@@ -1,0 +1,20 @@
+---
+common:
+    host_user: root
+    host_password: redhat
+    host_ip: "10.66.9.52"
+    rhvm_fqdn: rhvm41-vdsm-auto.lab.eng.pek2.redhat.com
+    browser: firefox
+
+subscription:
+    rhn_user: QualityAssurance
+    # TODO 
+
+hosted_engine:
+    rhvm_appliance_path: http://10.66.10.22:8090/rhevm-appliance/
+    # TODO
+
+mapper:
+    sys_ip_map:
+        hp-z620-05.qe.lab.eng.nay.redhat.com: "10.66.150.175"
+    # TODO
