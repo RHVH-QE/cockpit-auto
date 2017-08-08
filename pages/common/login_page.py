@@ -16,7 +16,7 @@ class LoginPage(PageObject):
     # Other options
     other_option = PageElement(id_="option-caret")
     server_input = PageElement(id_="server-field")
-
+    #server_input = PageElement(class_name="col-sm-10 col-md-10- server-box")
     # After click the Login button
     md5_input = PageElement(id_="conversation-input")
 
@@ -60,17 +60,20 @@ class LoginPage(PageObject):
         """
         Purpose:
             Login into remote machine with "allowUnknow" is default in cockpit
-        """
+        
         with settings(warn_only=True):
             cmd = "rm -f /etc/cockpit/cockpit.conf"
             run(cmd)
             cmd = "service cockpit restart"
             run(cmd)
+        """
+        self.other_option.click()
+        self.wait(5)
         self.username_input.send_keys("root")
         self.password_input.send_keys("redhat")
 
-        self.other_option.click()
-        self.server_input.send_keys("10.66.8.173")
+        #self.other_option.click()
+        self.server_input.send_keys("10.66.150.175")
         self.login_btn.click()
         self.wait(5)
 
