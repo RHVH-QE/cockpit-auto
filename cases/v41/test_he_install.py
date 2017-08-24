@@ -29,34 +29,6 @@ nfs_ip, nfs_password, nfs_storage_path, rhvm_appliance_path, vm_mac, vm_fqdn, vm
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
 
-"""
-@pytest.fixture(scope="session", autouse=True)
-def _environment(request):
-    with settings(warn_only=True):
-        cmd = "rpm -qa|grep cockpit-ovirt"
-        cockpit_ovirt_version = run(cmd)
-
-        cmd = "rpm -q imgbased"
-        result = run(cmd)
-        if result.failed:
-            cmd = "cat /etc/redhat-release"
-            redhat_release = run(cmd)
-            request.config._environment.append((
-                'redhat-release', redhat_release))
-        else:
-            cmd_imgbase = "imgbase w"
-            output_imgbase = run(cmd_imgbase)
-            rhvh_version = output_imgbase.split()[-1].split('+')[0]
-            request.config._environment.append(('rhvh-version', rhvh_version))
-
-        request.config._environment.append((
-            'cockpit-ovirt', cockpit_ovirt_version))
-
-
-@pytest.fixture(scope="module")
-def firefox(request):
-    pass
-"""
 
 def init_browser():
     if browser == 'firefox':

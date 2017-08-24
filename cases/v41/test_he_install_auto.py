@@ -417,6 +417,7 @@ def check_he_is_deployed(host_ip, host_user, host_password):
         assert ret.succeeded, "Not found the successfully message in the setup log %s" % ret
 
 
+<<<<<<< HEAD
 """
 @pytest.fixture(scope="session", autouse=True)
 def _environment(request):
@@ -448,6 +449,8 @@ def firefox(request):
 
 
 
+=======
+>>>>>>> 4839b3af42b4ea58c4d0e8e3339bedac31c4fe47
 def test_18667(ctx):
     """
     Purpose:
