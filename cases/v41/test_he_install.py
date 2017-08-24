@@ -3,9 +3,11 @@ from pages.common.he_install_auto import *
 from fabric.api import env, run, settings
 from cases import CONF
 #from test_common_tools import init_browser
-import logging
-import logging.config
+
 import os
+
+from utils.log import Log
+log = Log()
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
@@ -22,12 +24,7 @@ nfs_ip, nfs_password, nfs_storage_path, rhvm_appliance_path, vm_mac, vm_fqdn, vm
         'hosted_engine').get('he_vm_password'), CONF.get('hosted_engine').get(
             'engine_password'), CONF.get('hosted_engine').get('auto_answer')
 
-"""
-dirname = os.path.dirname(os.path.dirname(__file__))
-conf_path = os.path.join(dirname + "/logger.conf")
-logging.config.fileConfig(conf_path)
-log = logging.getLogger("sherry")
-"""
+
 
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
@@ -113,6 +110,7 @@ def test_18667():
     try:
         #he_install(host_dict, nfs_dict, install_dict, vm_dict)
         he_install_auto(host_dict, nfs_dict, install_dict, vm_dict)
+        log.info("Deploy HostedEngine successfully!")
     except Exception as e:
         print e
         return False
@@ -125,7 +123,13 @@ def test_18667():
         #assert 0, "Failed to install Hosted Engine"
 
     # Check the hosted engine is deployed
-    check_he_is_deployed(host_ip, host_user, host_password)
+    try:
+        log.info("Checking HostedEngine deployed?")
+        check_he_is_deployed(host_ip, host_user, host_password)
+        log.info("HostedEngine was deployed!")
+    except Exception as e:
+        print e
+        return False
 
 def runtest():
     #ctx = init_browser()

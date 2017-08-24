@@ -79,7 +79,7 @@ class HePage(PageObject):
         with self.switch_to_frame(self.frame_right_name):
             put_host_local_maintenace_btn = list(self.btns)[0]
             put_host_local_maintenace_btn.click()
-            self.wait(60)
+            self.wait(120)
 
     def check_host_in_local_maintenance(self):
         """
@@ -111,7 +111,7 @@ class HePage(PageObject):
         with self.switch_to_frame(self.frame_right_name):
             remove_host_local_maintenace_btn = list(self.btns)[1]
             remove_host_local_maintenace_btn.click()
-            self.wait(60)
+            self.wait(80)
 
     def put_cluster_to_global_maintenance(self):
         """

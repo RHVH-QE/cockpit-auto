@@ -1652,3 +1652,287 @@ Full stack:
 1501660621789	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
 1501660623133	Marionette	INFO	Listening on port 34013
 1501660623207	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502676544132	geckodriver	INFO	geckodriver 0.18.0
+1502676544135	geckodriver	INFO	Listening on 127.0.0.1:45657
+1502676545462	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502676546956	Marionette	INFO	Listening on port 37977
+1502676546997	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502704835872	geckodriver	INFO	geckodriver 0.18.0
+1502704835885	geckodriver	INFO	Listening on 127.0.0.1:38635
+1502704837042	geckodriver::marionette	INFO	Starting browser /bin/firefox with args ["-marionette"]
+1502704838488	Marionette	INFO	Listening on port 37285
+1502704838557	Marionette	WARN	TLS certificate errors will be ignored for this session
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: NetworkError when attempting to fetch resource.
+Full stack: 
+*************************
+ATTENTION: default value of option force_s3tc_enable overridden by environment.
+JavaScript error: http://talent.baidu.com/external/baidu/src/individualCenter/individualCenterView.js?_t=1502760822355, line 1: TypeError: e[t] is undefined
+JavaScript error: http://talent.baidu.com/external/baidu/src/individualCenter/individualCenterView.js?_t=1502760822355, line 1: TypeError: e[t] is undefined
+JavaScript error: http://talent.baidu.com/external/baidu/src/individualCenter/individualCenterView.js?_t=1502760822355, line 1: TypeError: e[t] is undefined
+JavaScript error: http://talent.baidu.com/external/baidu/src/individualCenter/individualCenterView.js?_t=1502760822355, line 1: TypeError: e[t] is undefined
+JavaScript error: http://bdimg.share.baidu.com/static/api/js/trans/logger.js?v=d16ec0e3.js, line 1: TypeError: n.ajax.request is not a function
+1502761875121	geckodriver	INFO	geckodriver 0.18.0
+1502761875125	geckodriver	INFO	Listening on 127.0.0.1:33279
+1502761876289	geckodriver::marionette	INFO	Starting browser /bin/firefox with args ["-marionette"]
+1502761877646	Marionette	INFO	Listening on port 41313
+1502761877707	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502762370190	geckodriver	INFO	geckodriver 0.18.0
+1502762370193	geckodriver	INFO	Listening on 127.0.0.1:55619
+1502762371334	geckodriver::marionette	INFO	Starting browser /bin/firefox with args ["-marionette"]
+1502762372701	Marionette	INFO	Listening on port 33735
+1502762372751	Marionette	WARN	TLS certificate errors will be ignored for this session
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: NetworkError when attempting to fetch resource.
+Full stack: 
+*************************
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: NetworkError when attempting to fetch resource.
+Full stack: 
+*************************
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776683396&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e147890322190198&synckey=1_656749156%7C2_656749574%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776683%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794538, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776688704&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e158575043278122&synckey=1_656749156%7C2_656749574%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776683%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794539, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776690221&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e944537316119647&synckey=1_656749156%7C2_656749574%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776683%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794540, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776700985&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e476672471710358&synckey=1_656749156%7C2_656749576%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776700%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794543, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776701575&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e825880271070880&synckey=1_656749156%7C2_656749576%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776700%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794544, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776702610&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e855672518590976&synckey=1_656749156%7C2_656749576%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776700%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794545, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776704003&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e764246611905038&synckey=1_656749156%7C2_656749576%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776700%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794546, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776706367&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e070332482651675&synckey=1_656749156%7C2_656749576%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776700%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794547, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776706443&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e544113193455401&synckey=1_656749156%7C2_656749576%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776700%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794548, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776706531&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e096257448701902&synckey=1_656749156%7C2_656749576%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776700%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794549, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776706632&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e767508804897923&synckey=1_656749156%7C2_656749576%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776700%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794550, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776706702&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e663380550487640&synckey=1_656749156%7C2_656749576%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776700%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794551, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776706789&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e394441740145312&synckey=1_656749156%7C2_656749576%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776700%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794552, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776708426&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e109648671948228&synckey=1_656749156%7C2_656749576%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776700%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794553, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776708954&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e855430972681340&synckey=1_656749156%7C2_656749576%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776700%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794554, line 1: SyntaxError: illegal character
+JavaScript error: https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin/synccheck?r=1502776982219&skey=%40crypt_10ad73e3_fbeff7532658d7409c6b676d59cce84e&sid=xacyOlieZzgrEd1h&uin=2788667783&deviceid=e161231340842636&synckey=1_656749156%7C2_656749587%7C3_656749394%7C11_656749345%7C13_656610016%7C201_1502776907%7C203_1502762492%7C1000_1502757722%7C1001_1502757753&_=1502760794736, line 1: SyntaxError: missing ; before statement
+1502787985557	Marionette	INFO	Ceased listening
+1502790771607	geckodriver	INFO	geckodriver 0.18.0
+1502790771610	geckodriver	INFO	Listening on 127.0.0.1:42715
+1502790772785	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502790774506	Marionette	INFO	Listening on port 33759
+1502790774607	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502792363717	geckodriver	INFO	geckodriver 0.18.0
+1502792363721	geckodriver	INFO	Listening on 127.0.0.1:38437
+1502792364884	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502792366330	Marionette	INFO	Listening on port 39125
+1502792366413	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502792537943	geckodriver	INFO	geckodriver 0.18.0
+1502792537946	geckodriver	INFO	Listening on 127.0.0.1:34749
+1502792539110	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502792540572	Marionette	INFO	Listening on port 38241
+1502792540633	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502792732668	geckodriver	INFO	geckodriver 0.18.0
+1502792732671	geckodriver	INFO	Listening on 127.0.0.1:39765
+1502792733833	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502792735264	Marionette	INFO	Listening on port 44565
+1502792735347	Marionette	WARN	TLS certificate errors will be ignored for this session
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: NetworkError when attempting to fetch resource.
+Full stack: 
+*************************
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: NetworkError when attempting to fetch resource.
+Full stack: 
+*************************
+1502850538677	Marionette	INFO	Ceased listening
+1502853353037	geckodriver	INFO	geckodriver 0.18.0
+1502853353040	geckodriver	INFO	Listening on 127.0.0.1:51837
+1502853354203	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502853355699	Marionette	INFO	Listening on port 34387
+1502853355732	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502853506844	geckodriver	INFO	geckodriver 0.18.0
+1502853506847	geckodriver	INFO	Listening on 127.0.0.1:39063
+1502853508020	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502853509444	Marionette	INFO	Listening on port 44053
+1502853509533	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502853516430	geckodriver	INFO	geckodriver 0.18.0
+1502853516433	geckodriver	INFO	Listening on 127.0.0.1:51837
+1502853517602	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502853519048	Marionette	INFO	Listening on port 45899
+1502853519135	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502853649287	geckodriver	INFO	geckodriver 0.18.0
+1502853649290	geckodriver	INFO	Listening on 127.0.0.1:47039
+1502853650454	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502853651884	Marionette	INFO	Listening on port 41521
+1502853651972	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502853670470	geckodriver	INFO	geckodriver 0.18.0
+1502853670473	geckodriver	INFO	Listening on 127.0.0.1:48863
+1502853671637	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502853673043	Marionette	INFO	Listening on port 37913
+1502853673148	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502853747839	geckodriver	INFO	geckodriver 0.18.0
+1502853747842	geckodriver	INFO	Listening on 127.0.0.1:53171
+1502853749009	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502853750429	Marionette	INFO	Listening on port 40117
+1502853750525	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502853798055	geckodriver	INFO	geckodriver 0.18.0
+1502853798058	geckodriver	INFO	Listening on 127.0.0.1:33215
+1502853799238	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502853800657	Marionette	INFO	Listening on port 41805
+1502853800754	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502853919209	geckodriver	INFO	geckodriver 0.18.0
+1502853919212	geckodriver	INFO	Listening on 127.0.0.1:48701
+1502853920380	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502853921808	Marionette	INFO	Listening on port 42801
+1502853921897	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502853997228	geckodriver	INFO	geckodriver 0.18.0
+1502853997231	geckodriver	INFO	Listening on 127.0.0.1:56441
+1502853998392	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502853999825	Marionette	INFO	Listening on port 37427
+1502853999906	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502854018189	geckodriver	INFO	geckodriver 0.18.0
+1502854018192	geckodriver	INFO	Listening on 127.0.0.1:42077
+1502854019354	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502854020799	Marionette	INFO	Listening on port 40093
+1502854020870	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502854065534	geckodriver	INFO	geckodriver 0.18.0
+1502854065537	geckodriver	INFO	Listening on 127.0.0.1:55851
+1502854066719	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502854068276	Marionette	INFO	Listening on port 35571
+1502854068340	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502854075142	geckodriver	INFO	geckodriver 0.18.0
+1502854075145	geckodriver	INFO	Listening on 127.0.0.1:49281
+1502854076316	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502854077748	Marionette	INFO	Listening on port 33335
+1502854077842	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502863104883	Marionette	INFO	Ceased listening
+1502934584837	geckodriver	INFO	geckodriver 0.18.0
+1502934584840	geckodriver	INFO	Listening on 127.0.0.1:39473
+1502934586065	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502934587156	Marionette	INFO	Listening on port 38251
+1502934587184	Marionette	WARN	TLS certificate errors will be ignored for this session
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: NetworkError when attempting to fetch resource.
+Full stack: 
+*************************
+1502938042979	Marionette	INFO	Ceased listening
+1502939544958	geckodriver	INFO	geckodriver 0.18.0
+1502939544968	geckodriver	INFO	Listening on 127.0.0.1:35493
+1502939546122	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502939547210	Marionette	INFO	Listening on port 34907
+1502939547240	Marionette	WARN	TLS certificate errors will be ignored for this session
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: NetworkError when attempting to fetch resource.
+Full stack: 
+*************************
+1502940254140	geckodriver	INFO	geckodriver 0.18.0
+1502940254150	geckodriver	INFO	Listening on 127.0.0.1:56259
+1502940255301	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502940256380	Marionette	INFO	Listening on port 44479
+1502940256417	Marionette	WARN	TLS certificate errors will be ignored for this session
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: NetworkError when attempting to fetch resource.
+Full stack: 
+*************************
+1502947770401	Marionette	INFO	Ceased listening
+1502947772815	Marionette	INFO	Ceased listening
+1502949079406	geckodriver	INFO	geckodriver 0.18.0
+1502949079409	geckodriver	INFO	Listening on 127.0.0.1:56127
+1502949080539	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502949081633	Marionette	INFO	Listening on port 36177
+1502949081664	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502949133267	geckodriver	INFO	geckodriver 0.18.0
+1502949133269	geckodriver	INFO	Listening on 127.0.0.1:48977
+1502949134398	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502949135496	Marionette	INFO	Listening on port 42167
+1502949135528	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502949326538	geckodriver	INFO	geckodriver 0.18.0
+1502949326540	geckodriver	INFO	Listening on 127.0.0.1:42031
+1502949327668	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502949328750	Marionette	INFO	Listening on port 38461
+1502949328787	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502950295920	geckodriver	INFO	geckodriver 0.18.0
+1502950295922	geckodriver	INFO	Listening on 127.0.0.1:52507
+1502950297078	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502950298418	Marionette	INFO	Listening on port 33509
+1502950298489	Marionette	WARN	TLS certificate errors will be ignored for this session
+1502950364468	geckodriver	INFO	geckodriver 0.18.0
+1502950364471	geckodriver	INFO	Listening on 127.0.0.1:57155
+1502950365603	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1502950366695	Marionette	INFO	Listening on port 40183
+1502950366728	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503036661123	geckodriver	INFO	geckodriver 0.18.0
+1503036661133	geckodriver	INFO	Listening on 127.0.0.1:57973
+1503036662402	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503036664148	Marionette	INFO	Listening on port 40197
+1503036664223	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503036730698	geckodriver	INFO	geckodriver 0.18.0
+1503036730701	geckodriver	INFO	Listening on 127.0.0.1:46367
+1503036731880	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503036733197	Marionette	INFO	Listening on port 37925
+1503036733300	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503036776293	Marionette	INFO	Ceased listening
+1503036778070	Marionette	INFO	Ceased listening
+1503037866448	geckodriver	INFO	geckodriver 0.18.0
+1503037866451	geckodriver	INFO	Listening on 127.0.0.1:54867
+1503037867593	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503037868905	Marionette	INFO	Listening on port 42675
+1503037869005	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503037929418	geckodriver	INFO	geckodriver 0.18.0
+1503037929421	geckodriver	INFO	Listening on 127.0.0.1:52839
+1503037930619	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503037932097	Marionette	INFO	Listening on port 36281
+1503037932141	Marionette	WARN	TLS certificate errors will be ignored for this session
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: NetworkError when attempting to fetch resource.
+Full stack: 
+*************************
+1503038988644	geckodriver	INFO	geckodriver 0.18.0
+1503038988647	geckodriver	INFO	Listening on 127.0.0.1:35365
+1503038989815	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503038991157	Marionette	INFO	Listening on port 44351
+1503038991233	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503039188781	geckodriver	INFO	geckodriver 0.18.0
+1503039188784	geckodriver	INFO	Listening on 127.0.0.1:57213
+1503039189955	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503039191291	Marionette	INFO	Listening on port 36401
+1503039191369	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503039253172	addons.productaddons	WARN	Failed downloading XML, status: 0, reason: error
+1503039253351	Marionette	INFO	Ceased listening
+1503039256524	Marionette	INFO	Ceased listening
+1503040035471	geckodriver	INFO	geckodriver 0.18.0
+1503040035474	geckodriver	INFO	Listening on 127.0.0.1:59359
+1503040036647	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503040037974	Marionette	INFO	Listening on port 43201
+1503040038063	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503040084719	geckodriver	INFO	geckodriver 0.18.0
+1503040084721	geckodriver	INFO	Listening on 127.0.0.1:50377
+1503040085854	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503040087177	Marionette	INFO	Listening on port 41541
+1503040087266	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503040109563	geckodriver	INFO	geckodriver 0.18.0
+1503040109566	geckodriver	INFO	Listening on 127.0.0.1:58217
+1503040110739	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503040112058	Marionette	INFO	Listening on port 39243
+1503040112151	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503040459035	geckodriver	INFO	geckodriver 0.18.0
+1503040459038	geckodriver	INFO	Listening on 127.0.0.1:39987
+1503040460198	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503040461715	Marionette	INFO	Listening on port 35117
+1503040461813	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503040621704	geckodriver	INFO	geckodriver 0.18.0
+1503040621707	geckodriver	INFO	Listening on 127.0.0.1:53503
+1503040622844	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503040624155	Marionette	INFO	Listening on port 42463
+1503040624275	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503040635707	Marionette	INFO	Ceased listening
+1503040637724	Marionette	INFO	Ceased listening

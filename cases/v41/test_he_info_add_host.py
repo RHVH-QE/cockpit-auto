@@ -5,15 +5,18 @@ from pages.common.hosted_engine_page import HePage
 from fabric.api import env, run, settings
 from utils.helpers import RhevmAction
 from cases import CONF
-from cases.v41.test_common_tools import init_browser
-#import logging
-#import logging.config
-#import os
+#from cases.v41.test_common_tools import init_browser
+from utils.log import Log
+import os
 
-host_ip, host_user, host_password, second_host, second_password = CONF.get(
+log = Log()
+
+
+host_ip, host_user, host_password, second_host, second_password, browser = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(
         'common').get('host_password'), CONF.get('hosted_engine').get(
-            'second_host'), CONF.get('hosted_engine').get('second_password')
+            'second_host'), CONF.get('hosted_engine').get(
+                'second_password'), CONF.get('common').get('browser')
 
 he_vm_fqdn, he_vm_ip, he_vm_password = CONF.get('hosted_engine').get(
     'he_vm_fqdn'), CONF.get('hosted_engine').get('he_vm_ip'), CONF.get(
@@ -22,8 +25,8 @@ he_vm_fqdn, he_vm_ip, he_vm_password = CONF.get('hosted_engine').get(
 sd_name, storage_type, storage_addr, storage_pass, storage_path = CONF.get(
     'hosted_engine').get('sd_name'), CONF.get('hosted_engine').get(
         'storage_type'), CONF.get('hosted_engine').get('nfs_ip'), CONF.get(
-            'hosted_engine').get('nfs_pass'), CONF.get(
-                'hosted_engine').get('he_data_nfs')
+            'hosted_engine').get('nfs_pass'), CONF.get('hosted_engine').get(
+                'he_data_nfs')
 
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
@@ -37,19 +40,23 @@ def check_sd_is_attached(sd_name):
 
 
 if not check_sd_is_attached(sd_name):
+    log.info("Creating the nfs storage...")
     hosts = he_rhvm.list_all_hosts()
     host_name = hosts["host"][0]["name"]
 
     # Clean the nfs path
-    cmd = "rm -rf %s/*" % storage_path
+
     with settings(
             warn_only=True,
             host_string='root@' + storage_addr,
             password=storage_pass):
+        cmd = "rm -rf %s/*" % storage_path
+        #run("echo 'hello'")
         run(cmd)
 
     # Add nfs storage to Default DC on Hosted Engine,
     # which is used for creating vm
+    
     he_rhvm.create_plain_storage_domain(
         sd_name=sd_name,
         sd_type='data',
@@ -58,50 +65,42 @@ if not check_sd_is_attached(sd_name):
         storage_path=storage_path,
         host=host_name)
     time.sleep(60)
-
+    
+    log.info("Attaching sd to datacenter...")
     he_rhvm.attach_sd_to_datacenter(sd_name=sd_name, dc_name='Default')
     time.sleep(30)
+    
 
-
-"""
-def _environment(request):
-    with settings(warn_only=True):
-        cmd = "rpm -qa|grep cockpit-ovirt"
-        cockpit_ovirt_version = run(cmd)
-
-        cmd = "rpm -q imgbased"
-        result = run(cmd)
-        if result.failed:
-            cmd = "cat /etc/redhat-release"
-            redhat_release = run(cmd)
-            request.config._environment.append(('redhat-release',
-                                                redhat_release))
-        else:
-            cmd_imgbase = "imgbase w"
-            output_imgbase = run(cmd_imgbase)
-            rhvh_version = output_imgbase.split()[-1].split('+')[0]
-            request.config._environment.append(('rhvh-version', rhvh_version))
-
-        request.config._environment.append(('cockpit-ovirt',
-                                            cockpit_ovirt_version))
-
-"""
-
-
+def init_browser():
+    if browser == 'firefox':
+        driver = webdriver.Firefox()
+        driver.implicitly_wait(20)
+        driver.root_uri = "https://{}:9090".format(host_ip)
+        return driver
+    elif browser == 'chrome':
+        driver = webdriver.Chrome()
+        driver.implicitly_wait(20)
+        driver.root_uri = "https://{}:9090".format(host_ip)
+        return driver
+        #return None
+    else:
+        raise NotImplementedError
 
 
 def test_login(ctx):
+    log.info("Logining to Cockpit...")
     login_page = LoginPage(ctx)
     login_page.basic_check_elements_exists()
     login_page.login_with_credential(host_user, host_password)
 
 
-def test_18668(ctx):
+def test_18668():
     """
     RHEVM-18668
         Setup additional host
     """
     # Add another host to default DC where also can be running HE
+    log.info("Setup another host to default DC...")
     second_host_name = "cockpit-host"
     he_rhvm.create_new_host(
         ip=second_host,
@@ -112,18 +111,23 @@ def test_18668(ctx):
     time.sleep(60)
 
     i = 0
-    while True:
-        if i > 65:
-            assert 0, "Timeout waitting for host is up"
-        host_status = he_rhvm.list_host(second_host_name)['status']
-        if host_status == 'up':
-            break
-        elif host_status == 'install_failed':
-            assert 0, "Host is not up as current status is: %s" % host_status
-        elif host_status == 'non_operational':
-            assert 0, "Host is not up as current status is: %s" % host_status
-        time.sleep(10)
-        i += 1
+    try:
+        while True:
+            if i > 65:
+                assert 0, "Timeout waitting for host is up"
+            host_status = he_rhvm.list_host(second_host_name)['status']
+            if host_status == 'up':
+                break
+            elif host_status == 'install_failed':
+                assert 0, "Host is not up as current status is: %s" % host_status
+            elif host_status == 'non_operational':
+                assert 0, "Host is not up as current status is: %s" % host_status
+            time.sleep(10)
+            i += 1
+    except Exception as e:
+        print e
+        return False
+    return True
 
 
 def test_18678(ctx):
@@ -132,9 +136,16 @@ def test_18678(ctx):
         Put the host into local maintenance
     """
     # Put the host to local maintenance
+    log.info("Putting the host into local maintenance...")
     he_page = HePage(ctx)
     he_page.put_host_to_local_maintenance()
-    he_page.check_host_in_local_maintenance()
+    try:
+        log.info("Checking the host local_maintenance...")
+        he_page.check_host_in_local_maintenance()
+    except Exception as e:
+        print e
+        return False
+    return True
 
 
 def test_18679(ctx):
@@ -148,10 +159,17 @@ def test_18679(ctx):
     he_page.check_host_in_local_maintenance()
 
     # Remove the host from local maintenance
+    log.info("Removing host from local_maintenance...")
     he_page.remove_host_from_local_maintenance()
 
     # Check the host is in local maintenance
-    he_page.check_host_not_in_local_maintenance()
+    try:
+        log.info("Checking host removed from local_maintenance...")
+        he_page.check_host_not_in_local_maintenance()
+    except Exception as e:
+        print e
+        return False
+    return True
 
 
 def test_18680(ctx):
@@ -162,16 +180,24 @@ def test_18680(ctx):
     he_page = HePage(ctx)
 
     # Put the cluster into global maintenance
+    log.info("Putting cluster to global maintenance...")
     he_page.put_cluster_to_global_maintenance()
 
     # Check the cluster is in global maintenance
-    he_page.check_cluster_in_global_maintenance()
+    try:
+        log.info("Checking cluster in global maintenance...")
+        he_page.check_cluster_in_global_maintenance()
+    except Exception as e:
+        print e
+        return False
+    return True
 
 
 def runtest():
+    test_18668()
     ctx = init_browser()
     test_login(ctx)
-    test_18668(ctx)
+    
     test_18678(ctx)
     test_18679(ctx)
     test_18680(ctx)

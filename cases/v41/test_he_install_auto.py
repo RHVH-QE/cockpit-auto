@@ -7,9 +7,12 @@ from selenium import webdriver
 from fabric.api import run, settings, put, local, get, env
 from vncdotool import api
 from HTMLParser import HTMLParser
-import logging
-import logging.config
+#import logging
+#import logging.config
 import time, os, re, urllib2
+
+from utils.log import Log
+log = Log()
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
@@ -30,11 +33,12 @@ nfs_ip, nfs_password, nfs_storage_path, rhvm_appliance_path, vm_mac, vm_fqdn, vm
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
 
+"""
 dirname = os.path.dirname(os.path.dirname(__file__))
 conf_path = os.path.join(dirname + "/logger.conf")
 logging.config.fileConfig(conf_path)
 log = logging.getLogger("sherry")
-
+"""
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
@@ -373,6 +377,7 @@ def he_install_auto(host_dict, nfs_dict, install_dict, vm_dict):
     class_name("btn-default").click()  # set comma-separated email address
     time.sleep(5)
 
+    log.info("Confirm the configuration and deployment...")
     class_name("btn-default").click()  # confirm the configuration
     time.sleep(750)
 
@@ -441,6 +446,8 @@ def firefox(request):
     pass
 """
 
+
+
 def test_18667(ctx):
     """
     Purpose:
@@ -477,6 +484,7 @@ def test_18667(ctx):
     try:
         #he_install(host_dict, nfs_dict, install_dict, vm_dict)
         he_install_auto(host_dict, nfs_dict, install_dict, vm_dict)
+        log.info("Deploy HE finished!")
     except Exception as e:
         log.exception(e)
         return False
@@ -489,6 +497,6 @@ def test_18667(ctx):
 def runtest():
     ctx = init_browser()
     test_18667(ctx)
-    #ctx.close()
+    ctx.close()
 
 #TO DO

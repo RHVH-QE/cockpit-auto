@@ -5,13 +5,12 @@ from fabric.api import run, env, settings
 from cases import CONF
 #from test_common_tools import init_browser
 import logging
-import logging.config
-import os
+#import logging.config
+#import os
+from utils.log import Log
 
-dirname = os.path.dirname(os.path.dirname(__file__))
-conf_path = os.path.join(dirname + "/logger.conf")
-logging.config.fileConfig(conf_path)
-log = logging.getLogger("sherry")
+log = Log()
+
 
 host_ip, host_user, host_password, browser, second_ip, second_password = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(

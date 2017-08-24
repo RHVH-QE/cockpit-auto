@@ -3,13 +3,16 @@ import os
 import re
 from selenium import webdriver
 from fabric.api import run, settings, put, local, get, env
-import logging
-import logging.config
+#import logging
+#import logging.config
 import urllib2
 from vncdotool import api
 from HTMLParser import HTMLParser
 # from pages.v41.tools_subscriptions_page import *
 from pages import CONF
+
+from utils.log import Log
+log = Log()
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
@@ -32,11 +35,12 @@ nfs_ip, nfs_password, nfs_storage_path, rhvm_appliance_path, vm_mac, vm_fqdn, vm
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
 
+"""
 dirname = os.path.dirname(os.path.dirname(__file__))
 conf_path = os.path.join(dirname + "/logger.conf")
 logging.config.fileConfig(conf_path)
 log = logging.getLogger("sherry")
-
+"""
 
 
 class MyHTMLParser(HTMLParser):
@@ -420,7 +424,7 @@ def he_install_auto(host_dict, nfs_dict, install_dict, vm_dict):
     time.sleep(5)
 
     class_name("btn-default").click()  # confirm the configuration
-    time.sleep(900)
+    time.sleep(750)
 
     with settings(
             warn_only=True, host_string='root@' + vm_ip, password='redhat'):
@@ -429,7 +433,7 @@ def he_install_auto(host_dict, nfs_dict, install_dict, vm_dict):
         cmd2 = "echo '%s  %s' >> /etc/hosts" % (vm_ip, vm_fqdn)
         run(cmd2)
 
-    time.sleep(600)
+    time.sleep(750)
 
     dr.quit()
 

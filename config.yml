@@ -5,7 +5,7 @@ common:
     host_ip: "10.66.148.24"
     rhvm_fqdn: rhvm41-vdsm-auto.lab.eng.pek2.redhat.com
     browser: firefox
-    test_build: redhat-virtualization-host-4.1-20170727.1
+    test_build: redhat-virtualization-host-4.1-20170808.1
 
 subscription:
     rhn_user: QualityAssurance
