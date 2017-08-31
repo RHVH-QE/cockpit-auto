@@ -3,7 +3,7 @@ from selenium import webdriver
 from pages.common.login_page import LoginPage
 from pages.common.hosted_engine_page import HePage
 from fabric.api import env, run, settings
-from utils.helpers import RhevmAction
+from utils.rhvmapi import RhevmAction
 from cases import CONF
 #from cases.v41.test_common_tools import init_browser
 import const
