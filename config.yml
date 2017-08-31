@@ -5,8 +5,8 @@ common:
     host_ip: "10.66.148.24"
     rhvm_fqdn: rhvm41-vdsm-auto.lab.eng.pek2.redhat.com
     browser: firefox
-    test_build: redhat-virtualization-host-4.1-20170808.1
-
+    #test_build: redhat-virtualization-host-4.1-20170817.0
+    test_build: rhvh-4.1-0.20170817.0
 subscription:
     rhn_user: QualityAssurance
     rhn_password: VHVFhPS5TEG8dud
@@ -36,19 +36,4 @@ hosted_engine:
     second_host: "10.66.150.175"
     second_password: redhat
     second_vm_fqdn: cockpit-vm
-    # TODO
-
-mapper:
-    sys_ip_map:
-        hp-z620-04.qe.lab.eng.nay.redhat.com: "10.66.148.24"
-        hp-z620-05.qe.lab.eng.nay.redhat.com: "10.66.150.175"
-        dell-op790-01.qe.lab.eng.nay.redhat.com: "10.66.148.7"
-        dell-pet105-02.qe.lab.eng.nay.redhat.com: "10.66.148.10"
-    he_vm_map:
-        rhevh-hostedengine-vm-01.qe.lab.eng.nay.redhat.com: "52:54:00:05:61:f2"
-        rhevh-hostedengine-vm-02.qe.lab.eng.nay.redhat.com: "52:54:00:71:d5:ff"
-        rhevh-hostedengine-vm-03.qe.lab.eng.nay.redhat.com: "52:54:00:57:ef:59"
-        rhevh-hostedengine-vm-04.lab.eng.pek2.redhat.com: "52:54:00:5e:8e:c7"
-        rhevh-hostedengine-vm-05.lab.eng.pek2.redhat.com: "52:54:00:5d:21:64"
-        rhevh-hostedengine-vm-06.lab.eng.pek2.redhat.com: "52:54:00:34:04:b0"
     # TODO

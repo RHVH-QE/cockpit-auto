@@ -3,128 +3,175 @@ from pages.common.login_page import LoginPage
 from pages.common.dashboard_nodestatus_page import NodeStatusPage
 from fabric.api import env, run, settings
 from cases import CONF
-from cases.v41.test_common_tools import init_browser
-#import logging
-#import logging.config
-#import os
+import const
+import logging
+from print_log import get_current_function_name
 
+log = logging.getLogger("sherry")
 
-host_ip, host_user, host_password, test_build, rhvm_fqdn = CONF.get(
+dict1 = dict(zip(const.dashboard_ui, const.dashboard_ui_id))
+
+host_ip, host_user, host_password, test_build, rhvm_fqdn, browser = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(
         'common').get('host_password'), CONF.get('common').get(
-            'test_build'), CONF.get('common').get('rhvm_fqdn')
+            'test_build'), CONF.get('common').get('rhvm_fqdn'), CONF.get('common').get('browser')
 
 
 
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
 
-
-
-"""
-def _environment(request):
-    with settings(warn_only=True):
-        cmd = "rpm -qa|grep cockpit-ovirt"
-        cockpit_ovirt_version = run(cmd)
-
-        cmd = "rpm -q imgbased"
-        result = run(cmd)
-        if result.failed:
-            cmd = "cat /etc/redhat-release"
-            redhat_release = run(cmd)
-            request.config._environment.append((
-                'redhat-release', redhat_release))
-        else:
-            cmd_imgbase = "imgbase w"
-            output_imgbase = run(cmd_imgbase)
-            rhvh_version = output_imgbase.split()[-1].split('+')[0]
-            request.config._environment.append(('rhvh-version', rhvh_version))
-
-        request.config._environment.append((
-            'cockpit-ovirt', cockpit_ovirt_version))
-"""
-
-
-
+def init_browser():
+    if browser == 'firefox':
+        driver = webdriver.Firefox()
+        driver.implicitly_wait(20)
+        driver.root_uri = "https://{}:9090".format(host_ip)
+        return driver
+    elif browser == 'chrome':
+        driver = webdriver.Chrome()
+        driver.implicitly_wait(20)
+        driver.root_uri = "https://{}:9090".format(host_ip)
+        return driver
+        #return None
+    else:
+        raise NotImplementedError
 
 def test_login(ctx):
+    log.info("Test dashboard_ui-->Trying to login to cockpit...")
     login_page = LoginPage(ctx)
     login_page.basic_check_elements_exists()
     login_page.login_with_credential(host_user, host_password)
 
 
-def test_18534(ctx):
+def check_node_status_func(ctx):
     """
     RHEVM-18534
         Check node status in virtualization dashboard.
     """
-    node_status_page = NodeStatusPage(ctx)
-    node_status_page.check_node_status()
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Checking node status in virtualization dashboard...")
+        node_status_page = NodeStatusPage(ctx)
+        node_status_page.check_node_status()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18535(ctx):
+def check_node_health_func(ctx):
     """
     RHEVM-18535
         Check node health in virtualization dashboard
     """
-    node_status_page = NodeStatusPage(ctx)
-    node_status_page.check_node_health(is_registerd=True)
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Checking node health in virtualization dashboard...")
+        node_status_page = NodeStatusPage(ctx)
+        node_status_page.check_node_health(is_registerd=True)
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18536(ctx):
+def check_node_info_func(ctx):
     """
     RHEVM-18536
         Check node health in virtualization dashboard
     """
-    node_status_page = NodeStatusPage(ctx)
-    test_layer = test_build + '+1'
-    node_status_page.check_node_info(test_layer)
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Checking node info in virtualization dashboard... ")
+        node_status_page = NodeStatusPage(ctx)
+        test_layer = test_build + '+1'
+        print test_layer
+        node_status_page.check_node_info(test_layer)
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18540(ctx):
+def check_network_func(ctx):
     """
     RHEVM-18540
         Go to the Networking page in virtualization dashboard
     """
-    node_status_page = NodeStatusPage(ctx)
-    node_status_page.check_network_func()
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Checking networking page in virtualization dashboard...")
+        node_status_page = NodeStatusPage(ctx)
+        node_status_page.check_network()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18541(ctx):
+def check_system_log_func(ctx):
     """
     RHEVM-18541
         Go to the Logs page in virtualization dashboard
     """
-    node_status_page = NodeStatusPage(ctx)
-    node_status_page.check_system_log()
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Checking logs page in virtualization dashboard...")
+        node_status_page = NodeStatusPage(ctx)
+        node_status_page.check_system_log()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18542(ctx):
+def check_storage_func(ctx):
     """
     RHEVM-18542
         Go to the Storage page in virtualization dashboard
     """
-    node_status_page = NodeStatusPage(ctx)
-    node_status_page.check_storage()
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Checking storage page in virtualization dashboard...")
+        node_status_page = NodeStatusPage(ctx)
+        node_status_page.check_storage()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18543(ctx):
+def check_ssh_key_func(ctx):
     """
     RHEVM-18543
         Check the ssh host key in virtualization dashboard
     """
-    node_status_page = NodeStatusPage(ctx)
-    node_status_page.check_ssh_key()
-
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Checking ssh host key in virtualization dashboard...")
+        node_status_page = NodeStatusPage(ctx)
+        node_status_page.check_ssh_key()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 def runtest():
     ctx = init_browser()
     test_login(ctx)
-    test_18534(ctx)
-    test_18535(ctx)
-    test_18536(ctx)
-    test_18540(ctx)
-    test_18541(ctx)
-    test_18542(ctx)
-    test_18543(ctx)
+    check_node_status_func(ctx)
+    check_node_health_func(ctx)
+    check_node_info_func(ctx)
+    check_network_func(ctx)
+    check_system_log_func(ctx)
+    check_storage_func(ctx)
+    check_ssh_key_func(ctx)
     ctx.close()

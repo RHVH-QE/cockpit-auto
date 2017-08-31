@@ -43,7 +43,8 @@ class LoginPage(PageObject):
         self.wait(0.5)
 
         self.login_btn.click()
-        self.wait()
+        self.wait(2)
+        assert not self.username_input, "Login to cockpit failed"
 
     def login_with_incorrect_credential(self):
         self.username_input.send_keys("cockpit")

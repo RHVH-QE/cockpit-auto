@@ -6,11 +6,13 @@ from fabric.api import env, run, settings
 from utils.helpers import RhevmAction
 from cases import CONF
 #from cases.v41.test_common_tools import init_browser
-from utils.log import Log
-import os
+import const
+import logging
+from print_log import get_current_function_name
 
-log = Log()
+log = logging.getLogger("sherry")
 
+dict1 = dict(zip(const.he_info_add_host, const.he_info_add_host_id))
 
 host_ip, host_user, host_password, second_host, second_password, browser = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(
@@ -46,12 +48,8 @@ if not check_sd_is_attached(sd_name):
 
     # Clean the nfs path
 
-    with settings(
-            warn_only=True,
-            host_string='root@' + storage_addr,
-            password=storage_pass):
+    with settings(warn_only=True, host_string='root@' + storage_addr, password=storage_pass):
         cmd = "rm -rf %s/*" % storage_path
-        #run("echo 'hello'")
         run(cmd)
 
     # Add nfs storage to Default DC on Hosted Engine,
@@ -88,18 +86,19 @@ def init_browser():
 
 
 def test_login(ctx):
-    log.info("Logining to Cockpit...")
+    log.info("Trying to logining to Cockpit...")
     login_page = LoginPage(ctx)
     login_page.basic_check_elements_exists()
     login_page.login_with_credential(host_user, host_password)
 
 
-def test_18668():
+def check_add_additional_host():
     """
     RHEVM-18668
         Setup additional host
     """
     # Add another host to default DC where also can be running HE
+    log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
     log.info("Setup another host to default DC...")
     second_host_name = "cockpit-host"
     he_rhvm.create_new_host(
@@ -124,81 +123,84 @@ def test_18668():
                 assert 0, "Host is not up as current status is: %s" % host_status
             time.sleep(10)
             i += 1
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        print e
-        return False
-    return True
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 
-def test_18678(ctx):
+def check_put_local_maintenance(ctx):
     """
     RHEVM-18678
         Put the host into local maintenance
     """
     # Put the host to local maintenance
-    log.info("Putting the host into local maintenance...")
-    he_page = HePage(ctx)
-    he_page.put_host_to_local_maintenance()
     try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Putting the host into local maintenance...")
+        he_page = HePage(ctx)
+        he_page.put_host_to_local_maintenance()
         log.info("Checking the host local_maintenance...")
         he_page.check_host_in_local_maintenance()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        print e
-        return False
-    return True
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 
-def test_18679(ctx):
+def check_remove_from_maintenance(ctx):
     """
     RHEVM-18679
         Remove the host from maintenance
     """
-    he_page = HePage(ctx)
-
-    # Check the host is in local maintenance
-    he_page.check_host_in_local_maintenance()
-
-    # Remove the host from local maintenance
-    log.info("Removing host from local_maintenance...")
-    he_page.remove_host_from_local_maintenance()
-
     # Check the host is in local maintenance
     try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        he_page = HePage(ctx)
+        he_page.check_host_in_local_maintenance()
+        log.info("Removing host from local_maintenance...")
+        he_page.remove_host_from_local_maintenance()
         log.info("Checking host removed from local_maintenance...")
         he_page.check_host_not_in_local_maintenance()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        print e
-        return False
-    return True
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 
-def test_18680(ctx):
+def check_put_global_maintenance(ctx):
     """
     RHEVM-18680
         Put the cluster into global maintenance
     """
-    he_page = HePage(ctx)
-
-    # Put the cluster into global maintenance
-    log.info("Putting cluster to global maintenance...")
-    he_page.put_cluster_to_global_maintenance()
 
     # Check the cluster is in global maintenance
     try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        he_page = HePage(ctx)
+        log.info("Putting cluster to global maintenance...")
+        he_page.put_cluster_to_global_maintenance()
         log.info("Checking cluster in global maintenance...")
         he_page.check_cluster_in_global_maintenance()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        print e
-        return False
-    return True
-
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 def runtest():
-    test_18668()
+    #test_18668()
     ctx = init_browser()
+    check_add_additional_host()
     test_login(ctx)
-    
-    test_18678(ctx)
-    test_18679(ctx)
-    test_18680(ctx)
+    check_put_local_maintenance(ctx)
+    check_remove_from_maintenance(ctx)
+    check_put_global_maintenance(ctx)
     ctx.close()

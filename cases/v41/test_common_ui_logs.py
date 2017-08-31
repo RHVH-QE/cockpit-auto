@@ -3,15 +3,13 @@ from pages.common.login_page import LoginPage
 from pages.common.ui_log_page import LogPage
 from fabric.api import run, env, settings
 from cases import CONF
-#from test_common_tools import init_browser
+import const
 import logging
-import logging.config
-import os
+from print_log import get_current_function_name
 
-dirname = os.path.dirname(os.path.dirname(__file__))
-conf_path = os.path.join(dirname + "/logger.conf")
-logging.config.fileConfig(conf_path)
 log = logging.getLogger("sherry")
+
+dict1 = dict(zip(const.common_ui_logs, const.common_ui_logs_id))
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
@@ -19,30 +17,6 @@ host_ip, host_user, host_password, browser = CONF.get('common').get(
 
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
-
-
-"""
-def _environment(request):
-    with settings(warn_only=True):
-        cmd = "rpm -q cockpit-ovirt-dashboard"
-        cockpit_ovirt_version = run(cmd)
-        print cockpit_ovirt_version
-        request.config._environment.append(('cockpit-ovirt',
-                                            cockpit_ovirt_version))
-
-        cmd = "rpm -q imgbased"
-        result = run(cmd)
-        if result.failed:
-            cmd = "cat /etc/redhat-release"
-            redhat_release = run(cmd)
-            request.config._environment.append(('redhat-release',
-                                                redhat_release))
-        else:
-            cmd = "imgbase w"
-            output_imgbase = run(cmd)
-            rhvh_version = output_imgbase.split()[-1].split('+')[0]
-            request.config._environment.append(('rhvh-version', rhvh_version))
-"""
 
 def init_browser():
     if browser == 'firefox':
@@ -60,19 +34,21 @@ def init_browser():
         raise NotImplementedError
 
 def test_login(ctx):
-    log.info("Trying to login to the browser...")
+    log.info("Test commom_ui_log-->Trying to login to the browser...")
     login_page = LoginPage(ctx)
     login_page.basic_check_elements_exists()
     login_page.login_with_credential(host_user, host_password)
 
 
-def test_18392(ctx):
+def check_ui_logs(ctx):
     """
-    RHEVM-18392
+    RHEVM-18394
         Check servers status
     """
-    log.info("Checking the logs...")
+    
     try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Checking the logs...")
         log_page = LogPage(ctx)
         log_page.basic_check_elements_exists()
         log.info("Checking the recent logs...")
@@ -83,13 +59,16 @@ def test_18392(ctx):
         log_page.check_last_24hours_logs()
         log.info("Checking the last 7d logs...")
         log_page.check_last_7days_logs()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        log.exception(e)
-        return False
-    return True
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+    
 
 def runtest():
     ctx = init_browser()
     test_login(ctx)
-    test_18392(ctx)
+    check_ui_logs(ctx)
     ctx.close()

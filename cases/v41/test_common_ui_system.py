@@ -4,15 +4,13 @@ from pages.common.login_page import LoginPage
 from pages.common.ui_system_page import SystemPage
 from fabric.api import env, run, settings
 from cases import CONF
-#from cases.v41.test_common_tools import init_browser
+import const
 import logging
-import logging.config
-import os
+from print_log import get_current_function_name
 
-dirname = os.path.dirname(os.path.dirname(__file__))
-conf_path = os.path.join(dirname + "/logger.conf")
-logging.config.fileConfig(conf_path)
 log = logging.getLogger("sherry")
+
+dict1 = dict(zip(const.common_ui_system, const.common_ui_system_id))
 
 host_ip, host_user, host_password, second_ip, second_password, browser = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(
@@ -22,28 +20,6 @@ host_ip, host_user, host_password, second_ip, second_password, browser = CONF.ge
 
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
-"""
-def _environment(request):
-    with settings(warn_only=True):
-        cmd = "rpm -qa|grep cockpit-ovirt"
-        cockpit_ovirt_version = run(cmd)
-
-        cmd = "rpm -q imgbased"
-        result = run(cmd)
-        if result.failed:
-            cmd = "cat /etc/redhat-release"
-            redhat_release = run(cmd)
-            request.config._environment.append((
-                'redhat-release', redhat_release))
-        else:
-            cmd_imgbase = "imgbase w"
-            output_imgbase = run(cmd_imgbase)
-            rhvh_version = output_imgbase.split()[-1].split('+')[0]
-            request.config._environment.append(('rhvh-version', rhvh_version))
-
-        request.config._environment.append((
-            'cockpit-ovirt', cockpit_ovirt_version))
-"""
 
 def init_browser():
     if browser == 'firefox':
@@ -61,135 +37,224 @@ def init_browser():
         raise NotImplementedError
 
 def test_login(ctx):
-    log.info("Trying to login to the browser...")
+    log.info("Test common_ui_system-->Trying to login to the browser...")
     login_page = LoginPage(ctx)
     login_page.basic_check_elements_exists()
     login_page.login_with_credential(host_user, host_password)
 
     
-def test_18379(ctx):
+def check_allowunknown_default(ctx):
     """
     RHEVM-18379
         Login into remote machine with "allowUnknown" is default in cockpit
     """
-    login_page = LoginPage(ctx)
-    login_page.check_allow_unknown_default()
+    
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Trying to login into remote machine with 'allowUnknow' is default in cockpit ...")
+        login_page = LoginPage(ctx)
+        login_page.check_allow_unknown_default()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 
-def test_18381(ctx):
+def check_allowunknown_true_wrong_account(ctx):
     """
     RHEVM-18381
         Wrong account to login into remote machine
         with "allowUnknow" is true in cockpit
     """
-    login_page = LoginPage(ctx)
-    login_page.check_allow_unknown_true_wrong_account(second_ip)
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Wrong account to login into remote machine with 'allowUnknow' is true in cockpit...")
+        login_page = LoginPage(ctx)
+        login_page.check_allow_unknown_true_wrong_account(second_ip)
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18382(ctx):
+def check_allowunknown_true_remote_closed(ctx):
     """
     RHEVM-18382
         Login remote closed host with "allowUnknow" is true in cockpit
     """
-    login_page = LoginPage(ctx)
-    login_page.check_allow_unknown_true_remote_closed(second_ip, "root",
-                                                      second_password)
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Trying to login remote closed host with 'allowUnknow' is true in cockpit...")
+        login_page = LoginPage(ctx)
+        login_page.check_allow_unknown_true_remote_closed(second_ip, "root", second_password)
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 
-def test_18383(ctx):
+def check_allowunknown_true_wrong_address(ctx):
     """
     RHEVM-18383
         Login remote host with wrong address in cockpit
     """
-    login_page = LoginPage(ctx)
-    login_page.check_allow_unknown_true_wrong_address()
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Trying to login remote host with wrong address in cockpit...")
+        login_page = LoginPage(ctx)
+        login_page.check_allow_unknown_true_wrong_address()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18384(ctx):
+def check_allowunknown_true_empty_username(ctx):
     """
     RHEVM-18384
         Login remote host with wrong address in cockpit
     """
-    login_page = LoginPage(ctx)
-    login_page.check_allow_unknown_true_empty_username(second_ip, "root",
-                                                       second_password)
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Trying to login remote host with wrong address in cockpit...")
+        login_page = LoginPage(ctx)
+        login_page.check_allow_unknown_true_empty_username(second_ip, "root", second_password)
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18380(ctx):
+def check_allowunknown_true(ctx):
     """
-    RHEVM-18379
+    RHEVM-18380
         Login into remote machine with "allowUnknown" is true in cockpit
     """
-    login_page = LoginPage(ctx)
-    login_page.check_allow_unknown_true(second_ip, "root", second_password)
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Trying to login into remote machine with 'allowUnknow' is true in cockpit ...")
+        login_page = LoginPage(ctx)
+        login_page.check_allow_unknown_true(second_ip, "root", second_password)
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18377(ctx):
+def check_system_login_host(ctx):
     """
     RHEVM-18377
         Login cockpit via Firefox browser
     """
-    login_page = LoginPage(ctx)
-    login_page.basic_check_elements_exists()
-    login_page.login_with_incorrect_credential()
-    time.sleep(2)
-    login_page.login_with_credential(host_user, host_password)
-    system_page = SystemPage(ctx)
-    system_page.check_login_host(host_ip)
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Trying to login cockpit via Firefox browser...")
+        login_page = LoginPage(ctx)
+        login_page.basic_check_elements_exists()
+        login_page.login_with_incorrect_credential()
+        time.sleep(2)
+        login_page.login_with_credential(host_user, host_password)
+        system_page = SystemPage(ctx)
+        system_page.check_login_host(host_ip)
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18385(ctx):
+def check_system_configure_hostname(ctx):
     """
     RHEVM-18385
         Configure hostname
     """
-    system_page = SystemPage(ctx)
-    system_page.configure_hostname()
-    system_page.check_configure_hostname()
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Trying to configure hostname...")
+        system_page = SystemPage(ctx)
+        system_page.configure_hostname()
+        system_page.check_configure_hostname()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18386(ctx):
+def check_system_configure_timezone(ctx):
     """
     RHEVM-18386
         Configure timezone
     """
-    system_page = SystemPage(ctx)
-    system_page.configure_timezone()
-    system_page.check_configure_timezone()
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Trying to configure timezone...")
+        system_page = SystemPage(ctx)
+        system_page.configure_timezone()
+        system_page.check_configure_timezone()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18387(ctx):
+def check_system_configure_time(ctx):
     """
-    RHEVM-18386
+    RHEVM-18387
         Configure time manually
     """
-    system_page = SystemPage(ctx)
-    system_page.configure_time()
-    system_page.check_configure_time()
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Trying to configure time manually...")
+        system_page = SystemPage(ctx)
+        system_page.configure_time()
+        system_page.check_configure_time()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
-
-def test_18390(ctx):
+def check_change_system_performance_profile(ctx):
     """
-    RHEVM-18386
+    RHEVM-18390
         Change performance profile
     """
-    system_page = SystemPage(ctx)
-    system_page.change_performance_profile()
-    system_page.check_change_performance_profile()
-
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Trying to change performance profile...")
+        system_page = SystemPage(ctx)
+        system_page.change_performance_profile()
+        system_page.check_change_performance_profile()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 def runtest():
     ctx = init_browser()
-    test_18379(ctx)
-    #test_18380(ctx)
-    #test_18381(ctx)
-    #test_18382(ctx)
-    #test_18383(ctx)
-    #test_18384(ctx)
-    #test_18377(ctx)
-    #test_18385(ctx)
-    #test_18385(ctx)
-    #test_18386(ctx)
-    #test_18387(ctx)
-    #test_18390(ctx)
+    #test_login(ctx)
+    check_allowunknown_default(ctx)
+    check_allowunknown_true(ctx)
+    check_allowunknown_true_wrong_account(ctx)
+    check_allowunknown_true_remote_closed(ctx)
+    check_allowunknown_true_wrong_address(ctx)
+    check_allowunknown_true_empty_username(ctx)
+    check_system_login_host(ctx)
+    check_system_configure_hostname(ctx)
+    check_system_configure_timezone(ctx)
+    check_system_configure_time(ctx)
+    check_change_system_performance_profile(ctx)
     ctx.close()

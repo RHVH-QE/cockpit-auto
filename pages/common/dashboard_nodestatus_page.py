@@ -202,7 +202,7 @@ class NodeStatusPage(PageObject):
         """
         raise NotImplementedError
 
-    def check_network_func(self):
+    def check_network(self):
         """
         Purpose:
             Check the Networking Information in virtualization dashboard

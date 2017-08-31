@@ -1,13 +1,15 @@
+from selenium import webdriver
 from pages.common.he_install import *
 from pages.common.he_install_auto import *
 from fabric.api import env, run, settings
 from cases import CONF
-#from test_common_tools import init_browser
+import logging
+import const
+from print_log import get_current_function_name
 
-import os
+log = logging.getLogger("sherry")
 
-from utils.log import Log
-log = Log()
+dict1 = dict(zip(const.he_install, const.he_install_id))
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
@@ -45,7 +47,7 @@ def init_browser():
     else:
         raise NotImplementedError
 
-def test_18667():
+def check_he_install():
     """
     Purpose:
         RHEVM-18667
@@ -80,30 +82,22 @@ def test_18667():
 
 
     try:
-        #he_install(host_dict, nfs_dict, install_dict, vm_dict)
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Setup hosted engine through ova...")
         he_install_auto(host_dict, nfs_dict, install_dict, vm_dict)
         log.info("Deploy HostedEngine successfully!")
-    except Exception as e:
-        print e
-        return False
-    """
-    except Exception as e:
-        log.exception(e)
-        return False
-    return True
-    """
-        #assert 0, "Failed to install Hosted Engine"
-
-    # Check the hosted engine is deployed
-    try:
         log.info("Checking HostedEngine deployed?")
         check_he_is_deployed(host_ip, host_user, host_password)
         log.info("HostedEngine was deployed!")
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        print e
-        return False
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+
 
 def runtest():
     #ctx = init_browser()
-    test_18667()
+    check_he_install()
     #ctx.close()

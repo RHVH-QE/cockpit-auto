@@ -6,14 +6,17 @@ from pages.common.dashboard_nodestatus_page import NodeStatusPage
 from fabric.api import run, env, settings
 from utils.helpers import RhevmAction
 from cases import CONF
-from cases.v41.test_common_tools import init_browser
-#import logging
-#import logging.config
-#import os
+import const
+from print_log import get_current_function_name
+import logging
 
-host_ip, host_user, host_password = CONF.get('common').get(
+log = logging.getLogger("sherry")
+
+dict1 = dict(zip(const.vm_registerd, const.vm_registerd_id))
+
+host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
-        'host_password')
+        'host_password'), CONF.get('common').get('browser')
 
 he_vm_fqdn, he_vm_ip, he_vm_password, he_engine_password, second_vm_fqdn = CONF.get(
     'hosted_engine').get('he_vm_fqdn'), CONF.get('hosted_engine').get(
@@ -32,6 +35,21 @@ env.password = host_password
 
 he_rhvm = RhevmAction(he_vm_fqdn, "admin", "password")
 
+
+def init_browser():
+    if browser == 'firefox':
+        driver = webdriver.Firefox()
+        driver.implicitly_wait(20)
+        driver.root_uri = "https://{}:9090".format(host_ip)
+        return driver
+    elif browser == 'chrome':
+        driver = webdriver.Chrome()
+        driver.implicitly_wait(20)
+        driver.root_uri = "https://{}:9090".format(host_ip)
+        return driver
+        #return None
+    else:
+        raise NotImplementedError
 
 def check_sd_is_attached(sd_name):
     if he_rhvm.list_storage_domain(sd_name):
@@ -91,91 +109,98 @@ if not check_new_vm_exists(second_vm_fqdn):
             break
         time.sleep(10)
         i += 1
-"""
-@pytest.fixture(scope="session", autouse=True)
-def _environment(request):
-    with settings(warn_only=True):
-        cmd = "rpm -qa|grep cockpit-ovirt"
-        cockpit_ovirt_version = run(cmd)
 
-        cmd = "rpm -q imgbased"
-        result = run(cmd)
-        if result.failed:
-            cmd = "cat /etc/redhat-release"
-            redhat_release = run(cmd)
-            request.config._environment.append(('redhat-release',
-                                                redhat_release))
-        else:
-            cmd_imgbase = "imgbase w"
-            output_imgbase = run(cmd_imgbase)
-            rhvh_version = output_imgbase.split()[-1].split('+')[0]
-            request.config._environment.append(('rhvh-version', rhvh_version))
-
-        request.config._environment.append(('cockpit-ovirt',
-                                            cockpit_ovirt_version))
-
-
-@pytest.fixture(scope="module")
-def firefox(request):
-    driver = webdriver.Firefox()
-    driver.implicitly_wait(20)
-    root_uri = getattr(request.module, "ROOT_URI", None)
-    driver.root_uri = root_uri
-    yield driver
-    driver.close()
-"""
 
 
 def test_login(ctx):
+    log.info("Trying to login to cockpit...")
     login_page = LoginPage(ctx)
     login_page.basic_check_elements_exists()
     login_page.login_with_credential(host_user, host_password)
 
 
-def test_18805(ctx):
+def check_running_vms_register_func(ctx):
     """
     RHEVM-18805
         Check running VMs (Register to RHEVM) status in virtual machines page
         Suppose there are two vms including HE vm and another commom vm
     """
-    vm_page = VirtualMachinesPage(ctx)
-    vm_page.check_running_vms_register(he_vm_fqdn, he_vm_ip, he_vm_password,
-                                       second_vm_fqdn)
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Check running VMs (Register to RHEVM) status in virtual machines page...')
+        vm_page = VirtualMachinesPage(ctx)
+        vm_page.check_running_vms_register(he_vm_fqdn, he_vm_ip, he_vm_password,
+                                        second_vm_fqdn)
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 
-def test_18808(ctx):
+def check_vdsm_func(ctx):
     """
     RHEVM-18808
         Check VDSM info in virtual machines page
     """
-    vm_page = VirtualMachinesPage(ctx)
-    vm_page.check_vdsm_elements()
-    vm_page.check_vdsm_conf_edit()
-    vm_page.check_vdsm_conf_save()
-    vm_page.check_vdsm_conf_reload()
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Check VDSM info in virtual machines page...")
+        vm_page = VirtualMachinesPage(ctx)
+        vm_page.check_vdsm_elements()
+        vm_page.check_vdsm_conf_edit()
+        vm_page.check_vdsm_conf_save()
+        vm_page.check_vdsm_conf_reload()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 
-def test_18809(ctx):
+def check_vm_login_logout_engine_func(ctx):
     """
     RHEVM-18809
         Check Login to Engine in virtual machines page
     """
-    vm_page = VirtualMachinesPage(ctx)
-    vm_page.check_vm_login_to_engine(he_vm_fqdn, he_engine_password)
-    time.sleep(2)
-    vm_page.check_vm_logout_from_engine()
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Check Login to Engine in virtual machines page...")
+        vm_page = VirtualMachinesPage(ctx)
+        vm_page.check_vm_login_to_engine(he_vm_fqdn, he_engine_password)
+        time.sleep(2)
+        vm_page.check_vm_logout_from_engine()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 
-def test_18811(ctx):
+def check_vm_refresh_func(ctx):
     """
     RHEVM-18811
         Check Refresh in virtual machines page
     """
-    vm_page = VirtualMachinesPage(ctx)
-    vm_page.check_vm_refresh()
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Check Refresh in virtual machines page")
+        vm_page = VirtualMachinesPage(ctx)
+        vm_page.check_vm_refresh()
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 
-def test_18813(ctx):
+def check_non_root_alert_func(ctx):
     """
     RHEVM-18813
         Check VM page with non-root account
@@ -195,20 +220,30 @@ def test_18813(ctx):
         run(cmd)
 
     # Logout the root account from cockpit
-    vm_page = VirtualMachinesPage(ctx)
-    vm_page.logout_from_cockpit()
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Check VM page with non-root account")
+        vm_page = VirtualMachinesPage(ctx)
+        vm_page.logout_from_cockpit()
 
-    # Login with non-root account
-    login_page = LoginPage(ctx)
-    login_page.login_with_credential(test_user, test_password)
+        # Login with non-root account
+        login_page = LoginPage(ctx)
+        login_page.login_with_credential(test_user, test_password)
 
-    # Check if there is "Can't check node status!
-    # "Please run as an administrator!"
-    node_status_page = NodeStatusPage(ctx)
-    node_status_page.check_non_root_alert(default=True)
+        # Check if there is "Can't check node status!
+        # "Please run as an administrator!"
+        node_status_page = NodeStatusPage(ctx)
+        node_status_page.check_non_root_alert(default=True)
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+    except Exception as e:
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
 
 
 def test_login_again(ctx):
+    log.info("Trying to test login to cockpit again...")
     # Logout the non-root account from cockpit
     vm_page = VirtualMachinesPage(ctx)
     vm_page.logout_from_cockpit()
@@ -221,10 +256,10 @@ def test_login_again(ctx):
 def runtest():
     ctx = init_browser()
     test_login(ctx)
-    test_18805(ctx)
-    test_18808(ctx)
-    test_18809(ctx)
-    test_18811(ctx)
-    test_18813(ctx)
+    check_running_vms_register_func(ctx)
+    check_vdsm_func(ctx)
+    check_vm_login_logout_engine_func(ctx)
+    check_vm_refresh_func(ctx)
+    check_non_root_alert_func(ctx)
     test_login_again(ctx)
     ctx.close()

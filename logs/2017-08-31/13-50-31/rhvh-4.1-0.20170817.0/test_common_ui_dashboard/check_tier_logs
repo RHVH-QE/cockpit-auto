@@ -1,0 +1,31 @@
+[test_common_ui_dashboard]31/08/2017 13:51:03 (test_login) INFO :: Test common_ui_dashboard-->Trying to login to the browser...
+[test_common_ui_dashboard]31/08/2017 13:51:31 (check_another_server) INFO :: Start to run test cases:["RHEVM-18371"]
+[test_common_ui_dashboard]31/08/2017 13:51:31 (check_another_server) INFO :: Checking whether adding the second host...
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_another_server) INFO :: func_(check_another_server)|| {"RHEVM-18371": "failed"}
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_another_server) ERROR :: Message: Failed to decode response from marionette
+
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_another_server) INFO :: Finished to run test cases:["RHEVM-18371"]
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_cpu) INFO :: Start to run test cases:["RHEVM-18372"]
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_cpu) INFO :: Checking CPU button...
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_cpu) INFO :: func(check_dashboard_cpu)|| {"RHEVM-18372": "failed"}
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_cpu) ERROR :: Message: Tried to run command without establishing a connection
+
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_cpu) INFO :: Finished to run test cases:["RHEVM-18372"]
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_memory) INFO :: Start to run test cases:["RHEVM-18373"]
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_memory) INFO :: Checking memory button...
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_memory) INFO :: func(check_dashboard_memory)|| {"RHEVM-18373": "failed"}
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_memory) ERROR :: Message: Tried to run command without establishing a connection
+
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_memory) INFO :: Finished to run test cases:["RHEVM-18373"]
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_network) INFO :: Start to run test cases:["RHEVM-18374"]
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_network) INFO :: Checking network button...
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_network) INFO :: func(check_dashboard_network)|| {"RHEVM-18374": "failed"}
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_network) ERROR :: Message: Tried to run command without establishing a connection
+
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_network) INFO :: Finished to run test cases:["RHEVM-18374"]
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_disk_io) INFO :: Start to run test cases:["RHEVM-18375"]
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_disk_io) INFO :: Checking disk_io button
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_disk_io) INFO :: func(check_dashboard_disk_io)|| {"RHEVM-18375": "failed"}
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_disk_io) ERROR :: Message: Tried to run command without establishing a connection
+
+[test_common_ui_dashboard]31/08/2017 13:51:52 (check_dashboard_disk_io) INFO :: Finished to run test cases:["RHEVM-18375"]

@@ -1,40 +1,15 @@
 # !/usr/bin/env python2.7
-"""Main function entry.
-Usage:
-    python run.py [argv]
 
-Options:
-    -h,--help                                          Menu
-    v41_debug_tier                                     Test v41_debug_tier
-    v41_rhvh_tier1                                     Test v41_rhvh_tier1
-    v41_rhvh_tier2                                     Test v41_rhvh_tier2
-    v41_rhvh_dashboard_uefi                            Test v41_rhvh_dashboard_uefi
-    v41_rhvh_dashboard_fc                              Test v41_rhvh_dashboard_fc
-    v41_rhvh_he_install_bond                           Test v41_rhvh_he_install_bond
-    v41_rhvh_he_install_bv                             Test v41_rhvh_he_install_bv
-    v41_rhvh_he_install_vlan                           Test v41_rhvh_he_install_vlan
-    v41_rhvh_he_install_non_default_port               Test v41_rhvh_he_install_non_default_port
-    v41_rhvh_he_install_redeploy                       Test v41_rhvh_he_install_redeploy
-    v41_rhvh_he_info_add_host                          Test v41_rhvh_he_info_add_host
-    v41_rhel_tier1v41_rhvh_he_install_redeploy         Test v41_rhel_tier1v41_rhvh_he_install_redeploy
-    v41_rhel_tier2                                     Test v41_rhel_tier2
-    v41_centos_tier1                                   Test v41_centos_tier1
-    v41_centos_tier2                                   Test v41_centos_tier2
-    v41_fedora_tier1                                   Test v41_fedora_tier1
-    v41_fedora_tier2                                   Test v41_fedora_tier2
-
-Example:
-    python run.py v41_debug_tier
-
-"""
-import os, sys, time, json, re, smtplib, shutil
+import os, sys, time, json, re, smtplib, shutil, logging
 from fabric.api import run, local, get, settings
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from collections import OrderedDict
 from cases import CONF
+from utils.helpers import results_logs
 import cases.v41 as v41
 
+log = logging.getLogger("sherry")
 
 
 """
@@ -89,8 +64,8 @@ def _get_host_ip(test_host):
             continue
         break
     return ips
-
-
+"""
+"""
 def _format_result(file):
     with open(file, 'r') as f:
         r = json.load(f)
@@ -104,8 +79,8 @@ def _format_result(file):
             continue
         format_ret.update({'RHEVM-' + format_k: v})
     return json.dumps(format_ret)
-
-
+"""
+"""
 def _format_result_to_jfile(raw_jfile, test_build, test_profile):
     # Load the result from json file
     with open(raw_jfile, 'r') as f:
@@ -274,7 +249,7 @@ def run_test():
 
 def main():
     if sys.argv[1] == 'h':
-        str =  """Main function entry.
+        str = """Main function entry.
     Usage:
         python run.py [argv]
 
@@ -303,37 +278,34 @@ def main():
     """
         print str
     else:
-        print "hello"
         tier = sys.argv[1]
         
+        from cases import scen
+        version = tier.split('_')[0]
+        if version.startswith('v41'):
+            import cases.v41 as ver_cases
+        else:
+            raise Exception("Not support such scenario")
+
+        results_logs.img_url = CONF.get('common').get('test_build')
+
         from cases import scen
         test_cases = []
         for c in getattr(scen, sys.argv[1])["CASES"]:
             test_cases.append(c)
 
-        test_moudle = []
+        #test_module = []
         for i in test_cases:
-            test_moudle.append(i.split('/')[2].split('.')[0])
+            test_module = []
+            results_logs.logger_name = 'check_tier_logs'
+            module = i.split('/')[2].split('.')[0]
+            results_logs.get_actual_logger(module)
+            test_module.append(module)
+            
 
-   
-        for j in test_moudle:
-            c = getattr(v41, j)
-            c.runtest()
-        
-    
-
-    
-
-
-    #test_common_tools.runtest()
-    #test_common_ui_dashboard.runtest()
-    #test_common_ui_logs.runtest()
-    #test_common_ui_services.runtest()
-    #test_common_ui_system.runtest()
-    #test_he_install_auto.runtest()
-    #test_he_install.runtest()
-    #test_he_info_add_host.runtest()
-
+            for j in test_module:
+                c = getattr(v41, j)
+                c.runtest()   
 
 if __name__ == '__main__':
     main()

@@ -3,12 +3,9 @@ import os
 import re
 from selenium import webdriver
 from fabric.api import run, settings, put, local, get, env
-#import logging
-#import logging.config
 import urllib2
 from vncdotool import api
 from HTMLParser import HTMLParser
-# from pages.v41.tools_subscriptions_page import *
 from pages import CONF
 
 from utils.log import Log
@@ -34,13 +31,6 @@ nfs_ip, nfs_password, nfs_storage_path, rhvm_appliance_path, vm_mac, vm_fqdn, vm
 
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
-
-"""
-dirname = os.path.dirname(os.path.dirname(__file__))
-conf_path = os.path.join(dirname + "/logger.conf")
-logging.config.fileConfig(conf_path)
-log = logging.getLogger("sherry")
-"""
 
 
 class MyHTMLParser(HTMLParser):
@@ -100,64 +90,6 @@ def get_latest_rhvm_appliance(appliance_path):
 
     return latest_rhvm_appliance
 
-"""
-def download_auto_answer(auto_answer):
-    with settings(warn_only=True):
-        cmd = "curl -o /tmp/he_vm_run %s" % auto_answer
-        res = local(cmd, capture=True)
-    if res.failed:
-        assert 0, "Failed to download the auto answer file"
-
-
-def press_keys(seq, cli):
-    press keys sequence
-
-    for keys in seq:
-        if len(keys) > 1:
-            for k in keys:
-                cli.keyPress(k)
-                time.sleep(0.5)
-        elif len(keys) == 1:
-            cli.keyPress("shift-%s" % keys[0])
-        else:
-            logging.warning("Error at least should have one key")
-
-
-class HandleVNCSetup:
-    def __init__(self,
-                 host_ip,
-                 host_user,
-                 host_password,
-                 vnc_password='redhat'):
-        self.host_ip = host_ip
-        self.host_user = host_user
-        self.host_password = host_password
-        self.vnc_password = vnc_password
-        self._set_vnc_pass()
-        self.cli = api.connect(self.host_ip, password=self.vnc_password)
-
-    def _set_vnc_pass(self):
-        with settings(
-                warn_only=True,
-                host_string=self.host_user + '@' + self.host_ip,
-                password=self.host_password):
-            run('hosted-engine --add-console-password --password=%s' %
-                self.vnc_password,
-                quiet=True)
-
-    def vnc_vm_login(self, vm_password):
-        for k in 'root':
-            self.cli.keyPress(k)
-            time.sleep(0.1)
-        self.cli.keyPress('enter')
-        time.sleep(1)
-
-        for k in vm_password:
-            self.cli.keyPress(k)
-            time.sleep(0.1)
-        self.cli.keyPress('enter')
-        time.sleep(1)
-"""
 
 def he_install_auto(host_dict, nfs_dict, install_dict, vm_dict):
     
@@ -423,6 +355,7 @@ def he_install_auto(host_dict, nfs_dict, install_dict, vm_dict):
     class_name("btn-default").click()  # set comma-separated email address
     time.sleep(5)
 
+    log.info("Confirm the all configuration...")
     class_name("btn-default").click()  # confirm the configuration
     time.sleep(750)
 
@@ -451,13 +384,27 @@ def check_he_is_deployed(host_ip, host_user, host_password):
             password=host_password):
         cmd = "hosted-engine --check-deployed"
         ret = run(cmd)
-        assert ret.succeeded, "HE is not deployed on %s" % host_ip
+        if ret.succeeded==True:
+            log.info("HE is deployed on %s" % host_ip)
+        else:
+            log.error("HE is not deployed on %s" % host_ip)
+
+
+        #assert ret.succeeded, "HE is not deployed on %s" % host_ip
 
         cmd = "find /var/log -type f |grep ovirt-hosted-engine-setup-.*.log"
         ret = run(cmd)
-        assert ret.succeeded, "No hosted engine setup log found"
+        if ret.succeeded==True:
+            log.info("Hosted engine setup log found")
+        else:
+            log.error("No hosted engine log found")
+        #assert ret.succeeded, "No hosted engine setup log found"
 
         cmd = "grep 'Hosted Engine successfully deployed' %s" % ret
         ret = run(cmd)
-        assert ret.succeeded, "Not found the successfully message in the setup log %s" % ret
+        if ret.succeeded==True:
+            log.info("Found the successfully message in the setup log %s" % ret)
+        else:
+            log.error("Not found the successfully message in the setup log %s" % ret)
+        #assert ret.succeeded, "Not found the successfully message in the setup log %s" % ret
 

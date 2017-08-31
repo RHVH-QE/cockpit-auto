@@ -1,18 +1,15 @@
-import pytest
 from selenium import webdriver
 from pages.common.login_page import LoginPage
 from pages.common.ui_service_page import ServicePage
 from fabric.api import run, env, settings
-#from cases.v41.test_common_tools import init_browser
-from cases import CONF
+import const
 import logging
-import logging.config
-import os
+from print_log import get_current_function_name
+from cases import CONF
 
-dirname = os.path.dirname(os.path.dirname(__file__))
-conf_path = os.path.join(dirname + "/logger.conf")
-logging.config.fileConfig(conf_path)
 log = logging.getLogger("sherry")
+
+dict1 = dict(zip(const.common_ui_services, const.common_ui_services_id))
 
 host_ip, host_user, host_password, second_ip, second_password, browser = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(
@@ -22,28 +19,6 @@ host_ip, host_user, host_password, second_ip, second_password, browser = CONF.ge
 
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
-"""
-def _environment(request):
-    with settings(warn_only=True):
-        cmd = "rpm -qa|grep cockpit-ovirt"
-        cockpit_ovirt_version = run(cmd)
-
-        cmd = "rpm -q imgbased"
-        result = run(cmd)
-        if result.failed:
-            cmd = "cat /etc/redhat-release"
-            redhat_release = run(cmd)
-            request.config._environment.append(('redhat-release',
-                                                redhat_release))
-        else:
-            cmd_imgbase = "imgbase w"
-            output_imgbase = run(cmd_imgbase)
-            rhvh_version = output_imgbase.split()[-1].split('+')[0]
-            request.config._environment.append(('rhvh-version', rhvh_version))
-
-        request.config._environment.append(('cockpit-ovirt',
-                                            cockpit_ovirt_version))
-"""
 
 def init_browser():
     if browser == 'firefox':
@@ -61,28 +36,24 @@ def init_browser():
         raise NotImplementedError
 
 def test_login(ctx):
-    log.info("Trying to login to the browser...")
+    log.info("Test common_ui_services-->Trying to login to the browser...")
     login_page = LoginPage(ctx)
     login_page.basic_check_elements_exists()
     login_page.login_with_credential(host_user, host_password)
 
 
-def test_18392(ctx):
+def check_ui_services(ctx):
     """
     RHEVM-18392
         Check servers status
     """
     log.info("Checking the services")
-    try: 
+    try:
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info("Checking the services")
         service_page = ServicePage(ctx)
         service_page.basic_check_elements_exists()
-    except AssertionError as e:
-        log.exception(e)
-        return False
-    return True
-
-    log.info("Checking the disable service action...")
-    try:
+        log.info("Checking the disable service action...")
         service_name = service_page.disable_service_action()
         service_page.check_service_is_disabled(service_name)
         log.info("Checking the enable service action...")
@@ -97,14 +68,17 @@ def test_18392(ctx):
         log.info("Checking the restart service action...")
         service_page.restart_service_action()
         service_page.check_service_is_restarted(service_name)
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except AssertionError as e:
-        log.exception(e)
-        return False
-    return True
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.error(e)
+    finally:
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+    
 
 
 def runtest():
     ctx = init_browser()
     test_login(ctx)
-    test_18392(ctx)
+    check_ui_services(ctx)
     ctx.close()

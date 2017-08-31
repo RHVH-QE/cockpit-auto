@@ -2,13 +2,10 @@ from selenium import webdriver
 from cases import CONF
 from pages.common.login_page import LoginPage
 import logging
-import logging.config
-import os
 
-dirname = os.path.dirname(os.path.dirname(__file__))
-conf_path = os.path.join(dirname + "/logger.conf")
-logging.config.fileConfig(conf_path)
 log = logging.getLogger("sherry")
+
+
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
@@ -32,10 +29,21 @@ def init_browser():
 
 
 def test_login(ctx):
-    log.info("Login to the browser...")
-    login_page = LoginPage(ctx)
-    login_page.basic_check_elements_exists()
-    login_page.login_with_credential(host_user, host_password) 
+    log.info("Start to run test common cases...")
+    log.info("Test common_tools-->Login to the browser...")
+    try:
+
+        login_page = LoginPage(ctx)
+        login_page.basic_check_elements_exists()
+        login_page.login_with_credential(host_user, host_password)
+        #log.info("['RHEVM:14141']: passed")
+        log.info("Common cases tested passed.")
+    except Exception as e:
+        log.info("Common cases tested failed.")
+        log.error(e)
+    finally:
+        log.info("Finish to run test common cases...")
+
 
 
 def runtest():
