@@ -1,3 +1,4 @@
 .vscode
 geckodriver.log
 *.pyc
+logs
