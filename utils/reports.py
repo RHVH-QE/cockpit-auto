@@ -46,24 +46,34 @@ class ResultSummary(object):
         final_results = OrderedDict()
         final_results[self.test_build] = OrderedDict()
         actual_run_cases = []
+        pass_cases_results = []
+        failed_cases_results = []
         pass_num = 0
         failed_num = 0
         for a, b, c in os.walk(root_path):
             for case in sorted(b):
                 ret = self._parse_checkpoints(os.path.join(a, case, 'check.log'))
                 final_results[self.test_build][case] = ret
+                for k, v in ret.items():
+                    if v == "passed":
+                        pass_cases_results.append(k)
+                    if v == "failed":
+                        failed_cases_results.append(k)
+
                 actual_run_cases.extend(list(ret.keys()))
                 values = list(ret.values())
                 pass_num = pass_num + values.count('passed')
                 failed_num = failed_num + values.count('failed')
             break
-
+        total_num = pass_num + failed_num
         final_results['sum'] = OrderedDict()
         final_results['sum']['title'] = self._gen_title()
         final_results['sum']['log_url'] = self._gen_log_url()
+        final_results['sum']['total'] = total_num
         final_results['sum']['passed'] = pass_num
         final_results['sum']['failed'] = failed_num
-
+        final_results['sum']['error'] = 0
+        final_results['sum']['errorlist']=failed_cases_results
         final_results_jfile = os.path.join(root_path,
                                            self.jfilename)
         try:

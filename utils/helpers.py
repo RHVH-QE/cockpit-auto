@@ -69,7 +69,7 @@ class ResultsAndLogs(object):
         log_file = os.path.join(PROJECT_ROOT, 'logs',
                                 self._current_date,
                                 self._current_time,
-                                self.test_build, test_case)
+                                self._test_build, test_case)
         if os.path.exists(log_file):
             os.system('rm -rf {}/*'.format(log_file))
 
