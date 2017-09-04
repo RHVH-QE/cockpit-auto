@@ -1,18 +1,7 @@
 v41_debug_tier = {
     "TAG": ["RHVH41"],
     "CASES": [
-        "cases/v41/test_common_tools.py",
-        "cases/v41/test_common_ui_dashboard.py"
-        #"cases/v41/test_he_install.py",
-        #"cases/v41/test_he_info_add_host.py",
-        #"cases/v41/test_he_info.py",
-        #"cases/v41/test_install_bond.py",
-        #"cases/v41/test_install_vlan.py",
-        #"cases/v41/test_install_bv.py",
-        #"cases/v41/test_install_redeployed.py",
-        #"cases/v41/test_install_non_default_port.py",
-        #"cases/v41/test_vm_registerd.py",
-        #"cases/v41/test_vm_unregisterd.py"
+        "cases/v41/test_dashboard_nodectl.py"
     ]
 }
 
@@ -35,9 +24,7 @@ v41_rhvh_tier1 = {
 v41_rhvh_tier2 = {
     "TAG": ["RHVH41"],
     "CASES": [
-        "cases/v41/test_common_ui_dashboard.py",
-        "cases/v41/test_common_ui_system.py",
-        "cases/v41/test_common_ui_services.py",
+        "cases/v41/test_common_ui.py",
         "cases/v41/test_common_tools.py"
     ]
 }
@@ -78,14 +65,17 @@ v41_rhvh_he_install_non_default_port = {
 
 v41_rhvh_he_install_redeploy = {
     "TAG": ["RHVH41"],
-    "CASES":
-    ["cases/v41/test_he_install.py", "cases/v41/test_he_install_redeploy.py"]
+    "CASES": [
+        "cases/v41/test_he_install.py", 
+        "cases/v41/test_he_install_redeploy.py"
+    ]
 }
 
 v41_rhvh_he_info_add_host = {
     "TAG": ["RHVH41", "ANOTHER_HOST"],
-    "CASES":
-    ["cases/v41/test_he_install.py", "cases/v41/test_he_info_add_host.py"]
+    "CASES": [
+        "cases/v41/test_he_install.py", 
+        "cases/v41/test_he_info_add_host.py"]
 }
 
 #
@@ -96,7 +86,8 @@ v41_rhel_tier1 = {
     "CASES": [
         "cases/v41/test_vm_unregisterd.py",
         "cases/v41/test_common_tools_subscription.py",
-        "cases/v41/test_he_install.py", "tests/v41/test_he_info.py",
+        "cases/v41/test_he_install.py", 
+        "tests/v41/test_he_info.py",
         "cases/v41/test_vm_registerd.py"
     ]
 }
@@ -104,9 +95,7 @@ v41_rhel_tier1 = {
 v41_rhel_tier2 = {
     "TAG": ["RHEL73"],
     "CASES": [
-        "cases/v41/test_common_ui_dashboard.py",
-        "cases/v41/test_common_ui_system.py",
-        "cases/v41/test_common_ui_services.py",
+        "cases/v41/test_common_ui.py",
         "cases/v41/test_common_tools.py"
     ]
 }
@@ -119,7 +108,8 @@ v41_centos_tier1 = {
     "CASES": [
         "cases/v41/test_vm_unregisterd.py",
         "cases/v41/test_common_tools_subscription.py",
-        "cases/v41/test_he_install.py", "tests/v41/test_he_info.py",
+        "cases/v41/test_he_install.py", 
+        "tests/v41/test_he_info.py",
         "cases/v41/test_vm_registerd.py"
     ]
 }
@@ -127,9 +117,7 @@ v41_centos_tier1 = {
 v41_centos_tier2 = {
     "TAG": ["CENTOS73"],
     "CASES": [
-        "cases/v41/test_common_ui_dashboard.py",
-        "cases/v41/test_common_ui_system.py",
-        "cases/v41/test_common_ui_services.py",
+        "cases/v41/test_common_ui.py",
         "cases/v41/test_common_tools.py"
     ]
 }
@@ -139,7 +127,8 @@ v41_fedora_tier1 = {
     "CASES": [
         "cases/v41/test_vm_unregisterd.py",
         "cases/v41/test_common_tools_subscription.py",
-        "cases/v41/test_he_install.py", "tests/v41/test_he_info.py",
+        "cases/v41/test_he_install.py", 
+        "tests/v41/test_he_info.py",
         "cases/v41/test_vm_registerd.py"
     ]
 }
@@ -147,9 +136,7 @@ v41_fedora_tier1 = {
 v41_fedora_tier2 = {
     "TAG": ["FEDORA24"],
     "CASES": [
-        "cases/v41/test_common_ui_dashboard.py",
-        "cases/v41/test_common_ui_system.py",
-        "cases/v41/test_common_ui_services.py",
+        "cases/v41/test_common_ui.py",
         "cases/v41/test_common_tools.py"
     ]
 }

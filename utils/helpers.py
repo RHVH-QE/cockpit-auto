@@ -1,6 +1,11 @@
 import os, yaml, logging, time
 import logging.config
+import logging
 from constants import PROJECT_ROOT
+import inspect
+import functools
+
+log = logging.getLogger("sherry")
 
 
 class ResultsAndLogs(object):
@@ -75,3 +80,25 @@ class ResultsAndLogs(object):
 
 
 results_logs = ResultsAndLogs()
+
+
+def get_cur_func():
+    return inspect.stack()[1][3]
+
+
+def checkpoint(check_id):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kw):
+            log.info('Start to run test cases:["RHEVM-%d"]' % check_id[func.__name__])
+            try:
+                func(*args, **kw)
+            except Exception as e:
+                log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (func.__name__, check_id[func.__name__]))
+                log.error(e)
+            else:
+                log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (func.__name__, check_id[func.__name__]))
+            finally:
+                log.info('Finished to run test cases:["RHEVM-%d"]' % check_id[func.__name__])
+        return wrapper
+    return decorator

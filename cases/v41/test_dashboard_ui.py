@@ -1,11 +1,11 @@
 from selenium import webdriver
 from pages.common.login_page import LoginPage
-from pages.common.dashboard_nodestatus_page import NodeStatusPage
+from pages.v41.dashboard_nodestatus_page import NodeStatusPage
 from fabric.api import env, run, settings
 from cases import CONF
 import const
 import logging
-from print_log import get_current_function_name
+from utils.helpers import get_cur_func
 
 log = logging.getLogger("sherry")
 
@@ -49,16 +49,16 @@ def check_node_status_func(ctx):
         Check node status in virtualization dashboard.
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking node status in virtualization dashboard...")
         node_status_page = NodeStatusPage(ctx)
         node_status_page.check_node_status()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 def check_node_health_func(ctx):
     """
@@ -66,16 +66,16 @@ def check_node_health_func(ctx):
         Check node health in virtualization dashboard
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking node health in virtualization dashboard...")
         node_status_page = NodeStatusPage(ctx)
         node_status_page.check_node_health(is_registerd=True)
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 def check_node_info_func(ctx):
     """
@@ -83,18 +83,18 @@ def check_node_info_func(ctx):
         Check node health in virtualization dashboard
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking node info in virtualization dashboard... ")
         node_status_page = NodeStatusPage(ctx)
         test_layer = test_build + '+1'
         print test_layer
         node_status_page.check_node_info(test_layer)
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 def check_network_func(ctx):
     """
@@ -102,16 +102,16 @@ def check_network_func(ctx):
         Go to the Networking page in virtualization dashboard
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking networking page in virtualization dashboard...")
         node_status_page = NodeStatusPage(ctx)
         node_status_page.check_network()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 def check_system_log_func(ctx):
     """
@@ -119,16 +119,16 @@ def check_system_log_func(ctx):
         Go to the Logs page in virtualization dashboard
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking logs page in virtualization dashboard...")
         node_status_page = NodeStatusPage(ctx)
         node_status_page.check_system_log()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 def check_storage_func(ctx):
     """
@@ -136,16 +136,16 @@ def check_storage_func(ctx):
         Go to the Storage page in virtualization dashboard
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking storage page in virtualization dashboard...")
         node_status_page = NodeStatusPage(ctx)
         node_status_page.check_storage()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 def check_ssh_key_func(ctx):
     """
@@ -153,16 +153,16 @@ def check_ssh_key_func(ctx):
         Check the ssh host key in virtualization dashboard
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking ssh host key in virtualization dashboard...")
         node_status_page = NodeStatusPage(ctx)
         node_status_page.check_ssh_key()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 def runtest():
     ctx = init_browser()

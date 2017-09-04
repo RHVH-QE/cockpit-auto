@@ -1,16 +1,16 @@
 import time
 from selenium import webdriver
 from pages.common.login_page import LoginPage
-from pages.common..tools_subscriptions_page import SubscriptionsPage
+from pages.v41.tools_subscriptions_page import SubscriptionsPage
 from fabric.api import env, run, settings
 from cases import CONF
 import const
 import logging
-from print_log import get_current_function_name
+from utils.helpers import get_cur_func
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.common_tools_subscription, const.common_tools_subscription_id))
+dict1 = dict(zip(const.common_tools, const.common_tools_id))
 
 host_ip, host_user, host_password, browser = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(
@@ -42,7 +42,6 @@ def init_browser():
         driver.implicitly_wait(20)
         driver.root_uri = "https://{}:9090".format(host_ip)
         return driver
-        #return None
     else:
         raise NotImplementedError
 
@@ -59,19 +58,20 @@ def check_subscription_rhsm(firefox):
         Subscription to RHSM
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Subscription to RHSM...")
         subscriptions_page = SubscriptionsPage(firefox)
         subscriptions_page.check_register_rhsm(rhn_user, rhn_password)
         time.sleep(5)
         subscriptions_page.check_subscription_result()
         subscriptions_page.unregister_subsciption()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
+    else:
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_subscription_key(firefox):
@@ -80,7 +80,7 @@ def check_subscription_key(firefox):
         Subscription to RHSM with key and organization
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Subscription to RHSM with key and organization")
         subscriptions_page = SubscriptionsPage(firefox)
         subscriptions_page.check_register_rhsm_key_org(
@@ -89,12 +89,13 @@ def check_subscription_key(firefox):
         time.sleep(5)
         subscriptions_page.check_subscription_result()
         subscriptions_page.unregister_subsciption()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
+    else:
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_subscription_password(firefox):
@@ -103,23 +104,24 @@ def check_subscription_password(firefox):
         Check password is encrypted in log after Subscription to RHSM
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Cehck password is encrypted in log after subscription to RHSM...")
         subscriptions_page = SubscriptionsPage(firefox)
         subscriptions_page.check_register_rhsm(rhn_user, rhn_password)
         subscriptions_page.check_password_encrypted(rhn_password)
         subscriptions_page.unregister_subsciption()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
+    else:
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 def runtest():
     ctx = init_browser()
     test_login(ctx)
     check_subscription_key(ctx)
     check_subscription_rhsm(ctx)
-    check_subscription_password
+    check_subscription_password(ctx)
     ctx.close()

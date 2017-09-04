@@ -1,15 +1,15 @@
 from selenium import webdriver
-from pages.common.he_install import *
-from pages.common.he_install_auto import *
+from pages.v41.he_install import *
+from pages.v41.he_install_auto import *
 from fabric.api import env, run, settings
 from cases import CONF
 import const
-from print_log import get_current_function_name
+from utils.helpers import get_cur_func
 import logging
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.he_install_bond, const.he_install_bond_id))
+dict1 = dict(zip(const.he_install, const.he_install_id))
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
@@ -92,18 +92,18 @@ def check_he_install_bond(ctx):
         'auto_answer': auto_answer
     }
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Setup hosted engine through ova with bond as network...")
         he_install_auto(host_dict, nfs_dict, install_dict, vm_dict)
         
         # Check the hosted engine is deployed
         check_he_is_deployed(host_ip, host_user, host_password)
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 def runtest():
     ctx = init_browser()

@@ -1,6 +1,6 @@
 import re
 from utils.page_objects import PageObject, PageElement, MultiPageElement
-from utils.helpers import RhevmAction
+from utils.rhvmapi import RhevmAction
 from selenium.common.exceptions import NoAlertPresentException
 from fabric.api import run, env, get
 from StringIO import StringIO

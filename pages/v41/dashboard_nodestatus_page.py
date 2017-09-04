@@ -1,4 +1,4 @@
-from utils.helpers import RhevmAction
+from utils.rhvmapi import RhevmAction
 from utils.page_objects import PageObject, PageElement, MultiPageElement
 from fabric.api import run
 

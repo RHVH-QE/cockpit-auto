@@ -1,18 +1,17 @@
 import time
 from selenium import webdriver
 from pages.common.login_page import LoginPage
-from pages.common.hosted_engine_page import HePage
+from pages.v41.hosted_engine_page import HePage
 from fabric.api import env, run, settings
 from utils.rhvmapi import RhevmAction
 from cases import CONF
-#from cases.v41.test_common_tools import init_browser
 import const
 import logging
-from print_log import get_current_function_name
+from utils.helpers import get_cur_func
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.he_info_add_host, const.he_info_add_host_id))
+dict1 = dict(zip(const.he_info, const.he_info_id))
 
 host_ip, host_user, host_password, second_host, second_password, browser = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(
@@ -98,7 +97,7 @@ def check_add_additional_host():
         Setup additional host
     """
     # Add another host to default DC where also can be running HE
-    log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+    log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
     log.info("Setup another host to default DC...")
     second_host_name = "cockpit-host"
     he_rhvm.create_new_host(
@@ -123,12 +122,12 @@ def check_add_additional_host():
                 assert 0, "Host is not up as current status is: %s" % host_status
             time.sleep(10)
             i += 1
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_put_local_maintenance(ctx):
@@ -138,18 +137,18 @@ def check_put_local_maintenance(ctx):
     """
     # Put the host to local maintenance
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Putting the host into local maintenance...")
         he_page = HePage(ctx)
         he_page.put_host_to_local_maintenance()
         log.info("Checking the host local_maintenance...")
         he_page.check_host_in_local_maintenance()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_remove_from_maintenance(ctx):
@@ -159,19 +158,19 @@ def check_remove_from_maintenance(ctx):
     """
     # Check the host is in local maintenance
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         he_page = HePage(ctx)
         he_page.check_host_in_local_maintenance()
         log.info("Removing host from local_maintenance...")
         he_page.remove_host_from_local_maintenance()
         log.info("Checking host removed from local_maintenance...")
         he_page.check_host_not_in_local_maintenance()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_put_global_maintenance(ctx):
@@ -182,18 +181,18 @@ def check_put_global_maintenance(ctx):
 
     # Check the cluster is in global maintenance
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         he_page = HePage(ctx)
         log.info("Putting cluster to global maintenance...")
         he_page.put_cluster_to_global_maintenance()
         log.info("Checking cluster in global maintenance...")
         he_page.check_cluster_in_global_maintenance()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 def runtest():
     #test_18668()

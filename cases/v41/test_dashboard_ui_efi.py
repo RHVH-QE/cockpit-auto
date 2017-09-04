@@ -1,15 +1,15 @@
 from selenium import webdriver
 from pages.common.login_page import LoginPage
-from pages.common.dashboard_nodestatus_page import NodeStatusPage
+from pages.v41.dashboard_nodestatus_page import NodeStatusPage
 from fabric.api import env, run, settings
 from cases import CONF
 import const
 import logging
-from print_log import get_current_function_name
+from utils.helpers import get_cur_func
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.dashboard_ui_efi, const.dashboard_ui_efi_id))
+dict1 = dict(zip(const.dashboard_ui, const.dashboard_ui_id))
 
 host_ip, host_user, host_password, test_build, rhvm_fqdn, browser = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(
@@ -48,17 +48,17 @@ def check_nodestatus_efi(ctx):
         Check node status with EFI
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking node status with EFI... ")
         node_status_page = NodeStatusPage(ctx)
         test_layer = test_build + '+1'
         node_status_page.check_node_status_efi(test_layer)
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 def runtest():
     ctx = init_browser()

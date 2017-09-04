@@ -1,10 +1,10 @@
 from selenium import webdriver
 from fabric.api import env, run, settings
-from pages.common.nodectl import Nodectl
+from pages.v41.nodectl import Nodectl
 from cases import CONF
-import const
 import logging
-from print_log import get_current_function_name
+import const
+from utils.helpers import get_cur_func
 
 log = logging.getLogger("sherry")
 
@@ -28,9 +28,9 @@ def init_browser():
         driver.implicitly_wait(20)
         driver.root_uri = "https://{}:9090".format(host_ip)
         return driver
-        #return None
     else:
         raise NotImplementedError
+
 
 def check_nodectl_help_func():
     """
@@ -39,29 +39,17 @@ def check_nodectl_help_func():
         Show nodectl help message in Terminal
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Test dashboard_nodectl-->Checking nodectl help...")
         nodectl = Nodectl()
         nodectl.check_nodectl_help()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
+    else: 
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
-
-
-'''
-# Not implemented since no output of "nodectl --version"
-def test_18546(firefox):
-    """
-    Purpose:
-        RHEVM-18546
-        Check nodectl version in Terminal
-    """
-    nodectl = Nodectl()
-    nodectl.check_nodectl_version()
-'''
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_nodectl_info_func():
@@ -71,40 +59,17 @@ def check_nodectl_info_func():
         Show information about the image in Terminal
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking nodectl info...")
         nodectl = Nodectl()
         nodectl.check_nodectl_info(test_build)
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
+    else:
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
-
-
-'''
-# Not implemented since no update currently
-def test_18548(firefox):
-    """
-    Purpose:
-        RHEVM-18548
-        Perform an update in Terminal
-    """
-    nodectl = Nodectl()
-    nodectl.check_nodectl_update()
-'''
-'''
-# Not implemented since no more layer
-def test_18549(firefox):
-    """
-    Purpose:
-        RHEVM-18549
-        Rollback previous layer in Terminal
-    """
-    nodectl = Nodectl()
-    nodectl.check_nodectl_rollback()
-'''
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_nodectl_check_func():
@@ -114,16 +79,17 @@ def check_nodectl_check_func():
         Check the system status in Terminal
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking nodectl check...")
         nodectl = Nodectl()
         nodectl.check_nodectl_check()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
+    else:
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_nodectl_debug_func():
@@ -133,16 +99,17 @@ def check_nodectl_debug_func():
         Check the debug information of nodectl sub_commands in Terminal
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking nodectl debug...")
         nodectl = Nodectl()
         nodectl.check_nodectl_debug()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
+    else:
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_nodectl_json_func():
@@ -152,16 +119,17 @@ def check_nodectl_json_func():
         Check the JSON output for nodectl in Terminal
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking nodectl json...")
         nodectl = Nodectl()
         nodectl.check_nodectl_json()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
+    else:
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_nodectl_motd_func():
@@ -171,16 +139,17 @@ def check_nodectl_motd_func():
         Check the motd for nodectl in Terminal
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking nodectl motd...")
         nodectl = Nodectl()
         nodectl.check_nodectl_motd()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
+    else:
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_nodectl_banner_func():
@@ -190,20 +159,20 @@ def check_nodectl_banner_func():
         Check the generate-banner output for nodectl in Terminal
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Checking nodectl banner...")
         nodectl = Nodectl()
         nodectl.check_nodectl_banner()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
+    else:
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def runtest():
-    #ctx = init_browser()
     check_nodectl_help_func()
     check_nodectl_info_func()
     check_nodectl_check_func()
@@ -211,4 +180,3 @@ def runtest():
     check_nodectl_json_func()
     check_nodectl_motd_func()
     check_nodectl_banner_func()
-    #ctx.close()

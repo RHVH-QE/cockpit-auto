@@ -1,6 +1,7 @@
 import time
 import os
 import re
+import logging
 from selenium import webdriver
 from fabric.api import run, settings, put, local, get, env
 import urllib2
@@ -8,8 +9,7 @@ from vncdotool import api
 from HTMLParser import HTMLParser
 from pages import CONF
 
-from utils.log import Log
-log = Log()
+log = logging.getLogger("sherry")
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(

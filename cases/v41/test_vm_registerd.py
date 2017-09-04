@@ -1,18 +1,18 @@
 import time
 from selenium import webdriver
 from pages.common.login_page import LoginPage
-from pages.common.vm_page import VirtualMachinesPage
-from pages.common.dashboard_nodestatus_page import NodeStatusPage
+from pages.v41.vm_page import VirtualMachinesPage
+from pages.v41.dashboard_nodestatus_page import NodeStatusPage
 from fabric.api import run, env, settings
-from utils.helpers import RhevmAction
+from utils.rhvmapi import RhevmAction
 from cases import CONF
 import const
-from print_log import get_current_function_name
+from utils.helpers import get_cur_func
 import logging
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.vm_registerd, const.vm_registerd_id))
+dict1 = dict(zip(const.vm, const.vm_id))
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
@@ -126,18 +126,18 @@ def check_running_vms_register_func(ctx):
         Suppose there are two vms including HE vm and another commom vm
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info('Check running VMs (Register to RHEVM) status in virtual machines page...')
         vm_page = VirtualMachinesPage(ctx)
         vm_page.check_running_vms_register(he_vm_fqdn, he_vm_ip, he_vm_password,
                                         second_vm_fqdn)
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
 
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_vdsm_func(ctx):
@@ -146,19 +146,19 @@ def check_vdsm_func(ctx):
         Check VDSM info in virtual machines page
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Check VDSM info in virtual machines page...")
         vm_page = VirtualMachinesPage(ctx)
         vm_page.check_vdsm_elements()
         vm_page.check_vdsm_conf_edit()
         vm_page.check_vdsm_conf_save()
         vm_page.check_vdsm_conf_reload()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_vm_login_logout_engine_func(ctx):
@@ -167,19 +167,19 @@ def check_vm_login_logout_engine_func(ctx):
         Check Login to Engine in virtual machines page
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Check Login to Engine in virtual machines page...")
         vm_page = VirtualMachinesPage(ctx)
         vm_page.check_vm_login_to_engine(he_vm_fqdn, he_engine_password)
         time.sleep(2)
         vm_page.check_vm_logout_from_engine()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
 
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_vm_refresh_func(ctx):
@@ -188,16 +188,16 @@ def check_vm_refresh_func(ctx):
         Check Refresh in virtual machines page
     """
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Check Refresh in virtual machines page")
         vm_page = VirtualMachinesPage(ctx)
         vm_page.check_vm_refresh()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def check_non_root_alert_func(ctx):
@@ -221,7 +221,7 @@ def check_non_root_alert_func(ctx):
 
     # Logout the root account from cockpit
     try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
         log.info("Check VM page with non-root account")
         vm_page = VirtualMachinesPage(ctx)
         vm_page.logout_from_cockpit()
@@ -234,12 +234,12 @@ def check_non_root_alert_func(ctx):
         # "Please run as an administrator!"
         node_status_page = NodeStatusPage(ctx)
         node_status_page.check_non_root_alert(default=True)
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
     except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_current_function_name(),dict1[get_current_function_name()]))
+        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
         log.error(e)
     finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_current_function_name()])
+        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
 def test_login_again(ctx):
