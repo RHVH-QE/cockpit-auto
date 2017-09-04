@@ -60,11 +60,8 @@ class Nodectl():
         output_info = run(cmd_info)
         info_dict = simplejson.loads(output_info)
 
-        # Get the layer by test_build(eg: redhat-virtualization-host-4.1-20170413.0)
-        xy_version = test_build.split('-')[-2]
-        date_version = test_build.split('-')[-1]
-        layer = "rhvh-" + xy_version + "-0." + date_version
-
+        # Get the layer by test_build(eg: rhvh-4.1-0.20170831.0)
+        layer = test_build
         # Check layers
         assert 'layers' in info_dict.keys(), "nodectl info not correct"
         assert layer in info_dict['layers'].keys(), "nodectl info not correct"

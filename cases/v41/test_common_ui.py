@@ -3,6 +3,7 @@ from pages.common.login_page import LoginPage
 from pages.v41.ui_dashboard_page import DashboardPage
 from pages.v41.ui_service_page import ServicePage
 from pages.v41.ui_system_page import SystemPage
+from pages.v41.ui_log_page import LogPage
 from fabric.api import run, env, settings
 from cases import CONF
 import time
@@ -287,4 +288,21 @@ def runtest():
     check_dashboard_memory(ctx)
     check_dashboard_network(ctx)
     check_dashboard_disk_io(ctx)
+    """
+    check_ui_logs(ctx)
+    check_ui_services(ctx)
+
+    check_allowunknown_default
+    check_allowunknown_true
+    check_allowunknown_true_empty_username
+    check_allowunknown_true_remote_closed
+    check_allowunknown_true_wrong_account
+    check_allowunknown_true_wrong_address
+    
+    check_change_system_performance_profile
+    check_system_configure_hostname
+    check_system_configure_time
+    check_system_configure_timezone
+    check_system_login_host
+    """
     ctx.close()
