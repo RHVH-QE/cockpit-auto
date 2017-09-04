@@ -4,7 +4,7 @@ from pages.v41.he_install_auto import *
 from fabric.api import env, run, settings
 from cases import CONF
 import const
-from utils.helpers import get_cur_func
+from utils.helpers import checkpoint
 import logging
 
 log = logging.getLogger("sherry")
@@ -41,10 +41,11 @@ def init_browser():
         driver.implicitly_wait(20)
         driver.root_uri = "https://{}:9090".format(host_ip)
         return driver
-        #return None
     else:
         raise NotImplementedError
 
+
+@checkpoint(dict1)
 def check_he_install_bond(ctx):
     """
     Purpose:
@@ -91,19 +92,13 @@ def check_he_install_bond(ctx):
         'engine_password': engine_password,
         'auto_answer': auto_answer
     }
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Setup hosted engine through ova with bond as network...")
-        he_install_auto(host_dict, nfs_dict, install_dict, vm_dict)
-        
-        # Check the hosted engine is deployed
-        check_he_is_deployed(host_ip, host_user, host_password)
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+
+    log.info("Setup hosted engine through ova with bond as network...")
+    he_install_auto(host_dict, nfs_dict, install_dict, vm_dict)
+    
+    # Check the hosted engine is deployed
+    check_he_is_deployed(host_ip, host_user, host_password)
+
 
 def runtest():
     ctx = init_browser()

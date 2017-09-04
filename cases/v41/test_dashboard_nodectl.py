@@ -4,7 +4,7 @@ from pages.v41.nodectl import Nodectl
 from cases import CONF
 import logging
 import const
-from utils.helpers import get_cur_func
+from utils.helpers import checkpoint
 
 log = logging.getLogger("sherry")
 
@@ -32,144 +32,88 @@ def init_browser():
         raise NotImplementedError
 
 
+@checkpoint(dict1)
 def check_nodectl_help_func():
     """
     Purpose:
         RHEVM-18545
         Show nodectl help message in Terminal
     """
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Test dashboard_nodectl-->Checking nodectl help...")
-        nodectl = Nodectl()
-        nodectl.check_nodectl_help()
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    else: 
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    log.info("Test dashboard_nodectl-->Checking nodectl help...")
+    nodectl = Nodectl()
+    nodectl.check_nodectl_help()
 
 
+@checkpoint(dict1)
 def check_nodectl_info_func():
     """
     Purpose:
         RHEVM-18547
         Show information about the image in Terminal
     """
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Checking nodectl info...")
-        nodectl = Nodectl()
-        nodectl.check_nodectl_info(test_build)
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    else:
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    log.info("Checking nodectl info...")
+    nodectl = Nodectl()
+    nodectl.check_nodectl_info(test_build)
 
 
+@checkpoint(dict1)
 def check_nodectl_check_func():
     """
     Purpose:
         RHEVM-18550
         Check the system status in Terminal
     """
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Checking nodectl check...")
-        nodectl = Nodectl()
-        nodectl.check_nodectl_check()
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    else:
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    log.info("Checking nodectl check...")
+    nodectl = Nodectl()
+    nodectl.check_nodectl_check()
 
 
+@checkpoint(dict1)
 def check_nodectl_debug_func():
     """
     Purpose:
         RHEVM-18551
         Check the debug information of nodectl sub_commands in Terminal
     """
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Checking nodectl debug...")
-        nodectl = Nodectl()
-        nodectl.check_nodectl_debug()
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    else:
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    log.info("Checking nodectl debug...")
+    nodectl = Nodectl()
+    nodectl.check_nodectl_debug()
 
 
+@checkpoint(dict1)
 def check_nodectl_json_func():
     """
     Purpose:
         RHEVM-18552
         Check the JSON output for nodectl in Terminal
     """
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Checking nodectl json...")
-        nodectl = Nodectl()
-        nodectl.check_nodectl_json()
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    else:
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    log.info("Checking nodectl json...")
+    nodectl = Nodectl()
+    nodectl.check_nodectl_json()
 
 
+@checkpoint(dict1)
 def check_nodectl_motd_func():
     """
     Purpose:
         RHEVM-18830
         Check the motd for nodectl in Terminal
     """
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Checking nodectl motd...")
-        nodectl = Nodectl()
-        nodectl.check_nodectl_motd()
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    else:
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    log.info("Checking nodectl motd...")
+    nodectl = Nodectl()
+    nodectl.check_nodectl_motd()
 
 
+@checkpoint(dict1)
 def check_nodectl_banner_func():
     """
     Purpose:
         RHEVM-18831
         Check the generate-banner output for nodectl in Terminal
     """
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Checking nodectl banner...")
-        nodectl = Nodectl()
-        nodectl.check_nodectl_banner()
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    else:
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    log.info("Checking nodectl banner...")
+    nodectl = Nodectl()
+    nodectl.check_nodectl_banner()
 
 
 def runtest():

@@ -7,7 +7,7 @@ from utils.rhvmapi import RhevmAction
 from cases import CONF
 import const
 import logging
-from utils.helpers import get_cur_func
+from utils.helpers import checkpoint
 
 log = logging.getLogger("sherry")
 
@@ -31,41 +31,6 @@ sd_name, storage_type, storage_addr, storage_pass, storage_path = CONF.get(
 
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
-
-he_rhvm = RhevmAction(he_vm_fqdn, "admin", "password")
-
-
-def check_sd_is_attached(sd_name):
-    if he_rhvm.list_storage_domain(sd_name):
-        return True
-
-
-if not check_sd_is_attached(sd_name):
-    log.info("Creating the nfs storage...")
-    hosts = he_rhvm.list_all_hosts()
-    host_name = hosts["host"][0]["name"]
-
-    # Clean the nfs path
-
-    with settings(warn_only=True, host_string='root@' + storage_addr, password=storage_pass):
-        cmd = "rm -rf %s/*" % storage_path
-        run(cmd)
-
-    # Add nfs storage to Default DC on Hosted Engine,
-    # which is used for creating vm
-    
-    he_rhvm.create_plain_storage_domain(
-        sd_name=sd_name,
-        sd_type='data',
-        storage_type=storage_type,
-        storage_addr=storage_addr,
-        storage_path=storage_path,
-        host=host_name)
-    time.sleep(60)
-    
-    log.info("Attaching sd to datacenter...")
-    he_rhvm.attach_sd_to_datacenter(sd_name=sd_name, dc_name='Default')
-    time.sleep(30)
     
 
 def init_browser():
@@ -79,7 +44,6 @@ def init_browser():
         driver.implicitly_wait(20)
         driver.root_uri = "https://{}:9090".format(host_ip)
         return driver
-        #return None
     else:
         raise NotImplementedError
 
@@ -91,13 +55,13 @@ def test_login(ctx):
     login_page.login_with_credential(host_user, host_password)
 
 
-def check_add_additional_host():
+@checkpoint(dict1)
+def check_add_additional_host(he_rhvm):
     """
     RHEVM-18668
         Setup additional host
     """
     # Add another host to default DC where also can be running HE
-    log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
     log.info("Setup another host to default DC...")
     second_host_name = "cockpit-host"
     he_rhvm.create_new_host(
@@ -109,48 +73,35 @@ def check_add_additional_host():
     time.sleep(60)
 
     i = 0
-    try:
-        while True:
-            if i > 65:
-                assert 0, "Timeout waitting for host is up"
-            host_status = he_rhvm.list_host(second_host_name)['status']
-            if host_status == 'up':
-                break
-            elif host_status == 'install_failed':
-                assert 0, "Host is not up as current status is: %s" % host_status
-            elif host_status == 'non_operational':
-                assert 0, "Host is not up as current status is: %s" % host_status
-            time.sleep(10)
-            i += 1
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    while True:
+        if i > 65:
+            assert 0, "Timeout waitting for host is up"
+        host_status = he_rhvm.list_host(second_host_name)['status']
+        if host_status == 'up':
+            break
+        elif host_status == 'install_failed':
+            assert 0, "Host is not up as current status is: %s" % host_status
+        elif host_status == 'non_operational':
+            assert 0, "Host is not up as current status is: %s" % host_status
+        time.sleep(10)
+        i += 1
 
 
+@checkpoint(dict1)
 def check_put_local_maintenance(ctx):
     """
     RHEVM-18678
         Put the host into local maintenance
     """
     # Put the host to local maintenance
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Putting the host into local maintenance...")
-        he_page = HePage(ctx)
-        he_page.put_host_to_local_maintenance()
-        log.info("Checking the host local_maintenance...")
-        he_page.check_host_in_local_maintenance()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    log.info("Putting the host into local maintenance...")
+    he_page = HePage(ctx)
+    he_page.put_host_to_local_maintenance()
+    log.info("Checking the host local_maintenance...")
+    he_page.check_host_in_local_maintenance()
 
 
+@checkpoint(dict1)
 def check_remove_from_maintenance(ctx):
     """
     RHEVM-18679
@@ -173,31 +124,55 @@ def check_remove_from_maintenance(ctx):
         log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
 
 
+@checkpoint(dict1)
 def check_put_global_maintenance(ctx):
     """
     RHEVM-18680
         Put the cluster into global maintenance
     """
-
     # Check the cluster is in global maintenance
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        he_page = HePage(ctx)
-        log.info("Putting cluster to global maintenance...")
-        he_page.put_cluster_to_global_maintenance()
-        log.info("Checking cluster in global maintenance...")
-        he_page.check_cluster_in_global_maintenance()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    he_page = HePage(ctx)
+    log.info("Putting cluster to global maintenance...")
+    he_page.put_cluster_to_global_maintenance()
+    log.info("Checking cluster in global maintenance...")
+    he_page.check_cluster_in_global_maintenance()
+
+
+def add_sd(he_rhvm, sd_name):
+    if not he_rhvm.list_storage_domain(sd_name):
+        log.info("Creating the nfs storage...")
+        hosts = he_rhvm.list_all_hosts()
+        host_name = hosts["host"][0]["name"]
+
+        # Clean the nfs path
+
+        with settings(warn_only=True, host_string='root@' + storage_addr, password=storage_pass):
+            cmd = "rm -rf %s/*" % storage_path
+            run(cmd)
+
+        # Add nfs storage to Default DC on Hosted Engine,
+        # which is used for creating vm
+        
+        he_rhvm.create_plain_storage_domain(
+            sd_name=sd_name,
+            sd_type='data',
+            storage_type=storage_type,
+            storage_addr=storage_addr,
+            storage_path=storage_path,
+            host=host_name)
+        time.sleep(60)
+        
+        log.info("Attaching sd to datacenter...")
+        he_rhvm.attach_sd_to_datacenter(sd_name=sd_name, dc_name='Default')
+        time.sleep(30)
+
 
 def runtest():
-    #test_18668()
+    he_rhvm = RhevmAction(he_vm_fqdn, "admin", "password")
+    add_sd(he_rhvm, sd_name)
+
     ctx = init_browser()
-    check_add_additional_host()
+    check_add_additional_host(he_rhvm)
     test_login(ctx)
     check_put_local_maintenance(ctx)
     check_remove_from_maintenance(ctx)

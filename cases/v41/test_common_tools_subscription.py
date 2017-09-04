@@ -6,7 +6,7 @@ from fabric.api import env, run, settings
 from cases import CONF
 import const
 import logging
-from utils.helpers import get_cur_func
+from utils.helpers import checkpoint
 
 log = logging.getLogger("sherry")
 
@@ -18,8 +18,8 @@ host_ip, host_user, host_password, browser = CONF.get(
             'browser')
 
 
-ca_path, activation_key, activation_org, rhn_user, 
-    rhn_password, satellite_ip, satellite_hostname, 
+ca_path, activation_key, activation_org, rhn_user, \
+    rhn_password, satellite_ip, satellite_hostname, \
         satellite_user,satellite_password = CONF.get(
             'subscription').get('ca_path'), CONF.get('subscription').get('activation_key'), CONF.get(
                 'subscription').get('activation_org'),CONF.get('subscription').get('rhn_user'),CONF.get(
@@ -52,71 +52,48 @@ def test_login(firefox):
     login_page.login_with_credential(host_user, host_password)
 
 
+@checkpoint(dict1)
 def check_subscription_rhsm(firefox):
     """
     RHEVM-18412
         Subscription to RHSM
     """
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Subscription to RHSM...")
-        subscriptions_page = SubscriptionsPage(firefox)
-        subscriptions_page.check_register_rhsm(rhn_user, rhn_password)
-        time.sleep(5)
-        subscriptions_page.check_subscription_result()
-        subscriptions_page.unregister_subsciption()
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    else:
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    log.info("Subscription to RHSM...")
+    subscriptions_page = SubscriptionsPage(firefox)
+    subscriptions_page.check_register_rhsm(rhn_user, rhn_password)
+    time.sleep(5)
+    subscriptions_page.check_subscription_result()
+    subscriptions_page.unregister_subsciption()
 
 
+@checkpoint(dict1)
 def check_subscription_key(firefox):
     """
     RHEVM-18413
         Subscription to RHSM with key and organization
     """
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Subscription to RHSM with key and organization")
-        subscriptions_page = SubscriptionsPage(firefox)
-        subscriptions_page.check_register_rhsm_key_org(
-            activation_key,
-            activation_org)
-        time.sleep(5)
-        subscriptions_page.check_subscription_result()
-        subscriptions_page.unregister_subsciption()
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    else:
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    log.info("Subscription to RHSM with key and organization")
+    subscriptions_page = SubscriptionsPage(firefox)
+    subscriptions_page.check_register_rhsm_key_org(
+        activation_key,
+        activation_org)
+    time.sleep(5)
+    subscriptions_page.check_subscription_result()
+    subscriptions_page.unregister_subsciption()
 
 
+@checkpoint(dict1)
 def check_subscription_password(firefox):
     """
     RHEVM-18414
         Check password is encrypted in log after Subscription to RHSM
     """
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Cehck password is encrypted in log after subscription to RHSM...")
-        subscriptions_page = SubscriptionsPage(firefox)
-        subscriptions_page.check_register_rhsm(rhn_user, rhn_password)
-        subscriptions_page.check_password_encrypted(rhn_password)
-        subscriptions_page.unregister_subsciption()
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    else:
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    log.info("Cehck password is encrypted in log after subscription to RHSM...")
+    subscriptions_page = SubscriptionsPage(firefox)
+    subscriptions_page.check_register_rhsm(rhn_user, rhn_password)
+    subscriptions_page.check_password_encrypted(rhn_password)
+    subscriptions_page.unregister_subsciption()
+
 
 def runtest():
     ctx = init_browser()

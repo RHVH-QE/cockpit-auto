@@ -5,7 +5,7 @@ from fabric.api import env, run, settings
 from cases import CONF
 import const
 import logging
-from utils.helpers import get_cur_func
+from utils.helpers import checkpoint
 
 log = logging.getLogger("sherry")
 
@@ -32,7 +32,6 @@ def init_browser():
         driver.implicitly_wait(20)
         driver.root_uri = "https://{}:9090".format(host_ip)
         return driver
-        #return None
     else:
         raise NotImplementedError
 
@@ -44,23 +43,17 @@ def test_login(ctx):
 
 
 # This will be tested on a rhvh with FC
+@checkpoint(dict1)
 def check_nodestatus_fc(ctx):
     """
     RHEVM-18538
         Check node status with FC multipath.
     """
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        log.info("Checking node status with FC multipath...")
-        node_status_page = NodeStatusPage(ctx)
-        test_layer = test_build + '+1'
-        node_status_page.check_node_status_fc(test_layer)
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    log.info("Checking node status with FC multipath...")
+    node_status_page = NodeStatusPage(ctx)
+    test_layer = test_build + '+1'
+    node_status_page.check_node_status_fc(test_layer)
+
 
 def runtest():
     ctx = init_browser()
