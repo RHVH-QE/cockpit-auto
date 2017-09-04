@@ -1,11 +1,10 @@
 from selenium import webdriver
-from pages.v41.he_install import *
 from pages.v41.he_install_auto import *
 from fabric.api import env, run, settings
 from cases import CONF
 import logging
 import const
-from utils.helpers import checkpoint
+from utils.helpers import checkpoint, get_cur_func
 
 log = logging.getLogger("sherry")
 
@@ -47,6 +46,7 @@ def init_browser():
     else:
         raise NotImplementedError
 
+@checkpoint(dict1)
 def check_he_install():
     """
     Purpose:
@@ -80,7 +80,6 @@ def check_he_install():
     'auto_answer': auto_answer
     }
 
-    log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
     log.info("Setup hosted engine through ova...")
     he_install_auto(host_dict, nfs_dict, install_dict, vm_dict)
     log.info("Deploy HostedEngine successfully!")
