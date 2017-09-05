@@ -95,7 +95,7 @@ def checkpoint(check_id):
                 func(*args, **kw)
             except Exception as e:
                 log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (func.__name__, check_id[func.__name__]))
-                log.error(e)
+                log.exception(e)
             else:
                 log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (func.__name__, check_id[func.__name__]))
             finally:

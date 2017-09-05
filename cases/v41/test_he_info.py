@@ -1,18 +1,19 @@
-import time
-import re
 from selenium import webdriver
 from pages.common.login_page import LoginPage
 from pages.v41.hosted_engine_page import HePage
 from fabric.api import env, run, settings
 from fabric.operations import reboot
 from cases import CONF
-import const
+from collections import OrderedDict
 from utils.helpers import checkpoint
+import const
 import logging
+import time
+import re
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.he_info, const.he_info_id))
+dict1 = OrderedDict(zip(const.he_info, const.he_info_id))
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(

@@ -2,13 +2,15 @@ from selenium import webdriver
 from pages.v41.he_install_auto import *
 from fabric.api import env, run, settings
 from cases import CONF
+from collections import OrderedDict
+from utils.helpers import checkpoint
 import logging
 import const
-from utils.helpers import checkpoint, get_cur_func
+
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.he_install, const.he_install_id))
+dict1 = OrderedDict(zip(const.he_install, const.he_install_id))
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(

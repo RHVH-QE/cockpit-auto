@@ -3,14 +3,15 @@ from pages.common.login_page import LoginPage
 from pages.v41.dashboard_nodestatus_page import NodeStatusPage
 from fabric.api import env, run, settings
 from cases import CONF
+from collections import OrderedDict
+from utils.helpers import checkpoint
 import const
 import logging
-from utils.helpers import checkpoint
 
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.dashboard_ui_efi, const.dashboard_ui_efi_id))
+dict1 = OrderedDict(zip(const.dashboard_ui_efi, const.dashboard_ui_efi_id))
 
 host_ip, host_user, host_password, test_build, rhvm_fqdn, browser = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(

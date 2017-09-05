@@ -2,13 +2,15 @@ from selenium import webdriver
 from fabric.api import env, run, settings
 from pages.v41.nodectl import Nodectl
 from cases import CONF
+from collections import OrderedDict
+from utils.helpers import checkpoint
 import logging
 import const
-from utils.helpers import checkpoint
+
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.dashboard_nodectl, const.dashboard_nodectl_id))
+dict1 = OrderedDict(zip(const.dashboard_nodectl, const.dashboard_nodectl_id))
 
 host_ip, host_user, host_password, test_build, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(

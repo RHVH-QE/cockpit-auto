@@ -3,13 +3,14 @@ from pages.common.login_page import LoginPage
 from pages.v41.vm_page import VirtualMachinesPage
 from fabric.api import run, env, settings
 from cases import CONF
-import const
+from collections import OrderedDict
 from utils.helpers import checkpoint
+import const
 import logging
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.vm_unregisterd, const.vm_unregisterd_id))
+dict1 = OrderedDict(zip(const.vm_unregisterd, const.vm_unregisterd_id))
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(

@@ -6,13 +6,14 @@ from pages.v41.ui_system_page import SystemPage
 from pages.v41.ui_log_page import LogPage
 from fabric.api import run, env, settings
 from cases import CONF
+from collections import OrderedDict
+from utils.helpers import checkpoint
 import time
 import logging
 import const
-from utils.helpers import checkpoint
 
 
-dict1 = dict(zip(const.common_ui, const.common_ui_id))
+dict1 = OrderedDict(zip(const.common_ui, const.common_ui_id))
 
 log = logging.getLogger("sherry")
 
