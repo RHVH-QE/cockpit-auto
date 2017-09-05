@@ -7,7 +7,7 @@ from fabric.api import run, settings, put, local, get, env
 import urllib2
 from vncdotool import api
 from HTMLParser import HTMLParser
-from pages import CONF
+from cases import CONF
 
 log = logging.getLogger("sherry")
 

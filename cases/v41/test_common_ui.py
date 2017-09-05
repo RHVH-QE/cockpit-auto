@@ -3,6 +3,7 @@ from pages.common.login_page import LoginPage
 from pages.v41.ui_dashboard_page import DashboardPage
 from pages.v41.ui_service_page import ServicePage
 from pages.v41.ui_system_page import SystemPage
+from pages.v41.ui_log_page import LogPage
 from fabric.api import run, env, settings
 from cases import CONF
 import time

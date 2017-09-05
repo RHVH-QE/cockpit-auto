@@ -1,11 +1,10 @@
 from selenium import webdriver
-from pages.v41.he_install import *
 from pages.v41.he_install_auto import *
 from fabric.api import env, run, settings
 from cases import CONF
 import logging
 import const
-from utils.helpers import checkpoint
+from utils.helpers import checkpoint, get_cur_func
 
 log = logging.getLogger("sherry")
 
