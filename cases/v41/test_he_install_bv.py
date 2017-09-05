@@ -9,7 +9,7 @@ from utils.helpers import checkpoint
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.he_install, const.he_install_id))
+dict1 = dict(zip(const.he_install_bv, const.he_install_bv_id))
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
@@ -97,7 +97,8 @@ def check_he_install_bv(ctx):
 
 
 def runtest():
-    ctx = init_browser()
-    check_he_install_bv(ctx)
-    ctx.close()
+    import sys
+    from utils.helpers import call_func_by_name
+    for ckp in dict1.keys():
+        call_func_by_name(sys.modules[__name__], ckp, ctx)
 

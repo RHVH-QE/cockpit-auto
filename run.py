@@ -57,7 +57,6 @@ def main():
     else:
         tier = sys.argv[1]
         
-        from cases import scen
         version = tier.split('_')[0]
         if version.startswith('v41'):
             import cases.v41 as ver_cases
@@ -68,13 +67,14 @@ def main():
 
         from cases import scen
         cases_file = [c for c in getattr(scen, sys.argv[1])["CASES"]]
-
         for cf in cases_file:
             case = cf.split('/')[2].split('.')[0]
             results_logs.logger_name = 'check.log'
             results_logs.get_actual_logger(case)
-
-            getattr(ver_cases, case).runtest()
+            try:
+                getattr(ver_cases, case).runtest()
+            except NameError as e:
+                log.error(e)
 
         generate_final_results(results_logs)
 

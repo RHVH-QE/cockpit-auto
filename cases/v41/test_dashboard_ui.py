@@ -20,6 +20,7 @@ host_ip, host_user, host_password, test_build, rhvm_fqdn, browser = CONF.get(
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
 
+
 def init_browser():
     if browser == 'firefox':
         driver = webdriver.Firefox()
@@ -33,6 +34,7 @@ def init_browser():
         return driver
     else:
         raise NotImplementedError
+
 
 def test_login(ctx):
     log.info("Test dashboard_ui-->Trying to login to cockpit...")
@@ -124,11 +126,8 @@ def check_ssh_key_func(ctx):
 def runtest():
     ctx = init_browser()
     test_login(ctx)
-    check_node_status_func(ctx)
-    check_node_health_func(ctx)
-    check_node_info_func(ctx)
-    check_network_func(ctx)
-    check_system_log_func(ctx)
-    check_storage_func(ctx)
-    check_ssh_key_func(ctx)
+    import sys
+    from utils.helpers import call_func_by_name
+    for ckp in dict1.keys():
+        call_func_by_name(sys.modules[__name__], ckp, ctx)
     ctx.close()

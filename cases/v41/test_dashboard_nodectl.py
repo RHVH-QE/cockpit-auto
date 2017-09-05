@@ -17,6 +17,7 @@ host_ip, host_user, host_password, test_build, browser = CONF.get('common').get(
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
 
+
 def init_browser():
     if browser == 'firefox':
         driver = webdriver.Firefox()
@@ -117,10 +118,7 @@ def check_nodectl_banner_func():
 
 
 def runtest():
-    check_nodectl_help_func()
-    check_nodectl_info_func()
-    check_nodectl_check_func()
-    check_nodectl_debug_func()
-    check_nodectl_json_func()
-    check_nodectl_motd_func()
-    check_nodectl_banner_func()
+    import sys
+    from utils.helpers import call_func_by_name
+    for ckp in dict1.keys():
+        call_func_by_name(sys.modules[__name__], ckp)

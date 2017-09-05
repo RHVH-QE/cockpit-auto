@@ -10,8 +10,7 @@ from utils.helpers import checkpoint
 log = logging.getLogger("sherry")
 
 
-
-dict1 = dict(zip(const.dashboard_ui, const.dashboard_ui_id))
+dict1 = dict(zip(const.dashboard_ui_fc, const.dashboard_ui_fc_id))
 
 host_ip, host_user, host_password, test_build, rhvm_fqdn, browser = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(
@@ -20,6 +19,7 @@ host_ip, host_user, host_password, test_build, rhvm_fqdn, browser = CONF.get(
 
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
+
 
 def init_browser():
     if browser == 'firefox':
@@ -34,6 +34,7 @@ def init_browser():
         return driver
     else:
         raise NotImplementedError
+
 
 def test_login(ctx):
     log.info("Test dashboard_ui_fc-->Trying to login to cockpit...")
@@ -58,5 +59,8 @@ def check_nodestatus_fc(ctx):
 def runtest():
     ctx = init_browser()
     test_login(ctx)
-    check_nodestatus_fc(ctx)
+    import sys
+    from utils.helpers import call_func_by_name
+    for ckp in dict1.keys():
+        call_func_by_name(sys.modules[__name__], ckp, ctx)
     ctx.close()

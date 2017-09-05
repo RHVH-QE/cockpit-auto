@@ -9,7 +9,7 @@ from utils.helpers import checkpoint
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.he_install, const.he_install_id))
+dict1 = dict(zip(const.he_install_redeploy, const.he_install_redeploy_id))
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
@@ -30,6 +30,7 @@ nfs_ip, nfs_password, nfs_storage_path, rhvm_appliance_path, vm_mac, vm_fqdn, vm
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
 
+
 def init_browser():
     if browser == 'firefox':
         driver = webdriver.Firefox()
@@ -41,7 +42,6 @@ def init_browser():
         driver.implicitly_wait(20)
         driver.root_uri = "https://{}:9090".format(host_ip)
         return driver
-        #return None
     else:
         raise NotImplementedError
 
@@ -110,6 +110,7 @@ def check_he_install_redeploy(ctx):
 
 
 def runtest():
-    ctx = init_browser()
-    check_he_install_redeploy(ctx)
-    ctx.close()
+    import sys
+    from utils.helpers import call_func_by_name
+    for ckp in dict1.keys():
+        call_func_by_name(sys.modules[__name__], ckp, ctx)

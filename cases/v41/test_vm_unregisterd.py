@@ -9,7 +9,7 @@ import logging
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.vm, const.vm_id))
+dict1 = dict(zip(const.vm_unregisterd, const.vm_unregisterd_id))
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
@@ -32,6 +32,7 @@ def init_browser():
         return driver
     else:
         raise NotImplementedError
+
 
 def test_login(ctx):
     login_page = LoginPage(ctx)
@@ -65,6 +66,8 @@ def check_vms_in_cluster_unregister_func(ctx):
 def runtest():
     ctx = init_browser()
     test_login(ctx)
-    check_running_vms_unregister_func(ctx)
-    check_vms_in_cluster_unregister_func(ctx)
+    import sys
+    from utils.helpers import call_func_by_name
+    for ckp in dict1.keys():
+        call_func_by_name(sys.modules[__name__], ckp, ctx)
     ctx.close()

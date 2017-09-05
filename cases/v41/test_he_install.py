@@ -43,10 +43,11 @@ def init_browser():
         driver.implicitly_wait(20)
         driver.root_uri = "https://{}:9090".format(host_ip)
         return driver
-        #return None
     else:
         raise NotImplementedError
 
+
+@checkpoint(dict1)
 def check_he_install():
     """
     Purpose:
@@ -80,7 +81,6 @@ def check_he_install():
     'auto_answer': auto_answer
     }
 
-    log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
     log.info("Setup hosted engine through ova...")
     he_install_auto(host_dict, nfs_dict, install_dict, vm_dict)
     log.info("Deploy HostedEngine successfully!")
@@ -90,6 +90,7 @@ def check_he_install():
 
 
 def runtest():
-    #ctx = init_browser()
-    check_he_install()
-    #ctx.close()
+    import sys
+    from utils.helpers import call_func_by_name
+    for ckp in dict1.keys():
+        call_func_by_name(sys.modules[__name__], ckp)

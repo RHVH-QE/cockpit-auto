@@ -133,9 +133,9 @@ def check_no_password_saved_func(ctx):
 
 def runtest():
     ctx = init_browser()
-    check_engine_status_func(ctx)
-    check_vm_status_func(ctx)
-    check_three_buttons_func(ctx)
-    check_he_running_on_host_func(ctx)
-    check_no_password_saved_func(ctx)
+    test_login(ctx)
+    import sys
+    from utils.helpers import call_func_by_name
+    for ckp in dict1.keys():
+        call_func_by_name(sys.modules[__name__], ckp, ctx)
     ctx.close()

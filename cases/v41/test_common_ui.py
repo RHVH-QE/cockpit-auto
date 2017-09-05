@@ -57,7 +57,7 @@ def check_dashboard_cpu(ctx):
     log.info("Checking CPU button...")
     dashboard_page = DashboardPage(ctx)
     dashboard_page.check_cpu()
-  
+
 
 @checkpoint(dict1)
 def check_dashboard_memory(ctx):
@@ -110,7 +110,7 @@ def check_ui_logs(ctx):
         Check servers status
     """
     log.info("Checking the logs...")
-    log_page = LogPage(ctx)
+    log_page = LoginPage(ctx)
     log_page.basic_check_elements_exists()
     log.info("Checking the recent logs...")
     log_page.check_recent_logs()
@@ -282,9 +282,8 @@ def check_change_system_performance_profile(ctx):
 def runtest():
     ctx = init_browser()
     test_login(ctx)
-    check_another_server(ctx)
-    check_dashboard_cpu(ctx)
-    check_dashboard_memory(ctx)
-    check_dashboard_network(ctx)
-    check_dashboard_disk_io(ctx)
+    import sys
+    from utils.helpers import call_func_by_name
+    for ckp in dict1.keys():
+        call_func_by_name(sys.modules[__name__], ckp, ctx)
     ctx.close()

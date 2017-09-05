@@ -102,3 +102,12 @@ def checkpoint(check_id):
                 log.info('Finished to run test cases:["RHEVM-%d"]' % check_id[func.__name__])
         return wrapper
     return decorator
+
+
+def call_func_by_name(obj, name, *args, **kw):
+    func = getattr(obj, name.lower(), None)
+    if func:
+        return func(*args, **kw)
+    else:
+        raise NameError(
+            'The checkpoint function {} is not defined'.format(name))

@@ -10,7 +10,7 @@ from utils.helpers import checkpoint
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.common_tools, const.common_tools_id))
+dict1 = dict(zip(const.common_tools_subscription, const.common_tools_subscription_id))
 
 host_ip, host_user, host_password, browser = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(
@@ -30,6 +30,7 @@ ca_path, activation_key, activation_org, rhn_user, \
 ROOT_URI = "https://" + host_ip + ":9090"
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
+
 
 def init_browser():
     if browser == 'firefox':
@@ -98,7 +99,8 @@ def check_subscription_password(firefox):
 def runtest():
     ctx = init_browser()
     test_login(ctx)
-    check_subscription_key(ctx)
-    check_subscription_rhsm(ctx)
-    check_subscription_password(ctx)
+    import sys
+    from utils.helpers import call_func_by_name
+    for ckp in dict1.keys():
+        call_func_by_name(sys.modules[__name__], ckp, ctx)
     ctx.close()

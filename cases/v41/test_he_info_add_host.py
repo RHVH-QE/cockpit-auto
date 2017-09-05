@@ -11,7 +11,8 @@ from utils.helpers import checkpoint
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.he_info, const.he_info_id))
+dict1 = dict(zip(const.he_info_add_host, const.he_info_add_host_id))
+
 
 host_ip, host_user, host_password, second_host, second_password, browser = CONF.get(
     'common').get('host_ip'), CONF.get('common').get('host_user'), CONF.get(
@@ -108,20 +109,12 @@ def check_remove_from_maintenance(ctx):
         Remove the host from maintenance
     """
     # Check the host is in local maintenance
-    try:
-        log.info('Start to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
-        he_page = HePage(ctx)
-        he_page.check_host_in_local_maintenance()
-        log.info("Removing host from local_maintenance...")
-        he_page.remove_host_from_local_maintenance()
-        log.info("Checking host removed from local_maintenance...")
-        he_page.check_host_not_in_local_maintenance()
-        log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (get_cur_func(),dict1[get_cur_func()]))
-    except Exception as e:
-        log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (get_cur_func(),dict1[get_cur_func()]))
-        log.error(e)
-    finally:
-        log.info('Finished to run test cases:["RHEVM-%d"]' % dict1[get_cur_func()])
+    he_page = HePage(ctx)
+    he_page.check_host_in_local_maintenance()
+    log.info("Removing host from local_maintenance...")
+    he_page.remove_host_from_local_maintenance()
+    log.info("Checking host removed from local_maintenance...")
+    he_page.check_host_not_in_local_maintenance()
 
 
 @checkpoint(dict1)
@@ -172,9 +165,12 @@ def runtest():
     add_sd(he_rhvm, sd_name)
 
     ctx = init_browser()
-    check_add_additional_host(he_rhvm)
     test_login(ctx)
-    check_put_local_maintenance(ctx)
-    check_remove_from_maintenance(ctx)
-    check_put_global_maintenance(ctx)
+    import sys
+    from utils.helpers import call_func_by_name
+    for ckp in dict1.keys():
+        if ckp == "check_add_additional_host":
+            call_func_by_name(sys.modules[__name__], ckp, he_rhvm)    
+        else:
+            call_func_by_name(sys.modules[__name__], ckp, ctx)
     ctx.close()

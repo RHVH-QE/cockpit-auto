@@ -12,7 +12,7 @@ import logging
 
 log = logging.getLogger("sherry")
 
-dict1 = dict(zip(const.vm, const.vm_id))
+dict1 = dict(zip(const.vm_registerd, const.vm_registerd_id))
 
 host_ip, host_user, host_password, browser = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
@@ -213,10 +213,9 @@ def runtest():
 
     ctx = init_browser()
     test_login(ctx)
-    check_running_vms_register_func(ctx)
-    check_vdsm_func(ctx)
-    check_vm_login_logout_engine_func(ctx)
-    check_vm_refresh_func(ctx)
-    check_non_root_alert_func(ctx)
-    test_login_again(ctx)
+    test_login(ctx)
+    import sys
+    from utils.helpers import call_func_by_name
+    for ckp in dict1.keys():
+        call_func_by_name(sys.modules[__name__], ckp, ctx)
     ctx.close()
