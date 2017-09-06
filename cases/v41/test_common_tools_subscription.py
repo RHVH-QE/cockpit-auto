@@ -90,7 +90,7 @@ def check_subscription_password(firefox):
     RHEVM-18414
         Check password is encrypted in log after Subscription to RHSM
     """
-    log.info("Cehck password is encrypted in log after subscription to RHSM...")
+    log.info("Check password is encrypted in log after subscription to RHSM...")
     subscriptions_page = SubscriptionsPage(firefox)
     subscriptions_page.check_register_rhsm(rhn_user, rhn_password)
     subscriptions_page.check_password_encrypted(rhn_password)

@@ -215,7 +215,6 @@ def runtest():
 
     ctx = init_browser()
     test_login(ctx)
-    test_login(ctx)
     import sys
     from utils.helpers import call_func_by_name
     for ckp in dict1.keys():
