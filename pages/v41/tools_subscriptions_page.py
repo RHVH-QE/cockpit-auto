@@ -3,22 +3,24 @@ import re
 from utils.page_objects import PageObject, PageElement, MultiPageElement
 from fabric.api import run, get, env
 from StringIO import StringIO
+import logging
+
+
+log = logging.getLogger("sherry")
 
 
 class SubscriptionsPage(PageObject):
     """Subscription-manager for host to register to RHSM/Satellite server"""
+    # register button
+    register_sys_btn = PageElement(css="div.subscription-status-ct>button")
 
-    ######################
-
-    register_sys_btn = PageElement(tag_name="button")
+    # Elements after click the register button
     login_input = PageElement(id_="subscription-register-username")
     passwd_input = PageElement(id_="subscription-register-password")
     key_input = PageElement(id_="subscription-register-key")
     org_input = PageElement(id_="subscription-register-org")
+    apply_cancel_btns = MultiPageElement(css="div.modal-footer>button")
 
-    btns = MultiPageElement(tag_name="button")
-
-    # url = PageElement(id_="subscription-register-url")
     url_select_btn = PageElement(
         xpath=".//*[@id='subscription-register-url']/button")
     url_default_item = PageElement(
@@ -27,8 +29,9 @@ class SubscriptionsPage(PageObject):
         xpath=".//*[@id='subscription-register-url']/ul/li[2]/a")
     url_input = PageElement(id_="subscription-register-url-custom")
 
+    # Elements under "Installed products"
     installed_product_btn = PageElement(tag_name="th")
-    spans = MultiPageElement(tag_name="span")
+    details_spans = MultiPageElement(css="td.form-tr-ct-title+td>span")
 
     # frame name
     frame_right_name = "cockpit1:localhost/subscriptions"
@@ -43,7 +46,7 @@ class SubscriptionsPage(PageObject):
             assert self.register_sys_btn, "register system btn not exist"
             assert self.login_input, "login text editor not exist"
             assert self.passwd_input, "password text editor not exist"
-            assert self.submit_btn, "register button not exist"
+            assert self.apply_cancel_btns, "register or cancel button not exist"
             assert self.key_input, "Activation Key text editor not exist"
             assert self.org_input, "Organization text editor not exist"
             assert self.url_select_btn, "Url select btn not exist"
@@ -67,8 +70,9 @@ class SubscriptionsPage(PageObject):
             self.passwd_input.send_keys(rhn_password)
             self.wait(0.5)
 
-            submit_btn = list(self.btns)[3]
-            submit_btn.click()
+            for btn in list(self.apply_cancel_btns):
+                if btn.text == "Register":
+                    btn.click()
             self.wait(60)
 
     def check_register_rhsm_key_org(self, activation_key, activation_org):
@@ -87,14 +91,14 @@ class SubscriptionsPage(PageObject):
             self.org_input.send_keys(activation_org)
             self.wait(0.5)
 
-            submit_btn = list(self.btns)[3]
-            submit_btn.click()
+            for btn in list(self.apply_cancel_btns):
+                if btn.text == "Register":
+                    btn.click()
             self.wait(60)
 
     def check_register_satellite(self, satellite_ip, satellite_user, satellite_password):
         """
         Purpose:
-            RHEVM-16752
             Test subscription to Satellite server
         """
         with self.switch_to_frame(self.frame_right_name):
@@ -109,13 +113,15 @@ class SubscriptionsPage(PageObject):
             self.wait(0.5)
             self.passwd_input.send_keys(satellite_password)
             self.wait(0.5)
-            self.submit_btn.click()
+
+            for btn in list(self.apply_cancel_btns):
+                if btn.text == "Register":
+                    btn.click()
             self.wait(60)
 
     def check_password_encrypted(self, rhn_password):
         """
         Purpose:
-            RHEVM-16750
             Test check password is encrypted in rhsm.log
         """
         remote_path = "/var/log/rhsm/rhsm.log"
@@ -128,9 +134,9 @@ class SubscriptionsPage(PageObject):
         with self.switch_to_frame(self.frame_right_name):
             self.installed_product_btn.click()
             self.wait(1)
-            product_name = list(self.spans)[0]
-            register_status = list(self.spans)[4]
-            print product_name.text, register_status.text
+            product_name = list(self.details_spans)[0]
+            register_status = list(self.details_spans)[4]
+            log.info(product_name.text, register_status.text)
             assert product_name.text == "Red Hat Virtualization Host", \
                 "product name is wrong"
             assert register_status.text == "Subscribed", \

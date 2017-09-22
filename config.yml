@@ -2,14 +2,14 @@
 common:
     host_user: root
     host_password: redhat
-    host_ip: "10.66.148.24"
-    rhvm_fqdn: rhvm41-vdsm-auto.lab.eng.pek2.redhat.com
+    host_ip: "10.66.8.109"
+    rhvm_fqdn: rhvm41-test.nay.redhat.com
     browser: firefox
-    test_build: rhvh-4.1-0.20170831.0
+    test_build: rhvh-4.1-0.20170914.0
 
 subscription:
     rhn_user: QualityAssurance
-    rhn_password: VHVFhPS5TEG8dud
+    rhn_password: VHVFhPS5TEG8dud9
     activation_key: rhevh
     activation_org: "711497"
     satellite_ip: "10.73.75.177"
@@ -17,7 +17,6 @@ subscription:
     satellite_user: admin
     satellite_password: redhat
     ca_path: https://10.73.75.177/pub/katello-ca-consumer-satellite62.lab.eng.pek2.redhat.com-1.0-1.noarch.rpm
-    # TODO 
 
 hosted_engine:
     rhvm_appliance_path: http://10.66.10.22:8090/rhevm-appliance/
@@ -36,4 +35,3 @@ hosted_engine:
     second_host: "10.66.150.175"
     second_password: redhat
     second_vm_fqdn: cockpit-vm
-    # TODO
