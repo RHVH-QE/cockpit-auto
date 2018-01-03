@@ -21,12 +21,12 @@ class ResultSummary(object):
         return time.strftime("%m%d%H%M", time.localtime())
 
     def _parse_checkpoints(self, res):
-        p1 = re.compile(r'{"RHEVM-\d')
+        p1 = re.compile(r"{'RHEVM-\d")
         rets = {}
         if os.path.exists(res):
             for line in open(res):
                 if p1.search(line):
-                    rets.update(eval(line.split("||")[-1]))
+                    rets.update(eval(line.split("::")[-1]))
 
         return rets
 

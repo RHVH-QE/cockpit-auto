@@ -1,37 +1,8 @@
+%YAML 1.2
 ---
-common:
-    host_user: root
-    host_password: redhat
-    host_ip: "10.66.8.109"
-    rhvm_fqdn: rhvm41-test.nay.redhat.com
-    browser: firefox
-    test_build: rhvh-4.1-0.20170914.0
 
-subscription:
-    rhn_user: QualityAssurance
-    rhn_password: VHVFhPS5TEG8dud9
-    activation_key: rhevh
-    activation_org: "711497"
-    satellite_ip: "10.73.75.177"
-    satellite_hostname: satellite62.lab.eng.pek2.redhat.com
-    satellite_user: admin
-    satellite_password: redhat
-    ca_path: https://10.73.75.177/pub/katello-ca-consumer-satellite62.lab.eng.pek2.redhat.com-1.0-1.noarch.rpm
-
-hosted_engine:
-    rhvm_appliance_path: http://10.66.10.22:8090/rhevm-appliance/
-    storage_type: nfs
-    nfs_ip: "10.66.148.11"
-    nfs_password: redhat
-    he_install_nfs: /home/jiawu/nfs1
-    he_data_nfs: /home/jiawu/nfs2
-    sd_name: heauto-sd
-    he_vm_mac: 52:54:00:57:ef:59
-    he_vm_fqdn: rhevh-hostedengine-vm-03.qe.lab.eng.nay.redhat.com
-    he_vm_ip: "10.66.148.104"
-    he_vm_password: redhat
-    engine_password: password
-    auto_answer: http://10.73.73.23:8000/run?download=true
-    second_host: "10.66.150.175"
-    second_password: redhat
-    second_vm_fqdn: cockpit-vm
+host_string: "192.168.122.49"
+host_user: root
+host_pass: redhat
+browser: firefox
+test_build: rhvh-4.2.0.6-0.20171218.0

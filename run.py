@@ -1,27 +1,14 @@
 # !/usr/bin/env python2.7
 
-import os, sys, time, json, re, shutil, logging
-from collections import OrderedDict
-from utils.reports import ResultSummary
-from cases import CONF
+import sys
+import logging
 from utils.helpers import results_logs
+from utils.helpers import generate_final_results
+from utils.helpers import yaml2dict
+from importlib import import_module
 
 
 log = logging.getLogger("sherry")
-
-
-def generate_final_results(results_logs):
-    try:
-        log_path = results_logs.current_log_path
-        test_build = results_logs.test_build
-        if test_build not in log_path:
-            return
-        final_path = os.path.join(
-            log_path.split(test_build)[0], test_build)
-        report = ResultSummary(final_path, test_build)
-        report.run()
-    except Exception as e:
-        log.error(e)
 
 
 def main():
@@ -32,49 +19,56 @@ def main():
 
     Options:
         h,help                                          Menu
-        v41_debug_tier                                     Test v41_debug_tier
-        v41_rhvh_tier1                                     Test v41_rhvh_tier1
-        v41_rhvh_tier2                                     Test v41_rhvh_tier2
-        v41_rhvh_dashboard_uefi                            Test v41_rhvh_dashboard_uefi
-        v41_rhvh_dashboard_fc                              Test v41_rhvh_dashboard_fc
-        v41_rhvh_he_install_bond                           Test v41_rhvh_he_install_bond
-        v41_rhvh_he_install_bv                             Test v41_rhvh_he_install_bv
-        v41_rhvh_he_install_vlan                           Test v41_rhvh_he_install_vlan
-        v41_rhvh_he_install_non_default_port               Test v41_rhvh_he_install_non_default_port
-        v41_rhvh_he_install_redeploy                       Test v41_rhvh_he_install_redeploy
-        v41_rhvh_he_info_add_host                          Test v41_rhvh_he_info_add_host
-        v41_rhel_tier1v41_rhvh_he_install_redeploy         Test v41_rhel_tier1v41_rhvh_he_install_redeploy
-        v41_rhel_tier2                                     Test v41_rhel_tier2
-        v41_centos_tier1                                   Test v41_centos_tier1
-        v41_centos_tier2                                   Test v41_centos_tier2
-        v41_fedora_tier1                                   Test v41_fedora_tier1
-        v41_fedora_tier2                                   Test v41_fedora_tier2
-
+        debug_tier                                     Test debug_tier
+        he_tier                                        Test he_tier
+        virt_tier                                      Test virt_tier
+        common_tier                                    Test common_tier
+        all_tier                                       Test all_tier
     Example:
-        python run.py v41_debug_tier
+        python run.py debug_tier
     """
         print str
     else:
         tier = sys.argv[1]
+
+        config_dict = yaml2dict('./config.yml')
+        host_string = config_dict['host_string']
+        host_user = config_dict['host_user']
+        host_pass = config_dict['host_pass']
+        browser = config_dict['browser']
+        test_build = config_dict['test_build']
+        results_logs.test_build = test_build
         
-        version = tier.split('_')[0]
-        if version.startswith('v41'):
-            import cases.v41 as ver_cases
-        else:
-            raise Exception("Not support such scenario")
+        test_scens = yaml2dict('./scen.yml')
+        try:
+            case_files = test_scens[tier]['cases']
+            for cf in case_files:
+                # Get file name from scenario file
+                cf_name = cf.rstrip('.py')
+                results_logs.logger_name = 'checkpoints.log'
+                results_logs.get_actual_logger(cf_name)
 
-        results_logs.test_build = CONF.get('common').get('test_build')
+                # Import module by case file name
+                case_module = import_module('cases.checks.' + cf_name, __package__)
+                testclss_name = ''
+                for attr in dir(case_module):
+                    if attr.startswith('Test'):
+                        testclss_name = attr
+                        break
+                testclss = getattr(case_module, testclss_name, None)
 
-        from cases import scen
-        cases_file = [c for c in getattr(scen, sys.argv[1])["CASES"]]
-        for cf in cases_file:
-            case = cf.split('/')[2].split('.')[0]
-            results_logs.logger_name = 'check.log'
-            results_logs.get_actual_logger(case)
-            try:
-                getattr(ver_cases, case).runtest()
-            except NameError as e:
-                log.error(e)
+                # Make the instance of test class
+                test = testclss()
+                test.host_string = host_string
+                test.host_user = host_user
+                test.host_pass = host_pass
+                test.browser = browser
+                test.build = test_build
+                
+                # Go check
+                log.info(test.go_check(cf_name))
+        except Exception as e:
+            log.exception(e)       
 
         generate_final_results(results_logs)
 

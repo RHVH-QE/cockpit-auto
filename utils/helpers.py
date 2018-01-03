@@ -2,8 +2,8 @@ import os, yaml, logging, time
 import logging.config
 import logging
 from constants import PROJECT_ROOT
-import inspect
-import functools
+from reports import ResultSummary
+
 
 log = logging.getLogger("sherry")
 
@@ -82,32 +82,16 @@ class ResultsAndLogs(object):
 results_logs = ResultsAndLogs()
 
 
-def get_cur_func():
-    return inspect.stack()[1][3]
+def generate_final_results(results_logs):
+    log_path = results_logs.current_log_path
+    test_build = results_logs.test_build
+    if test_build not in log_path:
+        return
+    final_path = os.path.join(
+        log_path.split(test_build)[0], test_build)
+    report = ResultSummary(final_path, test_build)
+    report.run()
 
 
-def checkpoint(check_id):
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kw):
-            log.info('Start to run test cases:["RHEVM-%d"]' % check_id[func.__name__])
-            try:
-                func(*args, **kw)
-            except Exception as e:
-                log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (func.__name__, check_id[func.__name__]))
-                log.exception(e)
-            else:
-                log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (func.__name__, check_id[func.__name__]))
-            finally:
-                log.info('Finished to run test cases:["RHEVM-%d"]' % check_id[func.__name__])
-        return wrapper
-    return decorator
-
-
-def call_func_by_name(obj, name, *args, **kw):
-    func = getattr(obj, name.lower(), None)
-    if func:
-        return func(*args, **kw)
-    else:
-        raise NameError(
-            'The checkpoint function {} is not defined'.format(name))
+def yaml2dict(yaml_file):
+    return yaml.load(open(yaml_file))
