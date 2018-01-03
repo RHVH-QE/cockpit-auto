@@ -2,7 +2,9 @@
 ---
 
 debug_tier:
-    cases: ["test_dashboard_nodectl.py"]
+    cases: [
+        "test_dashboard_ui.py"
+    ]
 
 virt_tier:
     cases: [
@@ -14,11 +16,12 @@ he_tier:
     cases: [
         "test_he_install.py", 
         "test_he_info.py"
-    
     ]
 
 common_tier:
-    cases: ["test_common_tools_subscription.py"]
+    cases: [
+        "test_tools_subscription.py"
+    ]
 
 all_tier:
     cases: [
@@ -26,5 +29,5 @@ all_tier:
         "test_dashboard_ui.py",
         "test_he_install.py",
         "test_he_info.py",
-        "test_common_tools_subscription.py"
+        "test_tools_subscription.py"
     ]

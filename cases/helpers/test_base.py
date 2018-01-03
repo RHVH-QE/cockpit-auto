@@ -59,28 +59,6 @@ class CheckBase(object):
     def build(self, val):
         self._build = val
 
-    def init_browser(self):
-        if self.browser == 'firefox':
-            driver = webdriver.Firefox()
-            driver.implicitly_wait(20)
-            driver.root_uri = "https://{}:9090".format(self.host_string)
-        elif self.browser == 'chrome':
-            driver = webdriver.Chrome()
-            driver.implicitly_wait(20)
-            driver.root_uri = "https://{}:9090".format(self.host_string)
-        else:
-            raise NotImplementedError
-        self._driver = driver
-
-    def cockpit_login(self):
-        login_page = LoginPage(self._driver)
-        login_page.basic_check_elements_exists()
-        login_page.login_with_credential(self.host_user, self.host_pass)
-
-    def close_browser(self):
-        if self._driver:
-            self._driver.close()
-
     def get_remote_file(self, remote_path, local_path):
         with settings(
                 host_string=self.host_string,
@@ -185,15 +163,48 @@ class CheckBase(object):
 
         return cks
 
+    def init_browser(self):
+        if self.browser == 'firefox':
+            driver = webdriver.Firefox()
+            driver.implicitly_wait(20)
+            driver.root_uri = "https://{}:9090".format(self.host_string)
+        elif self.browser == 'chrome':
+            driver = webdriver.Chrome()
+            driver.implicitly_wait(20)
+            driver.root_uri = "https://{}:9090".format(self.host_string)
+        else:
+            raise NotImplementedError
+        driver.maximize_window()
+        self._driver = driver
+
+    def cockpit_login(self):
+        login_page = LoginPage(self._driver)
+        login_page.basic_check_elements_exists()
+        login_page.login_with_credential(self.host_user, self.host_pass)
+
+    def set_page(self):
+        pass
+
+    def close_browser(self):
+        if self._driver:
+            self._driver.close()
+
+    def setup(self):
+        self.init_browser()
+        self.cockpit_login()
+        self.set_page()
+
+    def teardown(self):
+        self.close_browser()
+
     def go_check(self, file_name):
         cks = {}
         try:
-            self.init_browser()
-            self.cockpit_login()
+            self.setup()
             cks = self.run_cases(file_name)
         except Exception as e:
             log.exception(e)
         finally:
-            self.close_browser()
+            self.teardown()
 
         return cks

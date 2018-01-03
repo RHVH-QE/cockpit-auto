@@ -52,11 +52,11 @@ class PageObject(object):
     def basic_check_elements_exists(self):
         raise NotImplementedError
 
-    def save_screenshot(self, filename):
-        save_dir = "/tmp/cockpit-screenshot"
-        if not os.path.exists(save_dir):
-            os.makedirs(save_dir)
-        self.w.save_screenshot(save_dir + '/' + filename)
+    def save_screenshot(self, path):
+        dir = os.path.dirname(path)
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        self.w.save_screenshot(path)
 
     @contextmanager
     def switch_to_frame(self, frame_name):
