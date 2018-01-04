@@ -128,7 +128,7 @@ class CheckBase(object):
 
     def _get_checkpoint_cases_map(self, test_file_name):
         from importlib import import_module
-        const_file_name = test_file_name.lstrip('test_')
+        const_file_name = test_file_name.split('test_')[-1]
         try:
             module = import_module("cases.cases_info." + const_file_name, __package__)
         except ImportError as e:

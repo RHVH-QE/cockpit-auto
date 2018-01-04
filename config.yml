@@ -1,7 +1,7 @@
 %YAML 1.2
 ---
 
-host_string: "192.168.122.49"
+host_string: "10.66.148.7"
 host_user: root
 host_pass: redhat
 browser: firefox
