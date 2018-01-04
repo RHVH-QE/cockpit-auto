@@ -122,7 +122,7 @@ class CheckBase(object):
             for case in cases:
                 cks[case] = newck
         except Exception as e:
-            log.error(e)
+            log.exception(e)
         finally:
             log.info("Run checkpoint:%s for cases:%s finished.", checkpoint, cases)
 

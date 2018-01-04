@@ -19,13 +19,13 @@ class DashboardUiPage(PageObject):
 
     health_title = PageElement(
         xpath='//*[@id="content"]/div/div/div[1]/table/tbody[2]/tr[1]/td[1]')
-    health_btn = PageElement(
+    health_link = PageElement(
         xpath='.//*[@id="content"]/div/div/div[1]/table/tbody[2]/tr[1]/td[2]/div[1]/a/div')
     ok_icons = MultiPageElement(class_name="pficon-ok")
 
     cur_layer_title = PageElement(
         xpath='//*[@id="content"]/div/div/div[1]/table/tbody[2]/tr[2]/td[1]')
-    cur_layer_btn = PageElement(
+    cur_layer_link = PageElement(
         xpath='.//*[@id="content"]/div/div/div[1]/table/tbody[2]/tr[2]/td[2]/div[1]/a')
 
     rollback_btn = PageElement(
@@ -51,6 +51,25 @@ class DashboardUiPage(PageObject):
     ssh_key_link = PageElement(
         xpath='//*[@id="content"]/div/div/div[1]/table/tbody[5]/tr/td[2]/a')
 
+    # After click health link
+    node_health_dialog_title = PageElement(
+        xpath='//*[@id="content"]/div/div/div[1]/table/tbody[2]/tr[1]/td[2]/div[2]/div/div/div/div[1]/h4')
+    # accordion_header_btn: like "Thin storage","basic storage","Mount points" button
+    health_dialog_btns = MultiPageElement(class_name="accordion-header")
+    # close_btn : close button,like "X"
+    close_btns = MultiPageElement(class_name="close")
+
+    # After click current layer link
+    # elements under Node information dialog
+    cur_layer_dialog_title = PageElement(
+        xpath='//*[@id="content"]/div/div/div[1]/table/tbody[2]/tr[2]/td[2]/div[2]/div/div/div/div[1]/h4')
+    layer_dialog_btns = MultiPageElement(class_name='accordion-header')
+    entry_txts = MultiPageElement(class_name="col-md-6")
+
+    # Host RSA key title
+    ssh_key_dialog_title = PageElement(
+        xpath='//*[@id="content"]/div/div/div[1]/table/tbody[5]/tr/td[2]/div/div/div/div/div[1]/h4')
+
     def __init__(self, *args, **kwargs):
         super(DashboardUiPage, self).__init__(*args, **kwargs)
         self.get("/ovirt-dashboard")
@@ -71,10 +90,11 @@ class DashboardUiPage(PageObject):
             # health title and status
             assert self.health_title.text == 'Health', \
                 "Health title not correct"
+            assert re.search('ok', self.health_link.text), "Health is not ok" 
             # current layer title and info
             assert self.cur_layer_title.text == "Current Layer", \
                 "Current Layer title not correct"
-            assert self.cur_layer_btn, "Current layer button not exists"
+            assert self.cur_layer_link, "Current layer button not exists"
             # rollback button
             assert self.rollback_btn, "Rollback button not exists"
             # system title and info
@@ -87,3 +107,12 @@ class DashboardUiPage(PageObject):
             # system logs title and link
             assert re.search("System Logs", self.system_logs_title.text), \
                 "System logs title not correct"
+            assert self.system_logs_link, "System logs link not exists"
+            # storage title and link
+            assert re.search("Storage", self.storage_title.text), \
+                "Storage title not correct"
+            assert self.storage_link, "Storage link not exists"
+            # ssh key title and link
+            assert re.search("SSH Host Key", self.ssh_key_title.text), \
+                "SSH host key title not correct"
+            assert self.ssh_key_link, "SSH host key link not exists"

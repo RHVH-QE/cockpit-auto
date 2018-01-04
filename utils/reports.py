@@ -52,7 +52,7 @@ class ResultSummary(object):
         failed_num = 0
         for a, b, c in os.walk(root_path):
             for case in sorted(b):
-                ret = self._parse_checkpoints(os.path.join(a, case, 'check.log'))
+                ret = self._parse_checkpoints(os.path.join(a, case, 'checkpoints.log'))
                 final_results[self.test_build][case] = ret
                 for k, v in ret.items():
                     if v == "passed":
