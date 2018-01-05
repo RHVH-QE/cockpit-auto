@@ -1,5 +1,5 @@
 from selenium import webdriver
-from pages.v41.he_install import *
+#from pages.v41.he_install import *
 from pages.v41.he_install_auto import *
 from fabric.api import env, run, settings
 from cases import CONF

@@ -49,6 +49,7 @@ def main():
         v41_centos_tier2                                   Test v41_centos_tier2
         v41_fedora_tier1                                   Test v41_fedora_tier1
         v41_fedora_tier2                                   Test v41_fedora_tier2
+        v41_gluster_deploy                                 Test v41_gluster_deploy
 
     Example:
         python run.py v41_debug_tier

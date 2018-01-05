@@ -13,3 +13,4 @@ import test_he_install_vlan
 import test_vm_registerd
 import test_vm_unregisterd
 import test_he_info_add_host
+import test_deploy_he_over_gluster

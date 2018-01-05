@@ -140,3 +140,10 @@ v41_fedora_tier2 = {
         "cases/v41/test_common_tools.py"
     ]
 }
+
+v41_gluster_deploy = {
+    "TAG": ["gluster"],
+    "CASES": [
+        "cases/v41/test_deploy_he_over_gluster.py"
+    ]
+}

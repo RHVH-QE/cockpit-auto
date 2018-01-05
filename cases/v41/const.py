@@ -59,3 +59,22 @@ vm = [
     'check_vms_in_cluster_unregister_func' 
 ]
 vm_id = [18805, 18808, 18809, 18811, 18813, 18803, 18804]
+
+deployment_cases_RHHI = [
+    'check_engine_lv_of_type_thick_and_volume_of_type_replicate',
+    'check_gluster_packages_presence_on_rhvh_node', 
+    'check_glusterfs_firewall_service_availability_with_default_firewallzone',
+    'check_cockpitui_should_be_reachable_for_the_user',
+    'check_option_to_start_with_gluster_deployment',
+    'check_saving_the_generated_gdeploy_config_file',
+    'check_cockpit_gdeploy_plugin_provides_redeploy_button',
+    'check_cleanup_of_gluster_setup_done',
+    'check_deployment_with_hostedengine_on_gluster',
+    'check_gluster_deployment_wizard',
+    'validate_host_deployment_tab',
+    'check_back_and_cancel_buttons_on_gdeploy_wizard',
+    'validate_arbiter_volume_creation',
+    'validate_packages_tab'
+]
+
+deployment_cases_RHHI_id =[138, 118, 119, 121, 122, 127, 129, 130, 132, 144, 145, 148, 147, 146]
