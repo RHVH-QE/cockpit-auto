@@ -434,14 +434,12 @@ def check_he_is_deployed(host_ip, host_user, host_password):
         while (True):
             cmd = "hosted-engine --vm-status | grep 'Engine status'"
             ret = run(cmd)
-            if not ret.__contains__("up"):
+            if not ret.__contains__('"health": "good", "vm": "up"'):
                 log.info("Waiting for HE to be deployed on host %s" % host_ip)
             else:
                 log.info ("HE is deployed on %s" % host_ip)
                 break
             
-
-        
 
         cmd = "find /var/log -type f |grep ovirt-hosted-engine-setup-.*.log"
         ret = run(cmd)
