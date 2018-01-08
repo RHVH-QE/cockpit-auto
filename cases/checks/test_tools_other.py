@@ -1,4 +1,5 @@
 import logging
+from selenium import webdriver
 from pages.tools_account_page import AccountPage
 from pages.tools_diagnostic_page import DiagnosticPage
 from cases.helpers import CheckBase
@@ -12,8 +13,24 @@ class TestToolsOther(CheckBase):
 
     page = None
 
-    def set_page(self):
-        self.page = AccountPage(self._driver)
+    def init_browser(self):
+        if self.browser == 'firefox':
+            profile = webdriver.FirefoxProfile()
+            profile.set_preference('browser.download.dir', '/tmp')
+            driver = webdriver.Firefox(firefox_profile=profile)
+            driver.implicitly_wait(20)
+            driver.root_uri = "https://{}:9090".format(self.host_string)
+        elif self.browser == 'chrome':
+            options = webdriver.ChromeOptions()
+            prefs = {'download.default_directory': '/tmp'}
+            options.add_experimental_option('prefs', prefs)
+            driver = webdriver.Chrome(chrome_options=options)
+            driver.implicitly_wait(20)
+            driver.root_uri = "https://{}:9090".format(self.host_string)
+        else:
+            raise NotImplementedError
+        driver.maximize_window()
+        self._driver = driver
 
     def run_cmd(self, cmd, host_string=None, host_user=None, host_pass=None, timeout=60):
         if not host_string:
@@ -55,13 +72,15 @@ class TestToolsOther(CheckBase):
             Create account in cockpit
         """
         log.info('Checking create account in cockpit...')
+        self.page = AccountPage(self._driver)
+
         try:
             # Check basic elements
             self.page.basic_check_elements_exists()
         except AssertionError as e:
             log.error(e)
             return False
-  
+
         fullname = self._config['fullname']
         username = self._config['username']
         passwd = self._config['password']
@@ -98,6 +117,17 @@ class TestToolsOther(CheckBase):
             log.exception(e)
             return False
 
+    def _clean_sosreport(self):
+        cmd = "rm -f /tmp/sosreport-*.xz"
+        self.local_cmd(cmd)    
+
+    def _check_sosreport_downloaded(self):
+        cmd = "test -f /tmp/sosreport-*.xz"
+        ret = self.local_cmd(cmd)
+        if not ret[0]:
+            return False
+        return True
+
     def check_create_diagnostic(self):
         """
         Purpose:
@@ -105,6 +135,29 @@ class TestToolsOther(CheckBase):
         """
         log.info("Checking create diagnostic report")
         self.page = DiagnosticPage(self._driver)
+    
+        try:
+            # Check basic elements
+            self.page.basic_check_elements_exists()
+        except AssertionError as e:
+            log.error(e)
+            return False
+
+        self._clean_sosreport()
+
+        try:
+            with self.page.switch_to_frame(self.page.frame_right_name):
+                self.page.create_report_btn.click()
+                self.page.wait_until_element_visible(
+                    self.page.download_sos_btn)
+
+                self.page.download_sos_btn.click()
+                self.page.wait(30)
+        except Exception as e:
+            log.exception(e)
+            return False
+            
+        return self._check_sosreport_downloaded()
 
     def teardown(self):
         self.close_browser()

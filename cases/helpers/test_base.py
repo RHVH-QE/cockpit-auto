@@ -1,4 +1,5 @@
 import logging
+from subprocess import check_output, CalledProcessError
 from selenium import webdriver
 from pages.login_page import LoginPage
 from fabric.api import settings, run, get, put
@@ -102,6 +103,15 @@ class CheckBase(object):
         except Exception as e:
             log.error('Run cmd "%s" failed with exception "%s"', cmd, e)
             return False, e
+
+    def local_cmd(self, cmd):
+        try:
+            ret = check_output(cmd, shell=True)
+        except CalledProcessError as e:
+            log.error('Local cmd "%s" failed\n"%s"', cmd, e.output)
+            return False, e.output
+        else:
+            return True, ret
 
     def call_func_by_name(self, name=''):
         func = getattr(self, name.lower(), None)
