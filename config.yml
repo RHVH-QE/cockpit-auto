@@ -2,36 +2,52 @@
 common:
     host_user: root
     host_password: redhat
-    host_ip: "10.66.8.109"
-    rhvm_fqdn: rhvm41-test.nay.redhat.com
+    host_ip: 10.70.34.33
+    #host_ip: 10.70.37.98
+    rhvm_fqdn: cambridge.lab.eng.blr.redhat.com
+    #rhvm_fqdn: dhcp37-98.lab.eng.blr.redhat.com
     browser: firefox
-    test_build: rhvh-4.1-0.20170914.0
+    test_build: rhvh-4.1-0.20171207.0
 
 subscription:
-    rhn_user: QualityAssurance
-    rhn_password: VHVFhPS5TEG8dud9
-    activation_key: rhevh
-    activation_org: "711497"
-    satellite_ip: "10.73.75.177"
-    satellite_hostname: satellite62.lab.eng.pek2.redhat.com
-    satellite_user: admin
-    satellite_password: redhat
-    ca_path: https://10.73.75.177/pub/katello-ca-consumer-satellite62.lab.eng.pek2.redhat.com-1.0-1.noarch.rpm
+    rhn_user: knarra_grafton_pod
+    rhn_password: graftonqa
+     
 
 hosted_engine:
-    rhvm_appliance_path: http://10.66.10.22:8090/rhevm-appliance/
-    storage_type: nfs
-    nfs_ip: "10.66.148.11"
-    nfs_password: redhat
-    he_install_nfs: /home/jiawu/nfs1
-    he_data_nfs: /home/jiawu/nfs2
-    sd_name: heauto-sd
-    he_vm_mac: 52:54:00:57:ef:59
-    he_vm_fqdn: rhevh-hostedengine-vm-03.qe.lab.eng.nay.redhat.com
-    he_vm_ip: "10.66.148.104"
+    rhvm_appliance_path: http://rhsqe-repo.lab.eng.blr.redhat.com/rhvmappliance/rhvm-appliance-4.1.20171206.0-1.el7.noarch.rpm
+    storage_type: glusterfs
+    gluster_ip: 10.70.36.73
+    gluster_storage_path: engine
+    he_vm_mac: 00:44:54:19:48:01
+    he_vm_fqdn: rhev-engine1.lab.eng.blr.redhat.com
+    he_vm_domain: lab.eng.blr.redhat.com
+    he_vm_ip: "10.70.34.125"
     he_vm_password: redhat
-    engine_password: password
+    engine_password: redhat
     auto_answer: http://10.73.73.23:8000/run?download=true
-    second_host: "10.66.150.175"
-    second_password: redhat
-    second_vm_fqdn: cockpit-vm
+    # TODO
+
+gluster_details:
+    gluster_data_node1: 10.70.36.73
+    gluster_data_node2: 10.70.36.75
+    gluster_arbiter_node: 10.70.36.74
+    vmstore_is_arbiter: on
+    data_is_arbiter: on
+    data_disk_count: 4
+    device_name_engine: sdb
+    device_name_vmstore: sdb
+    device_name_data: sdb
+    size_of_datastore_lv: 1200
+    size_of_vmstore_lv: 1000
+    gdeploy_conf_file_path : /tmp/gdeployConfig.conf
+    mount_engine_brick : /gluster_bricks/engine
+    mount_data_brick: /gluster_bricks/data
+    mount_vmstore_brick: /gluster_bricks/vmstore
+    gluster_vg_name : gluster_vg_sdb
+    gluster_pv_name : /dev/sdb
+    number_of_Volumes : 3
+    engine_lv_name : /dev/mapper/gluster_vg_sdb-gluster_lv_engine
+    os_variant_rhvh : 'PRETTY_NAME="Red Hat Virtualization Host 4.1 (el7.4)"'
+        
+
