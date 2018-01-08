@@ -44,6 +44,9 @@ class PageObject(object):
         """wait for a specific period"""
         time.sleep(period)
 
+    def refresh(self):
+        self.w.refresh()
+
     def wait_until_element_visible(self, element):
         WebDriverWait(self.w, self.wait_timeout).until(
             EC.visibility_of(element)

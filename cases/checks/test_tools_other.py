@@ -2,6 +2,7 @@ import logging
 from selenium import webdriver
 from pages.tools_account_page import AccountPage
 from pages.tools_diagnostic_page import DiagnosticPage
+from pages.tools_selinux_page import SelinuxPage
 from cases.helpers import CheckBase
 from fabric.api import settings, run
 
@@ -87,6 +88,7 @@ class TestToolsOther(CheckBase):
 
         try:
             with self.page.switch_to_frame(self.page.frame_right_name):
+                self.page.wait(5)
                 self.page.accounts_create_btn.click()
                 self.page.wait(1)
                 self.page.real_name_input.clear()
@@ -158,6 +160,47 @@ class TestToolsOther(CheckBase):
             return False
             
         return self._check_sosreport_downloaded()
+
+    def _check_policy(self, expected="Enforcing"):
+        cmd = "getenforce"
+        ret = self.run_cmd(cmd)
+        return ret[1] == expected
+
+    def check_selinux_policy(self):
+        """
+        Purpose:
+            Check SELinux enforce policy status
+        """
+        log.info("Check SELinux enforce policy status")
+        self.page = SelinuxPage(self._driver)
+
+        try:
+            # Check basic elements
+            self.page.basic_check_elements_exists()
+        except AssertionError as e:
+            log.error(e)
+            return False
+
+        if not self._check_policy(expected="Enforcing"):
+            log.error("Fresh installed selinux policy is not Enforcing")
+            return False
+
+        try:
+            with self.page.switch_to_frame(self.page.frame_right_name):
+                self.page.policy_btn.click()
+                self.page.wait(3)
+
+                assert self._check_policy(expected="Permissive"), \
+                    "SElinux policy not changed to Permissive via button"
+
+                self.page.policy_btn.click()
+                self.page.wait(3)
+                assert self._check_policy(expected="Enforcing"), \
+                    "SElinux policy not changed to Enforcing via button"
+        except Exception as e:
+            log.exception(e)
+            return False
+        return True
 
     def teardown(self):
         self.close_browser()
