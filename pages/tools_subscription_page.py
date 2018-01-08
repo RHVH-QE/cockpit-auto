@@ -42,7 +42,7 @@ class SubscriptionPage(PageObject):
     def __init__(self, *args, **kwargs):
         super(SubscriptionPage, self).__init__(*args, **kwargs)
         self.get("/subscriptions")
-        self.wait(10)
+        self.wait(5)
 
     def basic_check_elements_exists(
         self, 

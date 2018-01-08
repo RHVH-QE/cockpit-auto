@@ -164,3 +164,89 @@ class TestSubscription(CheckBase):
         finally:
             self._unregister_subsciption()
         return True
+
+    def check_register_satellite(self):
+        """
+        Purpose:
+            Subscription to Satellite server
+        """
+        log.info('Subscription to Satellite server...')
+
+        try:
+            with self.page.switch_to_frame(self.page.frame_right_name):  
+                self.page.register_sys_btn.click()
+                wev = self.page.wait_until_element_visible
+                wev(self.page.register_dialog_title)
+
+                self._clean_all()
+
+                self.page.url_select_btn.click()
+                self.page.url_custom_item.click()
+                self.page.wait(0.5)
+
+                satellite_ip = self._config['satellite_ip']
+                satellite_user = self._config['satellite_user']
+                satellite_passwd = self._config['satellite_password']
+                self.page.url_input.send_keys(satellite_ip+'/rhsm')
+                self.page.wait(0.5)
+                self.page.login_input.send_keys(satellite_user)
+                self.page.wait(0.5)
+                self.page.passwd_input.send_keys(satellite_passwd)
+                self.page.wait(0.5)
+                
+                self._register_submit()
+                self.page.wait(60)
+
+                self._check_subscription_result()
+
+            self._check_cert_file()
+
+        except Exception as e:
+            log.exception(e)
+            return False
+        finally:
+            self._unregister_subsciption()
+        return True
+
+    def check_register_satellite57(self):
+        """
+        Purpose:
+            Subscription to Satellite5.7 server
+        """
+        log.info('Subscription to Satellite5.7 server...')
+
+        try:
+            with self.page.switch_to_frame(self.page.frame_right_name):  
+                self.page.register_sys_btn.click()
+                wev = self.page.wait_until_element_visible
+                wev(self.page.register_dialog_title)
+
+                self._clean_all()
+
+                self.page.url_select_btn.click()
+                self.page.url_custom_item.click()
+                self.page.wait(0.5)
+
+                satellite_ip = self._config['satellite57_ip']
+                satellite_user = self._config['satellite57_user']
+                satellite_passwd = self._config['satellite57_password']
+                self.page.url_input.send_keys(satellite_ip+'/rhsm')
+                self.page.wait(0.5)
+                self.page.login_input.send_keys(satellite_user)
+                self.page.wait(0.5)
+                self.page.passwd_input.send_keys(satellite_passwd)
+                self.page.wait(0.5)
+                
+                self._register_submit()
+                self.page.wait(60)
+
+                self._check_subscription_result()
+
+            self._check_cert_file()
+
+        except Exception as e:
+            log.exception(e)
+            return False
+        finally:
+            self._unregister_subsciption()
+        return True

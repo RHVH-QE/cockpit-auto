@@ -3,7 +3,7 @@
 
 debug_tier:
     cases: [
-        "test_dashboard_ui.py"
+        "test_tools_other.py"
     ]
 
 virt_tier:
