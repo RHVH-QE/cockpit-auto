@@ -58,7 +58,7 @@ Under cases file, there are 3 section.
 
 **Name rules should be followed**
 1. All the checks file should be start with "test_" under checks directory
-2. The class defined in the checks file, should start with "Test", Such as "TestDashboardUi", "TestSubscription"
+2. The class defined in the checks file, should start with "Test", Such as "TestDashboardUi", "TestSubscription", besides, define just one Test.* class in one check file
 3. Strip the "test_" from checks file name, this is cases info file. Such as "dashboard_ui.py","tools_subscription.py"
 
 After all, Don't forget to append the check file name into scen.yml under PROJECT_ROOT directory
