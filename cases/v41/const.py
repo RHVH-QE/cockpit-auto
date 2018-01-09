@@ -77,4 +77,5 @@ deployment_cases_RHHI = [
     'validate_packages_tab'
 ]
 
-deployment_cases_RHHI_id =[138, 118, 119, 121, 122, 127, 129, 130, 132, 144, 145, 148, 147, 146]
+deployment_cases_RHHI_id =['RHHI-138', 'RHHI-118', 'RHHI-119', 'RHHI-121', 'RHHI-122', 'RHHI-127', 'RHHI-129',
+                           'RHHI-130', 'RHHI-132', 'RHHI-144', 'RHHI-145', 'RHHI-148', 'RHHI-147', 'RHHI-146']

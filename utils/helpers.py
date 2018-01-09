@@ -90,33 +90,16 @@ def checkpoint(check_id):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kw):
-            log.info('Start to run test cases:["RHEVM-%d"]' % check_id[func.__name__])
+            log.info('Start to run test cases:["%s"]' % (check_id[func.__name__]))
             try:
                 func(*args, **kw)
             except Exception as e:
-                log.info('func(%s)|| {"RHEVM-%d": "failed"}' % (func.__name__, check_id[func.__name__]))
+                log.info('func(%s)|| {"%s": "failed"}' % (func.__name__, check_id[func.__name__]))
                 log.error(e)
             else:
-                log.info('func(%s)|| {"RHEVM-%d": "passed"}' % (func.__name__, check_id[func.__name__]))
+                log.info('func(%s)|| {"%s": "passed"}' % (func.__name__, check_id[func.__name__]))
             finally:
-                log.info('Finished to run test cases:["RHEVM-%d"]' % check_id[func.__name__])
+                log.info('Finished to run test cases:["%s"]' % (check_id[func.__name__]))
         return wrapper
     return decorator
 
-
-def checkpoint1(check_id):
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kw):
-            log.info('Start to run test cases:["RHHI-%d"]' % check_id[func.__name__])
-            try:
-                func(*args, **kw)
-            except Exception as e:
-                log.info('func(%s)|| {"RHHI-%d": "failed"}' % (func.__name__, check_id[func.__name__]))
-                log.error(e)
-            else:
-                log.info('func(%s)|| {"RHHI-%d": "passed"}' % (func.__name__, check_id[func.__name__]))
-            finally:
-                log.info('Finished to run test cases:["RHHI-%d"]' % check_id[func.__name__])
-        return wrapper
-    return decorator

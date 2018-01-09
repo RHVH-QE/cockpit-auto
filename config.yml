@@ -10,8 +10,8 @@ common:
     test_build: rhvh-4.1-0.20171207.0
 
 subscription:
-    rhn_user: knarra_grafton_pod
-    rhn_password: graftonqa
+    rhn_user: <user_name>
+    rhn_password: <password>
      
 
 hosted_engine:
