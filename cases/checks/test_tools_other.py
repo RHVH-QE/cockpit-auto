@@ -6,7 +6,6 @@ from pages.tools_diagnostic_page import DiagnosticPage
 from pages.tools_selinux_page import SelinuxPage
 from pages.tools_kdump_page import KdumpPage
 from cases.helpers import CheckBase
-from fabric.api import settings, run
 
 
 log = logging.getLogger('sherry')
@@ -15,6 +14,7 @@ log = logging.getLogger('sherry')
 class TestToolsOther(CheckBase):
 
     page = None
+    test_history = []
 
     def init_browser(self):
         if self.browser == 'firefox':
@@ -35,33 +35,6 @@ class TestToolsOther(CheckBase):
         driver.maximize_window()
         self._driver = driver
 
-    def run_cmd(self, cmd, host_string=None, host_user=None, host_pass=None, timeout=60):
-        if not host_string:
-            host_string = self.host_string
-        if not host_user:
-            host_user = self.host_user
-        if not host_pass:
-            host_pass = self.host_pass
-
-        ret = None
-        try:
-            with settings(
-                    host_string=host_string,
-                    user=host_user,
-                    password=host_pass,
-                    disable_known_hosts=True,
-                    connection_attempts=60):
-                ret = run(cmd, quiet=True, timeout=timeout)
-                if ret.succeeded:
-                    log.info('Run cmd "%s" succeeded\n"%s"', cmd, ret)
-                    return True, ret
-                else:
-                    log.error('Run cmd "%s" failed\n"%s"', cmd, ret)
-                    return False, ret
-        except Exception as e:
-            log.error('Run cmd "%s" failed with exception "%s"', cmd, e)
-            return False, e
-
     def _clean_account(self, username):
         cmd = "id {}".format(username)
         ret = self.run_cmd(cmd)
@@ -74,6 +47,39 @@ class TestToolsOther(CheckBase):
         ret = self.run_cmd(cmd)
         assert ret[0], "{} not exists".format(username)
 
+    def _user_create_from_account_page(self, fullname, username, passwd):
+        with self.page.switch_to_frame(self.page.frame_right_name):
+            log.info("Click AccountPage.accounts_create_btn")
+            self.page.accounts_create_btn.click()
+            self.page.wait(1)
+
+            log.info("Input AccountPage.real_name_input with %s", fullname) 
+            self.page.real_name_input.clear()
+            self.page.wait(1)
+            self.page.real_name_input.send_keys(fullname)
+            self.page.wait(3)
+
+            log.info("Input AccountPage.user_name_input with %s", username)
+            self.page.user_name_input.clear()
+            self.page.wait(1)
+            self.page.user_name_input.send_keys(username)
+            self.page.wait(3)
+
+            log.info("Input AccountPage.password_input with %s", passwd)
+            self.page.password_input.clear()
+            self.page.wait(1)
+            self.page.password_input.send_keys(passwd)
+            self.page.wait(3)
+
+            self.page.confirm_input.clear()
+            self.page.wait(1)
+            self.page.confirm_input.send_keys(passwd)
+            self.page.wait(3)
+
+            log.info("Click AccountPage.create_btn")
+            self.page.create_btn.click()
+            self.page.wait(3)
+
     def check_new_account(self):
         """
         Purpose:
@@ -81,7 +87,9 @@ class TestToolsOther(CheckBase):
         """
         log.info('Checking create account in cockpit...')
         self.page = AccountPage(self._driver)
+        self.test_history.append("check_new_account")
 
+        log.info("Checking basic elements")
         try:
             # Check basic elements
             self.page.basic_check_elements_exists()
@@ -93,40 +101,16 @@ class TestToolsOther(CheckBase):
         username = self._config['username']
         passwd = self._config['password']
 
+        log.info("Clean cockpit account if existing")
         self._clean_account(username)
 
         try:
-            with self.page.switch_to_frame(self.page.frame_right_name):
-                self.page.wait(5)
-                self.page.accounts_create_btn.click()
-                self.page.wait(1)
-                self.page.real_name_input.clear()
-                self.page.wait(1)
-                self.page.real_name_input.send_keys(fullname)
-                self.page.wait(3)
-
-                self.page.user_name_input.clear()
-                self.page.wait(1)
-                self.page.user_name_input.send_keys(username)
-                self.page.wait(3)
-
-                self.page.password_input.clear()
-                self.page.wait(1)
-                self.page.password_input.send_keys(passwd)
-                self.page.wait(3)
-
-                self.page.confirm_input.clear()
-                self.page.wait(1)
-                self.page.confirm_input.send_keys(passwd)
-                self.page.wait(3)
-
-                self.page.create_btn.click()
-                self.page.wait(3)
-
+            self._user_create_from_account_page(fullname, username, passwd)
             self._check_account_created(username)
         except Exception as e:
             log.exception(e)
             return False
+        return True
 
     def _clean_sosreport(self):
         cmd = "rm -f /tmp/sosreport-*.xz"
@@ -146,6 +130,7 @@ class TestToolsOther(CheckBase):
         """
         log.info("Checking create diagnostic report")
         self.page = DiagnosticPage(self._driver)
+        self.test_history.append("check_create_diagnostic")
 
         log.info("Basic elements check")
         try:
@@ -161,7 +146,8 @@ class TestToolsOther(CheckBase):
             with self.page.switch_to_frame(self.page.frame_right_name):
                 log.info("Click AccountPage.create_report_btn")
                 self.page.create_report_btn.click()
-                self.page.wait(120)
+                self.page.wait_until_element_visible(
+                    self.page.download_sos_btn, timeout=300)
 
                 self.page.download_sos_btn.click()
                 self.page.wait(30)
@@ -183,6 +169,7 @@ class TestToolsOther(CheckBase):
         """
         log.info("Check SELinux enforce policy status")
         self.page = SelinuxPage(self._driver)
+        self.test_history.append("check_selinux_policy")
 
         try:
             # Check basic elements
@@ -212,6 +199,45 @@ class TestToolsOther(CheckBase):
             return False
         return True
 
+    def _stop_kdump_from_service_page(self):
+        pass
+
+    def _start_kdump_from_service_page(self):
+        pass
+
+    def _disable_kdump_from_service_page(self):
+        pass
+
+    def _enable_kdump_from_service_page(self):
+        pass
+
+    def check_kdump_service(self):
+        """
+        Purpose:
+            Check the kdump service in cockpit
+        """
+        log.info("Check the kdump service in cockpit")
+        self.page = KdumpPage(self._driver)
+
+        self.test_history.append("check_kdump_service")
+
+        try:
+            # Check basic elements
+            self.page.basic_check_elements_exists()
+        except AssertionError as e:
+            log.error(e)
+            return False
+
+        try:
+            self._stop_kdump_from_service_page()
+            self._start_kdump_from_service_page()
+            self._disable_kdump_from_service_page()
+            self._enable_kdump_from_service_page()
+        except Exception as e:
+            log.exception(e)
+            return False
+        return True
+
     def _clean_vmcore(self):
         cmd = "find /var/crash -type f -name vmcore"
         ret = self.run_cmd(cmd, timeout=3600)
@@ -228,6 +254,24 @@ class TestToolsOther(CheckBase):
             return False
         return ret[1]
 
+    def _create_local_dump_from_kdump_page(self):
+        with self.page.switch_to_frame(self.page.frame_right_name):
+            log.info("Click KdumpPage.dump_location_link")
+            self.page.dump_location_link.click()
+            self.page.wait(1)
+            
+            log.info("Click KdumpPage.compression_checkbox")
+            self.page.compression_checkbox.click()
+            self.page.wait_until_element_visible(
+                self.page.test_config_btn, timeout=300)
+
+            log.info("Click KdumpPage.test_config_btn")
+            self.page.test_config_btn.click()
+            self.page.wait(3)
+            
+            log.info("Click KdumpPage.crash_system_btn")
+            self.page.crash_system_btn.click()
+
     def check_vmcore_local(self):
         """
         Purpose:
@@ -235,6 +279,7 @@ class TestToolsOther(CheckBase):
         """
         log.info("Capture vmcore at local via kdump function in cockpit")
         self.page = KdumpPage(self._driver)
+        self.test_history.append("check_vmcore_local")
 
         try:
             # Check basic elements
@@ -246,18 +291,9 @@ class TestToolsOther(CheckBase):
         self._clean_vmcore()
 
         try:
-            with self.page.switch_to_frame(self.page.frame_right_name):
-                self.page.dump_location_link.click()
-                self.page.wait(1)
-                self.page.compression_checkbox.click()
-                self.page.wait(90)
-
-                self.page.test_config_btn.click()
-                self.page.wait(3)
-                self.page.crash_system_btn.click()
-
-                if not self._check_vmcore_created():
-                    raise Exception("Vmcore not created")
+            self._create_local_dump_from_kdump_page()
+            if not self._check_vmcore_created():
+                raise Exception("Vmcore not created")
         except Exception as e:
             log.exception(e)
             return False
@@ -266,7 +302,10 @@ class TestToolsOther(CheckBase):
     def teardown(self):
         self.close_browser()
 
-        username = self._config['username']
-        self._clean_account(username)
-        self._clean_sosreport()
-        self._clean_vmcore()
+        if "check_new_account" in self.test_history:
+            username = self._config['username']
+            self._clean_account(username)
+        if "check_create_diagnostic" in self.test_history:
+            self._clean_sosreport()
+        if "check_vmcore_local" in self.test_history:
+            self._clean_vmcore()

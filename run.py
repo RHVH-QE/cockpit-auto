@@ -25,7 +25,7 @@ def run(tier):
         case_files = test_scens[tier]['cases']
         for cf in case_files:
             # Get file name from scenario file
-            cf_name = cf.rstrip('.py')
+            cf_name = cf.split('.')[0]
             results_logs.logger_name = 'checkpoints.log'
             results_logs.get_actual_logger(cf_name)
 

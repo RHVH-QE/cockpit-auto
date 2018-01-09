@@ -47,8 +47,10 @@ class PageObject(object):
     def refresh(self):
         self.w.refresh()
 
-    def wait_until_element_visible(self, element):
-        WebDriverWait(self.w, self.wait_timeout).until(
+    def wait_until_element_visible(self, element, timeout=None):
+        if not timeout:
+            timeout = self.wait_timeout
+        WebDriverWait(self.w, timeout).until(
             EC.visibility_of(element)
         )
 
