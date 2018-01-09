@@ -7,7 +7,6 @@ from utils.helpers import generate_final_results
 from utils.helpers import yaml2dict
 from importlib import import_module
 
-
 log = logging.getLogger("sherry")
 
 
@@ -38,7 +37,7 @@ def main():
         browser = config_dict['browser']
         test_build = config_dict['test_build']
         results_logs.test_build = test_build
-        
+
         test_scens = yaml2dict('./scen.yml')
         try:
             case_files = test_scens[tier]['cases']
@@ -49,7 +48,8 @@ def main():
                 results_logs.get_actual_logger(cf_name)
 
                 # Import module by case file name
-                case_module = import_module('cases.checks.' + cf_name, __package__)
+                case_module = import_module('cases.checks.' + cf_name,
+                                            __package__)
                 testclss_name = ''
                 for attr in dir(case_module):
                     if attr.startswith('Test'):
@@ -64,11 +64,11 @@ def main():
                 test.host_pass = host_pass
                 test.browser = browser
                 test.build = test_build
-                
+
                 # Go check
                 log.info(test.go_check(cf_name))
         except Exception as e:
-            log.exception(e)       
+            log.exception(e)
 
         generate_final_results(results_logs)
 

@@ -2,3 +2,4 @@
 geckodriver.log
 *.pyc
 logs
+.venv

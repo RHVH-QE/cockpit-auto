@@ -1,7 +1,5 @@
 # cockpit-auto
 
-[![build status](http://github.com/RHVH-QE/cockpit-auto/badges/master/build.svg)](https://github.com/RHVH-QE/cockpit-auto.git/commits/master)
-
 This project is for cockpit automation, which using selenium to locate web elements and to operate as a test user.
 
 ## Binded Mac, IP, Hostname For HE Automation
