@@ -5,7 +5,7 @@ from pages.login_page import LoginPage
 from fabric.api import settings, run, get, put
 
 
-log = logging.getLogger('sherry')
+log = logging.getLogger('bender')
 
 
 class CheckBase(object):

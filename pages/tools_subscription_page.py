@@ -3,7 +3,7 @@ import re
 from utils.page_objects import PageObject, PageElement, MultiPageElement
 
 
-log = logging.getLogger("sherry")
+log = logging.getLogger("bender")
 
 
 class SubscriptionPage(PageObject):

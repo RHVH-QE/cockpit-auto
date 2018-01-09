@@ -5,7 +5,7 @@ from constants import PROJECT_ROOT
 from reports import ResultSummary
 
 
-log = logging.getLogger("sherry")
+log = logging.getLogger("bender")
 
 
 class ResultsAndLogs(object):

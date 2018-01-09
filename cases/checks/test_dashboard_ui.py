@@ -4,7 +4,7 @@ from pages.dashboard_ui_page import DashboardUiPage
 from cases.helpers import CheckBase
 
 
-log = logging.getLogger('sherry')
+log = logging.getLogger('bender')
 
 
 class TestDashboardUi(CheckBase):

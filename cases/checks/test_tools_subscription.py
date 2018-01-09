@@ -5,7 +5,7 @@ from cases.helpers import CheckBase
 from StringIO import StringIO
 
 
-log = logging.getLogger('sherry')
+log = logging.getLogger('bender')
 
 
 class TestSubscription(CheckBase):

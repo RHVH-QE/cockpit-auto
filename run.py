@@ -7,7 +7,7 @@ from utils.helpers import generate_final_results
 from utils.helpers import yaml2dict
 from importlib import import_module
 
-log = logging.getLogger("sherry")
+log = logging.getLogger("bender")
 
 
 def run(tier):

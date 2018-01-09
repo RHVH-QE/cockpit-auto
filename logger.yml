@@ -11,16 +11,16 @@ logging:
 
   loggers:
     # Logging from my application
-    sherry:
+    bender:
       level: !!python/name:logging.DEBUG
       handlers: [logfile, console]
-      qualname: sherry.he_install
+      qualname: bender.he_install
       propagate: false
 
   handlers:
     logfile:
       class: logging.FileHandler
-      filename: sherry.log
+      filename: bender.log
       formatter: simpleFormatter
       level: !!python/name:logging.NOTSET
     console:

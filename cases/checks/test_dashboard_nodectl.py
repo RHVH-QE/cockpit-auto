@@ -2,7 +2,7 @@ import logging, re, simplejson
 from cases.helpers import CheckBase
 
 
-log = logging.getLogger('sherry')
+log = logging.getLogger('bender')
 
 
 class TestDashboardNodectl(CheckBase):

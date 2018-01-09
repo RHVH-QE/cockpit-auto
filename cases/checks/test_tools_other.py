@@ -8,7 +8,7 @@ from pages.tools_kdump_page import KdumpPage
 from cases.helpers import CheckBase
 
 
-log = logging.getLogger('sherry')
+log = logging.getLogger('bender')
 
 
 class TestToolsOther(CheckBase):
