@@ -1,8 +1,10 @@
 import logging
+import os
 from selenium import webdriver
 from pages.tools_account_page import AccountPage
 from pages.tools_diagnostic_page import DiagnosticPage
 from pages.tools_selinux_page import SelinuxPage
+from pages.tools_kdump_page import KdumpPage
 from cases.helpers import CheckBase
 from fabric.api import settings, run
 
@@ -60,12 +62,17 @@ class TestToolsOther(CheckBase):
             log.error('Run cmd "%s" failed with exception "%s"', cmd, e)
             return False, e
 
-    def _check_account_created(self, username, password):
-        cmd = "whoami"
-        ret = self.run_cmd(cmd, host_user=username, host_pass=password)
-        assert ret[0], \
-            "Failed to run whoami via new account {}".format(username)
-        assert ret[1] == username
+    def _clean_account(self, username):
+        cmd = "id {}".format(username)
+        ret = self.run_cmd(cmd)
+        if ret[0]:
+            cmd = "userdel {}".format(username)
+            self.run_cmd(cmd)
+
+    def _check_account_created(self, username):
+        cmd = "id {}".format(username)
+        ret = self.run_cmd(cmd)
+        assert ret[0], "{} not exists".format(username)
 
     def check_new_account(self):
         """
@@ -85,6 +92,8 @@ class TestToolsOther(CheckBase):
         fullname = self._config['fullname']
         username = self._config['username']
         passwd = self._config['password']
+
+        self._clean_account(username)
 
         try:
             with self.page.switch_to_frame(self.page.frame_right_name):
@@ -114,14 +123,14 @@ class TestToolsOther(CheckBase):
                 self.page.create_btn.click()
                 self.page.wait(3)
 
-            self._check_account_created(username, passwd)
+            self._check_account_created(username)
         except Exception as e:
             log.exception(e)
             return False
 
     def _clean_sosreport(self):
         cmd = "rm -f /tmp/sosreport-*.xz"
-        self.local_cmd(cmd)    
+        self.local_cmd(cmd)  
 
     def _check_sosreport_downloaded(self):
         cmd = "test -f /tmp/sosreport-*.xz"
@@ -137,7 +146,8 @@ class TestToolsOther(CheckBase):
         """
         log.info("Checking create diagnostic report")
         self.page = DiagnosticPage(self._driver)
-    
+
+        log.info("Basic elements check")
         try:
             # Check basic elements
             self.page.basic_check_elements_exists()
@@ -149,16 +159,16 @@ class TestToolsOther(CheckBase):
 
         try:
             with self.page.switch_to_frame(self.page.frame_right_name):
+                log.info("Click AccountPage.create_report_btn")
                 self.page.create_report_btn.click()
-                self.page.wait_until_element_visible(
-                    self.page.download_sos_btn)
+                self.page.wait(120)
 
                 self.page.download_sos_btn.click()
                 self.page.wait(30)
         except Exception as e:
             log.exception(e)
             return False
-            
+
         return self._check_sosreport_downloaded()
 
     def _check_policy(self, expected="Enforcing"):
@@ -202,8 +212,61 @@ class TestToolsOther(CheckBase):
             return False
         return True
 
+    def _clean_vmcore(self):
+        cmd = "find /var/crash -type f -name vmcore"
+        ret = self.run_cmd(cmd, timeout=3600)
+        vmcores = ret[1].split()
+        for vmcore in vmcores:
+            each_dir = os.path.dirname(vmcore)
+            cmd = "rm -rf {}".format(each_dir)
+            self.run_cmd(cmd)
+
+    def _check_vmcore_created(self):
+        cmd = "find /var/crash -type f -name vmcore"
+        ret = self.run_cmd(cmd, timeout=3600)
+        if not ret[0]:
+            return False
+        return ret[1]
+
+    def check_vmcore_local(self):
+        """
+        Purpose:
+            Capture vmcore at local via kdump function in cockpit
+        """
+        log.info("Capture vmcore at local via kdump function in cockpit")
+        self.page = KdumpPage(self._driver)
+
+        try:
+            # Check basic elements
+            self.page.basic_check_elements_exists()
+        except AssertionError as e:
+            log.error(e)
+            return False
+        
+        self._clean_vmcore()
+
+        try:
+            with self.page.switch_to_frame(self.page.frame_right_name):
+                self.page.dump_location_link.click()
+                self.page.wait(1)
+                self.page.compression_checkbox.click()
+                self.page.wait(90)
+
+                self.page.test_config_btn.click()
+                self.page.wait(3)
+                self.page.crash_system_btn.click()
+
+                if not self._check_vmcore_created():
+                    raise Exception("Vmcore not created")
+        except Exception as e:
+            log.exception(e)
+            return False
+        return True
+
     def teardown(self):
         self.close_browser()
+
         username = self._config['username']
-        cmd = "userdel {}".format(username)
-        self.run_cmd(cmd)
+        self._clean_account(username)
+        self._clean_sosreport()
+        self._clean_vmcore()

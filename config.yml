@@ -4,5 +4,5 @@
 host_string: "10.66.148.7"
 host_user: root
 host_pass: redhat
-browser: firefox
+browser: chrome
 test_build: rhvh-4.2.0.6-0.20171218.0
