@@ -3,7 +3,7 @@ from fabric.api import env, run, settings
 from cases import CONF
 from pages.v41.he_install_gluster_auto import *
 from collections import OrderedDict
-from utils.helpers import checkpoint1
+from utils.helpers import checkpoint
 import logging
 import const
 
@@ -59,7 +59,7 @@ def init_browser():
         raise NotImplementedError
 
 
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def check_engine_lv_of_type_thick_and_volume_of_type_replicate():
     """
     Purpose:
@@ -98,7 +98,7 @@ def check_engine_lv_of_type_thick_and_volume_of_type_replicate():
         else:
             log.error("No volume with name engine")
             
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def check_gluster_packages_presence_on_rhvh_node():
     """
        Purpose:
@@ -128,7 +128,7 @@ def check_gluster_packages_presence_on_rhvh_node():
                 log.error("vdsm-gluster package is not present on host %s %s" % (gluster_node_ip, ret1))
                 
                 
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def check_glusterfs_firewall_service_availability_with_default_firewallzone():
     """
         Purpose:
@@ -152,7 +152,7 @@ def check_glusterfs_firewall_service_availability_with_default_firewallzone():
                 log.error("glusterfs firewall service is not enabled by default on host %s, %s" % (gluster_node_ip, ret))
                 
                 
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def check_cockpitui_should_be_reachable_for_the_user():
     """
         Purpose:
@@ -178,7 +178,7 @@ def check_cockpitui_should_be_reachable_for_the_user():
         log.error("cockpit page is not available for host %s " % host_ip)
     dr.quit()
 
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def check_option_to_start_with_gluster_deployment():
     """
         Purpose:
@@ -220,7 +220,7 @@ def check_option_to_start_with_gluster_deployment():
             log.error("glusterfs deploy button is not enabled or present %s " % (host_ip))
     dr.quit()
 
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def check_saving_the_generated_gdeploy_config_file():
     """
         Purpose:
@@ -239,7 +239,7 @@ def check_saving_the_generated_gdeploy_config_file():
         else:
             log.error("generated gdeploy conf file is not saved")
 
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def check_cockpit_gdeploy_plugin_provides_redeploy_button():
     """
         Purpose:
@@ -308,7 +308,7 @@ def check_cockpit_gdeploy_plugin_provides_redeploy_button():
     dr.quit()
         
         
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def check_cleanup_of_gluster_setup_done():
     """
         Purpose:
@@ -402,7 +402,7 @@ def check_cleanup_of_gluster_setup_done():
                     log.error("could not remove labels from pv")
 
 
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def check_deployment_with_hostedengine_on_gluster():
     """
         Purpose:
@@ -442,7 +442,7 @@ def check_deployment_with_hostedengine_on_gluster():
     check_he_is_deployed(host_ip, host_user, host_password)
     log.info("HostedEngine was deployed!")
 
-@checkpoint1(dict1)    
+@checkpoint(dict1)    
 def check_gluster_deployment_wizard():
     """
         Purpose:
@@ -488,7 +488,7 @@ def check_gluster_deployment_wizard():
             dr.save_screenshot('screenshots/gluster_deploymentwizard_not_present.png')
     dr.quit()
 
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def validate_host_deployment_tab():
     """
         Purpose:
@@ -554,7 +554,7 @@ def validate_host_deployment_tab():
             log.error("Value is not retained in the host textbox")
     dr.quit()
 
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def check_back_and_cancel_buttons_on_gdeploy_wizard():
     """
         Purpose:
@@ -621,7 +621,7 @@ def check_back_and_cancel_buttons_on_gdeploy_wizard():
             dr.save_screenshot('screenshots/gluster_deploymentwizard_not_present.png')
     dr.quit()
     
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def validate_arbiter_volume_creation():
     """
         Purpose:
@@ -660,7 +660,7 @@ def validate_arbiter_volume_creation():
                 else:
                     log.error("volume %s has not been created as arbiter volume" % volume)
 
-@checkpoint1(dict1)
+@checkpoint(dict1)
 def validate_packages_tab():
     """
         Purpose:
@@ -779,9 +779,10 @@ def validate_packages_tab():
                 dr.save_screenshot('screenshots/pacakges_tab_RHEL.png')
     dr.quit()
             
+
             
 def runtest():
-    #check_cleanup_of_gluster_setup_done()
-    check_deployment_with_hostedengine_on_gluster()
+    check_cleanup_of_gluster_setup_done()
+    #check_deployment_with_hostedengine_on_gluster()
     
     
