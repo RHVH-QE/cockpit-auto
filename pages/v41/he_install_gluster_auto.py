@@ -249,52 +249,55 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
 
     # code for configuring gluster
     log.info("Configuring gluster to deploy Hosted Engine............")
-    xpath("//input[@value='hci']").click()
+    xpath("//input[@value='hci']").click()                                               #click on 'Configure Hosted Engine with Gluster"
     time.sleep(2)
-    xpath("//button[@class='btn btn-lg btn-primary']").click()
+    xpath("//button[@class='btn btn-lg btn-primary']").click()                           #click Next Button
     time.sleep(2)
-    xpaths("//input[@placeholder='Gluster network address']")[0].send_keys(gluster_data_node1)
+    xpaths("//input[@placeholder='Gluster network address']")[0].send_keys(gluster_data_node1)  #Enter the first gluster host
     time.sleep(2)
-    xpaths("//input[@placeholder='Gluster network address']")[1].send_keys(gluster_data_node2)
+    xpaths("//input[@placeholder='Gluster network address']")[1].send_keys(gluster_data_node2)  #Enter the second gluster host
     time.sleep(2)
-    xpaths("//input[@placeholder='Gluster network address']")[2].send_keys(gluster_arbiter_node)
+    xpaths("//input[@placeholder='Gluster network address']")[2].send_keys(gluster_arbiter_node) #Enter the third gluster host
     time.sleep(2)
-    xpath("//button[@class='btn btn-primary wizard-pf-next']").click()
+    xpath("//button[@class='btn btn-primary wizard-pf-next']").click() #click on Next
     time.sleep(2)
-    xpath("//button[@class='btn btn-primary wizard-pf-next']").click()
+    xpath("//button[@class='btn btn-primary wizard-pf-next']").click() #click on Next
     time.sleep(2)
-    xpaths("//input[@title='Third host in the host list will be used for creating arbiter bricks']")[1].click()
-    time.sleep(2)
-    xpaths("//input[@title='Third host in the host list will be used for creating arbiter bricks']")[2].click()
-    time.sleep(2)
-    xpath("//button[@class='btn btn-primary wizard-pf-next']").click()
+    if vmstore_is_arbiter == "Yes":
+        xpaths("//input[@title='Third host in the host list will be used for creating arbiter bricks']")[1].click() #check arbiter checkbox to create vmstore as arbiter volume
+        time.sleep(2)
+    if data_is_arbiter == "Yes":
+        xpaths("//input[@title='Third host in the host list will be used for creating arbiter bricks']")[2].click() #check arbiter checkbox to create data as arbiter volume
+        time.sleep(2)
+    time.sleep(5)
+    xpath("//button[@class='btn btn-primary wizard-pf-next']").click()                                          # click Next
     xpaths("//input[@type='number']")[1].clear()
     time.sleep(1)
-    xpaths("//input[@type='number']")[1].send_keys(data_disk_count)
+    xpaths("//input[@type='number']")[1].send_keys(data_disk_count)           #Enter the disk count of RAID
     time.sleep(1)
     xpaths("//input[@placeholder='device name']")[0].clear()
-    xpaths("//input[@placeholder='device name']")[0].send_keys(device_name_engine)
+    xpaths("//input[@placeholder='device name']")[0].send_keys(device_name_engine)  #Enter the device name to create engine lv
     time.sleep(1)
     xpaths("//input[@placeholder='device name']")[1].clear()
-    xpaths("//input[@placeholder='device name']")[1].send_keys(device_name_data)
+    xpaths("//input[@placeholder='device name']")[1].send_keys(device_name_data)    #Enter the device name to create data lv
     time.sleep(1)
     xpaths("//input[@placeholder='device name']")[2].clear()
-    xpaths("//input[@placeholder='device name']")[2].send_keys(device_name_vmstore)
+    xpaths("//input[@placeholder='device name']")[2].send_keys(device_name_vmstore)  #Enter the device name to create vmstore lv
     time.sleep(1)
     xpaths("//input[@type='number']")[3].clear()
     time.sleep(1)
-    xpaths("//input[@type='number']")[3].send_keys(size_of_datastore_lv)
+    xpaths("//input[@type='number']")[3].send_keys(size_of_datastore_lv)          #Enter the size for data store lv
     time.sleep(1)
     xpaths("//input[@type='number']")[4].clear()
     time.sleep(1)
-    xpaths("//input[@type='number']")[4].send_keys(size_of_vmstore_lv)
+    xpaths("//input[@type='number']")[4].send_keys(size_of_vmstore_lv)            #Enter the size for vmstore lv
     time.sleep(1)
-    xpath("//button[@class='btn btn-primary wizard-pf-next']").click()
+    xpath("//button[@class='btn btn-primary wizard-pf-next']").click()            #click Next
     time.sleep(5)
-    xpath("//button[@class='btn btn-primary wizard-pf-finish']").click()
-    verify_gluster_deployment(host_dict)
+    xpath("//button[@class='btn btn-primary wizard-pf-finish']").click()          #Click on Deploy Button
+    verify_gluster_deployment(host_dict)                                          #Validate Gluster Deployment
     time.sleep(10)
-    if not xpath("//button[@class='btn btn-lg btn-primary']").is_displayed():
+    if not xpath("//button[@class='btn btn-lg btn-primary']").is_displayed(): 
         log.error("continue to Hosted Engine deployment not found")
         
     else:
