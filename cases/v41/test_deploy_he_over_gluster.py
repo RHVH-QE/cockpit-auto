@@ -788,7 +788,6 @@ def runtest():
     check_deployment_with_hostedengine_on_gluster()
     check_saving_the_generated_gdeploy_config_file()
     check_engine_lv_of_type_thick_and_volume_of_type_replicate()
-    check_cleanup_of_gluster_setup_done()
     #check_cleanup_of_gluster_setup_done() #this can be executed only when clean up of Hosted Engine deployment is done
     
     
