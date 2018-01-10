@@ -438,7 +438,7 @@ def check_deployment_with_hostedengine_on_gluster():
         'engine_password': engine_password,
         'auto_answer': auto_answer,
     }
-    #he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_dict, gluster_dict)
+    he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_dict, gluster_dict)
     check_he_is_deployed(host_ip, host_user, host_password)
     log.info("HostedEngine was deployed!")
 
@@ -482,10 +482,9 @@ def check_gluster_deployment_wizard():
         time.sleep(5)
         if dr.find_element_by_xpath("//dt[@class='modal-title']").text == "Gluster Deployment":
             log.info ("Gluster deployment Wizard is present")
-            dr.save_screenshot('screenshots/gluster_deployment_wizard.png')
         else:
             log.error("gluster deployment wizard is not present on host %s " % (host_ip))
-            dr.save_screenshot('screenshots/gluster_deploymentwizard_not_present.png')
+            
     dr.quit()
 
 @checkpoint(dict1)
@@ -534,16 +533,13 @@ def validate_host_deployment_tab():
             log.info("Hint for the user is present to use gluster network as backend network IP for hosts")
         else:
             log.error("Hint is not present for the user to use gluster network as bakend network IP for hosts")
-            dr.save_screenshot('screenshots/no_hint_present_gluster_network.png')
         dr.find_element_by_xpath("//a[@tabindex='0']").click()
         time.sleep(2)
         log.info("validating for a hint for the user on which host will be used as arbiter node")
         if dr.find_element_by_xpath("//div[@role='tooltip']").text == "This host will be used as arbiter node while creating arbiter volumes":
             log.info("Host text box hints the user about the host that will be used as arbiter node")
-            dr.save_screenshot('screenshots/hint_for_arbiter_node.png')
         else:
             log.error("No hint for the user about arbiter node")
-            dr.save_screenshot('screenshots/hint_for_no_arbiter_node.png')
         log.info("validating if host ips entered in the text boxs are retained")
         dr.find_elements_by_xpath("//input[@placeholder='Gluster network address']")[0].send_keys(gluster_data_node1)
         time.sleep(5)
@@ -608,17 +604,15 @@ def check_back_and_cancel_buttons_on_gdeploy_wizard():
                 log.info("Back button functions correctly in gluster deployment wizard")
             else:
                 log.error("Back button does not function correctly in gluster deployment wizard")
-                dr.save_screenshot('screenshots/back_button_gluster_deployment_wizard.png')
             dr.find_element_by_xpath("//button[@class='btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss']").click()
             time.sleep(5)
             if dr.find_element_by_xpath("//input[@value='hci']").is_displayed():
                 log.info("Cancel button functions correctly in gluster deployment wizard")
             else:
                 log.error("Cancel button does not function correctly in gluster deployment wizard")
-                dr.save_screenshot('screenshots/cancel_button_gluster_deployment_wizard.png')
         else:
             log.error("gluster deployment wizard is not present on host %s " % host_ip)
-            dr.save_screenshot('screenshots/gluster_deploymentwizard_not_present.png')
+            
     dr.quit()
     
 @checkpoint(dict1)
@@ -742,7 +736,7 @@ def validate_packages_tab():
                     log.info("Update Hosts textbox check box is present in packages tab of Gluster Wizard")
                 else:
                     log.error("Update Hosts textbox check box is not present in packages tab of Gluster Wizard")
-                dr.save_screenshot('screenshots/pacakges_tab.png')
+                
                 
                     
             else:
@@ -776,13 +770,27 @@ def validate_packages_tab():
                     log.info("Update Hosts check box is present in packages tab of Gluster Wizard")
                 else:
                     log.error("Update Hosts textbox check box is not present in packages tab of Gluster Wizard")
-                dr.save_screenshot('screenshots/pacakges_tab_RHEL.png')
+                
     dr.quit()
             
 
             
 def runtest():
+    check_gluster_packages_presence_on_rhvh_node()
+    check_glusterfs_firewall_service_availability_with_default_firewallzone()
+    check_cockpitui_should_be_reachable_for_the_user()
+    check_option_to_start_with_gluster_deployment()
+    check_cockpit_gdeploy_plugin_provides_redeploy_button()
+    check_gluster_deployment_wizard()
+    validate_host_deployment_tab()
+    check_back_and_cancel_buttons_on_gdeploy_wizard()
+    validate_packages_tab()
+    check_deployment_with_hostedengine_on_gluster()
+    check_saving_the_generated_gdeploy_config_file()
+    check_engine_lv_of_type_thick_and_volume_of_type_replicate()
     check_cleanup_of_gluster_setup_done()
-    #check_deployment_with_hostedengine_on_gluster()
+    #check_cleanup_of_gluster_setup_done() #this can be executed only when clean up of Hosted Engine deployment is done
+    
+    
     
     
