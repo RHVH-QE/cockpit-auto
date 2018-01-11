@@ -10,7 +10,7 @@ common:
     test_build: rhvh-4.1-0.20171207.0
 
 subscription:
-    rhn_user: <user_name>
+    rhn_user: <user_name> 
     rhn_password: <password>
      
 
@@ -32,8 +32,8 @@ gluster_details:
     gluster_data_node1: 10.70.36.73
     gluster_data_node2: 10.70.36.75
     gluster_arbiter_node: 10.70.36.74
-    vmstore_is_arbiter: on
-    data_is_arbiter: on
+    vmstore_is_arbiter: Yes
+    data_is_arbiter: Yes
     data_disk_count: 4
     device_name_engine: sdb
     device_name_vmstore: sdb
