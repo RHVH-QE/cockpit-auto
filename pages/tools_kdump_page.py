@@ -29,7 +29,7 @@ class KdumpPage(PageObject):
         with self.switch_to_frame(self.frame_right_name):
             assert self.kdump_status_btn, "Kdump status button not exists"
             assert self.service_link.text == "Service is running", \
-                "Kdump service is not running"
+                "Kdump service is not running, as '{}'".format(self.service_link.text)
             assert self.dump_location_link.text == "locally in /var/crash", \
                 "Dump location is not default to {}, not /var/crash".format(
                     self.dump_location_link.text)

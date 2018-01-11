@@ -1,10 +1,12 @@
 import logging
 import os
+import re
 from selenium import webdriver
 from pages.tools_account_page import AccountPage
 from pages.tools_diagnostic_page import DiagnosticPage
 from pages.tools_selinux_page import SelinuxPage
 from pages.tools_kdump_page import KdumpPage
+from pages.kdump_service_page import KdumpServicePage
 from cases.helpers import CheckBase
 
 
@@ -94,7 +96,7 @@ class TestToolsOther(CheckBase):
             # Check basic elements
             self.page.basic_check_elements_exists()
         except AssertionError as e:
-            log.error(e)
+            log.exception(e)
             return False
 
         fullname = self._config['fullname']
@@ -137,7 +139,7 @@ class TestToolsOther(CheckBase):
             # Check basic elements
             self.page.basic_check_elements_exists()
         except AssertionError as e:
-            log.error(e)
+            log.exception(e)
             return False
 
         self._clean_sosreport()
@@ -175,11 +177,11 @@ class TestToolsOther(CheckBase):
             # Check basic elements
             self.page.basic_check_elements_exists()
         except AssertionError as e:
-            log.error(e)
+            log.exception(e)
             return False
 
         if not self._check_policy(expected="Enforcing"):
-            log.error("Fresh installed selinux policy is not Enforcing")
+            log.exception("Fresh installed selinux policy is not Enforcing")
             return False
 
         try:
@@ -200,16 +202,60 @@ class TestToolsOther(CheckBase):
         return True
 
     def _stop_kdump_from_service_page(self):
-        pass
+        self.page.service_status_select.click()
+        self.page.wait(1)
+        self.page.stop_btn.click()
+        self.page.wait(1)
+
+        cmd = "systemctl status kdump.service|grep Active"
+        ret = self.run_cmd(cmd)
+        if not ret[0]:
+            return False
+        output = ret[1]
+        status = output.split()[1]
+        assert status == "inactive", "Failed to stop the kdump service"
 
     def _start_kdump_from_service_page(self):
-        pass
+        self.page.service_status_select.click()
+        self.page.wait(1)
+        self.page.start_btn.click()
+        self.page.wait(1)
+
+        cmd = "systemctl status kdump.service|grep Active"
+        ret = self.run_cmd(cmd)
+        if not ret[0]:
+            return False
+        output = ret[1]
+        status = output.split()[1]
+        assert status == "active", "Failed to start the kdump service"
 
     def _disable_kdump_from_service_page(self):
-        pass
+        self.page.enable_disable_select.click()
+        self.page.wait(1)
+        self.page.disable_btn.click()
+        self.page.wait(1)
+
+        cmd = "systemctl status kdump.service|grep Loaded"
+        ret = self.run_cmd(cmd)
+        if not ret[0]:
+            return False
+        output = ret[1]
+        status = output.split(';')[1]
+        assert status == "disabled", "Failed to disable the kdump service"
 
     def _enable_kdump_from_service_page(self):
-        pass
+        self.page.enable_disable_select.click()
+        self.page.wait(1)
+        self.page.enable_btn.click()
+        self.page.wait(1)
+
+        cmd = "systemctl status kdump.service|grep Loaded"
+        ret = self.run_cmd(cmd)
+        if not ret[0]:
+            return False
+        output = ret[1]
+        status = output.split(';')[1]
+        assert status == "enabled", "Failed to enable the kdump service"
 
     def check_kdump_service(self):
         """
@@ -225,14 +271,28 @@ class TestToolsOther(CheckBase):
             # Check basic elements
             self.page.basic_check_elements_exists()
         except AssertionError as e:
-            log.error(e)
+            log.exception(e)
             return False
 
         try:
-            self._stop_kdump_from_service_page()
-            self._start_kdump_from_service_page()
-            self._disable_kdump_from_service_page()
-            self._enable_kdump_from_service_page()
+            with self.page.switch_to_frame(self.page.frame_right_name):
+                self.page.service_link.click()
+                self.page.wait(3)
+                assert re.search(
+                    'system/services#/kdump.service', self.page.current_url), \
+                    "Not direct to kdump service page"
+        except Exception as e:
+            log.exception(e)
+            return False
+
+        self.page = KdumpServicePage(self._driver)
+
+        try:
+            with self.page.switch_to_frame(self.page.frame_right_name):
+                self._stop_kdump_from_service_page()
+                self._start_kdump_from_service_page()
+                self._disable_kdump_from_service_page()
+                self._enable_kdump_from_service_page()
         except Exception as e:
             log.exception(e)
             return False
@@ -285,7 +345,7 @@ class TestToolsOther(CheckBase):
             # Check basic elements
             self.page.basic_check_elements_exists()
         except AssertionError as e:
-            log.error(e)
+            log.exception(e)
             return False
         
         self._clean_vmcore()
@@ -300,12 +360,17 @@ class TestToolsOther(CheckBase):
         return True
 
     def teardown(self):
+        log.info("Tear down work...")
+        log.info("Close the browser")
         self.close_browser()
 
         if "check_new_account" in self.test_history:
+            log.info("Clean the account if created")
             username = self._config['username']
             self._clean_account(username)
         if "check_create_diagnostic" in self.test_history:
+            log.info("Clean the sosreport if downloaded")
             self._clean_sosreport()
         if "check_vmcore_local" in self.test_history:
+            log.info("Clean the vmcore if generated")
             self._clean_vmcore()

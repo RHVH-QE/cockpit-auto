@@ -7,7 +7,8 @@ cases = {
     'RHEVM-23317': 'check_network_page',
     'RHEVM-23318': 'check_logs_page',
     'RHEVM-23319': 'check_storage_page',
-    'RHEVM-23320': 'check_ssh_key' 
+    'RHEVM-23320': 'check_ssh_key',
+    'RHEVM-23284': 'check_network_page'
 }
 
 config = {

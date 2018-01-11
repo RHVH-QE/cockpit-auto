@@ -200,12 +200,18 @@ class CheckBase(object):
             self._driver.close()
 
     def setup(self):
+        log.info("Setup work before testing...")
+        log.info("Init browser")
         self.init_browser()
+        log.info("Login cockpit")
         self.cockpit_login()
+        log.info("Init page")
         self.set_page()
 
     def teardown(self):
+        log.info("Teardown work after testing...")
         self.close_browser()
+        log.info("Closed the browser")
 
     def go_check(self, file_name):
         cks = {}
