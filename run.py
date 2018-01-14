@@ -10,6 +10,14 @@ from importlib import import_module
 log = logging.getLogger("bender")
 
 
+def _get_cases(cf_name):
+    cases_info_name = cf_name.split('test_')[-1]
+    cases_info_module = import_module(
+        "cases.cases_info." + cases_info_name, __package__)
+    cases_map = getattr(cases_info_module, 'cases', None)  # {$polarion_id: $checkpoint}
+    return cases_map
+
+
 def run(tier):
     """"""
     config_dict = yaml2dict('./config.yml')
@@ -19,8 +27,9 @@ def run(tier):
     browser = config_dict['browser']
     test_build = config_dict['test_build']
     results_logs.test_build = test_build
-
+    expect_cases = {}
     test_scens = yaml2dict('./scen.yml')
+
     try:
         case_files = test_scens[tier]['cases']
         for cf in case_files:
@@ -46,12 +55,16 @@ def run(tier):
             test.browser = browser
             test.build = test_build
 
+            # Get all cases from cases_info
+            cf_cases = _get_cases(cf_name)
+            expect_cases.update(cf_cases)
+
             # Go check
             log.info(test.go_check(cf_name))
     except Exception as e:
         log.exception(e)
 
-    generate_final_results(results_logs)
+    generate_final_results(expect_cases, results_logs)
 
 
 def main():
@@ -61,7 +74,7 @@ def main():
         "--test_tier",
         type=str,
         choices=[
-            "debug_tier", "he_tier", "virt_tier", "common_tier", "all_tier"
+            "debug_tier", "all_tier", "virt_tier", "common_tier"
         ],
         help="select desired test tier")
 

@@ -82,14 +82,14 @@ class ResultsAndLogs(object):
 results_logs = ResultsAndLogs()
 
 
-def generate_final_results(results_logs):
+def generate_final_results(expect_cases, results_logs):
     log_path = results_logs.current_log_path
     test_build = results_logs.test_build
     if test_build not in log_path:
         return
     final_path = os.path.join(
         log_path.split(test_build)[0], test_build)
-    report = ResultSummary(final_path, test_build)
+    report = ResultSummary(expect_cases, final_path, test_build)
     report.run()
 
 

@@ -11,7 +11,8 @@ class ResultSummary(object):
     /home/dracher/Zoidberg/logs/2017-03-08/redhat-virtualization-host-4.1-20170208.0
     """
 
-    def __init__(self, path, test_build=None):
+    def __init__(self, expect_cases, path, test_build=None):
+        self.expect_cases = expect_cases
         self.path = path.rstrip('/')
         self.test_build = test_build
         self.jfilename = "final_results.json"
@@ -48,8 +49,10 @@ class ResultSummary(object):
         actual_run_cases = []
         pass_cases_results = []
         failed_cases_results = []
+        error_cases_results = []
         pass_num = 0
         failed_num = 0
+        error_num = 0
         for a, b, c in os.walk(root_path):
             for case in sorted(b):
                 ret = self._parse_checkpoints(os.path.join(a, case, 'checkpoints.log'))
@@ -65,15 +68,22 @@ class ResultSummary(object):
                 pass_num = pass_num + values.count('passed')
                 failed_num = failed_num + values.count('failed')
             break
-        total_num = pass_num + failed_num
+        
+        for k in self.expect_cases.keys():
+            if k not in actual_run_cases:
+                error_cases_results.append(k)
+
+        total_num = len(self.expect_cases.keys())
+        error_num = len(error_cases_results)
         final_results['sum'] = OrderedDict()
         final_results['sum']['title'] = self._gen_title()
         final_results['sum']['log_url'] = self._gen_log_url()
         final_results['sum']['total'] = total_num
         final_results['sum']['passed'] = pass_num
         final_results['sum']['failed'] = failed_num
-        final_results['sum']['error'] = 0
+        final_results['sum']['error'] = error_num
         final_results['sum']['failedlist'] = failed_cases_results
+        final_results['sum']['errorlist'] = error_cases_results
         final_results_jfile = os.path.join(root_path,
                                            self.jfilename)
         try:
