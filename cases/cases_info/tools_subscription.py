@@ -8,8 +8,8 @@ cases = {
 }
 
 config = {
-    'rhn_user': 'QualityAssurance',
-    'rhn_password': 'VHVFhPS5TEG8dud9',
+    'rhn_user': 'qa@redhat.com',
+    'rhn_password': 'redhatqa',
     'activation_key': 'rhevh',
     'activation_org': '711497',
     'satellite_ip': '10.73.75.177',
