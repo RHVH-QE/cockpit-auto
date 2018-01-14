@@ -15,6 +15,7 @@ class TestSubscription(CheckBase):
         self.page = SubscriptionPage(self._driver)
 
     def _clean_all(self):
+        self.page.url_input.clear()
         self.page.login_input.clear()
         self.page.passwd_input.clear()
         self.page.key_input.clear()
@@ -48,7 +49,7 @@ class TestSubscription(CheckBase):
         packages = ['tcpdump', 'vim-enhanced', 'screen', 'strace', 
             'ltrace', 'wget', 'sysstat', 'dropwatch', 'systemtap', 'rhvm-appliance']
         for pak in packages:
-            cmd = "yum search {}".format(pak)
+            cmd = "yum list {}".format(pak)
             ret = self.run_cmd(cmd)
             assert ret[0], "Can not find package {}".format(pak)
 
@@ -92,14 +93,18 @@ class TestSubscription(CheckBase):
                 wev = self.page.wait_until_element_visible
                 wev(self.page.register_dialog_title)
 
-                self._clean_all()
-
                 self.page.url_select_btn.click()
                 self.page.url_custom_item.click()
                 self.page.wait(0.5)
 
+                self._clean_all()
+
+                subscription_url = self._config['subscription_url']
                 rhn_user = self._config['rhn_user']
                 rhn_password = self._config['rhn_password']
+
+                self.page.url_input.send_keys(subscription_url)
+                self.page.wait(0.5)
                 self.page.login_input.send_keys(rhn_user)
                 self.page.wait(0.5)
                 self.page.passwd_input.send_keys(rhn_password)
@@ -138,14 +143,17 @@ class TestSubscription(CheckBase):
                 wev = self.page.wait_until_element_visible
                 wev(self.page.register_dialog_title)
 
-                self._clean_all()
-
                 self.page.url_select_btn.click()
                 self.page.url_custom_item.click()
                 self.page.wait(0.5)
 
+                self._clean_all()
+
+                subscription_url = self._config['subscription_url']
                 activation_key = self._config['activation_key']
                 activation_org = self._config['activation_org']
+                self.page.url_input.send_keys(subscription_url)
+                self.page.wait(0.5)
                 self.page.key_input.send_keys(activation_key)
                 self.page.wait(0.5)
                 self.page.org_input.send_keys(activation_org)
@@ -178,15 +186,16 @@ class TestSubscription(CheckBase):
                 wev = self.page.wait_until_element_visible
                 wev(self.page.register_dialog_title)
 
-                self._clean_all()
-
                 self.page.url_select_btn.click()
                 self.page.url_custom_item.click()
                 self.page.wait(0.5)
 
+                self._clean_all()
+
                 satellite_ip = self._config['satellite_ip']
                 satellite_user = self._config['satellite_user']
                 satellite_passwd = self._config['satellite_password']
+
                 self.page.url_input.send_keys(satellite_ip+'/rhsm')
                 self.page.wait(0.5)
                 self.page.login_input.send_keys(satellite_user)
@@ -221,11 +230,11 @@ class TestSubscription(CheckBase):
                 wev = self.page.wait_until_element_visible
                 wev(self.page.register_dialog_title)
 
-                self._clean_all()
-
                 self.page.url_select_btn.click()
                 self.page.url_custom_item.click()
                 self.page.wait(0.5)
+
+                self._clean_all()
 
                 satellite_ip = self._config['satellite57_ip']
                 satellite_user = self._config['satellite57_user']

@@ -147,7 +147,9 @@ class CheckBase(object):
         id_ckp_map = getattr(module, 'cases', None)  # {$polarion_id: $checkpoint}
         self._config = getattr(module, 'config', None)  # Set the configuration
 
-        checkpoint_cases_map = {}
+        from collections import OrderedDict
+        checkpoint_cases_map = OrderedDict()
+
         if not id_ckp_map:
             return checkpoint_cases_map
 

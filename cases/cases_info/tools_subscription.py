@@ -1,13 +1,17 @@
 # test_tools_subscription
-cases = {
-    'RHEVM-23290': 'check_register_rhsm',
-    'RHEVM-23294': 'check_register_rhsm_org',
-    'RHEVM-23295': 'check_register_rhsm',
-    'RHEVM-23296': 'check_register_satellite',
-    'RHEVM-24721': 'check_register_satellite57'
-}
+from collections import OrderedDict
+cases_t = (
+    ('RHEVM-23290', 'check_register_rhsm'),
+    ('RHEVM-23294', 'check_register_rhsm_org'),
+    ('RHEVM-23295', 'check_register_rhsm'),
+    ('RHEVM-23296', 'check_register_satellite'),
+    ('RHEVM-24721', 'check_register_satellite57')
+)
+cases = OrderedDict(cases_t)
+
 
 config = {
+    'subscription_url': 'subscription.rhn.stage.redhat.com',
     'rhn_user': 'qa@redhat.com',
     'rhn_password': 'redhatqa',
     'activation_key': 'rhevh',

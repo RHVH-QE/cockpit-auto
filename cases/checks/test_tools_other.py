@@ -212,8 +212,9 @@ class TestToolsOther(CheckBase):
         if not ret[0]:
             return False
         output = ret[1]
-        status = output.split()[1]
-        assert status == "inactive", "Failed to stop the kdump service"
+        status = output.split()[1].strip()
+        assert status == "inactive", \
+            "Failed to stop the kdump service, as status is {}".format(status)
 
     def _start_kdump_from_service_page(self):
         self.page.service_status_select.click()
@@ -226,8 +227,9 @@ class TestToolsOther(CheckBase):
         if not ret[0]:
             return False
         output = ret[1]
-        status = output.split()[1]
-        assert status == "active", "Failed to start the kdump service"
+        status = output.split()[1].strip()
+        assert status == "active", \
+            "Failed to start the kdump service, as status is {}".format(status)
 
     def _disable_kdump_from_service_page(self):
         self.page.enable_disable_select.click()
@@ -240,8 +242,9 @@ class TestToolsOther(CheckBase):
         if not ret[0]:
             return False
         output = ret[1]
-        status = output.split(';')[1]
-        assert status == "disabled", "Failed to disable the kdump service"
+        status = output.split(';')[1].strip()
+        assert status == "disabled", \
+            "Failed to disable the kdump service, as status is {}".format(status)
 
     def _enable_kdump_from_service_page(self):
         self.page.enable_disable_select.click()
@@ -254,8 +257,9 @@ class TestToolsOther(CheckBase):
         if not ret[0]:
             return False
         output = ret[1]
-        status = output.split(';')[1]
-        assert status == "enabled", "Failed to enable the kdump service"
+        status = output.split(';')[1].strip()
+        assert status == "enabled", \
+            "Failed to enable the kdump service, as status is {}".format(status)
 
     def check_kdump_service(self):
         """
