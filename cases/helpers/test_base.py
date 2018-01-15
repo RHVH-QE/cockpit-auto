@@ -226,3 +226,12 @@ class CheckBase(object):
             self.teardown()
 
         return cks
+
+
+def paged(page_cls):
+    def decorator(func):
+        def wrapper(self, *args, **ks):
+            self.set_page(page_cls)
+            return func(*args, **ks)
+        return wrapper
+    return decorator

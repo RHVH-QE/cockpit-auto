@@ -33,7 +33,7 @@ class DashboardUiPage(PageObject):
 
     system_title = PageElement(
         xpath='//*[@id="content"]/div/div/div[1]/table/tbody[3]/tr/td/h4')
-    
+
     network_info_title = PageElement(
         xpath='//*[@id="content"]/div/div/div[1]/table/tbody[4]/tr[1]/td[1]')
     network_info_link = PageElement(

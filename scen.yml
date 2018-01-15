@@ -11,7 +11,7 @@ all_tier:
         "test_dashboard_nodectl.py",
         "test_dashboard_ui.py",
         "test_tools_subscription.py",
-        "test_tools_other"
+        "test_tools_other.py"
     ]
 
 virt_tier:
@@ -23,5 +23,5 @@ virt_tier:
 common_tier:
     cases: [
         "test_tools_subscription.py",
-        "test_tools_other"
+        "test_tools_other.py"
     ]

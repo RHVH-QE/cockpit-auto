@@ -82,7 +82,6 @@ class ResultSummary(object):
         final_results['sum']['passed'] = pass_num
         final_results['sum']['failed'] = failed_num
         final_results['sum']['error'] = error_num
-        final_results['sum']['failedlist'] = failed_cases_results
         final_results['sum']['errorlist'] = error_cases_results
         final_results_jfile = os.path.join(root_path,
                                            self.jfilename)

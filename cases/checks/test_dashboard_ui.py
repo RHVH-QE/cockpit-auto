@@ -19,6 +19,7 @@ class TestDashboardUi(CheckBase):
         Purpose:
             Check node status in virtualization dashboard
         """
+        self.set_page()
         log.info('Checking node status in virtualization dashboard...')
         try:
             # Check basic elements
@@ -66,6 +67,7 @@ class TestDashboardUi(CheckBase):
         Purpose:
             Check node health in virtualization dashboard
         """
+        self.set_page()
         log.info("Check node health in virtualization dashboard")
 
         with self.page.switch_to_frame(self.page.frame_right_name):
@@ -98,8 +100,9 @@ class TestDashboardUi(CheckBase):
         Purpose:
             Check node information in virtualization dashboard
         """
+        self.set_page()
         log.info("Check node information in virtualization dashboard")
-
+        ret = True
         try:
             with self.page.switch_to_frame(self.page.frame_right_name):
                 self.page.cur_layer_link.click()
@@ -124,27 +127,28 @@ class TestDashboardUi(CheckBase):
                     "Default is not current layer"
 
                 # Todo: check other info like kernel, initrd, etc
-
+        except AssertionError as e:
+            log.error(e)
+            ret = False
+        finally:
                 close_btn_list = list(self.page.close_btns)
                 for j in close_btn_list[0:]:
                     j.click()
-        except AssertionError as e:
-            log.error(e)
-            return False
-        return True
+                return ret
 
     def check_network_page(self):
         """
         Purpose:
             Go to the Networking page in virtualization dashboard
         """
+        self.set_page()
         log.info("Go to the Networking page in virtualization dashboard")
 
         try:
             with self.page.switch_to_frame(self.page.frame_right_name):
                 self.page.network_info_link.click()
                 self.page.wait(3)
-                assert re.search('network', self.page.w.current_url), \
+                assert re.search(r'network', self.page.current_url), \
                     "Not directed to network page"
         except AssertionError as e:
             log.error(e)
@@ -156,14 +160,15 @@ class TestDashboardUi(CheckBase):
         Purpose:
             Go to the Logs page in virtualization dashboard
         """
+        self.set_page()
         log.info("Go to the Logs page in virtualization dashboard")
 
         try:
             with self.page.switch_to_frame(self.page.frame_right_name):
                 self.page.system_logs_link.click()
                 self.page.wait(3)
-                assert re.search('systems/logs', self.page.w.current_url), \
-                    "Not directed to system logs page"
+                assert re.search(r'system/logs', self.page.current_url), \
+                    "Not directed to system logs page, as url is {}".format(self.page.current_url)
         except AssertionError as e:
             log.error(e)
             return False
@@ -174,13 +179,14 @@ class TestDashboardUi(CheckBase):
         Purpose:
             Go to the Storage page in virtualization dashboard
         """
+        self.set_page()
         log.info("Go to the Storage page in virtualization dashboard")
 
         try:
             with self.page.switch_to_frame(self.page.frame_right_name):
                 self.page.storage_link.click()
                 self.page.wait(3)
-                assert re.search('storage', self.page.w.current_url), \
+                assert re.search(r'storage', self.page.current_url), \
                     "Not directed to storage page"
         except AssertionError as e:
             log.error(e)
@@ -192,6 +198,7 @@ class TestDashboardUi(CheckBase):
         Purpose:
             Check the ssh host key in virtualization dashboard
         """
+        self.set_page()
         log.info("Check the ssh host key in virtualization dashboard")
 
         try:
