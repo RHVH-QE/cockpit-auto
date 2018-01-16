@@ -6,6 +6,7 @@ from collections import OrderedDict
 from utils.helpers import checkpoint
 import logging
 import const
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 log = logging.getLogger("sherry")
 
@@ -26,7 +27,7 @@ gluster_ip, gluster_storage_path, rhvm_appliance_path, vm_mac, vm_fqdn, vm_ip, v
         'hosted_engine').get('he_vm_password'), CONF.get('hosted_engine').get(
             'engine_password'), CONF.get('hosted_engine').get('auto_answer')
 
-gluster_data_node1, gluster_data_node2, gluster_arbiter_node, vmstore_is_arbiter, data_is_arbiter, data_disk_count, device_name_engine, device_name_data, device_name_vmstore, size_of_datastore_lv, size_of_vmstore_lv, gdeploy_conf_file_path, mount_engine_brick, mount_data_brick, mount_vmstore_brick, gluster_vg_name, gluster_pv_name, number_of_Volumes, engine_lv_name, os_variant_rhvh = CONF.get(
+gluster_data_node1, gluster_data_node2, gluster_arbiter_node, vmstore_is_arbiter, data_is_arbiter, data_disk_count, device_name_engine, device_name_data, device_name_vmstore, size_of_datastore_lv, size_of_vmstore_lv, gdeploy_conf_file_path, mount_engine_brick, mount_data_brick, mount_vmstore_brick, gluster_vg_name, gluster_pv_name, number_of_Volumes, engine_lv_name, os_variant_rhvh, bad_device_name = CONF.get(
     'gluster_details'
 ).get('gluster_data_node1'), CONF.get('gluster_details').get('gluster_data_node2'), CONF.get('gluster_details').get(
     'gluster_arbiter_node'), CONF.get('gluster_details').get('vmstore_is_arbiter'), CONF.get('gluster_details').get(
@@ -37,7 +38,7 @@ gluster_data_node1, gluster_data_node2, gluster_arbiter_node, vmstore_is_arbiter
     'mount_engine_brick'), CONF.get('gluster_details').get('mount_data_brick'), CONF.get('gluster_details').get(
     'mount_vmstore_brick'), CONF.get('gluster_details').get('gluster_vg_name'), CONF.get('gluster_details').get(
     'gluster_pv_name'), CONF.get('gluster_details').get('number_of_Volumes'), CONF.get('gluster_details').get(
-    'engine_lv_name'), CONF.get('gluster_details').get('os_variant_rhvh')
+    'engine_lv_name'), CONF.get('gluster_details').get('os_variant_rhvh'), CONF.get('gluster_details').get('bad_device_name')
 
 
 env.host_string = host_user + '@' + host_ip
@@ -774,14 +775,94 @@ def validate_packages_tab():
                 
     dr.quit()
             
+@checkpoint(dict1)
+def check_gdeploy_stops_deploying_when_error_is_encountered():
+    """
+        Purpose:
+            RHHI-140
+            verify that gdeploys stops deployment when an error is encountered.
+    """
+    host_dict = {'host_ip': host_ip,
+                 'host_user': host_user,
+                 'host_password': host_password
+                 }
+    if 'cockpit_port' in host_dict:
+        cockpit_port = host_dict['cockpit_port']
+    else:
+        cockpit_port = "9090"
+        root_uri = "https://" + host_ip + ":" + cockpit_port
+        dr = webdriver.Firefox()
+        dr.get(root_uri)
+        time.sleep(5)
+        id = dr.find_element_by_id
+        class_name = dr.find_element_by_class_name
+        tag_name = dr.find_elements_by_tag_name
+        xpath = dr.find_element_by_xpath
+        xpaths = dr.find_elements_by_xpath
 
-            
+        # Login to cockpit
+        log.info("Logining to the cockpit...")
+        id("login-user-input").send_keys(host_user)
+        time.sleep(2)
+        id("login-password-input").send_keys(host_password)
+        time.sleep(2)
+        id("login-button").click()
+        time.sleep(5)
+        dr.get(root_uri + "/ovirt-dashboard")
+        time.sleep(5)
+        dr.switch_to_frame("cockpit1:localhost/ovirt-dashboard")
+        time.sleep(5)
+        xpath("//a[@href='#/he']").click()
+        time.sleep(5)
+        # code for configuring gluster
+        xpath("//input[@value='hci']").click()
+        time.sleep(2)
+        xpath("//button[@class='btn btn-lg btn-primary']").click()
+        time.sleep(2)
+        xpaths("//input[@placeholder='Gluster network address']")[0].send_keys(gluster_data_node1)
+        time.sleep(2)
+        xpaths("//input[@placeholder='Gluster network address']")[1].send_keys(gluster_data_node2)
+        time.sleep(2)
+        xpaths("//input[@placeholder='Gluster network address']")[2].send_keys(gluster_arbiter_node)
+        time.sleep(2)
+        xpath("//button[@class='btn btn-primary wizard-pf-next']").click()
+        time.sleep(2)
+        xpath("//button[@class='btn btn-primary wizard-pf-next']").click()
+        time.sleep(2)
+        xpath("//button[@class='btn btn-primary wizard-pf-next']").click()
+        time.sleep(1)
+        xpaths("//input[@placeholder='device name']")[0].clear()
+        xpaths("//input[@placeholder='device name']")[0].send_keys(
+            bad_device_name)
+        time.sleep(2)
+        xpaths("//input[@placeholder='device name']")[1].clear()
+        xpaths("//input[@placeholder='device name']")[1].send_keys(
+            bad_device_name)
+        time.sleep(2)
+        xpaths("//input[@placeholder='device name']")[2].clear()
+        xpaths("//input[@placeholder='device name']")[2].send_keys(
+            bad_device_name)
+        time.sleep(2)
+        xpath("//button[@class='btn btn-primary wizard-pf-next']").click()
+        time.sleep(5)
+        xpath("//button[@class='btn btn-primary wizard-pf-finish']").click()
+        time.sleep(10)
+        log.info (xpath("//textarea[@class='gdeploy-wizard-config-preview']").text)
+        ret = xpath("//textarea[@class='gdeploy-wizard-config-preview']").text
+        if ret.__contains__("The error was: error while evaluating conditional (result.rc != 0):"):
+            log.info("gdeploy halted when an error is encountered")
+        else:
+            log.info("gdeploy did not halt when an error is encountered")
+    dr.quit()
+    
+
 def runtest():
     check_gluster_packages_presence_on_rhvh_node()
     check_glusterfs_firewall_service_availability_with_default_firewallzone()
     check_cockpitui_should_be_reachable_for_the_user()
     check_option_to_start_with_gluster_deployment()
     check_cockpit_gdeploy_plugin_provides_redeploy_button()
+    check_gdeploy_stops_deploying_when_error_is_encountered()
     check_gluster_deployment_wizard()
     validate_host_deployment_tab()
     check_back_and_cancel_buttons_on_gdeploy_wizard()

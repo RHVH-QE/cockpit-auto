@@ -74,8 +74,11 @@ deployment_cases_RHHI = [
     'validate_host_deployment_tab',
     'check_back_and_cancel_buttons_on_gdeploy_wizard',
     'validate_arbiter_volume_creation',
-    'validate_packages_tab'
+    'validate_packages_tab',
+    'check_gdeploy_stops_deploying_when_error_is_encountered'
+    
 ]
 
 deployment_cases_RHHI_id =['RHHI-138', 'RHHI-118', 'RHHI-119', 'RHHI-121', 'RHHI-122', 'RHHI-127', 'RHHI-129',
-                           'RHHI-130', 'RHHI-132', 'RHHI-144', 'RHHI-145', 'RHHI-148', 'RHHI-147', 'RHHI-146']
+                           'RHHI-130', 'RHHI-132', 'RHHI-144', 'RHHI-145', 'RHHI-148', 'RHHI-147', 'RHHI-146',
+                           'RHHI-140']
