@@ -1,0 +1,21 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+pyyaml = "*"
+selenium = "*"
+fabric = "*"
+
+
+[dev-packages]
+
+
+
+[requires]
+
+python_version = "2.7"

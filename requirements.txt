@@ -1,3 +1,0 @@
-PyYAML==3.12
-selenium==3.8.1
-Fabric==1.14.0
