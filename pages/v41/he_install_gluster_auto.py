@@ -15,11 +15,10 @@ import ConfigParser
 
 log = logging.getLogger("sherry")
 
-
-
-host_ip, host_user, host_password, browser = CONF.get('common').get(
+host_ip, host_user, host_password, browser, host2_ip, host3_ip = CONF.get('common').get(
     'host_ip'), CONF.get('common').get('host_user'), CONF.get('common').get(
-    'host_password'), CONF.get('common').get('browser')
+    'host_password'), CONF.get('common').get('browser'), CONF.get('common').get('host2_ip'), CONF.get('common').get(
+    'host3_ip')
 
 rhn_user, rhn_password = CONF.get('subscription').get('rhn_user'), CONF.get(
     'subscription').get('rhn_password')
@@ -38,7 +37,7 @@ gluster_ip, gluster_storage_path, rhvm_appliance_path, vm_mac, vm_fqdn, vm_ip, v
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
 
-gluster_data_node1, gluster_data_node2, gluster_arbiter_node, vmstore_is_arbiter, data_is_arbiter, data_disk_count, device_name_engine, device_name_data, device_name_vmstore, size_of_datastore_lv, size_of_vmstore_lv, gdeploy_conf_file_path, mount_engine_brick, mount_data_brick, mount_vmstore_brick, gluster_vg_name, gluster_pv_name, number_of_Volumes, engine_lv_name = CONF.get(
+gluster_data_node1, gluster_data_node2, gluster_arbiter_node, vmstore_is_arbiter, data_is_arbiter, data_disk_count, device_name_engine, device_name_data, device_name_vmstore, size_of_datastore_lv, size_of_vmstore_lv, gdeploy_conf_file_path, mount_engine_brick, mount_data_brick, mount_vmstore_brick, gluster_vg_name, gluster_pv_name, number_of_Volumes, engine_lv_name, file_path_interface1, file_path_interface2 = CONF.get(
     'gluster_details'
 ).get('gluster_data_node1'), CONF.get('gluster_details').get('gluster_data_node2'), CONF.get('gluster_details').get(
     'gluster_arbiter_node'), CONF.get('gluster_details').get('vmstore_is_arbiter'), CONF.get('gluster_details').get(
@@ -49,7 +48,9 @@ gluster_data_node1, gluster_data_node2, gluster_arbiter_node, vmstore_is_arbiter
     'mount_engine_brick'), CONF.get('gluster_details').get('mount_data_brick'), CONF.get('gluster_details').get(
     'mount_vmstore_brick'), CONF.get('gluster_details').get('gluster_vg_name'), CONF.get('gluster_details').get(
     'gluster_pv_name'), CONF.get('gluster_details').get('number_of_Volumes'), CONF.get('gluster_details').get(
-    'engine_lv_name')
+    'engine_lv_name'), CONF.get('gluster_details').get('file_path_interface1'), CONF.get('gluster_details').get(
+    'file_path_interface2'
+)
 
 
 
@@ -163,7 +164,7 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
     engine_password = vm_dict['engine_password']
     auto_answer = vm_dict['auto_answer']
 
-    # Subscription to RHSM via CMD
+     # Subscription to RHSM via CMD
     log.info("Subscription to RHN or RHSM ,then enable rhvh repos...")
     for gluster_node_name, gluster_node_ip in gluster_dict.items():
         with settings(
@@ -218,6 +219,82 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
         cmd6 = "rm -f %s" % local_rhvm_appliance
         run(cmd6)
     
+    #Add entries to interface files so that ips on two interfaces are pingable
+    log.info(
+        "Adding entries to interface files..........."
+    )
+
+    with settings(
+        warn_only=True,
+        host_string=host_user + '@' + host_ip,
+        password=host_password):
+        cmd0 = "echo '2' >> /proc/sys/net/ipv4/conf/%s/rp_filter" % file_path_interface1
+        run(cmd0)
+        cmd1 = "echo '2' >> /proc/sys/net/ipv4/conf/%s/rp_filter" % file_path_interface2
+        run(cmd1)
+        cmd2 = "echo '2' >> /proc/sys/net/ipv4/conf/default/rp_filter"
+        run(cmd2)
+        cmd3 = "echo '2' >> /proc/sys/net/ipv4/conf/all/rp_filter"
+        run(cmd3)
+        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' >> /etc/sysctl.conf"
+        run(cmd4)
+        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' >> /etc/sysctl.conf"
+        run(cmd5)
+        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface1
+        run(cmd6)
+        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface2
+        run(cmd7)
+        cmd8 = "sysctl -p"
+        run(cmd8)
+    with settings(
+        warn_only=True,
+        host_string=host_user + '@' + host2_ip,
+        password=host_password):
+        cmd0 = "echo '2' >> /proc/sys/net/ipv4/conf/%s/rp_filter" % file_path_interface1
+        run(cmd0)
+        cmd1 = "echo '2' >> /proc/sys/net/ipv4/conf/%s/rp_filter" % file_path_interface2
+        run(cmd1)
+        cmd2 = "echo '2' >> /proc/sys/net/ipv4/conf/default/rp_filter"
+        run(cmd2)
+        cmd3 = "echo '2' >> /proc/sys/net/ipv4/conf/all/rp_filter"
+        run(cmd3)
+        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' >> /etc/sysctl.conf"
+        run(cmd4)
+        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' >> /etc/sysctl.conf"
+        run(cmd5)
+        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface1
+        run(cmd6)
+        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface2
+        run(cmd7)
+        cmd8 = "sysctl -p"
+        run(cmd8)
+
+    with settings(
+        warn_only=True,
+        host_string=host_user + '@' + host3_ip,
+        password=host_password):
+        cmd0 = "echo '2' >> /proc/sys/net/ipv4/conf/%s/rp_filter" % (file_path_interface1)
+        run(cmd0)
+        cmd1 = "echo '2' >> /proc/sys/net/ipv4/conf/%s/rp_filter" % (file_path_interface2)
+        run(cmd1)
+        cmd2 = "echo '2' >> /proc/sys/net/ipv4/conf/default/rp_filter"
+        run(cmd2)
+        cmd3 = "echo '2' >> /proc/sys/net/ipv4/conf/all/rp_filter"
+        run(cmd3)
+        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' >> /etc/sysctl.conf"
+        run(cmd4)
+        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' >> /etc/sysctl.conf"
+        run(cmd5)
+        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface1
+        run(cmd6)
+        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface2
+        run(cmd7)
+        cmd8 = "sysctl -p"
+        run(cmd8)
+    log.info("Generating and copying keys")
+    #generating keys
+    generate_keys()
+    copy_keys()
     time.sleep(2)
     log.info("Deploying gluster...")
     dr = webdriver.Firefox()
@@ -295,7 +372,7 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
     xpath("//button[@class='btn btn-primary wizard-pf-next']").click()            #click Next
     time.sleep(5)
     xpath("//button[@class='btn btn-primary wizard-pf-finish']").click()          #Click on Deploy Button
-    verify_gluster_deployment(host_dict)                                          #Validate Gluster Deployment
+    verify_gluster_deployment(host_dict)                                         #Validate Gluster Deployment
     time.sleep(10)
     if not xpath("//button[@class='btn btn-lg btn-primary']").is_displayed(): 
         log.error("continue to Hosted Engine deployment not found")
@@ -458,3 +535,46 @@ def check_he_is_deployed(host_ip, host_user, host_password):
         else:
             log.error("Not found the successfully message in the setup log %s" % ret)
                                
+
+def generate_keys():
+    """
+        Purpose:
+            Generate keys on the first node
+        """
+    with settings(
+        warn_only=True,
+        host_string=host_user + '@' + host_ip,
+        password=host_password):
+        cmd = run("echo -e  'y\n'|ssh-keygen -t rsa -f /root/.ssh/id_rsa -q -P '' ")
+        ret=run(cmd)
+        if ret.succeeded == True:
+            log.info("Successfully generated keys on the first host %s" % host_ip)
+        elif ret!=0:
+            log.info("Keys already exists and overridden")
+        else:
+            log.info("could not generate keys")
+
+
+def copy_keys():
+    """
+        Purpose:
+            copy  keys from first node to all other nodes.
+        """
+    gluster_dict = {'gluster_data_node1': gluster_data_node1,
+                    'gluster_data_node2': gluster_data_node2,
+                    'gluster_arbiter_node': gluster_arbiter_node
+                    }
+    for gluster_node_name, gluster_node_ip in gluster_dict.items():
+        with settings(
+            warn_only=True,
+            host_string=host_user + '@' + host_ip,
+            password=host_password):
+            cmd0 = "echo '%s' >> password.txt" % gluster_node_ip
+            run(cmd0)
+            cmd1 = "sshpass -f password.txt ssh-copy-id -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no -f root" + '@' + \
+                   gluster_node_ip
+            ret = run(cmd1)
+            if ret.__contains__("Number of key(s) added: 1"):
+                log.info("Successfully copied keys to %s" % gluster_node_ip)
+            else:
+                log.info("Could not copy keys to %s" % gluster_node_ip)
