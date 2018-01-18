@@ -1,8 +1,8 @@
 # cockpit-auto
 
-This project is for cockpit automation, which using selenium to locate web elements and to operate as a test user.
+This project is for cockpit automation, which using selenium to locate web elements and operate as a test user.
 
-## Binded Mac, IP, Hostname For HE Automation
+## Bound Mac, IP, Hostname For Hosted-Engine Testing
 
 | Hostname | Mac Addr | IP Addr | valid? |
 | -------- | -------- | ------- | ------ |
@@ -41,13 +41,13 @@ python run.py $test_tier
 
 ## Branches
 master
-> Auto testing for rhv4.2 cockpit, where files and test cases were refatored
+> Auto testing for ovirt 4.2 cockpit, where files and test cases were refatored
 
 v41
-> Auto testing for rhv4.1 cockpit
+> Auto testing for ovirt 4.1 cockpit
 
 ## Cases development
-Under cases file, there are 3 section.
+Under cases file, there are 3 sections.
 
 - cases_info
 > which represent the {$polarion_id: $checkpoint_name} and configuration be used in each check file.
@@ -57,7 +57,7 @@ Under cases file, there are 3 section.
 > Some helper library used by the checkpoints
 
 **Name rules should be followed**
-1. All the checks file should be start with "test_" under checks directory
+1. All the checks file should be started with "test_" under checks directory
 2. The class defined in the checks file, should start with "Test", Such as "TestDashboardUi", "TestSubscription", besides, define just one Test.* class in one check file
 3. Strip the "test_" from checks file name, this is cases info file. Such as "dashboard_ui.py","tools_subscription.py"
 
