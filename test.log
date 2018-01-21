@@ -1,0 +1,189 @@
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing BmpImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing BufrStubImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing CurImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing DcxImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing DdsImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing EpsImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing FitsStubImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing FliImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing FpxImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing FtexImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing GbrImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing GifImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing GribStubImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing Hdf5StubImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing IcnsImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing IcoImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing ImImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing ImtImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing IptcImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing JpegImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing Jpeg2KImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing McIdasImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing MicImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing MpegImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing MpoImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing MspImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing PalmImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing PcdImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing PcxImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing PdfImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing PixarImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing PngImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing PpmImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing PsdImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing SgiImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing SpiderImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing SunImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing TgaImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing TiffImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing WebPImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing WmfImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing XbmImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing XpmImagePlugin
+[Image]18/01/2018 00:00:01 (init) DEBUG :: Importing XVThumbImagePlugin
+[test_base]18/01/2018 00:00:01 (setup) INFO :: Setup work before testing...
+[test_base]18/01/2018 00:00:01 (setup) INFO :: Init browser
+[remote_connection]18/01/2018 00:00:02 (_request) DEBUG :: POST http://127.0.0.1:50421/session {"capabilities": {"alwaysMatch": {"platform": "ANY", "browserName": "chrome", "version": "", "chromeOptions": {"args": [], "extensions": []}}, "firstMatch": []}, "desiredCapabilities": {"platform": "ANY", "browserName": "chrome", "version": "", "chromeOptions": {"args": [], "extensions": []}}}
+[remote_connection]18/01/2018 00:00:03 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:03 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/timeouts/implicit_wait {"sessionId": "a825da5e36c78994663687477d9172b3", "ms": 20000.0}
+[remote_connection]18/01/2018 00:00:03 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:03 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/window/current/maximize {"windowHandle": "current", "sessionId": "a825da5e36c78994663687477d9172b3"}
+[remote_connection]18/01/2018 00:00:03 (_request) DEBUG :: Finished Request
+[test_base]18/01/2018 00:00:03 (setup) INFO :: Login cockpit
+[remote_connection]18/01/2018 00:00:03 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/url {"url": "https://10.73.73.19:9090/", "sessionId": "a825da5e36c78994663687477d9172b3"}
+[remote_connection]18/01/2018 00:00:03 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:03 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element {"using": "id", "sessionId": "a825da5e36c78994663687477d9172b3", "value": "login-user-input"}
+[remote_connection]18/01/2018 00:00:03 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:03 (_request) DEBUG :: GET http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element/0.36112437035642553-1/displayed {"sessionId": "a825da5e36c78994663687477d9172b3", "id": "0.36112437035642553-1"}
+[remote_connection]18/01/2018 00:00:03 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:03 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element {"using": "id", "sessionId": "a825da5e36c78994663687477d9172b3", "value": "login-user-input"}
+[remote_connection]18/01/2018 00:00:04 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:04 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element {"using": "id", "sessionId": "a825da5e36c78994663687477d9172b3", "value": "login-password-input"}
+[remote_connection]18/01/2018 00:00:04 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:04 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element {"using": "id", "sessionId": "a825da5e36c78994663687477d9172b3", "value": "login-button"}
+[remote_connection]18/01/2018 00:00:04 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:06 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element {"using": "id", "sessionId": "a825da5e36c78994663687477d9172b3", "value": "login-user-input"}
+[remote_connection]18/01/2018 00:00:06 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:06 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element/0.36112437035642553-1/clear {"sessionId": "a825da5e36c78994663687477d9172b3", "id": "0.36112437035642553-1"}
+[remote_connection]18/01/2018 00:00:06 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:06 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element {"using": "id", "sessionId": "a825da5e36c78994663687477d9172b3", "value": "login-user-input"}
+[remote_connection]18/01/2018 00:00:06 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:06 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element/0.36112437035642553-1/value {"text": "root", "sessionId": "a825da5e36c78994663687477d9172b3", "id": "0.36112437035642553-1", "value": ["r", "o", "o", "t"]}
+[remote_connection]18/01/2018 00:00:06 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:07 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element {"using": "id", "sessionId": "a825da5e36c78994663687477d9172b3", "value": "login-password-input"}
+[remote_connection]18/01/2018 00:00:07 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:07 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element/0.36112437035642553-2/clear {"sessionId": "a825da5e36c78994663687477d9172b3", "id": "0.36112437035642553-2"}
+[remote_connection]18/01/2018 00:00:07 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:07 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element {"using": "id", "sessionId": "a825da5e36c78994663687477d9172b3", "value": "login-password-input"}
+[remote_connection]18/01/2018 00:00:07 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:07 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element/0.36112437035642553-2/value {"text": "redhat", "sessionId": "a825da5e36c78994663687477d9172b3", "id": "0.36112437035642553-2", "value": ["r", "e", "d", "h", "a", "t"]}
+[remote_connection]18/01/2018 00:00:07 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:08 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element {"using": "id", "sessionId": "a825da5e36c78994663687477d9172b3", "value": "login-button"}
+[remote_connection]18/01/2018 00:00:08 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:08 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element/0.36112437035642553-3/click {"sessionId": "a825da5e36c78994663687477d9172b3", "id": "0.36112437035642553-3"}
+[remote_connection]18/01/2018 00:00:08 (_request) DEBUG :: Finished Request
+[remote_connection]18/01/2018 00:00:10 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/element {"using": "id", "sessionId": "a825da5e36c78994663687477d9172b3", "value": "login-user-input"}
+[remote_connection]18/01/2018 00:00:30 (_request) DEBUG :: Finished Request
+[test_base]18/01/2018 00:00:30 (setup) INFO :: Init page
+[remote_connection]18/01/2018 00:00:30 (_request) DEBUG :: POST http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/url {"url": "https://10.73.73.19:9090/ovirt-dashboard#/he", "sessionId": "a825da5e36c78994663687477d9172b3"}
+[remote_connection]18/01/2018 00:00:30 (_request) DEBUG :: Finished Request
+[test_base]18/01/2018 00:00:40 (run_cases) INFO :: Start to run check points, please wait...
+[test_base]18/01/2018 00:00:40 (run_checkpoint) INFO :: Start to run checkpoint:check_he_install for cases:['RHEVM-23815']
+[test_he_install]18/01/2018 00:00:40 (_install_rhvm_appliance) INFO :: Getting and installing the latest rhvm appliance ...
+[test_he_install]18/01/2018 00:00:40 (_get_latest_rhvm_appliance) INFO :: Getting the latest rhvm4.2 appliance...
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: starting thread (client mode): 0xc66cc2d0L
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: Local version/idstring: SSH-2.0-paramiko_2.2.1
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: Remote version/idstring: SSH-2.0-OpenSSH_7.4
+[transport]18/01/2018 00:00:40 (_log) INFO :: Connected (version 2.0, client OpenSSH_7.4)
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: kex algos:[u'curve25519-sha256', u'curve25519-sha256@libssh.org', u'ecdh-sha2-nistp256', u'ecdh-sha2-nistp384', u'ecdh-sha2-nistp521', u'diffie-hellman-group-exchange-sha256', u'diffie-hellman-group16-sha512', u'diffie-hellman-group18-sha512', u'diffie-hellman-group-exchange-sha1', u'diffie-hellman-group14-sha256', u'diffie-hellman-group14-sha1', u'diffie-hellman-group1-sha1'] server key:[u'ssh-rsa', u'rsa-sha2-512', u'rsa-sha2-256', u'ecdsa-sha2-nistp256', u'ssh-ed25519'] client encrypt:[u'chacha20-poly1305@openssh.com', u'aes128-ctr', u'aes192-ctr', u'aes256-ctr', u'aes128-gcm@openssh.com', u'aes256-gcm@openssh.com', u'aes128-cbc', u'aes192-cbc', u'aes256-cbc', u'blowfish-cbc', u'cast128-cbc', u'3des-cbc'] server encrypt:[u'chacha20-poly1305@openssh.com', u'aes128-ctr', u'aes192-ctr', u'aes256-ctr', u'aes128-gcm@openssh.com', u'aes256-gcm@openssh.com', u'aes128-cbc', u'aes192-cbc', u'aes256-cbc', u'blowfish-cbc', u'cast128-cbc', u'3des-cbc'] client mac:[u'umac-64-etm@openssh.com', u'umac-128-etm@openssh.com', u'hmac-sha2-256-etm@openssh.com', u'hmac-sha2-512-etm@openssh.com', u'hmac-sha1-etm@openssh.com', u'umac-64@openssh.com', u'umac-128@openssh.com', u'hmac-sha2-256', u'hmac-sha2-512', u'hmac-sha1'] server mac:[u'umac-64-etm@openssh.com', u'umac-128-etm@openssh.com', u'hmac-sha2-256-etm@openssh.com', u'hmac-sha2-512-etm@openssh.com', u'hmac-sha1-etm@openssh.com', u'umac-64@openssh.com', u'umac-128@openssh.com', u'hmac-sha2-256', u'hmac-sha2-512', u'hmac-sha1'] client compress:[u'none', u'zlib@openssh.com'] server compress:[u'none', u'zlib@openssh.com'] client lang:[u''] server lang:[u''] kex follows?False
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: Kex agreed: ecdh-sha2-nistp256
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: HostKey agreed: ssh-ed25519
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: Cipher agreed: aes128-ctr
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: MAC agreed: hmac-sha2-256
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: Compression agreed: none
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: kex engine KexNistp256 specified hash_algo <built-in function openssl_sha256>
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: Switch to new keys ...
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: Adding ssh-ed25519 host key for 10.73.73.19: cebe119836eb086ad02845ceb6bdcdd7
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: Trying SSH agent key d53caf01cbf812c788aae7bc2d28bb07
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: userauth is OK
+[transport]18/01/2018 00:00:40 (_log) INFO :: Authentication (publickey) failed.
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: Trying SSH agent key fdc9fa8c370d3f00855edec30f087b2f
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: userauth is OK
+[transport]18/01/2018 00:00:40 (_log) INFO :: Authentication (publickey) failed.
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: Trying discovered key 194317435a31159b084f1c6ff2d0fdf1 in /home/yzhao_sherry/.ssh/id_rsa
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: userauth is OK
+[transport]18/01/2018 00:00:40 (_log) INFO :: Authentication (publickey) failed.
+[transport]18/01/2018 00:00:40 (_log) DEBUG :: userauth is OK
+[transport]18/01/2018 00:00:40 (_log) INFO :: Authentication (password) successful!
+[channel]18/01/2018 00:00:41 (_log) DEBUG :: [chan 0] Max packet in: 32768 bytes
+[transport]18/01/2018 00:00:41 (_log) DEBUG :: Received global request "hostkeys-00@openssh.com"
+[transport]18/01/2018 00:00:41 (_log) DEBUG :: Rejecting "hostkeys-00@openssh.com" global request from server.
+[channel]18/01/2018 00:00:41 (_log) DEBUG :: [chan 0] Max packet out: 32768 bytes
+[transport]18/01/2018 00:00:41 (_log) DEBUG :: Secsh channel 0 opened.
+[channel]18/01/2018 00:00:41 (_log) DEBUG :: [chan 0] Sesch channel 0 request ok
+[channel]18/01/2018 00:00:41 (_log) DEBUG :: [chan 0] Sesch channel 0 request ok
+[channel]18/01/2018 00:00:56 (_log) DEBUG :: [chan 0] EOF received (0)
+[channel]18/01/2018 00:00:56 (_log) DEBUG :: [chan 0] EOF sent (0)
+[test_base]18/01/2018 00:00:56 (run_cmd) INFO :: Run cmd "curl -o /root/rhvm-appliance-4.2-20171219.0.el7.4.2.rpm http://10.66.10.22:8090/rhevm-appliance/rhvm-appliance-4.2-20171219.0.el7.4.2.rpm" succeeded
+"% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  7 1398M    7  105M    0     0   107M      0  0:00:12 --:--:--  0:00:12  108M 15 1398M   15  214M    0     0   108M      0  0:00:12  0:00:01  0:00:11  108M 23 1398M   23  324M    0     0   109M      0  0:00:12  0:00:02  0:00:10  109M 31 1398M   31  434M    0     0   109M      0  0:00:12  0:00:03  0:00:09  109M 38 1398M   38  543M    0     0   109M      0  0:00:12  0:00:04  0:00:08  109M 46 1398M   46  654M    0     0   109M      0  0:00:12  0:00:05  0:00:07  109M 54 1398M   54  766M    0     0   109M      0  0:00:12  0:00:06  0:00:06  110M 60 1398M   60  850M    0     0   106M      0  0:00:13  0:00:07  0:00:06  105M 68 1398M   68  960M    0     0   106M      0  0:00:13  0:00:08  0:00:05  105M 76 1398M   76 1069M    0     0   107M      0  0:00:13  0:00:09  0:00:04  105M 84 1398M   84 1175M    0     0   107M      0  0:00:13  0:00:10  0:00:03  104M 91 1398M   91 1283M    0     0   107M      0  0:00:13  0:00:11  0:00:02  103M 99 1398M   99 1391M    0     0   107M      0  0:00:13  0:00:12  0:00:01  108M100 1398M  100 1398M    0     0   107M      0  0:00:13  0:00:13 --:--:--  107M"
+[channel]18/01/2018 00:00:56 (_log) DEBUG :: [chan 1] Max packet in: 32768 bytes
+[channel]18/01/2018 00:00:56 (_log) DEBUG :: [chan 1] Max packet out: 32768 bytes
+[transport]18/01/2018 00:00:56 (_log) DEBUG :: Secsh channel 1 opened.
+[channel]18/01/2018 00:00:56 (_log) DEBUG :: [chan 1] Sesch channel 1 request ok
+[channel]18/01/2018 00:00:56 (_log) DEBUG :: [chan 1] Sesch channel 1 request ok
+[channel]18/01/2018 00:01:40 (_log) DEBUG :: [chan 1] EOF received (1)
+[channel]18/01/2018 00:01:40 (_log) DEBUG :: [chan 1] EOF sent (1)
+[test_base]18/01/2018 00:01:40 (run_cmd) INFO :: Run cmd "rpm -ivh /root/rhvm-appliance-4.2-20171219.0.el7.4.2.rpm --force" succeeded
+"Preparing...                                                            (100%)#                                 (100%)##                                (100%)###                               (100%)####                              (100%)#####                             (100%)######                            (100%)#######                           (100%)########                          (100%)#########                         (100%)##########                        (100%)###########                       (100%)############                      (100%)#############                     (100%)##############                    (100%)###############                   (100%)################                  (100%)#################                 (100%)##################                (100%)###################               (100%)####################              (100%)#####################             (100%)######################            (100%)#######################           (100%)########################          (100%)#########################         (100%)##########################        (100%)###########################       (100%)############################      (100%)#############################     (100%)##############################    (100%)###############################   (100%)################################  (100%)################################# (100%)################################# [100%]
+Updating / installing...
+   1:rhvm-appliance-1:4.2-20171219.0.e                                  (  1%)#                                 (  4%)##                                (  7%)###                               ( 10%)####                              ( 13%)#####                             ( 16%)######                            ( 19%)#######                           ( 22%)########                          ( 25%)#########                         ( 28%)##########                        ( 31%)###########                       ( 34%)############                      ( 37%)#############                     ( 40%)##############                    ( 43%)###############                   ( 46%)################                  ( 49%)#################                 ( 51%)##################                ( 54%)###################               ( 57%)####################              ( 60%)#####################             ( 63%)######################            ( 66%)#######################           ( 69%)########################          ( 72%)#########################         ( 75%)##########################        ( 78%)###########################       ( 81%)############################      ( 84%)#############################     ( 87%)##############################    ( 90%)###############################   ( 93%)################################  ( 96%)################################# ( 99%)################################# [100%]"
+[channel]18/01/2018 00:01:40 (_log) DEBUG :: [chan 2] Max packet in: 32768 bytes
+[channel]18/01/2018 00:01:40 (_log) DEBUG :: [chan 2] Max packet out: 32768 bytes
+[transport]18/01/2018 00:01:40 (_log) DEBUG :: Secsh channel 2 opened.
+[channel]18/01/2018 00:01:41 (_log) DEBUG :: [chan 2] Sesch channel 2 request ok
+[channel]18/01/2018 00:01:41 (_log) DEBUG :: [chan 2] Sesch channel 2 request ok
+[channel]18/01/2018 00:01:43 (_log) DEBUG :: [chan 2] EOF received (2)
+[channel]18/01/2018 00:01:43 (_log) DEBUG :: [chan 2] EOF sent (2)
+[test_base]18/01/2018 00:01:43 (run_cmd) INFO :: Run cmd "rm -rf /root/rhvm-appliance-4.2-20171219.0.el7.4.2.rpm" succeeded
+""
+[test_he_install]18/01/2018 00:01:43 (_add_to_etc_host) INFO :: Adding the host to /etc/hosts...
+[channel]18/01/2018 00:01:43 (_log) DEBUG :: [chan 3] Max packet in: 32768 bytes
+[channel]18/01/2018 00:01:43 (_log) DEBUG :: [chan 3] Max packet out: 32768 bytes
+[transport]18/01/2018 00:01:43 (_log) DEBUG :: Secsh channel 3 opened.
+[channel]18/01/2018 00:01:43 (_log) DEBUG :: [chan 3] Sesch channel 3 request ok
+[channel]18/01/2018 00:01:43 (_log) DEBUG :: [chan 3] Sesch channel 3 request ok
+[channel]18/01/2018 00:01:46 (_log) DEBUG :: [chan 3] EOF received (3)
+[channel]18/01/2018 00:01:46 (_log) DEBUG :: [chan 3] EOF sent (3)
+[test_base]18/01/2018 00:01:46 (run_cmd) INFO :: Run cmd "hostname" succeeded
+"localhost.localdomain"
+[channel]18/01/2018 00:01:46 (_log) DEBUG :: [chan 4] Max packet in: 32768 bytes
+[channel]18/01/2018 00:01:46 (_log) DEBUG :: [chan 4] Max packet out: 32768 bytes
+[transport]18/01/2018 00:01:46 (_log) DEBUG :: Secsh channel 4 opened.
+[channel]18/01/2018 00:01:46 (_log) DEBUG :: [chan 4] Sesch channel 4 request ok
+[channel]18/01/2018 00:01:46 (_log) DEBUG :: [chan 4] Sesch channel 4 request ok
+[channel]18/01/2018 00:01:48 (_log) DEBUG :: [chan 4] EOF received (4)
+[channel]18/01/2018 00:01:48 (_log) DEBUG :: [chan 4] EOF sent (4)
+[test_base]18/01/2018 00:01:48 (run_cmd) INFO :: Run cmd "echo '10.73.73.19  (True, 'localhost.localdomain')' >> /etc/hosts" succeeded
+""
+[test_base]18/01/2018 00:01:48 (run_checkpoint) ERROR :: not all arguments converted during string formatting
+Traceback (most recent call last):
+  File "/home/yzhao_sherry/work/newcockpit-auto/githubcockpit/cockpit-auto/cases/helpers/test_base.py", line 127, in run_checkpoint
+    ck = self.call_func_by_name(checkpoint)
+  File "/home/yzhao_sherry/work/newcockpit-auto/githubcockpit/cockpit-auto/cases/helpers/test_base.py", line 119, in call_func_by_name
+    return func()
+  File "/home/yzhao_sherry/work/newcockpit-auto/githubcockpit/cockpit-auto/cases/checks/test_he_install.py", line 82, in check_he_install
+    self._add_to_etc_host()
+  File "/home/yzhao_sherry/work/newcockpit-auto/githubcockpit/cockpit-auto/cases/checks/test_he_install.py", line 61, in _add_to_etc_host
+    self.run_cmd("echo '%s' > /etc/hostname" % host_name)
+TypeError: not all arguments converted during string formatting
+[test_base]18/01/2018 00:01:48 (run_checkpoint) INFO :: Run checkpoint:check_he_install for cases:['RHEVM-23815'] finished.
+[test_base]18/01/2018 00:01:48 (teardown) INFO :: Teardown work after testing...
+[remote_connection]18/01/2018 00:01:48 (_request) DEBUG :: DELETE http://127.0.0.1:50421/session/a825da5e36c78994663687477d9172b3/window {"sessionId": "a825da5e36c78994663687477d9172b3"}
+[remote_connection]18/01/2018 00:01:49 (_request) DEBUG :: Finished Request
+[test_base]18/01/2018 00:01:49 (teardown) INFO :: Closed the browser
+[run]18/01/2018 00:01:49 (run) INFO :: {}
+Generated /home/yzhao_sherry/work/newcockpit-auto/githubcockpit/cockpit-auto/logs/2018-01-18/00-00-01/rhvh-4.2.0.6-0.20180104.0/final_results.json
+[transport]18/01/2018 00:01:49 (_log) DEBUG :: EOF in transport thread

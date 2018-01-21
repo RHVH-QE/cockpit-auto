@@ -74,7 +74,7 @@ def main():
         "--test_tier",
         type=str,
         choices=[
-            "debug_tier", "all_tier", "virt_tier", "common_tier"
+            "debug_tier", "all_tier", "virt_tier", "he_tier", "common_tier"
         ],
         help="select desired test tier")
 

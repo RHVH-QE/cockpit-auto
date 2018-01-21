@@ -20,6 +20,11 @@ virt_tier:
         "test_dashboard_ui.py"
     ]
 
+he_tier:
+    cases: [
+        "test_he_deployment.py"
+    ]
+
 common_tier:
     cases: [
         "test_tools_subscription.py",
