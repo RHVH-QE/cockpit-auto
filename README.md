@@ -4,22 +4,10 @@ This project is for cockpit automation, which using selenium to locate web eleme
 
 ## Bound Mac, IP, Hostname For Hosted-Engine Testing
 
-| Hostname | Mac Addr | IP Addr | valid? |
-| -------- | -------- | ------- | ------ |
-| rhevh-hostedengine-vm-01.qe.lab.eng.nay.redhat.com | 52:54:00:05:61:f2  | 10.66.148.102 | *YES* |
-| rhevh-hostedengine-vm-02.qe.lab.eng.nay.redhat.com | 52:54:00:71:d5:ff  | 10.66.148.103 | *YES* |
-| rhevh-hostedengine-vm-03.qe.lab.eng.nay.redhat.com | 52:54:00:57:ef:59  | 10.66.148.104 | *YES* |
-| rhevh-hostedengine-vm-04.lab.eng.pek2.redhat.com | 52:54:00:5e:8e:c7  | 10.73.73.100 | *YES* |
-| rhevh-hostedengine-vm-05.lab.eng.pek2.redhat.com | 52:54:00:5d:21:64  | 10.73.73.101 | *YES* |
-| rhevh-hostedengine-vm-06.lab.eng.pek2.redhat.com | 52:54:00:34:04:b0  | 10.73.73.102 | *YES* |
+http://red.ht/2Dq5dcO
 
 ## Test machines used
-| Hostname | Mac Addr | IP Addr | NIC | PURPOSE | valid?|
-| -------- | -------- | ------- | ------ | ------ | ------ |
-| dell-op790-01.qe.lab.eng.nay.redhat.com | `d4:be:d9:95:61:ca`  | 10.66.148.7 | em1 | Virt | *YES* |
-| hp-z620-05.qe.lab.eng.nay.redhat.com | `2c:44:fd:3a:d7:d7`  | 10.66.150.175 | eno1 | HE | *YES* |
-| hp-z620-04.qe.lab.eng.nay.redhat.com | `2c:44:fd:3a:d7:b6`  | 10.66.148.24 | enp1s0 | HE | *YES* |
-| dell-pet105-02.qe.lab.eng.nay.redhat.com | `00:22:19:2d:4b:a3`  | 10.66.148.10 | enp2s0 | TEST RUN | *YES* |
+http://red.ht/2Dq5dcO
 
 
 ## How To Run
