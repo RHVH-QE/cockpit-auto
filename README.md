@@ -18,13 +18,13 @@ git clone https://github.com/RHVH-QE/cockpit-auto.git
 ```
 2. Install the dependency packages
 ```bash
-pip install -r requirements
+pipenv install --dev
 ```
 3. All the test scenarios are defined in the scen.yml
 
 4. Run the executable file run.py and append the $test_scen defined in scen.yml
 ```bash
-python run.py $test_tier
+python run.py -t $test_tier
 ```
 
 ## Branches
