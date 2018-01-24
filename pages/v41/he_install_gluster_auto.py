@@ -166,10 +166,9 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
 
      # Subscription to RHSM via CMD
     log.info("Subscription to RHN or RHSM ,then enable rhvh repos...")
-    for gluster_node_name, gluster_node_ip in gluster_dict.items():
-        with settings(
+    with settings(
             warn_only=True,
-            host_string=host_user + '@' + gluster_node_ip,
+            host_string=host_user + '@' + host_ip,
             password=host_password):
             cmd0 = "subscription-manager register --username=%s --password=%s" % (
                 rhn_user, rhn_password)
@@ -236,13 +235,13 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
         run(cmd2)
         cmd3 = "echo '2' >> /proc/sys/net/ipv4/conf/all/rp_filter"
         run(cmd3)
-        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' >> /etc/sysctl.conf"
+        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' > /etc/sysctl.conf"
         run(cmd4)
-        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' >> /etc/sysctl.conf"
+        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' > /etc/sysctl.conf"
         run(cmd5)
-        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface1
+        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' > /etc/sysctl.conf" % file_path_interface1
         run(cmd6)
-        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface2
+        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' > /etc/sysctl.conf" % file_path_interface2
         run(cmd7)
         cmd8 = "sysctl -p"
         run(cmd8)
@@ -258,13 +257,13 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
         run(cmd2)
         cmd3 = "echo '2' >> /proc/sys/net/ipv4/conf/all/rp_filter"
         run(cmd3)
-        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' >> /etc/sysctl.conf"
+        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' > /etc/sysctl.conf"
         run(cmd4)
-        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' >> /etc/sysctl.conf"
+        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' > /etc/sysctl.conf"
         run(cmd5)
-        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface1
+        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' > /etc/sysctl.conf" % file_path_interface1
         run(cmd6)
-        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface2
+        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' > /etc/sysctl.conf" % file_path_interface2
         run(cmd7)
         cmd8 = "sysctl -p"
         run(cmd8)
@@ -281,13 +280,13 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
         run(cmd2)
         cmd3 = "echo '2' >> /proc/sys/net/ipv4/conf/all/rp_filter"
         run(cmd3)
-        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' >> /etc/sysctl.conf"
+        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' > /etc/sysctl.conf"
         run(cmd4)
-        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' >> /etc/sysctl.conf"
+        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' > /etc/sysctl.conf"
         run(cmd5)
-        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface1
+        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' > /etc/sysctl.conf" % file_path_interface1
         run(cmd6)
-        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface2
+        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' > /etc/sysctl.conf" % file_path_interface2
         run(cmd7)
         cmd8 = "sysctl -p"
         run(cmd8)
@@ -534,7 +533,7 @@ def check_he_is_deployed(host_ip, host_user, host_password):
             log.info("Found the successfully message in the setup log %s" % ret)
         else:
             log.error("Not found the successfully message in the setup log %s" % ret)
-                               
+                                   
 
 def generate_keys():
     """
@@ -569,7 +568,7 @@ def copy_keys():
             warn_only=True,
             host_string=host_user + '@' + host_ip,
             password=host_password):
-            cmd0 = "echo '%s' >> password.txt" % gluster_node_ip
+            cmd0 = "echo '%s' > password.txt" % host_password
             run(cmd0)
             cmd1 = "sshpass -f password.txt ssh-copy-id -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no -f root" + '@' + \
                    gluster_node_ip

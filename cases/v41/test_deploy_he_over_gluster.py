@@ -442,7 +442,7 @@ def check_deployment_with_hostedengine_on_gluster():
     he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_dict, gluster_dict)
     check_he_is_deployed(host_ip, host_user, host_password)
     log.info("HostedEngine was deployed!")
-    dr.quit()
+    
 
 @checkpoint(dict1)    
 def check_gluster_deployment_wizard():
