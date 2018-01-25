@@ -235,13 +235,13 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
         run(cmd2)
         cmd3 = "echo '2' >> /proc/sys/net/ipv4/conf/all/rp_filter"
         run(cmd3)
-        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' > /etc/sysctl.conf"
+        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' >> /etc/sysctl.conf"
         run(cmd4)
-        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' > /etc/sysctl.conf"
+        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' >> /etc/sysctl.conf"
         run(cmd5)
-        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' > /etc/sysctl.conf" % file_path_interface1
+        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface1
         run(cmd6)
-        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' > /etc/sysctl.conf" % file_path_interface2
+        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface2
         run(cmd7)
         cmd8 = "sysctl -p"
         run(cmd8)
@@ -257,13 +257,13 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
         run(cmd2)
         cmd3 = "echo '2' >> /proc/sys/net/ipv4/conf/all/rp_filter"
         run(cmd3)
-        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' > /etc/sysctl.conf"
+        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' >> /etc/sysctl.conf"
         run(cmd4)
-        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' > /etc/sysctl.conf"
+        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' >> /etc/sysctl.conf"
         run(cmd5)
-        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' > /etc/sysctl.conf" % file_path_interface1
+        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface1
         run(cmd6)
-        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' > /etc/sysctl.conf" % file_path_interface2
+        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface2
         run(cmd7)
         cmd8 = "sysctl -p"
         run(cmd8)
@@ -280,13 +280,13 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
         run(cmd2)
         cmd3 = "echo '2' >> /proc/sys/net/ipv4/conf/all/rp_filter"
         run(cmd3)
-        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' > /etc/sysctl.conf"
+        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' >> /etc/sysctl.conf"
         run(cmd4)
-        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' > /etc/sysctl.conf"
+        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' >> /etc/sysctl.conf"
         run(cmd5)
-        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' > /etc/sysctl.conf" % file_path_interface1
+        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface1
         run(cmd6)
-        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' > /etc/sysctl.conf" % file_path_interface2
+        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface2
         run(cmd7)
         cmd8 = "sysctl -p"
         run(cmd8)
