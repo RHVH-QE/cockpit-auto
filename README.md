@@ -2,12 +2,9 @@
 
 This project is for cockpit automation, which using selenium to locate web elements and operate as a test user.
 
-## Bound Mac, IP, Hostname For Hosted-Engine Testing
+## Test machines, Bound Mac, IP, Hostname For Hosted-Engine Testing
 
-http://red.ht/2Dq5dcO
-
-## Test machines used
-http://red.ht/2Dq5dcO
+[VMs of binding MAC, IP and hostname in lab for RHEV-H](http://red.ht/2Dq5dcO)
 
 
 ## How To Run
