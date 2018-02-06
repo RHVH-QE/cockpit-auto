@@ -17,6 +17,7 @@ class CheckBase(object):
         self._host_pass = None
         self._browser = None
         self._build = None
+        self._cases = None
         self._config = None
         self._driver = None
 
@@ -59,6 +60,22 @@ class CheckBase(object):
     @build.setter
     def build(self, val):
         self._build = val
+
+    @property
+    def cases(self):
+        return self._cases
+
+    @cases.setter
+    def cases(self, val):
+        self._cases = val
+
+    @property
+    def config(self):
+        return self._config
+
+    @config.setter
+    def config(self, val):
+        self._config = val
 
     def get_remote_file(self, remote_path, local_path):
         with settings(
@@ -136,16 +153,8 @@ class CheckBase(object):
         finally:
             log.info("Run checkpoint:%s for cases:%s finished.", checkpoint, cases)
 
-    def _get_checkpoint_cases_map(self, test_file_name):
-        from importlib import import_module
-        const_file_name = test_file_name.split('test_')[-1]
-        try:
-            module = import_module("cases.cases_info." + const_file_name, __package__)
-        except ImportError as e:
-            log.error(e)
-            return {}
-        id_ckp_map = getattr(module, 'cases', None)  # {$polarion_id: $checkpoint}
-        self._config = getattr(module, 'config', None)  # Set the configuration
+    def _get_checkpoint_cases_map(self):
+        id_ckp_map = self._cases  # {$polarion_id: $checkpoint}
 
         from collections import OrderedDict
         checkpoint_cases_map = OrderedDict()
@@ -162,10 +171,10 @@ class CheckBase(object):
 
         return checkpoint_cases_map
  
-    def run_cases(self, file_name):
+    def run_cases(self):
         cks = {}
         # get checkpoint cases map
-        checkpoint_cases_map = self._get_checkpoint_cases_map(file_name)
+        checkpoint_cases_map = self._get_checkpoint_cases_map()
 
         # run check
         log.info("Start to run check points, please wait...")
@@ -215,11 +224,11 @@ class CheckBase(object):
         self.close_browser()
         log.info("Closed the browser")
 
-    def go_check(self, file_name):
+    def go_check(self):
         cks = {}
         try:
             self.setup()
-            cks = self.run_cases(file_name)
+            cks = self.run_cases()
         except Exception as e:
             log.exception(e)
         finally:

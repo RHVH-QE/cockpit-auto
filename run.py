@@ -7,15 +7,28 @@ from utils.helpers import generate_final_results
 from utils.helpers import yaml2dict
 from importlib import import_module
 
+
 log = logging.getLogger("bender")
 
 
-def _get_cases(cf_name):
-    cases_info_name = cf_name.split('test_')[-1]
+def _get_cases(case_info_name):
     cases_info_module = import_module(
-        "cases.cases_info." + cases_info_name, __package__)
+        "cases.cases_info." + case_info_name, __package__)
     cases_map = getattr(cases_info_module, 'cases', None)  # {$polarion_id: $checkpoint}
-    return cases_map
+    each_cfg = getattr(cases_info_module, 'config', None)
+    return cases_map, each_cfg
+
+
+def _get_check(case_info_name):
+    check_file_name = "test_" + case_info_name
+    check_module = import_module('cases.checks.' + check_file_name, __package__)
+    chk_cls_name = ''
+    for attr in dir(check_module):
+        if attr.startswith('Test'):
+            chk_cls_name = attr
+            break
+    chk_cls = getattr(check_module, chk_cls_name, None)
+    return chk_cls
 
 
 def run(tier):
@@ -31,36 +44,30 @@ def run(tier):
     test_scens = yaml2dict('./scen.yml')
 
     try:
-        case_files = test_scens[tier]['cases']
-        for cf in case_files:
-            # Get file name from scenario file
-            cf_name = cf.split('.')[0]
+        case_infos = test_scens[tier]['cases']
+        for case_info_name in case_infos:
             results_logs.logger_name = 'checkpoints.log'
-            results_logs.get_actual_logger(cf_name)
+            results_logs.get_actual_logger(case_info_name)
 
-            # Import module by case file name
-            case_module = import_module('cases.checks.' + cf_name, __package__)
-            testclss_name = ''
-            for attr in dir(case_module):
-                if attr.startswith('Test'):
-                    testclss_name = attr
-                    break
-            testclss = getattr(case_module, testclss_name, None)
+            # Get cases map and configurations
+            cases_map, each_cfg = _get_cases(case_info_name)
+            expect_cases.update(cases_map)
 
-            # Make the instance of test class
-            test = testclss()
-            test.host_string = host_string
-            test.host_user = host_user
-            test.host_pass = host_pass
-            test.browser = browser
-            test.build = test_build
+            # Get checkpoint class
+            chk_cls = _get_check(case_info_name)
 
-            # Get all cases from cases_info
-            cf_cases = _get_cases(cf_name)
-            expect_cases.update(cf_cases)
+            # Make the instance of checkpoint class
+            check = chk_cls()
+            check.host_string = host_string
+            check.host_user = host_user
+            check.host_pass = host_pass
+            check.browser = browser
+            check.build = test_build
+            check.cases = cases_map
+            check.config = each_cfg
 
             # Go check
-            log.info(test.go_check(cf_name))
+            log.info(check.go_check())
     except Exception as e:
         log.exception(e)
 

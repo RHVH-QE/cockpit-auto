@@ -3,30 +3,30 @@
 
 debug_tier:
     cases: [
-        "test_dashboard_ui.py"
+        "dashboard_ui"
     ]
 
 all_tier:
     cases: [
-        "test_dashboard_nodectl.py",
-        "test_dashboard_ui.py",
-        "test_tools_subscription.py",
-        "test_tools_other.py"
+        "dashboard_nodectl",
+        "dashboard_ui",
+        "tools_subscription",
+        "tools_other"
     ]
 
 virt_tier:
     cases: [
-        "test_dashboard_nodectl.py", 
-        "test_dashboard_ui.py"
+        "dashboard_nodectl", 
+        "dashboard_ui"
     ]
 
 he_tier:
     cases: [
-        "test_he_deployment.py"
+        "he_deployment"
     ]
 
 common_tier:
     cases: [
-        "test_tools_subscription.py",
-        "test_tools_other.py"
+        "tools_subscription",
+        "tools_other"
     ]

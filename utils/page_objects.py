@@ -51,9 +51,7 @@ class PageObject(object):
     def current_url(self):
         return self.w.current_url
 
-    def wait_until_element_visible(self, element, timeout=None):
-        if not timeout:
-            timeout = self.wait_timeout
+    def wait_until_element_visible(self, element, timeout=10):
         WebDriverWait(self.w, timeout).until(
             EC.visibility_of(element)
         )

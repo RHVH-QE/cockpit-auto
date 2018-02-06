@@ -7,7 +7,6 @@ import logging
 from vncdotool import api
 from selenium import webdriver
 from fabric.api import run, settings, put, local, get, env
-
 from utils.htmlparser import MyHTMLParser
 from pages.hosted_engine_page import HePage
 from cases.helpers import CheckBase
@@ -15,7 +14,9 @@ from utils.htmlparser import MyHTMLParser
 from utils.constants import PROJECT_ROOT
 from utils.rhvmapi import RhevmAction
 
+
 log = logging.getLogger("bender")
+
 
 class TestHostedEngine(CheckBase):
     page = None
@@ -373,7 +374,6 @@ class TestHostedEngine(CheckBase):
             log.exception(e)
             return False
         return True
-        
 
     def check_put_global_maintenance(self):
         log.info("Check the cluster in the global maintenance...")
@@ -386,7 +386,7 @@ class TestHostedEngine(CheckBase):
             log.exception(e)
             return False
         return True
-    
+
     def check_he_clean(self):
         log.info("Check the function to clean he env is OK, then you can redeploy the HE...")
         try:

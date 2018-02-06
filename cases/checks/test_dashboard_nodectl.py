@@ -252,10 +252,10 @@ class TestDashboardNodectl(CheckBase):
         if not ret[0]:
             return False
 
-    def go_check(self, file_name):
+    def go_check(self):
         cks = {}
         try:
-            cks = self.run_cases(file_name)
+            cks = self.run_cases()
         except Exception as e:
             log.exception(e)
 
