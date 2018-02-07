@@ -36,7 +36,4 @@ config = {
     'second_host': '10.73.73.15',
     'second_password': 'redhat',
     'second_vm_fqdn': 'cockpit-vm',
-    'stage_server_url': 'subscription.rhn.stage.redhat.com',
-    'stage_user': 'qa@redhat.com',
-    'stage_passwd': 'redhatqa'
 }
