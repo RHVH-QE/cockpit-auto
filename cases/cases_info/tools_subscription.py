@@ -11,9 +11,6 @@ cases = OrderedDict(cases_t)
 
 
 config = {
-    'subscription_url': 'subscription.rhn.stage.redhat.com',
-    'rhn_user': 'qa@redhat.com',
-    'rhn_password': 'redhatqa',
     'activation_key': 'rhevh',
     'activation_org': '711497',
     'satellite_ip': '10.73.75.177',
