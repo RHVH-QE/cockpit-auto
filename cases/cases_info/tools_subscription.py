@@ -11,6 +11,9 @@ cases = OrderedDict(cases_t)
 
 
 config = {
+    'subscription_url': '***',	
+    'rhn_user': '***',
+    'rhn_password': '***',
     'activation_key': 'rhevh',
     'activation_org': '711497',
     'satellite_ip': '10.73.75.177',
