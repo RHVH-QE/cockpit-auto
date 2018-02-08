@@ -15,7 +15,7 @@ git clone https://github.com/RHVH-QE/cockpit-auto.git
 ```
 2. Install the dependency packages
 ```bash
-pipenv install --dev
+pipenv install
 ```
 3. All the test scenarios are defined in the scen.yml
 
