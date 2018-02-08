@@ -88,16 +88,6 @@ class TestHostedEngine(CheckBase):
         else:
             pass
 
-    def _subscription_to_rhsm(self, serverurl, user, password):
-        log.info("Subscription to rhn stage ...")
-        self.run_cmd("subscription-manager register --serverurl=%s --username=%s \
-                     --password=%s" % (serverurl, user, password))
-        self.run_cmd("subscription-manager attach --auto")
-        self.run_cmd("subscription-manager repos --enable=rhel-7-server-rhvh-4*")
-        output = self.run_cmd("subscription-manager repos --list-enable |grep 'Repo ID'|grep 'rhvh'")
-        if output == 0:
-            log.error("Failed to find the rhvh repos...")
-
     def _wait_host_status(self, rhvm_ins, host_name, expect_status):
         log.info("Waitting for the host %s" % expect_status)
         i = 0
