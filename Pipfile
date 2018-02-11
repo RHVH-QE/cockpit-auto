@@ -10,6 +10,7 @@ name = "pypi"
 pyyaml = "*"
 selenium = "*"
 fabric = "*"
+flask = "*"
 
 
 [dev-packages]
