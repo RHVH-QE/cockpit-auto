@@ -18,13 +18,11 @@ host_ip, host_user, host_password, browser = CONF.get('common').get(
 
 gluster_ip, gluster_storage_path, rhvm_appliance_path, vm_mac, vm_fqdn, vm_ip, vm_password, engine_password, auto_answer = CONF.get(
     'hosted_engine'
-).get('gluster_ip'), CONF.get(
-    'hosted_engine'
-).get('gluster_engine_volume'), CONF.get('hosted_engine').get(
+).get('gluster_ip'), CONF.get('hosted_engine').get('gluster_storage_path'), CONF.get('hosted_engine').get(
     'rhvm_appliance_path'
 ), CONF.get('hosted_engine').get('he_vm_mac'), CONF.get('hosted_engine').get(
     'he_vm_fqdn'), CONF.get('hosted_engine').get('he_vm_ip'), CONF.get(
-        'hosted_engine').get('he_vm_password'), CONF.get('hosted_engine').get(
+        'hosted_engine').get('he_vm_password    '), CONF.get('hosted_engine').get(
             'engine_password'), CONF.get('hosted_engine').get('auto_answer')
 
 gluster_data_node1, gluster_data_node2, gluster_arbiter_node, vmstore_is_arbiter, data_is_arbiter, data_disk_count, device_name_engine, device_name_data, device_name_vmstore, size_of_datastore_lv, size_of_vmstore_lv, gdeploy_conf_file_path, mount_engine_brick, mount_data_brick, mount_vmstore_brick, gluster_vg_name, gluster_pv_name, number_of_Volumes, engine_lv_name, os_variant_rhvh, bad_device_name = CONF.get(
@@ -38,7 +36,9 @@ gluster_data_node1, gluster_data_node2, gluster_arbiter_node, vmstore_is_arbiter
     'mount_engine_brick'), CONF.get('gluster_details').get('mount_data_brick'), CONF.get('gluster_details').get(
     'mount_vmstore_brick'), CONF.get('gluster_details').get('gluster_vg_name'), CONF.get('gluster_details').get(
     'gluster_pv_name'), CONF.get('gluster_details').get('number_of_Volumes'), CONF.get('gluster_details').get(
-    'engine_lv_name'), CONF.get('gluster_details').get('os_variant_rhvh'), CONF.get('gluster_details').get('bad_device_name')
+    'engine_lv_name'), CONF.get('gluster_details').get('os_variant_rhvh'), CONF.get('gluster_details').get(
+    'bad_device_name')
+    
 
 
 env.host_string = host_user + '@' + host_ip
@@ -439,6 +439,7 @@ def check_deployment_with_hostedengine_on_gluster():
         'engine_password': engine_password,
         'auto_answer': auto_answer,
     }
+    
     he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_dict, gluster_dict)
     check_he_is_deployed(host_ip, host_user, host_password)
     log.info("HostedEngine was deployed!")

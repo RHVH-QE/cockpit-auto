@@ -11,6 +11,7 @@ from cases import CONF
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import ConfigParser
+from selenium.webdriver.common.by import By
 
 
 log = logging.getLogger("sherry")
@@ -23,21 +24,22 @@ host_ip, host_user, host_password, browser, host2_ip, host3_ip = CONF.get('commo
 rhn_user, rhn_password = CONF.get('subscription').get('rhn_user'), CONF.get(
     'subscription').get('rhn_password')
 
-gluster_ip, gluster_storage_path, rhvm_appliance_path, vm_mac, vm_fqdn, vm_ip, vm_password, engine_password, auto_answer = CONF.get(
+gluster_ip, gluster_storage_path, rhvm_appliance_path, vm_mac, vm_fqdn, vm_ip, vm_password, engine_password, auto_answer, no_of_cpus, mem_size, vm_disk_size, gw_address  = CONF.get(
     'hosted_engine'
 ).get('glusterfs_ip'), CONF.get('hosted_engine').get('gluster_storage_path'),CONF.get('hosted_engine').get(
     'rhvm_appliance_path'
 ), CONF.get('hosted_engine').get('he_vm_mac'), CONF.get('hosted_engine').get(
     'he_vm_fqdn'), CONF.get('hosted_engine').get('he_vm_ip'), CONF.get(
     'hosted_engine').get('he_vm_password'), CONF.get('hosted_engine').get('engine_password'), CONF.get('hosted_engine').get(
-    'auto_answer')
+    'auto_answer'), CONF.get('hosted_engine').get('no_of_cpus'), CONF.get('hosted_engine').get('mem_size'), CONF.get(
+    'hosted_engine').get('vm_disk_size'), CONF.get('hosted_engine').get('gw_address')
 
 
 
 env.host_string = host_user + '@' + host_ip
 env.password = host_password
 
-gluster_data_node1, gluster_data_node2, gluster_arbiter_node, vmstore_is_arbiter, data_is_arbiter, data_disk_count, device_name_engine, device_name_data, device_name_vmstore, size_of_datastore_lv, size_of_vmstore_lv, gdeploy_conf_file_path, mount_engine_brick, mount_data_brick, mount_vmstore_brick, gluster_vg_name, gluster_pv_name, number_of_Volumes, engine_lv_name, file_path_interface1, file_path_interface2 = CONF.get(
+gluster_data_node1, gluster_data_node2, gluster_arbiter_node, vmstore_is_arbiter, data_is_arbiter, data_disk_count, device_name_engine, device_name_data, device_name_vmstore, size_of_datastore_lv, size_of_vmstore_lv, gdeploy_conf_file_path, mount_engine_brick, mount_data_brick, mount_vmstore_brick, gluster_vg_name, gluster_pv_name, number_of_Volumes, engine_lv_name, file_path_interface1, file_path_interface2, rhhi_version = CONF.get(
     'gluster_details'
 ).get('gluster_data_node1'), CONF.get('gluster_details').get('gluster_data_node2'), CONF.get('gluster_details').get(
     'gluster_arbiter_node'), CONF.get('gluster_details').get('vmstore_is_arbiter'), CONF.get('gluster_details').get(
@@ -49,8 +51,8 @@ gluster_data_node1, gluster_data_node2, gluster_arbiter_node, vmstore_is_arbiter
     'mount_vmstore_brick'), CONF.get('gluster_details').get('gluster_vg_name'), CONF.get('gluster_details').get(
     'gluster_pv_name'), CONF.get('gluster_details').get('number_of_Volumes'), CONF.get('gluster_details').get(
     'engine_lv_name'), CONF.get('gluster_details').get('file_path_interface1'), CONF.get('gluster_details').get(
-    'file_path_interface2'
-)
+    'file_path_interface2'), CONF.get('gluster_details').get('rhhi_version')
+
 
 
 
@@ -181,7 +183,7 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
             output = run("os.popen(cmd3).read()")
             if output == 0:
                 raise RuntimeError("Failed to find rhvh repos")
-
+    
     
     #Downloading the rhevm appliance to the host machine
     rhvm_appliance_link = rhvm_appliance_path
@@ -195,7 +197,7 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
         output = run(cmd)
     if output.failed:
         raise RuntimeError("Failed to download the latest rhvm appliance")
-
+    
     # Add host to /etc/hosts and install rhvm_appliance
     log.info(
         "Adding the host to /etc/hosts and installing the rhvm appliance...")
@@ -222,7 +224,7 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
     log.info(
         "Adding entries to interface files..........."
     )
-
+    
     with settings(
         warn_only=True,
         host_string=host_user + '@' + host_ip,
@@ -267,7 +269,7 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
         run(cmd7)
         cmd8 = "sysctl -p"
         run(cmd8)
-
+    
     with settings(
         warn_only=True,
         host_string=host_user + '@' + host3_ip,
@@ -322,7 +324,7 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
     time.sleep(5)
 
       
-
+    
     # code for configuring gluster
     log.info("Configuring gluster to deploy Hosted Engine............")
     xpath("//input[@value='hci']").click()                                               #click on 'Configure Hosted Engine with Gluster"
@@ -379,126 +381,210 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
     else:
         log.info("Going to Deploy HostedEngine on Gluster...")
     
+    xpath("//button[@class='btn btn-lg btn-primary']").click()  # click on button 'Continue to Hosted Engine deployment'
+    time.sleep(10)
+    
     # Test starts from here
-    xpath("//button[@class='btn btn-lg btn-primary']").click() # click on button 'Continue to Hosted Engine deployment'
-    time.sleep(10)
-    class_name("btn-default").click()  # click next button,continue yes
-    time.sleep(20)
-    list(tag_name("input"))[0].clear()  # clear the text box to configure gluster cluster
-    time.sleep(5)
-    list(tag_name("input"))[0].send_keys("Yes") #entering the input as yes to configure gluster cluster
-    time.sleep(5)
-    class_name("btn-default").click()  # click next button, continue yes
-    time.sleep(10)
+    if rhhi_version == "1.1":
+        class_name("btn-default").click()  # click next button,continue yes
+        time.sleep(20)
+        list(tag_name("input"))[0].clear()  # clear the text box to configure gluster cluster
+        time.sleep(5)
+        list(tag_name("input"))[0].send_keys("Yes") #entering the input as yes to configure gluster cluster
+        time.sleep(5)
+        class_name("btn-default").click()  # click next button, continue yes
+        time.sleep(10)
     
-    class_name("btn-default").click()  # gateway ip confirm
-    time.sleep(5)
+        class_name("btn-default").click()  # gateway ip confirm
+        time.sleep(5)
 
-    list(tag_name("input"))[0].clear()  # select NIC
-    time.sleep(5)
-    list(tag_name("input"))[0].send_keys(he_nic)
-    time.sleep(5)
+        list(tag_name("input"))[0].clear()  # select NIC
+        time.sleep(5)
+        list(tag_name("input"))[0].send_keys(he_nic)
+        time.sleep(5)
 
-    class_name("btn-default").click() #confirm nic  
-    time.sleep(5)
+        class_name("btn-default").click() #confirm nic  
+        time.sleep(5)
 
-    class_name("btn-default").click() #select the appliance
-    time.sleep(120)
+        class_name("btn-default").click() #select the appliance
+        time.sleep(120)
 
-    class_name("btn-default").click()  # select vnc
-    time.sleep(2)
+        class_name("btn-default").click()  # select vnc
+        time.sleep(2)
 
-    class_name("btn-default").click()  # select cloud-init
-    time.sleep(2)
+        class_name("btn-default").click()  # select cloud-init
+        time.sleep(2)
 
-    list(tag_name("input"))[0].send_keys(vm_fqdn)  # set VM FQDN
-    time.sleep(2)
-    class_name("btn-default").click()
-    time.sleep(2)
+        list(tag_name("input"))[0].send_keys(vm_fqdn)  # set VM FQDN
+        time.sleep(2)
+        class_name("btn-default").click()
+        time.sleep(2)
 
-    class_name("btn-default").click()  # set vm domain
-    time.sleep(2)
+        class_name("btn-default").click()  # set vm domain
+        time.sleep(2)
 
-    class_name("btn-default").click() #Automatically setup engine-setup on first boot
-    time.sleep(2)
+        class_name("btn-default").click() #Automatically setup engine-setup on first boot
+        time.sleep(2)
 
-    list(tag_name("input"))[0].clear()  # Enter root password that will be used for engine appliance
-    time.sleep(2)
-    list(tag_name("input"))[0].send_keys(vm_password)
-    time.sleep(2)
-    class_name("btn-default").click()
-    time.sleep(2)
-    list(tag_name("input"))[0].clear()
-    time.sleep(2)
-    list(tag_name("input"))[0].send_keys(vm_password) #confirm appliance password
-    time.sleep(2)
-    class_name("btn-default").click()
-    time.sleep(2)
+        list(tag_name("input"))[0].clear()  # Enter root password that will be used for engine appliance
+        time.sleep(2)
+        list(tag_name("input"))[0].send_keys(vm_password)
+        time.sleep(2)
+        class_name("btn-default").click()
+        time.sleep(2)
+        list(tag_name("input"))[0].clear()
+        time.sleep(2)
+        list(tag_name("input"))[0].send_keys(vm_password) #confirm appliance password
+        time.sleep(2)
+        class_name("btn-default").click()
+        time.sleep(2)
 
-    class_name("btn-default").click()  # leave ssh key empty
-    time.sleep(2)
+        class_name("btn-default").click()  # leave ssh key empty
+        time.sleep(2)
 
-    list(tag_name("input"))[0].clear()  # enable ssh access for root
-    time.sleep(2)
-    list(tag_name("input"))[0].send_keys("yes")
-    time.sleep(2)
-    class_name("btn-default").click()
-    time.sleep(2)
+        list(tag_name("input"))[0].clear()  # enable ssh access for root
+        time.sleep(2)
+        list(tag_name("input"))[0].send_keys("yes")
+        time.sleep(2)
+        class_name("btn-default").click()
+        time.sleep(2)
 
-    class_name("btn-default").click()  # set vm disk size,default
-    time.sleep(2)
+        class_name("btn-default").click()  # set vm disk size,default
+        time.sleep(2)
 
-    class_name("btn-default").click()  # set vm memory,default
-    time.sleep(2)
+        class_name("btn-default").click()  # set vm memory,default
+        time.sleep(2)
 
-    class_name("btn-default").click()  # set cpu type,default
-    time.sleep(2)
+        class_name("btn-default").click()  # set cpu type,default
+        time.sleep(2)
 
-    class_name("btn-default").click()  # set the number of vcpu
-    time.sleep(2)
+        class_name("btn-default").click()  # set the number of vcpu
+        time.sleep(2)
 
-    list(tag_name("input"))[0].clear()  # set unicast MAC
-    time.sleep(2)
-    list(tag_name("input"))[0].send_keys(vm_mac)
-    time.sleep(2)
-    class_name("btn-default").click()
-    time.sleep(2)
+        list(tag_name("input"))[0].clear()  # set unicast MAC
+        time.sleep(2)
+        list(tag_name("input"))[0].send_keys(vm_mac)
+        time.sleep(2)
+        class_name("btn-default").click()
+        time.sleep(2)
 
-    class_name("btn-default").click()  # network,default DHCP
-    time.sleep(2)
+        class_name("btn-default").click()  # network,default DHCP
+        time.sleep(2)
 
-    class_name("btn-default").click()  # resolve hostname
-    time.sleep(2)
+        class_name("btn-default").click()  # resolve hostname
+        time.sleep(2)
 
-    list(tag_name("input"))[0].clear()  # set engine admin password
-    time.sleep(2)
-    list(tag_name("input"))[0].send_keys(engine_password)
-    time.sleep(2)
-    class_name("btn-default").click()
-    time.sleep(2)
-    list(tag_name("input"))[0].clear()
-    time.sleep(2)
-    list(tag_name("input"))[0].send_keys(engine_password) #confirm the engine password again
-    time.sleep(2)
-    class_name("btn-default").click()
-    time.sleep(2)
+        list(tag_name("input"))[0].clear()  # set engine admin password
+        time.sleep(2)
+        list(tag_name("input"))[0].send_keys(engine_password)
+        time.sleep(2)
+        class_name("btn-default").click()
+        time.sleep(2)
+        list(tag_name("input"))[0].clear()
+        time.sleep(2)
+        list(tag_name("input"))[0].send_keys(engine_password) #confirm the engine password again
+        time.sleep(2)
+        class_name("btn-default").click()
+        time.sleep(2)
 
-    class_name("btn-default").click()  # set the name of SMTP
-    time.sleep(2)
+        class_name("btn-default").click()  # set the name of SMTP
+        time.sleep(2)
 
-    class_name("btn-default").click()  # set the port of SMTP,default 25
-    time.sleep(2)
+        class_name("btn-default").click()  # set the port of SMTP,default 25
+        time.sleep(2)
 
-    class_name("btn-default").click()  # set email address
-    time.sleep(2)
+        class_name("btn-default").click()  # set email address
+        time.sleep(2)
 
-    class_name("btn-default").click()  # set comma-separated email address
-    time.sleep(5)
+        class_name("btn-default").click()  # set comma-separated email address
+        time.sleep(5)
 
-    class_name("btn-default").click()  # confirm the configuration
+        class_name("btn-default").click()  # confirm the configuration
+        
+    elif rhhi_version == "2.0":
+        log.info("rhhi_version is 2.0 & configuring HE")
+        xpaths("//input[@type='checkbox']")[0].click()              # uncheck Auto-import Appliance
+        time.sleep(5)
+        xpath("//input[@placeholder='Installation File Path']").clear()
+        time.sleep(2)
+        xpath("//input[@placeholder='Installation File Path']").send_keys(rhvm_appliance_path) # Enter installation file path
+        time.sleep(2)
+        xpath("//input[@placeholder='Number of CPUs']").clear()
+        time.sleep(2)
+        xpath("//input[@placeholder='Number of CPUs']").send_keys(no_of_cpus)                 # Enter no.of cpu cores
+        time.sleep(2)
+        xpath("//input[@placeholder='Disk Size']").clear()
+        time.sleep(2)
+        xpath("//input[@placeholder='Disk Size']").send_keys(mem_size)                # Enter no.of memory size of HE VM
+        time.sleep(2)
+        xpath("//input[@title='Enter the MAC address for the VM.']").clear()
+        time.sleep(2)
+        xpath("//input[@title='Enter the MAC address for the VM.']").send_keys(vm_mac) # Enter mac address of the HE VM
+        time.sleep(2)
+        xpath("//input[@placeholder='engine-host.example.com']").clear()
+        time.sleep(2)
+        xpath("//input[@placeholder='engine-host.example.com']").send_keys(host_ip)  # Enter Hosted engine FQDN
+        time.sleep(2)
+        xpath("//input[@title='Enter the engine FQDN.']").clear()
+        time.sleep(2)
+        xpath("//input[@title='Enter the engine FQDN.']").send_keys(vm_fqdn)  # Enter Hosted engine FQDN
+        time.sleep(2)
+        xpath("//input[@type='password']").clear()
+        time.sleep(2)
+        xpath("//input[@type='password']").send_keys(vm_password)  # Enter Hosted engine Root password
+        time.sleep(2)
+        xpaths("//input[@type='password']")[1].send_keys(vm_password)  # Confirm Hosted Engine root password
+        time.sleep(5)
+        xpath("//button[@class='btn btn-primary wizard-pf-next']").click()  #proceed to Engine tab by clicking on next
+        time.sleep(10)
+        log.info("Inside Engine tab")
+        xpath("//input[@title='Enter the admin portal password.']").send_keys(engine_password) #Enter Admin portal password
+        time.sleep(2)
+        xpath("//input[@title='Confirm the admin portal password.']").send_keys(engine_password) # confirm Admin portal password
+        time.sleep(2)
+        xpath("//button[@class='btn btn-primary wizard-pf-next']").click()  # proceed to Review tab by clicking on next
+        time.sleep(10)
+        xpath("//button[@class='btn btn-primary wizard-pf-next']").click()  # proceed to preview tab and click on execute
+        
+        #Add code here to check if Hosted engine has been deployed, not aware of the command as of today.
+        
+        log.info("Inside Storage tab")
+        xpath("//input[@placeholder='Disk Size']").clear()  # clear the disk size value
+        time.sleep(2)
+        xpath("//input[@placeholder='Disk Size']").send_keys(vm_disk_size)  # Enter the disk size for vm
+        time.sleep(2)
+        xpath("//button[@class='btn btn-default dropdown-toggle']").click() #select glusterfs for storage
+        time.sleep(5)
+        xpath("//li[@value='glusterfs']").click()
+        time.sleep(5)
+        xpath("//input[@placeholder='Enter the path for the shared storage you wish to use.']").clear()
+        time.sleep(2)
+        shared_storage = str(gluster_ip)+":/"+str(gluster_storage_path)
+        xpath("//input[@placeholder='Enter the path for the shared storage you wish to use.']").send_keys(shared_storage) #set the path for shared storage
+        time.sleep(2)
+        mount_options = "backup-volfile-servers="+str(gluster_data_node2)+":"+str(gluster_arbiter_node)
+        xpath("//input[@type='text']")[1].send_keys(mount_options) #Enter the mount options
+        time.sleep(5)
+        xpath("//button[@class='btn btn-primary wizard-pf-next']").click()  # proceed to Network tab by clicking on next
+        time.sleep(10)
+        xpath("//button[@class='btn btn-default dropdown-toggle']").click()  # select Bridge interface for storage
+        time.sleep(5)
+        xpath("//li[@value='"+file_path_interface1+"']").click() # Enter the interface
+        time.sleep(5)
+        xpaths("//input[@type='checkbox']")[0].click()  # uncheck configure iptables
+        time.sleep(5)
+        xpath("//input[@title='Enter a pingable gateway address.']").clear()
+        time.sleep(2)
+        xpath("//input[@title='Enter a pingable gateway address.']").send_keys(gw_address) #Enter gateway address
+        time.sleep(2)
+        xpath("//button[@class='btn btn-primary wizard-pf-next']").click()  # proceed to Review tab by clicking on next
+        time.sleep(10)
+        xpath("//button[@class='btn btn-primary wizard-pf-finish").click() # start deployment
+    
+    else:
+        log.error("rhhi version specified in conf file is not present")
     
     
-
 
 def check_he_is_deployed(host_ip, host_user, host_password):
     """
