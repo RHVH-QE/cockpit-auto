@@ -2,55 +2,60 @@
 common:
     host_user: root
     host_password: redhat
-    host_ip: 10.70.34.33
-    rhvm_fqdn: cambridge.lab.eng.blr.redhat.com
-    host2_ip : 10.70.34.34
-    host3_ip : 10.70.34.34
+    host_ip: <host_ip>
+    rhvm_fqdn: <fqdn of first host>
+    host2_ip : <host2_ip>
+    host3_ip : <host3_ip>
     browser: firefox
     test_build: rhvh-4.1-0.20171207.0
 
 subscription:
-    rhn_user: <user_name> 
+    rhn_user: <user_name>
     rhn_password: <password>
      
 
 hosted_engine:
-    rhvm_appliance_path: http://rhsqe-repo.lab.eng.blr.redhat.com/rhvmappliance/rhvm-appliance-4.1.20171206.0-1.el7.noarch.rpm
+    rhvm_appliance_path: <path_to_rhvm_appliance>
     storage_type: glusterfs
-    gluster_ip: 10.70.36.73
+    gluster_ip: <gluster_primary_node_ip>
     gluster_storage_path: engine
-    he_vm_mac: 00:44:54:19:48:01
-    he_vm_fqdn: rhev-engine1.lab.eng.blr.redhat.com
+    he_vm_mac: <mac_address>
+    he_vm_fqdn: <vm_fqdn_name>
     he_vm_domain: lab.eng.blr.redhat.com
-    he_vm_ip: "10.70.34.125"
-    he_vm_password: redhat
-    engine_password: redhat
+    he_vm_ip: <he_vm_ip>
+    he_vm_password: <he_vm_password>
+    engine_password: <engine_password>
+    no_of_cpus : 2
+    mem_size : 4096
+    vm_disk_size : 58
+    gw_address: <gateway_address>
     auto_answer: http://10.73.73.23:8000/run?download=true
     # TODO
 
 gluster_details:
-    gluster_data_node1: 10.70.36.73
-    gluster_data_node2: 10.70.36.75
-    gluster_arbiter_node: 10.70.36.74
+    gluster_data_node1: <gluster_data_node1>
+    gluster_data_node2: <gluster_data_node2>
+    gluster_arbiter_node: <gluster_data_node3 / arbiter_node>
     vmstore_is_arbiter: Yes
     data_is_arbiter: Yes
     data_disk_count: 4
-    device_name_engine: sdb
-    device_name_vmstore: sdb
-    device_name_data: sdb
-    size_of_datastore_lv: 1200
+    device_name_engine: sdc
+    device_name_vmstore: sdc
+    device_name_data: sdc
+    size_of_datastore_lv: 12000
     size_of_vmstore_lv: 1000
     gdeploy_conf_file_path : /tmp/gdeployConfig.conf
     mount_engine_brick : /gluster_bricks/engine
     mount_data_brick: /gluster_bricks/data
     mount_vmstore_brick: /gluster_bricks/vmstore
-    gluster_vg_name : gluster_vg_sdb
-    gluster_pv_name : /dev/sdb
+    gluster_vg_name : gluster_vg_sdc
+    gluster_pv_name : /dev/sdc
     number_of_Volumes : 3
-    engine_lv_name : /dev/mapper/gluster_vg_sdb-gluster_lv_engine
+    engine_lv_name : /dev/mapper/gluster_vg_sdc-gluster_lv_engine
     os_variant_rhvh : 'PRETTY_NAME="Red Hat Virtualization Host 4.1 (el7.4)"'
     bad_device_name : 'hda'
-    file_path_interface1 : 'ens3'
-    file_path_interface2 : 'ens8'
-        
+    file_path_interface1 : 'ens3f0'
+    file_path_interface2 : 'enp4s0f0'
+    rhhi_version: '1.1'
+    
 
