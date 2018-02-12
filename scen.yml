@@ -25,6 +25,12 @@ he_tier:
         "he_deployment"
     ]
 
+rhel_tier:
+    cases: [
+        "dashboard_nodectl", 
+        "he_deployment"
+    ]
+
 common_tier:
     cases: [
         "tools_subscription",
