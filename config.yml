@@ -1,7 +1,7 @@
 %YAML 1.2
 ---
 
-host_string: "10.66.11.45"
+host_string: "10.73.73.19"
 host_user: root
 host_pass: redhat
 browser: chrome

@@ -18,12 +18,17 @@ class HePage(PageObject):
         xpath="//input[@placeholder='Engine VM Host Name']")
     domain_name = PageElement(
         xpath="//input[@placeholder='Engine VM Domain']")
+    engine_fqdn = PageElement(
+        xpath="//input[@placeholder='ovirt-engine.example.com']")
     passwd = MultiPageElement(
         xpath="//input[@type='password']")
     nfs_path = PageElement(
         xpath="//input[@placeholder='host:/path']")
     next_button = PageElement(
         xpath="//button[@class='btn btn-primary wizard-pf-next']")
+    drop_down = PageElement(class_name="dropdown-toggle")
+    ansible_deployment = PageElement(xpath="//li[@value='Ansible Deployment']")
+    otopi_deployment = PageElement(xpath="//li[@value='OTOPI Deployment']")
     deploy_button = PageElement(
         xpath="//button[@class='btn btn-primary wizard-pf-finish']")
     checkboxes = MultiPageElement(xpath="//input[@type='checkbox']")

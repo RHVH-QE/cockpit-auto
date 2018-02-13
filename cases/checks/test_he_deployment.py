@@ -122,13 +122,17 @@ class TestHostedEngine(CheckBase):
             return False, e
         return True
 
-    def _he_install(self):
+    def _he_install_otopi(self):
         # Setup the HostedEngine ENV
         self._set_up()
         try:
             # VM page
             with self.page.switch_to_frame(self.page.frame_right_name):
                 log.info("Starting to deploy HostedEngine...")
+                self.page.drop_down.click()
+                self.page.wait(2)
+                self.page.otopi_deployment.click()
+                self.page.wait(2)
                 self.page.deploy_icon.click()
                 self.page.wait(10)
                 # MAC Address
@@ -137,18 +141,13 @@ class TestHostedEngine(CheckBase):
                 self.page.wait(2)
                 self.page.mac_address.send_keys(self._config['he_vm_mac'])
                 self.page.wait(1)
-                # VM hostname
-                log.info("input the Engine hostname...")
-                self.page.engine_hostname.clear()
+                # Engine FQDN
+                log.info("input the Engine FQDN...")
+                self.page.engine_fqdn.clear()
                 self.page.wait(1)
-                self.page.engine_hostname.send_keys(self._config['he_vm_fqdn'].split(".")[0])
+                self.page.engine_fqdn.send_keys(self._config['he_vm_fqdn'])
                 self.page.wait(1)
-                # Domain name
-                log.info("Input the domain name...") 
-                self.page.domain_name.clear()
-                self.page.wait(1)
-                self.page.domain_name.send_keys(self._config['he_vm_domain'])
-                self.page.wait(1)
+
                 # VM root password
                 log.info("Input the VM root password...")
                 self.page.passwd[0].send_keys(self._config['he_vm_password'])
@@ -186,19 +185,25 @@ class TestHostedEngine(CheckBase):
                 self.page.wait(50)
                 log.info("Select the appliance...")
                 self.page.default_button[2].click()
+                self.page.wait(80)
+                log.info("Confirm the ssh public key...")
+                self.page.default_button[2].click()
+                self.page.wait(60)
+                log.info("Select the DHCP ...")
+                self.page.default_button[2].click()
 
-                self.page.wait(1400)
+                self.page.wait(1500)
         except Exception as e:
             log.exception(e)
             return False
         return True
 
-    def check_he_install(self):
+    def check_he_otopi_install(self):
         true, false = True, False
         vm_status = {'detail': 'Up', 'health': 'good', 'vm': 'up'}
         log.info("Checking HostedEngine install...")
         try:
-            self._he_install()
+            self._he_install_otopi()
             ret = self.run_cmd("hosted-engine --check-deployed")
             ret_st = self.run_cmd("hosted-engine --vm-status --json")
             
@@ -234,6 +239,8 @@ class TestHostedEngine(CheckBase):
     def check_he_hint(self):
         log.info("Check the local maintenance on one host hint...")
         try:
+            self._driver.refresh()
+            self.page.wait(10)
             with self.page.switch_to_frame(self.page.frame_right_name):
                 self.page.check_local_maintenance_hint()
                 self.page.wait(5)
@@ -245,6 +252,8 @@ class TestHostedEngine(CheckBase):
     def check_engine_status(self):
         log.info("Check the engine status")
         try:
+            self._driver.refresh()
+            self.page.wait(10)
             with self.page.switch_to_frame(self.page.frame_right_name):
                 self.page.check_engine_status()
                 self.page.wait(5)
@@ -255,6 +264,8 @@ class TestHostedEngine(CheckBase):
 
     def check_vm_status(self):
         try:
+            self._driver.refresh()
+            self.page.wait(10)
             with self.page.switch_to_frame(self.page.frame_right_name):
                 log.info("Check he running on the host...")
                 self.page.check_he_running_on_host(self.run_cmd("hostname")[1])
@@ -325,7 +336,8 @@ class TestHostedEngine(CheckBase):
     def check_put_local_maintenance(self):
         log.info("Check put the host to local maintenance...")
         try:
-            
+            self._driver.refresh()
+            self.page.wait(10)
             self.page.check_three_buttons()
             self.page.wait(5)
             self.page.put_host_to_local_maintenance()
@@ -341,6 +353,8 @@ class TestHostedEngine(CheckBase):
     def check_migrate_he(self):
         log.info("Check whether he on additional host successfully...")
         try:
+            self._driver.refresh()
+            self.page.wait(10)
             if self.page.check_host_not_in_local_maintenance == True:
                 self.check_put_local_maintenance()
 
@@ -354,7 +368,8 @@ class TestHostedEngine(CheckBase):
     def check_remove_from_maintenance(self):
         log.info("Check remove this host from maintenance...")
         try:
-            self.page.wait(2)
+            self._driver.refresh()
+            self.page.wait(10)
             self.page.remove_host_from_local_maintenance()
             self.page.wait(5)
             self.page.check_host_not_in_local_maintenance()
@@ -368,6 +383,8 @@ class TestHostedEngine(CheckBase):
     def check_put_global_maintenance(self):
         log.info("Check the cluster in the global maintenance...")
         try:
+            self._driver.refresh()
+            self.page.wait(10)
             self.page.put_cluster_to_global_maintenance()
             self.page.wait(6)
             self.page.check_cluster_in_global_maintenance()
@@ -400,8 +417,8 @@ class TestHostedEngine(CheckBase):
         log.info("Check trying to redeploy HostedEngine on the host...")
         try:
             self._driver.refresh()
-            self.page.wait(5)
-            self.check_he_install()
+            self.page.wait(10)
+            self.check_he_otopi_install()
         except Exception as e:
             log.exception(e)
             return False

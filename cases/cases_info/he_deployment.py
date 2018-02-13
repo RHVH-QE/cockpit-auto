@@ -2,7 +2,7 @@
 from collections import OrderedDict
 
 cases_t = (
-    ('RHEVM-23815', 'check_he_install'),
+    ('RHEVM-23815', 'check_he_otopi_install'),
     ('RHEVM-24594', 'check_he_hint'),
     ('RHEVM-23817', 'check_engine_status'),
     ('RHEVM-23819', 'check_vm_status'),
