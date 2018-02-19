@@ -220,78 +220,7 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
         cmd6 = "rm -f %s" % local_rhvm_appliance
         run(cmd6)
     
-    #Add entries to interface files so that ips on two interfaces are pingable
-    log.info(
-        "Adding entries to interface files..........."
-    )
     
-    with settings(
-        warn_only=True,
-        host_string=host_user + '@' + host_ip,
-        password=host_password):
-        cmd0 = "echo '2' >> /proc/sys/net/ipv4/conf/%s/rp_filter" % file_path_interface1
-        run(cmd0)
-        cmd1 = "echo '2' >> /proc/sys/net/ipv4/conf/%s/rp_filter" % file_path_interface2
-        run(cmd1)
-        cmd2 = "echo '2' >> /proc/sys/net/ipv4/conf/default/rp_filter"
-        run(cmd2)
-        cmd3 = "echo '2' >> /proc/sys/net/ipv4/conf/all/rp_filter"
-        run(cmd3)
-        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' >> /etc/sysctl.conf"
-        run(cmd4)
-        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' >> /etc/sysctl.conf"
-        run(cmd5)
-        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface1
-        run(cmd6)
-        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface2
-        run(cmd7)
-        cmd8 = "sysctl -p"
-        run(cmd8)
-    with settings(
-        warn_only=True,
-        host_string=host_user + '@' + host2_ip,
-        password=host_password):
-        cmd0 = "echo '2' >> /proc/sys/net/ipv4/conf/%s/rp_filter" % file_path_interface1
-        run(cmd0)
-        cmd1 = "echo '2' >> /proc/sys/net/ipv4/conf/%s/rp_filter" % file_path_interface2
-        run(cmd1)
-        cmd2 = "echo '2' >> /proc/sys/net/ipv4/conf/default/rp_filter"
-        run(cmd2)
-        cmd3 = "echo '2' >> /proc/sys/net/ipv4/conf/all/rp_filter"
-        run(cmd3)
-        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' >> /etc/sysctl.conf"
-        run(cmd4)
-        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' >> /etc/sysctl.conf"
-        run(cmd5)
-        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface1
-        run(cmd6)
-        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface2
-        run(cmd7)
-        cmd8 = "sysctl -p"
-        run(cmd8)
-    
-    with settings(
-        warn_only=True,
-        host_string=host_user + '@' + host3_ip,
-        password=host_password):
-        cmd0 = "echo '2' >> /proc/sys/net/ipv4/conf/%s/rp_filter" % (file_path_interface1)
-        run(cmd0)
-        cmd1 = "echo '2' >> /proc/sys/net/ipv4/conf/%s/rp_filter" % (file_path_interface2)
-        run(cmd1)
-        cmd2 = "echo '2' >> /proc/sys/net/ipv4/conf/default/rp_filter"
-        run(cmd2)
-        cmd3 = "echo '2' >> /proc/sys/net/ipv4/conf/all/rp_filter"
-        run(cmd3)
-        cmd4 = "echo 'net.ipv4.conf.default.rp_filter = 2' >> /etc/sysctl.conf"
-        run(cmd4)
-        cmd5 = "echo 'net.ipv4.conf.all.rp_filter = 2' >> /etc/sysctl.conf"
-        run(cmd5)
-        cmd6 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface1
-        run(cmd6)
-        cmd7 = "echo 'net.ipv4.conf.%s.rp_filter = 2' >> /etc/sysctl.conf" % file_path_interface2
-        run(cmd7)
-        cmd8 = "sysctl -p"
-        run(cmd8)
     log.info("Generating and copying keys")
     #generating keys
     generate_keys()
@@ -319,9 +248,9 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
     dr.get(root_uri + "/ovirt-dashboard")
     time.sleep(5)
     dr.switch_to_frame("cockpit1:localhost/ovirt-dashboard")
-    time.sleep(2)
+    time.sleep(10)
     xpath("//a[@href='#/he']").click()
-    time.sleep(5)
+    time.sleep(10)
 
       
     
@@ -421,13 +350,13 @@ def he_install_gluster_auto(host_dict, gluster_storage_dict, install_dict, vm_di
         time.sleep(2)
 
         class_name("btn-default").click()  # set vm domain
-        time.sleep(2)
+        time.sleep(5)
 
         class_name("btn-default").click() #Automatically setup engine-setup on first boot
-        time.sleep(2)
+        time.sleep(5)
 
         list(tag_name("input"))[0].clear()  # Enter root password that will be used for engine appliance
-        time.sleep(2)
+        time.sleep(5)
         list(tag_name("input"))[0].send_keys(vm_password)
         time.sleep(2)
         class_name("btn-default").click()
