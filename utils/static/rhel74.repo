@@ -1,0 +1,17 @@
+[rhel-7.4.z]
+name=RHEL_7.4_zstream
+baseurl=http://download.eng.bos.redhat.com/rel-eng/updates/latest-RHEL-7.4/compose/Server/$basearch/os/
+enabled=1
+gpgcheck=0
+
+[rhel-74-optional]
+name=RHEL_74_OPTIONAL
+baseurl=http://download.eng.bos.redhat.com/rel-eng/updates/latest-RHEL-7.4/compose/Server-optional/$basearch/os/
+enabled=1
+gpgcheck=0
+
+[rhel-7.4-extras]
+name=RHEL_74_EXTRAS
+baseurl=http://pulp-read.dist.prod.ext.phx2.redhat.com/content/dist/rhel/server/7/7Server/$basearch/extras/os/
+enabled=1
+gpgcheck=0
