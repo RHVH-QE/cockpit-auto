@@ -7,7 +7,7 @@ from constants import PROJECT_ROOT
 RHEL_STRING = "10.73.75.57"
 RHEL_USER = "root"
 RHEL_PASSWORD = "redhat"
-RHEL_REPO_FILE = "rhel74.repo"
+RHEL_REPO_FILE = "rhel75.repo"
 RHV_REPO_RPM = "http://bob.eng.lab.tlv.redhat.com/builds/latest_4.2/rhv-release-latest-4.2.noarch.rpm"
 YUM_UPDATE_TIMEOUT = 1200
 YUM_INSTALL_TIMEOUT = 1200
