@@ -29,7 +29,7 @@ gluster_data_node1, gluster_data_node2, gluster_arbiter_node, vmstore_is_arbiter
     'gluster_details'
 ).get('gluster_data_node1'), CONF.get('gluster_details').get('gluster_data_node2'), CONF.get('gluster_details').get(
     'gluster_arbiter_node'), CONF.get('gluster_details').get('vmstore_is_arbiter'), CONF.get('gluster_details').get(
-    'data_is_arbtier'), CONF.get('gluster_details').get('data_disk_count'), CONF.get('gluster_details').get(
+    'data_is_arbiter'), CONF.get('gluster_details').get('data_disk_count'), CONF.get('gluster_details').get(
     'device_name_engine'), CONF.get('gluster_details').get('device_name_data'), CONF.get('gluster_details').get(
     'device_name_vmstore'), CONF.get('gluster_details').get('size_of_datastore_lv'), CONF.get('gluster_details').get(
     'size_of_vmstore_lv'), CONF.get('gluster_details').get('gdeploy_conf_file_path'), CONF.get('gluster_details').get(
