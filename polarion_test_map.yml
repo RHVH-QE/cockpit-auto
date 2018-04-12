@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+
+RHEVM-23308: test_ovirt_dashboard.py:TestOvirtDashboard.test_layer
+RHEVM-23309: test_ovirt_dashboard.py:TestOvirtDashboard.test_health
+RHEVM-23311: test_ovirt_dashboard.py:TestOvirtDashboard.test_layer
+RHEVM-23317: test_ovirt_dashboard.py:TestOvirtDashboard.test_network_info_link
+RHEVM-23318: test_ovirt_dashboard.py:TestOvirtDashboard.test_system_log_link
+RHEVM-23319: test_ovirt_dashboard.py:TestOvirtDashboard.test_storage_link
+RHEVM-23320: test_ovirt_dashboard.py:TestOvirtDashboard.test_ssh_host_key_link
+RHEVM-23284: test_ovirt_dashboard.py:TestOvirtDashboard.test_network_info_link

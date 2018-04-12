@@ -1,8 +1,15 @@
 %YAML 1.2
 ---
 
-host_string: "10.73.73.19"
+# host infos
+host_string: "10.66.10.188"
 host_user: root
 host_pass: redhat
 browser: chrome
-test_build: rhvh-4.2.1.2-0.20180201.0
+
+# avocado config
+avocado_results_dir: /home/qinyuan/avocado/
+
+# versions of pkg/sys under test
+test_pkg_ver: cockpit-ovirt-dashboard-0.11.20
+test_sys_ver: rhvh-4.2.2.1-0.20180409.0

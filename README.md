@@ -21,7 +21,7 @@ pipenv install
 
 4. Run the executable file run.py and append the $test_scen defined in scen.yml
 ```bash
-python run.py -t $test_tier
+python run.py $tags
 ```
 
 ## Branches

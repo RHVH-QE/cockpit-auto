@@ -7,14 +7,19 @@ name = "pypi"
 
 [packages]
 
-pyyaml = "*"
+PyYAML = "*"
 selenium = "*"
-fabric = "*"
-flask = "*"
+Fabric = "*"
+Flask = "*"
+avocado-framework = "*"
+avocado-framework-plugin-result-html = "*"
+simplejson = "*"
 
 
 [dev-packages]
 
+pylint = "*"
+"autopep8" = "*"
 
 
 [requires]
