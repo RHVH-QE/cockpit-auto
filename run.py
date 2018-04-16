@@ -1,4 +1,4 @@
-# !/usr/bin/env python2.7
+#!/usr/bin/env python2.7
 
 import os
 import yaml
@@ -63,11 +63,11 @@ def main():
     parser = argparse.ArgumentParser(description='Run Cockpit Avocado test(s)')
     parser.add_argument(
         "tags",
-        help=("List avocado tag(s) in the format of 'A,B|C|E', to specify which tests need to be run.\n"
-              "'A,B|C|E' means to run:\n"
-              "    the tests with both tag A and tag B,\n"
-              "    and the tests with tag C,\n"
-              "    and the tests with tag E"))
+        help=("List avocado tag(s) in the format of 'A,B|C|E', to specify which tests need to be run. "
+              "'A,B|C|E' means to run: "
+              "the tests with both tag A and tag B, "
+              "the tests with tag C, "
+              "and the tests with tag E"))
 
     args = parser.parse_args()
     run(args.tags)
