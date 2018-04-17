@@ -31,6 +31,9 @@ master
 v41
 > Auto testing for ovirt 4.1 cockpit
 
+vm
+> Auto testing for cockpit-VMs since 4.2.2 phase.
+
 ## Cases development
 Under cases file, there are 3 sections.
 
