@@ -17,6 +17,7 @@ visible = EC.visibility_of_element_located
 clickable = EC.element_to_be_clickable
 invisible = EC.invisibility_of_element_located
 frame = EC.frame_to_be_available_and_switch_to_it
+text = EC.text_to_be_present_in_element
 
 LOCATOR_MAP = {'CSS_SELECTOR': By.CSS_SELECTOR,
                'ID': By.ID,
@@ -145,3 +146,14 @@ class Browser(object):
     def assert_text_visible(self, text, wait_times=DEFAULT_TRY):
         el = "XPATH{}//*[contains(text(), '%s')]" % text
         self.assert_element_visible(el, wait_times)
+        
+    def assert_text_expected(self, el, text):
+        element_text = self.get_text(el)
+        if text not in element_text:
+            raise Exception("ERR: The expected text is unavailable.")
+
+    def assert_text_not_expected(self, el, text):
+        element_text = self.get_text(el)
+        if text in element_text:
+            raise Exception("ERR: The unexpected text is available.")
+    
