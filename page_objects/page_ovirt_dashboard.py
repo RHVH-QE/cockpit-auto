@@ -1,5 +1,5 @@
 import simplejson
-from common.page import PageTest
+from page import PageTest
 
 
 class OvirtDashboardPage(PageTest):
@@ -51,21 +51,21 @@ class OvirtDashboardPage(PageTest):
 
     def nodectl_check_on_host(self):
         cmd = 'nodectl check --machine-readable'
-        ret = self.machine.execute(cmd)
+        ret = self.host.execute(cmd)
         if not ret[0]:
             raise Exception("ERR: Run `%s` failed on host" % cmd)
         return simplejson.loads(ret[1])
 
     def nodectl_info_on_host(self):
         cmd = 'nodectl info --machine-readable'
-        ret = self.machine.execute(cmd)
+        ret = self.host.execute(cmd)
         if not ret[0]:
             raise Exception("ERR: Run `%s` failed on host" % cmd)
         return simplejson.loads(ret[1])
 
     def get_ssh_key_on_host(self):
         cmd = "cat /etc/ssh/ssh_host_rsa_key | tr -d '\r\n'"
-        ret = self.machine.execute(cmd)
+        ret = self.host.execute(cmd)
         if not ret[0]:
             raise Exception("ERR: Run `%s` failed on host" % cmd)
         return ret[1]

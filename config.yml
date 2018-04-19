@@ -2,13 +2,13 @@
 ---
 
 # host infos
-host_string: "10.66.10.188"
+host_string: your ip
 host_user: root
-host_pass: redhat
+host_pass: your password
 browser: chrome
 
 # avocado config
-avocado_results_dir: /home/qinyuan/avocado
+avocado_results_dir: /home/yourname/avocado
 
 # versions of pkg/sys under test
 test_pkg_ver: cockpit-ovirt-dashboard-ver

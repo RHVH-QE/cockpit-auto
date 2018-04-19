@@ -1,8 +1,7 @@
 import os
-import time
 from avocado import Test
-from machinelib import Machine
 from seleniumlib import Browser
+from utils.machine import Machine
 
 
 class PageTest(Test):
@@ -16,7 +15,7 @@ class PageTest(Test):
         passwd = os.environ['PASSWD']
         browser = os.environ['BROWSER']
 
-        self.machine = Machine(host_string, username, passwd)
+        self.host = Machine(host_string, username, passwd)
 
         self.browser = Browser(browser)
         self.browser.screenshot_path = self.logdir
