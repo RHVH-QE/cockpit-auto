@@ -36,7 +36,7 @@ def gen_polarion_results(avocado_results_dir):
                 polarion_results, indent=4))
 
 
-def run(tags):
+def run(tags, polarion_flag):
     config_dict = yaml.load(open('./config.yml'))
 
     os.environ['HOST_STRING'] = config_dict['host_string']
@@ -56,21 +56,26 @@ def run(tags):
                                 avocado_results_dir, ' '.join(tag_filter_list)])
 
     os.system(avocado_run_cmd)
-    gen_polarion_results(avocado_results_dir)
+
+    if polarion_flag:
+        gen_polarion_results(avocado_results_dir)
 
 
 def main():
     parser = argparse.ArgumentParser(description='Run Cockpit Avocado test(s)')
+    parser.add_argument("-p", "--polarion", dest='polarion_flag', action='store_true',
+                        help="Generate polarion result, it's in the same directory with avocado results")
     parser.add_argument(
-        "tags",
-        help=("List avocado tag(s) in the format of 'A,B|C|E', to specify which tests need to be run. "
-              "'A,B|C|E' means to run: "
-              "the tests with both tag A and tag B, "
+        "tags", nargs='?',
+        help=("Avocado tags filter specifying which tests need to be run. "
+              "For example, if want to run the tests with both tag A and tag B, "
               "the tests with tag C, "
-              "and the tests with tag E"))
+              "and the tests with tag D, "
+              "then should define the filter as 'A,B|C|D'. "
+              "Refer to each test to see the actual avocado tags."))
 
     args = parser.parse_args()
-    run(args.tags)
+    run(args.tags, args.polarion_flag)
 
 
 if __name__ == '__main__':
