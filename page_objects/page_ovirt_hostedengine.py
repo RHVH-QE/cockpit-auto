@@ -20,8 +20,8 @@ class OvirtHostedEnginePage(PageTest):
     HE_START = "XPATH{}//span[@class='deployment-option-panel-container']/button[text()='Start']"
 
     # Guide Links
-    GETTING_START_LINK = "XPATH{}//a[contains(@href, 'Self-Hosted_Engine_Guide')]"
-    MORE_INFORMATION_LINK = "XPATH{}//a[contains(@href, 'www.ovirt.org')]"
+    GETTING_START_LINK = "XPATH{}//a[contains(text(), 'Installation Guide')]"
+    MORE_INFORMATION_LINK = "XPATH{}//a[contains(text(), 'oVirt Homepage')]"
 
     # VM STAGE
     _TITLE = "XPATH{}//input[@title='%s']"
