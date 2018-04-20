@@ -90,7 +90,7 @@ class OvirtHostedEnginePage(PageTest):
     STORAGE_GLUSTERFS = _STORAGE_TYPE % 'glusterfs'
 
     # FINISH STAGE
-    FINISH_DEVELOPMENT = "XPATH{}//button[text()='Finish Development']"
+    FINISH_DEPLOYMENT = "XPATH{}//button[text()='Finish Deployment']"
     CLOSE_BUTTON = "XPATH{}//button[text()='Close']"
 
     # CHECKPOINTS
