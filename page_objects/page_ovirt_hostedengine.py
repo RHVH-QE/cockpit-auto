@@ -104,7 +104,8 @@ class OvirtHostedEnginePage(PageTest):
 
     LOCAL_MAINTEN_STAT = "XPATH{}//div[@class='list-group-item-text']"
     VM_STATUS = "XPATH{}//div[contains(@class, 'list-view-pf-additional-info-item')]/div"
-
+    HE_RUNNING = "XPATH{}//p[contains(text(),'Hosted Engine is running on')]"
+    
     FAILED_TEXT = "XPATH{}//div[text()='Deployment failed']"
 
     def get_latest_rhvm_appliance(self, appliance_path):
