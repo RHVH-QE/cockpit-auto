@@ -20,8 +20,8 @@ class OvirtHostedEnginePage(PageTest):
     HE_START = "XPATH{}//span[@class='deployment-option-panel-container']/button[text()='Start']"
 
     # Guide Links
-    GETTING_START_LINK = "XPATH{}//a[contains(@href, 'Self-Hosted_Engine_Guide')]"
-    MORE_INFORMATION_LINK = "XPATH{}//a[contains(@href, 'www.ovirt.org')]"
+    GETTING_START_LINK = "XPATH{}//a[contains(text(), 'Installation Guide')]"
+    MORE_INFORMATION_LINK = "XPATH{}//a[contains(text(), 'oVirt Homepage')]"
 
     # VM STAGE
     _TITLE = "XPATH{}//input[@title='%s']"
@@ -42,6 +42,7 @@ class OvirtHostedEnginePage(PageTest):
 
     NETWORK_STATIC = _DROPDOWN_VALUE % 'static'
     VM_IP = _PLACEHOLDER % '192.168.1.2'
+    IP_PREFIX = _PLACEHOLDER % '24'
     DNS_SERVER = "XPATH{}//div[contains(@class, 'multi-row-text-box-input')]" \
         "/input[@type='text']"
 
@@ -93,8 +94,8 @@ class OvirtHostedEnginePage(PageTest):
     CLOSE_BUTTON = "XPATH{}//button[text()='Close']"
 
     # CHECKPOINTS
-    MAINTENANCE_HINT = "XPATH{}//div[text()='Local maintenance cannot be enabled with a single host']"
-    GLOBAL_HINT = "XPATH{}//div[text()='The cluster is in global maintenance mode!']"
+    MAINTENANCE_HINT = "XPATH{}//div[contains(text(), 'Local maintenance')]"
+    GLOBAL_HINT = "XPATH{}//div[contains(text(), 'global maintenance')]"
     ENGINE_UP_ICON = "XPATH{}//span[contains(@class, 'pficon-ok')]"
 
     _MAINTENANCE = "XPATH{}//button[contains(text(), '%s')]"
@@ -102,10 +103,10 @@ class OvirtHostedEnginePage(PageTest):
     REMOVE_MAINTENANCE = _MAINTENANCE % 'Remove'
     GLOBAL_MAINTENANCE = _MAINTENANCE % 'global'
 
-    LOCAL_MAINTEN_STAT = "XPATH{}//div[@class='list-group-item-text']"
-    VM_STATUS = "XPATH{}//div[contains(@class, 'list-view-pf-additional-info-item')]/div"
+    LOCAL_MAINTEN_STAT = "XPATH{}//div[contains(text(), 'Agent')]"
+    VM_STATUS = "XPATH{}//div[contains(text(), 'State')]"
     HE_RUNNING = "XPATH{}//p[contains(text(),'Hosted Engine is running on')]"
-    
+
     FAILED_TEXT = "XPATH{}//div[text()='Deployment failed']"
 
     def get_latest_rhvm_appliance(self, appliance_path):
