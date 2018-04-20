@@ -90,7 +90,7 @@ class OvirtHostedEnginePage(PageTest):
     STORAGE_GLUSTERFS = _STORAGE_TYPE % 'glusterfs'
 
     # FINISH STAGE
-    FINISH_DEVELOPMENT = "XPATH{}//button[text()='Finish Development']"
+    FINISH_DEPLOYMENT = "XPATH{}//button[text()='Finish Deployment']"
     CLOSE_BUTTON = "XPATH{}//button[text()='Close']"
 
     # CHECKPOINTS
@@ -212,13 +212,13 @@ class OvirtHostedEnginePage(PageTest):
     def add_additional_host_to_cluster(self, host_ip, host_name, host_pass, rhvm_fqdn, engine_pass):
         rhvm = RhevmAction(rhvm_fqdn, "admin", engine_pass)
         rhvm.add_host(host_ip, host_name, host_pass, "Default", True)
-        if not self.wait_host_status(rhvm, host_name, 'up'):
+        if self.wait_host_status(rhvm, host_name, 'up'):
             raise Exception(
                 "ERR: Add the additional host to the cluster failed, pls check.")
 
     def put_host_to_local_maintenance(self):
         self.browser.click(self.LOCAL_MAINTENANCE)
-        time.sleep(120)
+        time.sleep(240)
 
     def remove_host_from_maintenance(self):
         self.browser.click(self.REMOVE_MAINTENANCE)
