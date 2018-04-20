@@ -17,28 +17,25 @@ visible = EC.visibility_of_element_located
 clickable = EC.element_to_be_clickable
 invisible = EC.invisibility_of_element_located
 frame = EC.frame_to_be_available_and_switch_to_it
-text = EC.text_to_be_present_in_element
 
-LOCATOR_MAP = {'CSS_SELECTOR': By.CSS_SELECTOR,
-               'ID': By.ID,
-               'NAME': By.NAME,
-               'XPATH': By.XPATH,
-               'LINK_TEXT': By.LINK_TEXT,
-               'PARTIAL_LINK_TEXT': By.PARTIAL_LINK_TEXT,
-               'TAG_NAME': By.TAG_NAME,
-               'CLASS_NAME': By.CLASS_NAME,
-               }
+BY_MAP = {'CSS_SELECTOR': By.CSS_SELECTOR,
+          'ID': By.ID,
+          'NAME': By.NAME,
+          'XPATH': By.XPATH,
+          'LINK_TEXT': By.LINK_TEXT,
+          'PARTIAL_LINK_TEXT': By.PARTIAL_LINK_TEXT,
+          'TAG_NAME': By.TAG_NAME,
+          'CLASS_NAME': By.CLASS_NAME,
+          }
 
 SEPERATOR = ":::"
 
 
-def by(src_str):
-    tmp_str = src_str.format(SEPERATOR).split(SEPERATOR)[0].strip()
-    return LOCATOR_MAP.get(tmp_str)
-
-
-def lc(src_str):
-    return src_str.format(SEPERATOR).split(SEPERATOR)[-1].strip()
+def locator(el_descriptor):
+    el_format = el_descriptor.format(SEPERATOR)
+    by = BY_MAP.get(el_format.split(SEPERATOR)[0].strip())
+    path = el_format.split(SEPERATOR)[-1].strip()
+    return (by, path)
 
 
 class Browser(object):
@@ -71,23 +68,23 @@ class Browser(object):
         self.driver.refresh()
 
     def close(self):
-        self.driver.close()
+        self.driver.quit()
 
-    def _wait(self, by, locator, trytimes, cond):
+    def _wait(self, el_descriptor, cond, try_times):
+        """
+        el_descriptor - The descriptor of an element, shoule be like "XPATH{}//..", "ID{}id"
+        """
         element = None
-        for count in range(0, trytimes):
+        for count in range(0, try_times):
             try:
                 element = WebDriverWait(
-                    self.driver, DEFAULT_EXPLICIT_WAIT).until(cond((by, locator)))
+                    self.driver, DEFAULT_EXPLICIT_WAIT).until(cond(locator(el_descriptor)))
                 break
             except:
                 pass
 
         if not element:
-            # sample screenshot name is: screenshot-test20Login.png
-            # it stores super caller method to name via inspection code stack
-            screenshot_file = "screenshot-%s.png" % str(
-                inspect.stack()[2][3])
+            screenshot_file = "screenshot-%s.png" % str(inspect.stack()[2][3])
             try:
                 self.driver.save_screenshot(
                     os.path.join(self.screenshot_path, screenshot_file))
@@ -96,36 +93,33 @@ class Browser(object):
                     screenshot_file, e)
                 pass
             finally:
-                raise Exception('ERR: Unable to locate name: %s' %
-                                str(locator), screenshot_file)
+                raise Exception('ERR: Unable to locate %s' %
+                                str(el_descriptor), screenshot_file)
         return element
 
-    def switch_to_frame(self, frame_name, wait_times=DEFAULT_TRY):
-        el = "XPATH{}//iframe[contains(@name,'%s')]" % frame_name
-        self._wait(by(el), lc(el), wait_times, cond=frame)
+    def switch_to_frame(self, frame_name, try_times=DEFAULT_TRY):
+        el_descriptor = "XPATH{}//iframe[contains(@name,'%s')]" % frame_name
+        self._wait(el_descriptor, cond=frame, try_times=try_times)
 
     def switch_to_default_content(self):
         self.driver.switch_to.default_content()
 
-    def click(self, el, wait_times=DEFAULT_TRY):
-        """
-        el - The descriptor of an element, shoule be like "XPATH{}//..", "ID{}id"
-        """
-        element = self._wait(by(el), lc(el), wait_times, cond=clickable)
+    def click(self, el_descriptor, try_times=DEFAULT_TRY):
+        element = self._wait(
+            el_descriptor, cond=clickable, try_times=try_times)
         element.click()
 
-    def click_text(self, text, wait_times=DEFAULT_TRY):
-        el = "XPATH{}//*[contains(text(), '%s')]" % text
-        self.click(el, wait_times)
+    def click_text(self, text, try_times=DEFAULT_TRY):
+        el_descriptor = "XPATH{}//*[contains(text(), '%s')]" % text
+        self.click(el_descriptor, try_times)
 
-    def hover_and_click(self, el_hover, el_click, wait_times=DEFAULT_TRY):
-        hover_element = self._wait(by(el_hover), lc(
-            el_hover), wait_times, cond=visible)
+    def hover_and_click(self, el_hover, el_click, try_times=DEFAULT_TRY):
+        hover_element = self._wait(el_hover, cond=visible, try_times=try_times)
         ActionChains(self.driver).move_to_element(hover_element).perform()
-        self.click(el_click, wait_times)
+        self.click(el_click, try_times)
 
-    def input_text(self, el, new_value, clear=True, wait_times=DEFAULT_TRY):
-        element = self._wait(by(el), lc(el), wait_times, cond=visible)
+    def input_text(self, el_descriptor, new_value, clear=True, try_times=DEFAULT_TRY):
+        element = self._wait(el_descriptor, cond=visible, try_times=try_times)
         if clear:
             element.clear()
         if not new_value.endswith('\n'):
@@ -135,25 +129,28 @@ class Browser(object):
             element.send_keys(new_value)
             element.send_keys(Keys.RETURN)
 
-    def get_text(self, el, wait_times=DEFAULT_TRY):
-        element = self._wait(by(el), lc(el), wait_times, cond=visible)
+    def get_text(self, el_descriptor, try_times=DEFAULT_TRY):
+        element = self._wait(el_descriptor, cond=visible, try_times=try_times)
         return element.text
 
-    def assert_element_visible(self, el, wait_times=DEFAULT_TRY):
-        self._wait(by(el), lc(el), wait_times, cond=visible)
+    def assert_element_visible(self, el_descriptor, try_times=DEFAULT_TRY):
+        self._wait(el_descriptor, cond=visible, try_times=try_times)
         return True
 
-    def assert_text_visible(self, text, wait_times=DEFAULT_TRY):
-        el = "XPATH{}//*[contains(text(), '%s')]" % text
-        self.assert_element_visible(el, wait_times)
-        
-    def assert_text_expected(self, el, text):
-        element_text = self.get_text(el)
-        if text not in element_text:
-            raise Exception("ERR: The expected text is unavailable.")
+    def assert_text_visible(self, text, try_times=DEFAULT_TRY):
+        el_descriptor = "XPATH{}//*[contains(text(), '%s')]" % text
+        self.assert_element_visible(el_descriptor, try_times)
 
-    def assert_text_not_expected(self, el, text):
-        element_text = self.get_text(el)
+    def assert_text_in_element(self, el_descriptor, text, try_times=DEFAULT_TRY):
+        element_text = self.get_text(el_descriptor, try_times)
+        if text not in element_text:
+            raise Exception(
+                "ERR: The expected text '%s' is not in element %s." % (text, el_descriptor))
+        return True
+
+    def assert_text_not_in_element(self, el_descriptor, text, try_times=DEFAULT_TRY):
+        element_text = self.get_text(el_descriptor, try_times)
         if text in element_text:
-            raise Exception("ERR: The unexpected text is available.")
-    
+            raise Exception(
+                "ERR: The unexpected text '%s' is in element %s." % (text, el_descriptor))
+        return True

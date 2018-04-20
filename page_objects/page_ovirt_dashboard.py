@@ -11,6 +11,7 @@ class OvirtDashboardPage(PageTest):
     DASHBOARD_LINK = "XPATH{}//a[@href='#/dashboard']"
 
     OK_ICON = "pficon-ok"
+    WARN_ICON = "pficon-warning-triangle-o"
 
     # Node Health
     _HEALTH = "XPATH{}//td[text()='Health']//following-sibling::td"
@@ -74,7 +75,7 @@ class OvirtDashboardPage(PageTest):
         if status == 'ok':
             return self.OK_ICON
         else:
-            return "invalid"
+            return self.WARN_ICON
 
     def gen_text_icon_in_node_health(self, node_check_key, node_check_value):
         if node_check_key == "vdsmd":
