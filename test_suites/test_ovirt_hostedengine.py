@@ -53,7 +53,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
             self.browser.click(self.NEXT_BUTTON)
 
             # FINISH STAGE
-            self.browser.click(self.FINISH_DEVELOPMENT)
+            self.browser.click(self.FINISH_DEPLOYMENT)
             self.browser.click(self.CLOSE_BUTTON, 1500)
         prepare_env()
         check_deploy()
@@ -153,6 +153,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         self.clean_hostengine_env()
         self.browser.refresh()
+        self.browser.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         self.test_node_zero_default_deploy()
 
     def test_additional_host(self):
