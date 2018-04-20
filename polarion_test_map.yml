@@ -38,6 +38,3 @@ RHEVM-25116: test_ovirt_hostedengine.py:TestOvirtHostedEngine.test_node_zero_sta
 # RHEVM-24961
 # RHEVM-25010
 # RHEVM-25122
-
-
-
