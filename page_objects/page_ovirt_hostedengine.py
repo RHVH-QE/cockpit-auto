@@ -2,7 +2,6 @@ import os
 import time
 import simplejson
 import urllib2
-from fabric.api import run, settings, env
 from page import PageTest
 from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
@@ -17,26 +16,23 @@ class OvirtHostedEnginePage(PageTest):
     OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
     HOSTEDENGINE_LINK = "XPATH{}//a[@href='#/he']"
 
-    # Two start buttons
-    HE_START = "XPATH{}//span[@class='deployment-option-panel-container']/button[@class='btn btn-primary']"
-    HC_START = "XPATH{}//span[contains(@class, 'last-deployment-option-panel-container')]" \
-        "/button[@class='btn btn-primary']"
+    # Start button
+    HE_START = "XPATH{}//span[@class='deployment-option-panel-container']/button[text()='Start']"
 
     # Guide Links
-    GETTING_START_LINK = "XPATH{}//a[@href='https://ovirt.org/documentation/self-hosted/Self-Hosted_Engine_Guide/']"
-    MORE_INFORMATION_LINK = "XPATH{}//a[@href='http://www.ovirt.org']"
+    GETTING_START_LINK = "XPATH{}//a[contains(text(), 'Installation Guide')]"
+    MORE_INFORMATION_LINK = "XPATH{}//a[contains(text(), 'oVirt Homepage')]"
 
     # VM STAGE
     _TITLE = "XPATH{}//input[@title='%s']"
     _PLACEHOLDER = "XPATH{}//input[@placeholder='%s']"
     VM_FQDN = _PLACEHOLDER % 'ovirt-engine.example.com'
     MAC_ADDRESS = _TITLE % 'Enter the MAC address for the VM.'
-    ROOT_PASS = "XPATH{}//label[text()='Root Password']/../div/input[@type='password']"
-    CONFIRM_ROOT_PASS = "XPATH{}//label[text()='Confirm Root Password']/../div/input[@type='password']"
-    ADVANCED = "XPATH{}//a[@class='he-wizard-collapse-section-link']"
+    ROOT_PASS = "XPATH{}//label[text()='Root Password']//parent::*//input[@type='password']"
+    ADVANCED = "XPATH{}//a[text()='Advanced']"
 
     # TODO
-    _DROPDOWN_MENU = "XPATH{}//label[text()='%s]/../div/div/button[contains(@class, 'dropdown-toggle')]"
+    _DROPDOWN_MENU = "XPATH{}//label[text()='%s]//parent::*//button[contains(@class, 'dropdown-toggle')]"
     NETWORK_DROPDOWN = _DROPDOWN_MENU % 'Network Configuration'
     # TODO
     # BRIDGE_DROPDOWN
@@ -46,27 +42,28 @@ class OvirtHostedEnginePage(PageTest):
 
     NETWORK_STATIC = _DROPDOWN_VALUE % 'static'
     VM_IP = _PLACEHOLDER % '192.168.1.2'
+    IP_PREFIX = _PLACEHOLDER % '24'
     DNS_SERVER = "XPATH{}//div[contains(@class, 'multi-row-text-box-input')]" \
         "/input[@type='text']"
 
     # ENGINE STAGE
-    ADMIN_PASS = _TITLE % 'Enter the admin portal password.'
-    CONFIRM_ADMIN_PASS = _TITLE % 'Confirm the admin portal password.'
-    NEXT_BUTTON = "XPATH{}//button[@class='btn btn-primary wizard-pf-next']"
-    BACK_BUTTON = "XPATH{}//button[@class='btn btn-default wizard-pf-back']"
-    CANCEL_BUTTON = "XPATH{}//button[@class='btn btn-default btn-cancel wizard-pf-cancel wizard-pf-dismiss']"
+    ADMIN_PASS = "XPATH{}//label[text()='Admin Portal Password']//parent::*//input[@type='password']"
+    NEXT_BUTTON = "XPATH{}//button[text()='Next']"
+    BACK_BUTTON = "XPATH{}//button[text()='Back']"
+    CANCEL_BUTTON = "XPATH{}//button[text()='Cancel']"
 
     # PREPARE VM
-    PREPARE_VM_BUTTON = "XPATH{}//button[@class='btn btn-primary wizard-pf-next']"
-    REDEPLOY_BUTTON = "XPATH{}//div[@class='pull-right']/button[@class='btn btn-primary']"
-    PREPARE_VM_SUCCESS_TEXT = "XPATH{}//span[@class='glyphicon glyphicon-ok-circle']"
+    PREPARE_VM_BUTTON = "XPATH{}//button[text()='Prepare VM']"
+    REDEPLOY_BUTTON = "XPATH{}//button[text()='Redeploy']"
+    PREPARE_VM_SUCCESS_TEXT = "XPATH{}//h3[contains(text(), 'successfully')]"
 
     # STORAGE STAGE
     # NFS
     _STORAGE_TYPE = "XPATH{}//ul[@class='dropdown-menu']/li[@value='%s']"
     STORAGE_NFS = _STORAGE_TYPE % 'nfs'
     STORAGE_CONN = _PLACEHOLDER % 'host:/path'
-    MNT_OPT = "CSS_SELECTOR{}input[type='text'][style='width: 250px;']"
+    MNT_OPT = "XPATH{}//label[text()='Mount Options']//parent::*//input[@type='text']"
+    NFS_VER_DROPDOWN = _DROPDOWN_MENU % 'NFS Version'
     NFS_AUTO = _DROPDOWN_VALUE % 'auto'
     NFS_V3 = _DROPDOWN_VALUE % 'v3'
     NFS_V4 = _DROPDOWN_VALUE % 'v4'
@@ -80,7 +77,7 @@ class OvirtHostedEnginePage(PageTest):
     PORTAL_PASS = "XPATH{}//input[@title='Enter the user for the iSCSI portal you wish to use.'][@type='password']"
     # DISCOVERY_USER
     # DISCOVERY_PASS
-    RETRIEVE_TARGET = "XPATH{}//button[@class='btn btn-primary']"
+    RETRIEVE_TARGET = "XPATH{}//button[text()='Retrieve Target List']"
     # SELECTED_TARGET
     # SELECTED_ISCSI_LUN
 
@@ -93,18 +90,24 @@ class OvirtHostedEnginePage(PageTest):
     STORAGE_GLUSTERFS = _STORAGE_TYPE % 'glusterfs'
 
     # FINISH STAGE
-    FINISH_DEVELOPMENT = "XPATH{}//button[@class='btn btn-primary wizard-pf-next']"
-    CLOSE_BUTTON = "XPATH{}//button[@class='btn btn-primary wizard-pf-next']"
+    FINISH_DEVELOPMENT = "XPATH{}//button[text()='Finish Development']"
+    CLOSE_BUTTON = "XPATH{}//button[text()='Close']"
 
     # CHECKPOINTS
-    MAINTENANCE_HINT = "XPATH{}//div[text()='Local maintenance cannot be enabled with a single host']"
-    GLOBAL_HINT = "XPATH{}//span[contains(@class, 'pficon-warning-triangle-o')]"
+    MAINTENANCE_HINT = "XPATH{}//div[contains(text(), 'Local maintenance')]"
+    GLOBAL_HINT = "XPATH{}//div[contains(text(), 'global maintenance')]"
     ENGINE_UP_ICON = "XPATH{}//span[contains(@class, 'pficon-ok')]"
 
     _MAINTENANCE = "XPATH{}//button[contains(text(), '%s')]"
     LOCAL_MAINTENANCE = _MAINTENANCE % 'local'
     REMOVE_MAINTENANCE = _MAINTENANCE % 'Remove'
     GLOBAL_MAINTENANCE = _MAINTENANCE % 'global'
+
+    LOCAL_MAINTEN_STAT = "XPATH{}//div[contains(text(), 'Agent')]"
+    VM_STATUS = "XPATH{}//div[contains(text(), 'State')]"
+    HE_RUNNING = "XPATH{}//p[contains(text(),'Hosted Engine is running on')]"
+
+    FAILED_TEXT = "XPATH{}//div[text()='Deployment failed']"
 
     def get_latest_rhvm_appliance(self, appliance_path):
         """
@@ -145,13 +148,8 @@ class OvirtHostedEnginePage(PageTest):
         pass
 
     def clean_nfs_storage(self, nfs_ip, nfs_pass, nfs_path):
-        with settings(
-                host_string=nfs_ip,
-                user='root',
-                password=nfs_pass,
-                disable_known_hosts=True,
-                connection_attempts=60):
-            run("rm -rf %s/*" % nfs_path)
+        host_ins = Machine(host_string=nfs_ip, host_user='root', host_passwd=nfs_pass)
+        host_ins.execute("rm -rf %s/*" % nfs_path)
 
     def move_failed_setup_log(self):
         cmd = "find /var/log -type f |grep ovirt-hosted-engine-setup-.*.log"
@@ -220,9 +218,19 @@ class OvirtHostedEnginePage(PageTest):
 
     def put_host_to_local_maintenance(self):
         self.browser.click(self.LOCAL_MAINTENANCE)
+        time.sleep(120)
 
     def remove_host_from_maintenance(self):
         self.browser.click(self.REMOVE_MAINTENANCE)
+        time.sleep(30)
 
     def put_cluster_to_global_maintenance(self):
         self.browser.click(self.GLOBAL_MAINTENANCE)
+
+    def clean_hostengine_env(self):
+        project_path = os.path.dirname(os.path.dirname(__file__))
+        clean_rnv_file = ''.join(project_path) + '/utils/clean_he_env.py'
+        self.host.put_file(clean_rnv_file, '/root/clean_he_env.py')
+        self.host.execute("python /root/clean_he_env.py")
+
+
