@@ -205,7 +205,7 @@ class OvirtHostedEnginePage(PageTest):
         time.sleep(10)
         size2 = self.host.execute(
             "ls -lnt /var/log/messages | awk '{print $5}'")
-        if int(size2[1]) - int(size1[1]) > 200:
+        if int(size2[1]) - int(size1[1]) > 500:
             raise Exception(
                 "Look like large messages under /var/log/messages, please check")
 
@@ -215,6 +215,7 @@ class OvirtHostedEnginePage(PageTest):
         if self.wait_host_status(rhvm, host_name, 'up'):
             raise Exception(
                 "ERR: Add the additional host to the cluster failed, pls check.")
+        time.sleep(60)
 
     def put_host_to_local_maintenance(self):
         self.browser.click(self.LOCAL_MAINTENANCE)
@@ -233,4 +234,16 @@ class OvirtHostedEnginePage(PageTest):
         self.host.put_file(clean_rnv_file, '/root/clean_he_env.py')
         self.host.execute("python /root/clean_he_env.py")
 
-
+    def check_additional_host_socre(self, ip, passwd):
+        cmd = "hosted-engine --vm-status --json"
+        host_ins = Machine(host_string=ip, host_user='root', host_passwd=passwd)
+        i = 0
+        while True:
+            if i > 10:
+                raise RuntimeError("Timeout waitting for host to available running HE.")
+            ret = host_ins.execute(cmd)
+            true, false = True, False
+            if eval(ret[1])["2"]["score"] == 3400:
+                break
+            time.sleep(10)
+            i += 1

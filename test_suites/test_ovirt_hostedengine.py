@@ -26,10 +26,9 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         def prepare_env():
             self.move_failed_setup_log()
             self.install_rhvm_appliance(config_dict['rhvm_appliance_path'])
-            self.clean_nfs_storage(
-                config_dict['nfs_ip'],
-                config_dict['nfs_pass'],
-                config_dict['nfs_dir'])
+            self.clean_nfs_storage(config_dict['nfs_ip'],
+                                   config_dict['nfs_pass'],
+                                   config_dict['nfs_dir'])
 
         def check_deploy():
             # VM STAGE
@@ -49,12 +48,14 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
 
             # STORAGE STAGE
             self.browser.input_text(
-                self.STORAGE_CONN, config_dict['nfs_ip'] + ':' + config_dict['nfs_dir'])
+                self.STORAGE_CONN,
+                config_dict['nfs_ip'] + ':' + config_dict['nfs_dir'])
             self.browser.click(self.NEXT_BUTTON)
 
             # FINISH STAGE
             self.browser.click(self.FINISH_DEPLOYMENT)
             self.browser.click(self.CLOSE_BUTTON, 1500)
+
         prepare_env()
         check_deploy()
 
@@ -62,7 +63,8 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier1
         """
-        if not self.browser.assert_element_visible("XPATH{}//p[contains(text(),'Hosted Engine is running on')]"):
+        if not self.browser.assert_element_visible(
+                "XPATH{}//p[contains(text(),'Hosted Engine is running on')]"):
             raise Exception("ERR: HostedEngine is not running on host.")
 
     def test_maintenance_hint(self):
@@ -87,8 +89,8 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         a = self.get_data('ovirt_hostedengine.yml')
         config_dict = yaml.load(open(a))
-        self.check_no_password_saved(
-            config_dict['he_vm_pass'], config_dict['admin_pass'])
+        self.check_no_password_saved(config_dict['he_vm_pass'],
+                                     config_dict['admin_pass'])
 
     def test_no_large_messages(self):
         """
@@ -106,10 +108,9 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         def prepare_env():
             self.move_failed_setup_log()
             self.install_rhvm_appliance(config_dict['rhvm_appliance_path'])
-            self.clean_nfs_storage(
-                config_dict['nfs_ip'],
-                config_dict['nfs_pass'],
-                config_dict['nfs_dir'])
+            self.clean_nfs_storage(config_dict['nfs_ip'],
+                                   config_dict['nfs_pass'],
+                                   config_dict['nfs_dir'])
 
         def check_deploy():
             # VM STAGE
@@ -119,8 +120,8 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
             self.browser.click(self.NETWORK_DROPDOWN)
             self.browser.click(self.NETWORK_STATIC)
             self.browser.input_text(self.VM_IP, config_dict['he_vm_ip'])
-            self.browser.input_text(
-                self.IP_PREFIX, config_dict['he_ip_prefix'])
+            self.browser.input_text(self.IP_PREFIX,
+                                    config_dict['he_ip_prefix'])
             self.browser.input_text(self.DNS_SERVER, config_dict['dns_server'])
             self.browser.input_text(self.ROOT_PASS, config_dict['he_vm_pass'])
             self.browser.click(self.NEXT_BUTTON)
@@ -135,7 +136,8 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
 
             # STORAGE STAGE
             self.browser.input_text(
-                self.STORAGE_CONN, config_dict['nfs_ip'] + ':' + config_dict['nfs_dir'])
+                self.STORAGE_CONN,
+                config_dict['nfs_ip'] + ':' + config_dict['nfs_dir'])
             self.browser.click(self.ADVANCED)
             self.browser.click(self.NFS_VER_DROPDOWN)
             self.browser.click(self.NFS_V4)
@@ -144,6 +146,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
             # FINISH STAGE
             self.browser.click(self.FINISH_DEPLOYMENT)
             self.browser.click(self.CLOSE_BUTTON, 1500)
+
         prepare_env()
         check_deploy()
 
@@ -163,18 +166,20 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         a = self.get_data('ovirt_hostedengine.yml')
         config_dict = yaml.load(open(a))
         self.add_additional_host_to_cluster(
-            config_dict['second_host'],
-            config_dict['second_vm_fqdn'],
-            config_dict['second_pass'],
-            config_dict['he_vm_fqdn'],
+            config_dict['second_host'], config_dict['second_vm_fqdn'],
+            config_dict['second_pass'], config_dict['he_vm_fqdn'],
             config_dict['admin_pass'])
 
     def test_local_maintenance(self):
         """
         :avocado: tags=he_tier1
         """
+        a = self.get_data('ovirt_hostedengine.yml')
+        config_dict = yaml.load(open(a))
         self.put_host_to_local_maintenance()
         self.browser.assert_text_in_element(self.LOCAL_MAINTEN_STAT, 'true')
+        self.check_additional_host_socre(config_dict['second_host'],
+                                         config_dict['second_pass'])
 
     def test_migrated_he(self):
         """
@@ -187,8 +192,8 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         :avocado: tags=he_tier1
         """
         self.remove_host_from_maintenance()
-        self.browser.assert_text_not_in_element(
-            self.LOCAL_MAINTEN_STAT, 'true')
+        self.browser.assert_text_not_in_element(self.LOCAL_MAINTEN_STAT,
+                                                'true')
 
     def test_global_maintenance(self):
         """
