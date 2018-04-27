@@ -2,13 +2,13 @@ import os
 import time
 import simplejson
 import urllib2
-from page import PageTest
+from seleniumlib import SeleniumTest
 from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
 from utils.rhvmapi import RhevmAction
 
 
-class OvirtHostedEnginePage(PageTest):
+class OvirtHostedEnginePage(SeleniumTest):
     """
     :avocado: disable
     """
@@ -148,7 +148,8 @@ class OvirtHostedEnginePage(PageTest):
         pass
 
     def clean_nfs_storage(self, nfs_ip, nfs_pass, nfs_path):
-        host_ins = Machine(host_string=nfs_ip, host_user='root', host_passwd=nfs_pass)
+        host_ins = Machine(host_string=nfs_ip,
+                           host_user='root', host_passwd=nfs_pass)
         host_ins.execute("rm -rf %s/*" % nfs_path)
 
     def move_failed_setup_log(self):
@@ -183,8 +184,8 @@ class OvirtHostedEnginePage(PageTest):
             i += 1
 
     def open_page(self):
-        self.browser.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.browser.click(self.HOSTEDENGINE_LINK)
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.HOSTEDENGINE_LINK)
 
     def check_no_password_saved(self, root_pass, admin_pass):
         ret_log = self.host.execute(
@@ -217,20 +218,18 @@ class OvirtHostedEnginePage(PageTest):
                 "ERR: Add the additional host to the cluster failed, pls check.")
 
     def put_host_to_local_maintenance(self):
-        self.browser.click(self.LOCAL_MAINTENANCE)
+        self.click(self.LOCAL_MAINTENANCE)
         time.sleep(240)
 
     def remove_host_from_maintenance(self):
-        self.browser.click(self.REMOVE_MAINTENANCE)
+        self.click(self.REMOVE_MAINTENANCE)
         time.sleep(30)
 
     def put_cluster_to_global_maintenance(self):
-        self.browser.click(self.GLOBAL_MAINTENANCE)
+        self.click(self.GLOBAL_MAINTENANCE)
 
     def clean_hostengine_env(self):
         project_path = os.path.dirname(os.path.dirname(__file__))
         clean_rnv_file = ''.join(project_path) + '/utils/clean_he_env.py'
         self.host.put_file(clean_rnv_file, '/root/clean_he_env.py')
         self.host.execute("python /root/clean_he_env.py")
-
-

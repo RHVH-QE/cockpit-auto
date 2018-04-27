@@ -1,8 +1,8 @@
 import simplejson
-from page import PageTest
+from seleniumlib import SeleniumTest
 
 
-class OvirtDashboardPage(PageTest):
+class OvirtDashboardPage(SeleniumTest):
     """
     :avocado: disable
     """
@@ -47,8 +47,8 @@ class OvirtDashboardPage(PageTest):
     STORAGE_FRAME_NAME = "/storage"
 
     def open_page(self):
-        self.browser.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
-        self.browser.click(self.DASHBOARD_LINK)
+        self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
+        self.click(self.DASHBOARD_LINK)
 
     def nodectl_check_on_host(self):
         cmd = 'nodectl check --machine-readable'

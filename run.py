@@ -13,19 +13,19 @@ def gen_polarion_results(avocado_results_dir):
     polarion_test_map = yaml.load(open('./polarion_test_map.yml'))
 
     polarion_results = OrderedDict()
-    polarion_results["title"] = "Auto_Test_" + \
+    polarion_results['title'] = 'Auto_Test_' + \
         avocado_results_dir.split('/')[-1]
-    polarion_results["results"] = OrderedDict()
+    polarion_results['results'] = OrderedDict()
     for test in avocado_json_results['tests']:
-        test_status = test["status"]
-        if test_status not in ['PASS', 'FAIL']:
-            continue
-        test_status = test_status.lower() + "ed"
+        if test['status'] == 'PASS':
+            test_status = 'passed'
+        else:
+            test_status = 'failed'
 
         test_name = test['id'].split('/')[-1]
         for key, value in polarion_test_map.items():
             if value == test_name:
-                polarion_results["results"][key] = test_status
+                polarion_results['results'][key] = test_status
 
     polarion_results_file = os.path.join(
         avocado_results_dir, 'latest', 'polarion_results.json')
@@ -36,7 +36,7 @@ def gen_polarion_results(avocado_results_dir):
                 polarion_results, indent=4))
 
 
-def run(tags, polarion_flag):
+def run(tags):
     config_dict = yaml.load(open('./config.yml'))
 
     os.environ['HOST_STRING'] = config_dict['host_string']
@@ -56,15 +56,11 @@ def run(tags, polarion_flag):
                                 avocado_results_dir, ' '.join(tag_filter_list)])
 
     os.system(avocado_run_cmd)
-
-    if polarion_flag:
-        gen_polarion_results(avocado_results_dir)
+    gen_polarion_results(avocado_results_dir)
 
 
 def main():
     parser = argparse.ArgumentParser(description='Run Cockpit Avocado test(s)')
-    parser.add_argument("-p", "--polarion", dest='polarion_flag', action='store_true',
-                        help="Generate polarion result, it's in the same directory with avocado results")
     parser.add_argument(
         "tags", nargs='?',
         help=("Avocado tags filter specifying which tests need to be run. "
@@ -75,7 +71,7 @@ def main():
               "Refer to each test to see the actual avocado tags."))
 
     args = parser.parse_args()
-    run(args.tags, args.polarion_flag)
+    run(args.tags)
 
 
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
 import os
 import inspect
 import time
+from avocado import Test
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
@@ -8,6 +9,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import WebDriverException
+from utils.machine import Machine
 
 
 DEFAULT_EXPLICIT_WAIT = 1
@@ -38,25 +40,58 @@ def locator(el_descriptor):
     return (by, path)
 
 
-class Browser(object):
+class NoElementError(Exception):
+    pass
 
-    def __init__(self, browser):
+
+class SeleniumTest(Test):
+    """
+    :avocado: disable
+    """
+
+    def setUp(self):
+        host_string = os.environ['HOST_STRING']
+        username = os.environ['USERNAME']
+        passwd = os.environ['PASSWD']
+        browser = os.environ['BROWSER']
+
+        self.host = Machine(host_string, username, passwd)
+
         if browser == 'firefox':
             self.driver = webdriver.Firefox()
         else:
             self.driver = webdriver.Chrome()
         self.driver.set_window_size(1400, 1200)
         self.driver.set_page_load_timeout(90)
+        self.screenshot_path = self.logdir
+        self.open_url('http://%s:9090' % host_string)
+        self.login(username, passwd)
+        self.open_page()
 
-        self._screenshot_path = None
+    def tearDown(self):
+        self.driver.quit()
 
-    @property
-    def screenshot_path(self):
-        return self._screenshot_path
+    def login(self, username, passwd):
+        # login page elements
+        login_user_text_input = "ID{}login-user-input"
+        login_pass_text_input = "ID{}login-password-input"
+        login_button = "ID{}login-button"
 
-    @screenshot_path.setter
-    def screenshot_path(self, val):
-        self._screenshot_path = val
+        self.input_text(login_user_text_input, username)
+        self.input_text(login_pass_text_input, passwd)
+        self.click(login_button)
+
+    def logout(self):
+        # logout elements:
+        navbar_dropdown = "ID{}navbar-dropdown"
+        go_logout = "ID{}go-logout"
+
+        self.switch_to_default_content()
+        self.click(navbar_dropdown)
+        self.click(go_logout)
+
+    def open_page(self):
+        pass
 
     def open_url(self, url):
         self.driver.get(url)
@@ -66,9 +101,6 @@ class Browser(object):
 
     def refresh(self):
         self.driver.refresh()
-
-    def close(self):
-        self.driver.quit()
 
     def _wait(self, el_descriptor, cond, try_times):
         """
@@ -93,8 +125,9 @@ class Browser(object):
                     screenshot_file, e)
                 pass
             finally:
-                raise Exception('ERR: Unable to locate %s' %
-                                str(el_descriptor), screenshot_file)
+                raise NoElementError('Unable to locate %s' %
+                                     str(el_descriptor), screenshot_file)
+
         return element
 
     def switch_to_frame(self, frame_name, try_times=DEFAULT_TRY):
@@ -114,12 +147,14 @@ class Browser(object):
         self.click(el_descriptor, try_times)
 
     def hover_and_click(self, el_hover, el_click, try_times=DEFAULT_TRY):
-        hover_element = self._wait(el_hover, cond=visible, try_times=try_times)
+        hover_element = self._wait(
+            el_hover, cond=visible, try_times=try_times)
         ActionChains(self.driver).move_to_element(hover_element).perform()
         self.click(el_click, try_times)
 
     def input_text(self, el_descriptor, new_value, clear=True, try_times=DEFAULT_TRY):
-        element = self._wait(el_descriptor, cond=visible, try_times=try_times)
+        element = self._wait(el_descriptor, cond=visible,
+                             try_times=try_times)
         if clear:
             element.clear()
         if not new_value.endswith('\n'):
@@ -130,12 +165,15 @@ class Browser(object):
             element.send_keys(Keys.RETURN)
 
     def get_text(self, el_descriptor, try_times=DEFAULT_TRY):
-        element = self._wait(el_descriptor, cond=visible, try_times=try_times)
+        element = self._wait(el_descriptor, cond=visible,
+                             try_times=try_times)
         return element.text
 
     def assert_element_visible(self, el_descriptor, try_times=DEFAULT_TRY):
-        self._wait(el_descriptor, cond=visible, try_times=try_times)
-        return True
+        try:
+            self._wait(el_descriptor, cond=visible, try_times=try_times)
+        except NoElementError:
+            self.fail()
 
     def assert_text_visible(self, text, try_times=DEFAULT_TRY):
         el_descriptor = "XPATH{}//*[contains(text(), '%s')]" % text
@@ -144,13 +182,11 @@ class Browser(object):
     def assert_text_in_element(self, el_descriptor, text, try_times=DEFAULT_TRY):
         element_text = self.get_text(el_descriptor, try_times)
         if text not in element_text:
-            raise Exception(
-                "ERR: The expected text '%s' is not in element %s." % (text, el_descriptor))
-        return True
+            self.fail("The expected text '%s' is not in element %s." %
+                      (text, el_descriptor))
 
     def assert_text_not_in_element(self, el_descriptor, text, try_times=DEFAULT_TRY):
         element_text = self.get_text(el_descriptor, try_times)
         if text in element_text:
-            raise Exception(
-                "ERR: The unexpected text '%s' is in element %s." % (text, el_descriptor))
-        return True
+            self.fail("The unexpected text '%s' is in element %s." %
+                      (text, el_descriptor))

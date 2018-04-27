@@ -12,8 +12,8 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     """
 
     def test_guide_link(self):
-        self.browser.assert_element_visible(self.GETTING_START_LINK)
-        self.browser.assert_element_visible(self.MORE_INFORMATION_LINK)
+        self.assert_element_visible(self.GETTING_START_LINK)
+        self.assert_element_visible(self.MORE_INFORMATION_LINK)
 
     def test_node_zero_default_deploy(self):
         # The default deployment means that HE deployment, DHCP network, NFS Auto version, No MNT Option
@@ -33,28 +33,28 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
 
         def check_deploy():
             # VM STAGE
-            self.browser.click(self.HE_START)
-            self.browser.input_text(self.VM_FQDN, config_dict['he_vm_fqdn'])
-            self.browser.input_text(self.MAC_ADDRESS, config_dict['he_vm_mac'])
-            self.browser.input_text(self.ROOT_PASS, config_dict['he_vm_pass'])
-            self.browser.click(self.NEXT_BUTTON)
+            self.click(self.HE_START)
+            self.input_text(self.VM_FQDN, config_dict['he_vm_fqdn'])
+            self.input_text(self.MAC_ADDRESS, config_dict['he_vm_mac'])
+            self.input_text(self.ROOT_PASS, config_dict['he_vm_pass'])
+            self.click(self.NEXT_BUTTON)
 
             # ENGINE STAGE
-            self.browser.input_text(self.ADMIN_PASS, config_dict['admin_pass'])
-            self.browser.click(self.NEXT_BUTTON)
+            self.input_text(self.ADMIN_PASS, config_dict['admin_pass'])
+            self.click(self.NEXT_BUTTON)
 
             # PREPARE VM
-            self.browser.click(self.PREPARE_VM_BUTTON)
-            self.browser.click(self.NEXT_BUTTON, 1500)
+            self.click(self.PREPARE_VM_BUTTON)
+            self.click(self.NEXT_BUTTON, 1500)
 
             # STORAGE STAGE
-            self.browser.input_text(
+            self.input_text(
                 self.STORAGE_CONN, config_dict['nfs_ip'] + ':' + config_dict['nfs_dir'])
-            self.browser.click(self.NEXT_BUTTON)
+            self.click(self.NEXT_BUTTON)
 
             # FINISH STAGE
-            self.browser.click(self.FINISH_DEPLOYMENT)
-            self.browser.click(self.CLOSE_BUTTON, 1500)
+            self.click(self.FINISH_DEPLOYMENT)
+            self.click(self.CLOSE_BUTTON, 1500)
         prepare_env()
         check_deploy()
 
@@ -62,23 +62,23 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier1
         """
-        if not self.browser.assert_element_visible("XPATH{}//p[contains(text(),'Hosted Engine is running on')]"):
+        if not self.assert_element_visible("XPATH{}//p[contains(text(),'Hosted Engine is running on')]"):
             raise Exception("ERR: HostedEngine is not running on host.")
 
     def test_maintenance_hint(self):
         """
         :avocado: tags=he_tier1
         """
-        if not self.browser.assert_element_visible(self.MAINTENANCE_HINT):
+        if not self.assert_element_visible(self.MAINTENANCE_HINT):
             raise Exception("ERR: NO maintenance hint gived.")
 
     def test_engine_vm_status(self):
         """
         :avocado: tags=he_tier1
         """
-        if not self.browser.assert_element_visible(self.ENGINE_UP_ICON):
+        if not self.assert_element_visible(self.ENGINE_UP_ICON):
             raise Exception("ERR: The engine status is not up, please check.")
-        if not self.browser.assert_element_visible(self.HE_RUNNING):
+        if not self.assert_element_visible(self.HE_RUNNING):
             raise Exception("ERR: HostedEngine is not running on host.")
 
     def test_no_password_saved(self):
@@ -113,37 +113,37 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
 
         def check_deploy():
             # VM STAGE
-            self.browser.click(self.HE_START)
-            self.browser.input_text(self.VM_FQDN, config_dict['he_vm_fqdn'])
-            self.browser.input_text(self.MAC_ADDRESS, config_dict['he_vm_mac'])
-            self.browser.click(self.NETWORK_DROPDOWN)
-            self.browser.click(self.NETWORK_STATIC)
-            self.browser.input_text(self.VM_IP, config_dict['he_vm_ip'])
-            self.browser.input_text(
+            self.click(self.HE_START)
+            self.input_text(self.VM_FQDN, config_dict['he_vm_fqdn'])
+            self.input_text(self.MAC_ADDRESS, config_dict['he_vm_mac'])
+            self.click(self.NETWORK_DROPDOWN)
+            self.click(self.NETWORK_STATIC)
+            self.input_text(self.VM_IP, config_dict['he_vm_ip'])
+            self.input_text(
                 self.IP_PREFIX, config_dict['he_ip_prefix'])
-            self.browser.input_text(self.DNS_SERVER, config_dict['dns_server'])
-            self.browser.input_text(self.ROOT_PASS, config_dict['he_vm_pass'])
-            self.browser.click(self.NEXT_BUTTON)
+            self.input_text(self.DNS_SERVER, config_dict['dns_server'])
+            self.input_text(self.ROOT_PASS, config_dict['he_vm_pass'])
+            self.click(self.NEXT_BUTTON)
 
             # ENGINE STAGE
-            self.browser.input_text(self.ADMIN_PASS, config_dict['admin_pass'])
-            self.browser.click(self.NEXT_BUTTON)
+            self.input_text(self.ADMIN_PASS, config_dict['admin_pass'])
+            self.click(self.NEXT_BUTTON)
 
             # PREPARE VM
-            self.browser.click(self.PREPARE_VM_BUTTON)
-            self.browser.click(self.NEXT_BUTTON, 1500)
+            self.click(self.PREPARE_VM_BUTTON)
+            self.click(self.NEXT_BUTTON, 1500)
 
             # STORAGE STAGE
-            self.browser.input_text(
+            self.input_text(
                 self.STORAGE_CONN, config_dict['nfs_ip'] + ':' + config_dict['nfs_dir'])
-            self.browser.click(self.ADVANCED)
-            self.browser.click(self.NFS_VER_DROPDOWN)
-            self.browser.click(self.NFS_V4)
-            self.browser.click(self.NEXT_BUTTON)
+            self.click(self.ADVANCED)
+            self.click(self.NFS_VER_DROPDOWN)
+            self.click(self.NFS_V4)
+            self.click(self.NEXT_BUTTON)
 
             # FINISH STAGE
-            self.browser.click(self.FINISH_DEPLOYMENT)
-            self.browser.click(self.CLOSE_BUTTON, 1500)
+            self.click(self.FINISH_DEPLOYMENT)
+            self.click(self.CLOSE_BUTTON, 1500)
         prepare_env()
         check_deploy()
 
@@ -152,8 +152,8 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         :avocado: tags=he_tier1
         """
         self.clean_hostengine_env()
-        self.browser.refresh()
-        self.browser.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.refresh()
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         self.test_node_zero_default_deploy()
 
     def test_additional_host(self):
@@ -174,20 +174,20 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         :avocado: tags=he_tier1
         """
         self.put_host_to_local_maintenance()
-        self.browser.assert_text_in_element(self.LOCAL_MAINTEN_STAT, 'true')
+        self.assert_text_in_element(self.LOCAL_MAINTEN_STAT, 'true')
 
     def test_migrated_he(self):
         """
         :avocado: tags=he_tier1
         """
-        self.browser.assert_text_in_element(self.VM_STATUS, 'down')
+        self.assert_text_in_element(self.VM_STATUS, 'down')
 
     def test_remove_maintenance(self):
         """
         :avocado: tags=he_tier1
         """
         self.remove_host_from_maintenance()
-        self.browser.assert_text_not_in_element(
+        self.assert_text_not_in_element(
             self.LOCAL_MAINTEN_STAT, 'true')
 
     def test_global_maintenance(self):
@@ -195,4 +195,4 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         :avocado: tags=he_tier1
         """
         self.put_cluster_to_global_maintenance()
-        self.browser.assert_element_visible(self.GLOBAL_HINT)
+        self.assert_element_visible(self.GLOBAL_HINT)
