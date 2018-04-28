@@ -2,12 +2,12 @@
 ---
 
 # RHVM
-rhvm_appliance_path: 'http://10.66.10.22:8090/rhevm-appliance/'
+rhvm_appliance_path: rhvm_appliance_path
 
 # NFS
-nfs_ip: '10.66.148.11'
-nfs_pass: 'redhat'
-nfs_dir: '/home/jiawu/nfs1'
+nfs_ip: nfs_ip
+nfs_pass: nfs_pass
+nfs_dir: nfs_dir
 
 # ISCSI
 
@@ -16,18 +16,18 @@ nfs_dir: '/home/jiawu/nfs1'
 # GLUSTERFS
 
 # ENGINE VM
-he_vm_fqdn: 'rhevh-hostedengine-vm-04.lab.eng.pek2.redhat.com'
-he_vm_mac: '52:54:00:5e:8e:c7'
-he_vm_ip: '10.73.73.100'
-vm_ip_prefix: 22
-he_vm_pass: 'redhat'
-dns_server: '10.73.2.107'
+he_vm_fqdn: he_vm_fqdn
+he_vm_mac: he_vm_mac
+he_vm_ip: he_vm_ip
+vm_ip_prefix: vm_ip_prefix
+he_vm_pass: he_vm_pass
+dns_server: dns_server
 
-admin_pass: 'password'
+admin_pass: admin_pass
 
-first_host: '10.73.73.103'
-second_host: '10.73.73.104'
-second_pass: 'redhat'
-second_vm_fqdn: 'cockpit-vm'
+first_host: first_host
+second_host: second_host
+second_pass: second_pass
+second_vm_fqdn: second_vm_fqdn
 
 
