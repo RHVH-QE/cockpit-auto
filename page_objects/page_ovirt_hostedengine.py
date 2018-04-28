@@ -135,8 +135,8 @@ class OvirtHostedEnginePage(SeleniumTest):
     def install_rhvm_appliance(self, appliance_path):
         rhvm_appliance_link = self.get_latest_rhvm_appliance(appliance_path)
         local_rhvm_appliance = "/root/%s" % rhvm_appliance_link.split('/')[-1]
-        output = self.host.execute(
-            "curl -o %s %s" % (local_rhvm_appliance, rhvm_appliance_link))
+        output = self.host.execute("curl -o %s %s" % (local_rhvm_appliance,
+                                                      rhvm_appliance_link))
         if output[0] == "False":
             raise Exception(
                 "ERR: Failed to download the latest rhvm appliance")
@@ -148,8 +148,8 @@ class OvirtHostedEnginePage(SeleniumTest):
         pass
 
     def clean_nfs_storage(self, nfs_ip, nfs_pass, nfs_path):
-        host_ins = Machine(host_string=nfs_ip,
-                           host_user='root', host_passwd=nfs_pass)
+        host_ins = Machine(
+            host_string=nfs_ip, host_user='root', host_passwd=nfs_pass)
         host_ins.execute("rm -rf %s/*" % nfs_path)
 
     def move_failed_setup_log(self):
@@ -189,9 +189,10 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def check_no_password_saved(self, root_pass, admin_pass):
         ret_log = self.host.execute(
-            "find /var/log -type f |grep ovirt-hosted-engine-setup-bootstrap_local_vm.*.log")
-        appliance_cmd = "grep 'APPLIANCE_PASSWORD': '%s' %s" % (
-            root_pass, ret_log[1])
+            "find /var/log -type f |grep ovirt-hosted-engine-setup-bootstrap_local_vm.*.log"
+        )
+        appliance_cmd = "grep 'APPLIANCE_PASSWORD': '%s' %s" % (root_pass,
+                                                                ret_log[1])
         admin_cmd = "grep 'ADMIN_PASSWORD': '%s' %s" % (admin_pass, ret_log[1])
         output_appliance_pass = self.host.execute(appliance_cmd)
         output_admin_pass = self.host.execute(admin_cmd)
@@ -208,14 +209,17 @@ class OvirtHostedEnginePage(SeleniumTest):
             "ls -lnt /var/log/messages | awk '{print $5}'")
         if int(size2[1]) - int(size1[1]) > 200:
             raise Exception(
-                "Look like large messages under /var/log/messages, please check")
+                "Look like large messages under /var/log/messages, please check"
+            )
 
-    def add_additional_host_to_cluster(self, host_ip, host_name, host_pass, rhvm_fqdn, engine_pass):
+    def add_additional_host_to_cluster(self, host_ip, host_name, host_pass,
+                                       rhvm_fqdn, engine_pass):
         rhvm = RhevmAction(rhvm_fqdn, "admin", engine_pass)
         rhvm.add_host(host_ip, host_name, host_pass, "Default", True)
         if self.wait_host_status(rhvm, host_name, 'up'):
             raise Exception(
-                "ERR: Add the additional host to the cluster failed, pls check.")
+                "ERR: Add the additional host to the cluster failed, pls check."
+            )
 
     def put_host_to_local_maintenance(self):
         self.click(self.LOCAL_MAINTENANCE)
@@ -230,6 +234,24 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def clean_hostengine_env(self):
         project_path = os.path.dirname(os.path.dirname(__file__))
-        clean_rnv_file = ''.join(project_path) + '/utils/clean_he_env.py'
-        self.host.put_file(clean_rnv_file, '/root/clean_he_env.py')
+        clean_he_file = ''.join(
+            project_path
+        ) + '/test_suites/test_ovirt_hostedengine.py.data/clean_he_env.py'
+        self.host.put_file(clean_he_file, '/root/clean_he_env.py')
         self.host.execute("python /root/clean_he_env.py")
+
+    def check_additional_host_socre(self, ip, passwd):
+        cmd = "hosted-engine --vm-status --json"
+        host_ins = Machine(
+            host_string=ip, host_user='root', host_passwd=passwd)
+        i = 0
+        while True:
+            if i > 10:
+                raise RuntimeError(
+                    "Timeout waitting for host to available running HE.")
+            ret = host_ins.execute(cmd)
+            true, false = True, False
+            if eval(ret[1])["2"]["score"] == 3400:
+                break
+            time.sleep(10)
+            i += 1
