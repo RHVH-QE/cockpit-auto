@@ -233,3 +233,17 @@ class OvirtHostedEnginePage(SeleniumTest):
         clean_rnv_file = ''.join(project_path) + '/utils/clean_he_env.py'
         self.host.put_file(clean_rnv_file, '/root/clean_he_env.py')
         self.host.execute("python /root/clean_he_env.py")
+
+    def check_additional_host_socre(self, ip, passwd):
+            cmd = "hosted-engine --vm-status --json"
+            host_ins = Machine(host_string=ip, host_user='root', host_passwd=passwd)
+            i = 0
+            while True:
+                if i > 10:
+                    raise RuntimeError("Timeout waitting for host to available running HE.")
+                ret = host_ins.execute(cmd)
+                true, false = True, False
+                if eval(ret[1])["2"]["score"] == 3400:
+                    break
+                time.sleep(10)
+                i += 1
