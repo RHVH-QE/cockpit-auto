@@ -1,0 +1,15 @@
+%YAML 1.2
+---
+
+# host infos
+host_string: your ip
+host_user: root
+host_pass: your password
+browser: chrome
+
+# avocado config
+avocado_results_dir: /home/yourname/avocado
+
+# versions of pkg/sys under test
+test_pkg_ver: cockpit-ovirt-dashboard-ver
+test_sys_ver: rhvh-ver
