@@ -1,0 +1,28 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+pyyaml = "*"
+selenium = "*"
+fabric = "*"
+flask = "*"
+avocado-framework = "*"
+avocado-framework-plugin-result-html = "*"
+simplejson = "*"
+requests = "*"
+
+
+[dev-packages]
+
+pylint = "*"
+"autopep8" = "*"
+
+
+[requires]
+
+python_version = "2.7"

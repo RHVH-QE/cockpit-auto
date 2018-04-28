@@ -1,0 +1,33 @@
+%YAML 1.2
+---
+
+# RHVM
+rhvm_appliance_path: rhvm_appliance_path
+
+# NFS
+nfs_ip: nfs_ip
+nfs_pass: nfs_pass
+nfs_dir: nfs_dir
+
+# ISCSI
+
+# FC
+
+# GLUSTERFS
+
+# ENGINE VM
+he_vm_fqdn: he_vm_fqdn
+he_vm_mac: he_vm_mac
+he_vm_ip: he_vm_ip
+vm_ip_prefix: vm_ip_prefix
+he_vm_pass: he_vm_pass
+dns_server: dns_server
+
+admin_pass: admin_pass
+
+first_host: first_host
+second_host: second_host
+second_pass: second_pass
+second_vm_fqdn: second_vm_fqdn
+
+
