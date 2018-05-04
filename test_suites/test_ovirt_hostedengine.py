@@ -63,25 +63,20 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier1
         """
-        if not self.assert_element_visible(
-                "XPATH{}//p[contains(text(),'Hosted Engine is running on')]"):
-            raise Exception("ERR: HostedEngine is not running on host.")
+        self.assert_element_visible(self.HE_RUNNING)
 
     def test_maintenance_hint(self):
         """
         :avocado: tags=he_tier1
         """
-        if not self.assert_element_visible(self.MAINTENANCE_HINT):
-            raise Exception("ERR: NO maintenance hint gived.")
+        self.assert_element_visible(self.MAINTENANCE_HINT)
 
     def test_engine_vm_status(self):
         """
         :avocado: tags=he_tier1
         """
-        if not self.assert_element_visible(self.ENGINE_UP_ICON):
-            raise Exception("ERR: The engine status is not up, please check.")
-        if not self.assert_element_visible(self.HE_RUNNING):
-            raise Exception("ERR: HostedEngine is not running on host.")
+        self.assert_element_visible(self.ENGINE_UP_ICON)
+        self.assert_element_visible(self.HE_RUNNING)
 
     def test_no_password_saved(self):
         """

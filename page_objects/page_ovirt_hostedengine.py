@@ -136,7 +136,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         rhvm_appliance_link = self.get_latest_rhvm_appliance(appliance_path)
         local_rhvm_appliance = "/root/%s" % rhvm_appliance_link.split('/')[-1]
         output = self.host.execute("curl -o %s %s" % (local_rhvm_appliance,
-                                                      rhvm_appliance_link))
+                                                      rhvm_appliance_link), timeout=200)
         if output[0] == "False":
             raise Exception(
                 "ERR: Failed to download the latest rhvm appliance")
@@ -207,7 +207,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         time.sleep(10)
         size2 = self.host.execute(
             "ls -lnt /var/log/messages | awk '{print $5}'")
-        if int(size2[1]) - int(size1[1]) > 200:
+        if int(size2[1]) - int(size1[1]) > 500:
             raise Exception(
                 "Look like large messages under /var/log/messages, please check"
             )
