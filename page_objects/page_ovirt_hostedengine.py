@@ -189,15 +189,18 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def check_no_password_saved(self, root_pass, admin_pass):
         ret_log = self.host.execute(
-            "find /var/log -type f |grep ovirt-hosted-engine-setup-bootstrap_local_vm.*.log"
+            "find /var/log -type f |grep ovirt-hosted-engine-setup-ansible-bootstrap_local_vm.*.log"
         )
-        appliance_cmd = "grep 'APPLIANCE_PASSWORD': '%s' %s" % (root_pass,
-                                                                ret_log[1])
-        admin_cmd = "grep 'ADMIN_PASSWORD': '%s' %s" % (admin_pass, ret_log[1])
+        appliance_str = "'APPLIANCE_PASSWORD': '%s'" % root_pass
+        appliance_cmd = "grep '%s' %s" % (appliance_str, ret_log[1])
+
+        admin_str = "'ADMIN_PASSWORD': '%s'" % admin_pass
+        admin_cmd = "grep '%s' %s" % (admin_str, ret_log[1])
+
         output_appliance_pass = self.host.execute(appliance_cmd)
         output_admin_pass = self.host.execute(admin_cmd)
 
-        if output_appliance_pass or output_admin_pass:
+        if output_appliance_pass[1] or output_admin_pass[1]:
             raise Exception(
                 "ERR: The appliance and admin passwords are saved.")
 
