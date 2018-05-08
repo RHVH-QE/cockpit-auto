@@ -132,7 +132,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
             self.input_text(
                 self.STORAGE_CONN,
                 config_dict['nfs_ip'] + ':' + config_dict['nfs_dir'])
-            self.click(self.ADVANCED)
+            self.click(self.STORAGE_ADVANCED)
             self.click(self.NFS_VER_DROPDOWN)
             self.click(self.NFS_V4)
             self.click(self.NEXT_BUTTON)

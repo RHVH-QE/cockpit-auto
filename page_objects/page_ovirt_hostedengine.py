@@ -29,10 +29,10 @@ class OvirtHostedEnginePage(SeleniumTest):
     VM_FQDN = _PLACEHOLDER % 'ovirt-engine.example.com'
     MAC_ADDRESS = _TITLE % 'Enter the MAC address for the VM.'
     ROOT_PASS = "XPATH{}//label[text()='Root Password']//parent::*//input[@type='password']"
-    ADVANCED = "XPATH{}//a[text()='Advanced']"
+    VM_ADVANCED = "XPATH{}//a[text()='Advanced']"
 
     # TODO
-    _DROPDOWN_MENU = "XPATH{}//label[text()='%s]//parent::*//button[contains(@class, 'dropdown-toggle')]"
+    _DROPDOWN_MENU = "XPATH{}//label[text()='%s']//parent::*//button[contains(@class, 'dropdown-toggle')]"
     NETWORK_DROPDOWN = _DROPDOWN_MENU % 'Network Configuration'
     # TODO
     # BRIDGE_DROPDOWN
@@ -60,14 +60,17 @@ class OvirtHostedEnginePage(SeleniumTest):
     # STORAGE STAGE
     # NFS
     _STORAGE_TYPE = "XPATH{}//ul[@class='dropdown-menu']/li[@value='%s']"
+    STORAGE_BUTTON = _DROPDOWN_MENU % 'Storage Type'
     STORAGE_NFS = _STORAGE_TYPE % 'nfs'
     STORAGE_CONN = _PLACEHOLDER % 'host:/path'
     MNT_OPT = "XPATH{}//label[text()='Mount Options']//parent::*//input[@type='text']"
+    STORAGE_ADVANCED = "XPATH{}//form/div[@class='form-group']/child::*//a[text()='Advanced']"
     NFS_VER_DROPDOWN = _DROPDOWN_MENU % 'NFS Version'
     NFS_AUTO = _DROPDOWN_VALUE % 'auto'
     NFS_V3 = _DROPDOWN_VALUE % 'v3'
     NFS_V4 = _DROPDOWN_VALUE % 'v4'
     NFS_V41 = _DROPDOWN_VALUE % 'v4_1'
+
     # NFS_V42
 
     # ISCSI
