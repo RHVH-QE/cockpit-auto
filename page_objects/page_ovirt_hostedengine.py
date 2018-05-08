@@ -204,8 +204,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         output_admin_pass = self.host.execute(admin_cmd)
 
         if output_appliance_pass[1] or output_admin_pass[1]:
-            raise Exception(
-                "ERR: The appliance and admin passwords are saved.")
+            self.fail()
 
     def check_no_large_messages(self):
         size1 = self.host.execute(
@@ -214,18 +213,14 @@ class OvirtHostedEnginePage(SeleniumTest):
         size2 = self.host.execute(
             "ls -lnt /var/log/messages | awk '{print $5}'")
         if int(size2[1]) - int(size1[1]) > 500:
-            raise Exception(
-                "Look like large messages under /var/log/messages, please check"
-            )
+            self.fail()
 
     def add_additional_host_to_cluster(self, host_ip, host_name, host_pass,
                                        rhvm_fqdn, engine_pass):
         rhvm = RhevmAction(rhvm_fqdn, "admin", engine_pass)
         rhvm.add_host(host_ip, host_name, host_pass, "Default", True)
         if self.wait_host_status(rhvm, host_name, 'up'):
-            raise Exception(
-                "ERR: Add the additional host to the cluster failed, pls check."
-            )
+            self.fail()
 
     def put_host_to_local_maintenance(self):
         self.click(self.LOCAL_MAINTENANCE)
