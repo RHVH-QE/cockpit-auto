@@ -74,20 +74,23 @@ class OvirtHostedEnginePage(SeleniumTest):
     # NFS_V42
 
     # ISCSI
+    _TEXT_LABEL = "XPATH{}//label[text()='%s']//parent::*//input[@type='text']"
+    _PASSWORD_LABEL = "XPATH{}//label[text()='%s']//parent::*//input[@type='password']"
     STORAGE_ISCSI = _STORAGE_TYPE % 'iscsi'
-    PORTAL_IP_ADDR = _TITLE % 'Enter the IP address for the iSCSI portal you wish to use.'
-    PORTAL_USER = "XPATH{}//input[@title='Enter the user for the iSCSI portal you wish to use.'][@type='text']"
-    PORTAL_PASS = "XPATH{}//input[@title='Enter the user for the iSCSI portal you wish to use.'][@type='password']"
-    # DISCOVERY_USER
-    # DISCOVERY_PASS
+    PORTAL_IP_ADDR = _TEXT_LABEL % 'Portal IP Address'
+    PORTAL_USER = _TEXT_LABEL % 'Portal Username'
+    PORTAL_PASS = _PASSWORD_LABEL % 'Portal Password'
+    DISCOVERY_USER = _TEXT_LABEL % 'Discovery Username'
+    DISCOVERY_PASS = _PASSWORD_LABEL % 'Discovery Password'
+
     RETRIEVE_TARGET = "XPATH{}//button[text()='Retrieve Target List']"
-    # SELECTED_TARGET
-    # SELECTED_ISCSI_LUN
+    SELECTED_TARGET = "XPATH{}//input[@type='radio'][@name='target']"
+    SELECTED_ISCSI_LUN = "XPATH{}//input[@type='radio'][@name='lun']"
 
     # FC
     STORAGE_FC = _STORAGE_TYPE % 'fc'
-    # SELECTED_FC_LUN
-    # FC_DISCOVER = "XPATH{}//button[@class='btn btn-primary']"
+    SELECTED_FC_LUN = "XPATH{}//input[@type='radio'][@value='36005076300810b3e0000000000000027']"
+    FC_DISCOVER = "XPATH{}//button[@text()='Discover']"
 
     # GLUSTERFS
     STORAGE_GLUSTERFS = _STORAGE_TYPE % 'glusterfs'

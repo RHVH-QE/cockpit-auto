@@ -15,6 +15,25 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         self.assert_element_visible(self.GETTING_START_LINK)
         self.assert_element_visible(self.MORE_INFORMATION_LINK)
 
+    def test_default_VM_ENGINE_CONFIG(self):
+        a = self.get_data('ovirt_hostedengine.yml')
+        config_dict = yaml.load(open(a))
+
+        # VM STAGE
+        self.click(self.HE_START)
+        self.input_text(self.VM_FQDN, config_dict['he_vm_fqdn'])
+        self.input_text(self.MAC_ADDRESS, config_dict['he_vm_mac'])
+        self.input_text(self.ROOT_PASS, config_dict['he_vm_pass'])
+        self.click(self.NEXT_BUTTON)
+
+        # ENGINE STAGE
+        self.input_text(self.ADMIN_PASS, config_dict['admin_pass'])
+        self.click(self.NEXT_BUTTON)
+
+        # PREPARE VM
+        self.click(self.PREPARE_VM_BUTTON)
+        self.click(self.NEXT_BUTTON, 1500)
+
     def test_node_zero_default_deploy(self):
         # The default deployment means that HE deployment, DHCP network, NFS Auto version, No MNT Option
         """
@@ -31,20 +50,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
                                    config_dict['nfs_dir'])
 
         def check_deploy():
-            # VM STAGE
-            self.click(self.HE_START)
-            self.input_text(self.VM_FQDN, config_dict['he_vm_fqdn'])
-            self.input_text(self.MAC_ADDRESS, config_dict['he_vm_mac'])
-            self.input_text(self.ROOT_PASS, config_dict['he_vm_pass'])
-            self.click(self.NEXT_BUTTON)
-
-            # ENGINE STAGE
-            self.input_text(self.ADMIN_PASS, config_dict['admin_pass'])
-            self.click(self.NEXT_BUTTON)
-
-            # PREPARE VM
-            self.click(self.PREPARE_VM_BUTTON)
-            self.click(self.NEXT_BUTTON, 1500)
+            self.test_default_VM_ENGINE_CONFIG()
 
             # STORAGE STAGE
             self.input_text(
@@ -92,6 +98,100 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         :avocado: tags=he_tier1
         """
         self.check_no_large_messages()
+
+    def test_node_zero_iscsi_deployment(self):
+        """
+        :avocado: tags=he_tier2
+        """
+        a = self.get_data('ovirt_hostedengine.yml')
+        config_dict = yaml.load(open(a))
+
+        def prepare_env():
+            self.move_failed_setup_log()
+            self.install_rhvm_appliance(config_dict['rhvm_appliance_path'])
+
+        def check_deploy():
+            self.test_default_VM_ENGINE_CONFIG()
+
+            # STORAGE STAGE
+            self.click(self.STORAGE_BUTTON)
+            self.click(self.STORAGE_ISCSI)
+            self.click(self.STORAGE_ADVANCED)
+            self.input_text(self.PORTAL_IP_ADDR, config_dict['iscsi_portal_ip'])
+            self.input_text(self.PORTAL_USER, config_dict['iscsi_portal_user'])
+            self.input_text(self.PORTAL_PASS, config_dict['iscsi_portal_pass'])
+            self.input_text(self.DISCOVERY_USER, config_dict['iscsi_discovery_user'])
+            self.input_text(self.DISCOVERY_PASS, config_dict['iscsi_discovery_pass'])
+
+            self.click(self.RETRIEVE_TARGET)
+            self.click(self.SELECTED_TARGET, 60)
+            self.click(self.SELECTED_ISCSI_LUN, 60)
+            self.click(self.NEXT_BUTTON)
+
+            # FINISH STAGE
+            self.click(self.FINISH_DEPLOYMENT)
+            self.click(self.CLOSE_BUTTON, 1500)
+
+        prepare_env()
+        check_deploy()
+
+    def test_node_zero_fc_deployment(self):
+        """
+        :avocado: tags=he_tier2
+        """
+        a = self.get_data('ovirt_hostedengine.yml')
+        config_dict = yaml.load(open(a))
+
+        def prepare_env():
+            self.move_failed_setup_log()
+            self.install_rhvm_appliance(config_dict['rhvm_appliance_path'])
+
+        def check_deploy():
+            self.test_default_VM_ENGINE_CONFIG()
+
+            # STORAGE STAGE
+            self.click(self.STORAGE_BUTTON)
+            self.click(self.STORAGE_FC)
+
+            self.click(self.SELECTED_FC_LUN, 60)
+
+            self.click(self.NEXT_BUTTON)
+
+            # FINISH STAGE
+            self.click(self.FINISH_DEPLOYMENT)
+            self.click(self.CLOSE_BUTTON, 1500)
+
+        prepare_env()
+        check_deploy()
+
+    def test_node_zero_gluster_deployment(self):
+        """
+        :avocado: tags=he_tier2
+        """
+        a = self.get_data('ovirt_hostedengine.yml')
+        config_dict = yaml.load(open(a))
+
+        def prepare_env():
+            self.move_failed_setup_log()
+            self.install_rhvm_appliance(config_dict['rhvm_appliance_path'])
+
+        def check_deploy():
+            self.test_default_VM_ENGINE_CONFIG()
+
+            # STORAGE STAGE
+            self.click(self.STORAGE_BUTTON)
+            self.click(self.STORAGE_GLUSTERFS)
+            self.input_text(
+                self.STORAGE_CONN,
+                config_dict['gluster_ip'] + ':' + config_dict['gluster_dir'])
+            self.click(self.NEXT_BUTTON)
+
+            # FINISH STAGE
+            self.click(self.FINISH_DEPLOYMENT)
+            self.click(self.CLOSE_BUTTON, 1500)
+
+        prepare_env()
+        check_deploy()
 
     def test_node_zero_static_v4_deploy(self):
         """
