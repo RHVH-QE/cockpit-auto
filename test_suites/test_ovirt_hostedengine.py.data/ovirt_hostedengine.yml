@@ -10,10 +10,17 @@ nfs_pass: nfs_pass
 nfs_dir: nfs_dir
 
 # ISCSI
+iscsi_portal_ip: isci_portal_ip
+iscsi_portal_user: iscsi_portal_user
+iscsi_portal_pass: iscsi_portal_pass
+iscsi_discovery_user: iscsi_discovery_user
+iscsi_discovery_pass: iscsi_discovery_pass
 
-# FC
+# FC -- Machine:hp-dl385pg8-11
 
 # GLUSTERFS
+gluster_ip: gluster_ip
+gluster_dir: gluster_dir
 
 # ENGINE VM
 he_vm_fqdn: he_vm_fqdn
@@ -29,5 +36,3 @@ first_host: first_host
 second_host: second_host
 second_pass: second_pass
 second_vm_fqdn: second_vm_fqdn
-
-

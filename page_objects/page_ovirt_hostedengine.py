@@ -29,10 +29,10 @@ class OvirtHostedEnginePage(SeleniumTest):
     VM_FQDN = _PLACEHOLDER % 'ovirt-engine.example.com'
     MAC_ADDRESS = _TITLE % 'Enter the MAC address for the VM.'
     ROOT_PASS = "XPATH{}//label[text()='Root Password']//parent::*//input[@type='password']"
-    ADVANCED = "XPATH{}//a[text()='Advanced']"
+    VM_ADVANCED = "XPATH{}//a[text()='Advanced']"
 
     # TODO
-    _DROPDOWN_MENU = "XPATH{}//label[text()='%s]//parent::*//button[contains(@class, 'dropdown-toggle')]"
+    _DROPDOWN_MENU = "XPATH{}//label[text()='%s']//parent::*//button[contains(@class, 'dropdown-toggle')]"
     NETWORK_DROPDOWN = _DROPDOWN_MENU % 'Network Configuration'
     # TODO
     # BRIDGE_DROPDOWN
@@ -60,31 +60,37 @@ class OvirtHostedEnginePage(SeleniumTest):
     # STORAGE STAGE
     # NFS
     _STORAGE_TYPE = "XPATH{}//ul[@class='dropdown-menu']/li[@value='%s']"
+    STORAGE_BUTTON = _DROPDOWN_MENU % 'Storage Type'
     STORAGE_NFS = _STORAGE_TYPE % 'nfs'
     STORAGE_CONN = _PLACEHOLDER % 'host:/path'
     MNT_OPT = "XPATH{}//label[text()='Mount Options']//parent::*//input[@type='text']"
+    STORAGE_ADVANCED = "XPATH{}//form/div[@class='form-group']/child::*//a[text()='Advanced']"
     NFS_VER_DROPDOWN = _DROPDOWN_MENU % 'NFS Version'
     NFS_AUTO = _DROPDOWN_VALUE % 'auto'
     NFS_V3 = _DROPDOWN_VALUE % 'v3'
     NFS_V4 = _DROPDOWN_VALUE % 'v4'
     NFS_V41 = _DROPDOWN_VALUE % 'v4_1'
+
     # NFS_V42
 
     # ISCSI
+    _TEXT_LABEL = "XPATH{}//label[text()='%s']//parent::*//input[@type='text']"
+    _PASSWORD_LABEL = "XPATH{}//label[text()='%s']//parent::*//input[@type='password']"
     STORAGE_ISCSI = _STORAGE_TYPE % 'iscsi'
-    PORTAL_IP_ADDR = _TITLE % 'Enter the IP address for the iSCSI portal you wish to use.'
-    PORTAL_USER = "XPATH{}//input[@title='Enter the user for the iSCSI portal you wish to use.'][@type='text']"
-    PORTAL_PASS = "XPATH{}//input[@title='Enter the user for the iSCSI portal you wish to use.'][@type='password']"
-    # DISCOVERY_USER
-    # DISCOVERY_PASS
+    PORTAL_IP_ADDR = _TEXT_LABEL % 'Portal IP Address'
+    PORTAL_USER = _TEXT_LABEL % 'Portal Username'
+    PORTAL_PASS = _PASSWORD_LABEL % 'Portal Password'
+    DISCOVERY_USER = _TEXT_LABEL % 'Discovery Username'
+    DISCOVERY_PASS = _PASSWORD_LABEL % 'Discovery Password'
+
     RETRIEVE_TARGET = "XPATH{}//button[text()='Retrieve Target List']"
-    # SELECTED_TARGET
-    # SELECTED_ISCSI_LUN
+    SELECTED_TARGET = "XPATH{}//input[@type='radio'][@name='target']"
+    SELECTED_ISCSI_LUN = "XPATH{}//input[@type='radio'][@name='lun']"
 
     # FC
     STORAGE_FC = _STORAGE_TYPE % 'fc'
-    # SELECTED_FC_LUN
-    # FC_DISCOVER = "XPATH{}//button[@class='btn btn-primary']"
+    SELECTED_FC_LUN = "XPATH{}//input[@type='radio'][@value='36005076300810b3e0000000000000027']"
+    FC_DISCOVER = "XPATH{}//button[@text()='Discover']"
 
     # GLUSTERFS
     STORAGE_GLUSTERFS = _STORAGE_TYPE % 'glusterfs'
@@ -189,17 +195,19 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def check_no_password_saved(self, root_pass, admin_pass):
         ret_log = self.host.execute(
-            "find /var/log -type f |grep ovirt-hosted-engine-setup-bootstrap_local_vm.*.log"
+            "find /var/log -type f |grep ovirt-hosted-engine-setup-ansible-bootstrap_local_vm.*.log"
         )
-        appliance_cmd = "grep 'APPLIANCE_PASSWORD': '%s' %s" % (root_pass,
-                                                                ret_log[1])
-        admin_cmd = "grep 'ADMIN_PASSWORD': '%s' %s" % (admin_pass, ret_log[1])
+        appliance_str = "'APPLIANCE_PASSWORD': '%s'" % root_pass
+        appliance_cmd = "grep '%s' %s" % (appliance_str, ret_log[1])
+
+        admin_str = "'ADMIN_PASSWORD': '%s'" % admin_pass
+        admin_cmd = "grep '%s' %s" % (admin_str, ret_log[1])
+
         output_appliance_pass = self.host.execute(appliance_cmd)
         output_admin_pass = self.host.execute(admin_cmd)
 
-        if output_appliance_pass or output_admin_pass:
-            raise Exception(
-                "ERR: The appliance and admin passwords are saved.")
+        if output_appliance_pass[1] or output_admin_pass[1]:
+            self.fail()
 
     def check_no_large_messages(self):
         size1 = self.host.execute(
@@ -208,18 +216,14 @@ class OvirtHostedEnginePage(SeleniumTest):
         size2 = self.host.execute(
             "ls -lnt /var/log/messages | awk '{print $5}'")
         if int(size2[1]) - int(size1[1]) > 500:
-            raise Exception(
-                "Look like large messages under /var/log/messages, please check"
-            )
+            self.fail()
 
     def add_additional_host_to_cluster(self, host_ip, host_name, host_pass,
                                        rhvm_fqdn, engine_pass):
         rhvm = RhevmAction(rhvm_fqdn, "admin", engine_pass)
         rhvm.add_host(host_ip, host_name, host_pass, "Default", True)
         if self.wait_host_status(rhvm, host_name, 'up'):
-            raise Exception(
-                "ERR: Add the additional host to the cluster failed, pls check."
-            )
+            self.fail()
 
     def put_host_to_local_maintenance(self):
         self.click(self.LOCAL_MAINTENANCE)
