@@ -15,7 +15,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         self.assert_element_visible(self.GETTING_START_LINK)
         self.assert_element_visible(self.MORE_INFORMATION_LINK)
 
-    def test_default_VM_ENGINE_CONFIG(self):
+    def default_VM_ENGINE_CONFIG(self):
         a = self.get_data('ovirt_hostedengine.yml')
         config_dict = yaml.load(open(a))
 
@@ -50,7 +50,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
                                    config_dict['nfs_dir'])
 
         def check_deploy():
-            self.test_default_VM_ENGINE_CONFIG()
+            self.default_VM_ENGINE_CONFIG()
 
             # STORAGE STAGE
             self.input_text(
@@ -111,7 +111,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
             self.install_rhvm_appliance(config_dict['rhvm_appliance_path'])
 
         def check_deploy():
-            self.test_default_VM_ENGINE_CONFIG()
+            self.default_VM_ENGINE_CONFIG()
 
             # STORAGE STAGE
             self.click(self.STORAGE_BUTTON)
@@ -147,7 +147,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
             self.install_rhvm_appliance(config_dict['rhvm_appliance_path'])
 
         def check_deploy():
-            self.test_default_VM_ENGINE_CONFIG()
+            self.default_VM_ENGINE_CONFIG()
 
             # STORAGE STAGE
             self.click(self.STORAGE_BUTTON)
@@ -176,7 +176,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
             self.install_rhvm_appliance(config_dict['rhvm_appliance_path'])
 
         def check_deploy():
-            self.test_default_VM_ENGINE_CONFIG()
+            self.default_VM_ENGINE_CONFIG()
 
             # STORAGE STAGE
             self.click(self.STORAGE_BUTTON)
