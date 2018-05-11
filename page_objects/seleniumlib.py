@@ -1,6 +1,7 @@
 import os
 import inspect
 import time
+import re
 from avocado import Test
 from selenium import webdriver
 from selenium.webdriver import ActionChains
@@ -34,9 +35,13 @@ SEPERATOR = ":::"
 
 
 def locator(el_descriptor):
-    el_format = el_descriptor.format(SEPERATOR)
-    by = BY_MAP.get(el_format.split(SEPERATOR)[0].strip())
-    path = el_format.split(SEPERATOR)[-1].strip()
+    if re.match(r'^//', el_descriptor):
+        by = BY_MAP.get('XPATH')
+        path = el_descriptor
+    else:
+        el_format = el_descriptor.format(SEPERATOR)
+        by = BY_MAP.get(el_format.split(SEPERATOR)[0].strip())
+        path = el_format.split(SEPERATOR)[-1].strip()
     return (by, path)
 
 
@@ -101,6 +106,9 @@ class SeleniumTest(Test):
 
     def refresh(self):
         self.driver.refresh()
+
+    def get_title(self):
+        return self.driver.title
 
     def _wait(self, el_descriptor, cond, try_times):
         """
@@ -168,6 +176,11 @@ class SeleniumTest(Test):
         element = self._wait(el_descriptor, cond=visible,
                              try_times=try_times)
         return element.text
+
+    def get_attribute(self, el_descriptor, attr_name, try_times=DEFAULT_TRY):
+        element = self._wait(el_descriptor, cond=visible,
+                             try_times=try_times)
+        return element.get_attribute(attr_name)
 
     def assert_element_visible(self, el_descriptor, try_times=DEFAULT_TRY):
         try:

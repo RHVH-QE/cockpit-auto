@@ -10,76 +10,89 @@ class TestOvirtDashboard(OvirtDashboardPage):
     :avocado: tags=ovirt_dashboard
     """
 
-    def test_health(self):
+    def test_health_status(self):
+        nodectl_check = self.nodectl_check_on_host()
+        expected_status = nodectl_check['status']
+        expected_icon = self.gen_icon_from_status(expected_status)
+        status_on_ui = self.get_health_text()
+        icon_on_ui = self.get_health_icon()
+        self.assertEqual(status_on_ui, expected_status)
+        self.assertIn(status_on_ui, icon_on_ui)
+
+    def test_node_health(self):
         def check_icons(dict_a):
             for key, value in dict_a.items():
-                text, icon = self.gen_text_icon_in_node_health(key, value)
-                self.assert_element_visible(icon)
+                expected_name = self.gen_expected_name_from_nodectl_check(key)
+                expected_icon = self.gen_expected_icon_from_nodectl_check(
+                    value)
+                icon_on_ui = self.get_item_icon_on_node_health(
+                    expected_name)
+                self.assertIn(expected_icon, icon_on_ui)
                 if not isinstance(value, dict) or len(value) <= 1:
                     continue
-                self.click(text)
+                self.open_item_on_node_health(expected_name)
                 value.pop('status')
                 check_icons(value)
 
-        node_check = self.nodectl_check_on_host()
-        node_status = node_check['status']
-        self.assert_element_visible(self.HEALTH_TEXT % node_status)
-        self.assert_element_visible(
-            self.HELATH_ICON % self.gen_icon_from_status(node_status))
-        self.click(self.HEALTH_TEXT % node_status)
-        check_icons(node_check)
+        nodectl_check = self.nodectl_check_on_host()
+        self.open_node_health_window()
+        check_icons(nodectl_check)
 
-    def test_layer(self):
+    def test_current_layer(self):
+        nodectl_info = self.nodectl_info_on_host()
+        expected_current_layer = nodectl_info['current_layer']
+        current_layer_on_ui = self.get_current_layer_text()
+        self.assertEqual(expected_current_layer, current_layer_on_ui)
+
+    def test_node_information(self):
         def check_contents(dict_a):
             for key, value in dict_a.items():
                 if not isinstance(value, dict):
-                    text = self.get_text(self.NODE_INFO_VALUE % key)
+                    text = self.get_arg_value_on_node_info(key)
                     self.assertEqual(value, text)
                     continue
-                self.click(self.NODE_INFO_TEXT % key)
+                self.open_item_on_node_info(key)
                 if key == "layers":
                     for k, v in value.items():
-                        text = self.get_text(self.NODE_INFO_LAYER % k)
-                        for i in range(len(v)):
-                            self.assertIn(v[i], text)
+                        text = self.get_layer_on_node_info(k)
+                        self.assertIn(v[0], text)
                     continue
                 check_contents(value)
 
-        node_info = self.nodectl_info_on_host()
-        current_layer_link = self.CURRENT_LAYER_LINK % node_info['current_layer']
-        self.assert_element_visible(current_layer_link)
-        self.click(current_layer_link)
-        check_contents(node_info)
+        nodectl_info = self.nodectl_info_on_host()
+        self.open_node_information_window()
+        check_contents(nodectl_info)
 
-    def test_rollback_unavailable(self):
-        node_info = self.nodectl_info_on_host()
-        self.click(self.ROLLBACK_BUTTON_ON_HOME)
-        rollback_button = self.ROLLBACK_BUTTON_ON_LAYERS_DISABLE % node_info['current_layer']
-        self.assert_element_visible(rollback_button)
-
-    def _test_rollback_available(self):
-        pass
+    def test_rollback(self):
+        nodectl_info = self.nodectl_info_on_host()
+        current_layer = nodectl_info['current_layer']
+        layers = nodectl_info['layers'].values()
+        available_layer = None
+        self.open_rollback_window()
+        for layer in layers:
+            rollback_attr = self.get_rollback_attr_on_layer(layer[0])
+            if layer[0] != current_layer:
+                self.assertNotIn('disabled', rollback_attr)
+                available_layer = layer[0]
+            else:
+                self.assertIn('disabled', rollback_attr)
+        if available_layer:
+            self.execute_rollback_on_layer(available_layer)
+            self.assert_element_visible(self.ROLLBACK_ALERT % available_layer)
 
     def test_network_info_link(self):
-        self.click(self.NETWORK_INFO_LINK)
-        self.refresh()
-        self.switch_to_frame(self.NETWORK_FRAME_NAME)
+        self.open_network_info_link()
+        self.assertIn('Networking', self.get_title())
 
     def test_system_log_link(self):
-        self.click(self.SYSTEM_LOGS_LINK)
-        self.refresh()
-        self.switch_to_frame(self.SYSTEM_LOGS_FRAME_NAME)
+        self.open_system_logs_link()
+        self.assertIn('Logs', self.get_title())
 
     def test_storage_link(self):
-        self.click(self.STORAGE_LINK)
-        self.refresh()
-        self.switch_to_frame(self.STORAGE_FRAME_NAME)
+        self.open_storage_link()
+        self.assertIn('Storage', self.get_title())
 
     def test_ssh_host_key_link(self):
-        ssh_key = self.get_ssh_key_on_host()
-        self.click(self.SSH_HOST_KEY_LINK)
-        text = self.get_text(self.SSH_HOST_KEY_CONTENT)
-        self.assertEqual(ssh_key, text.replace('\n', ''))
-
-    def _test_vm_numbers(self):
-        pass
+        ssh_key_on_host = self.get_ssh_key_on_host()
+        ssh_key_on_ui = self.get_ssh_key_on_page()
+        self.assertEqual(ssh_key_on_host, ssh_key_on_ui)

@@ -15,6 +15,7 @@ avocado-framework = "*"
 avocado-framework-plugin-result-html = "*"
 simplejson = "*"
 requests = "*"
+xmltodict = "*"
 
 
 [dev-packages]
