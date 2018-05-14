@@ -55,18 +55,35 @@ class SeleniumTest(Test):
     """
 
     def setUp(self):
-        host_string = os.environ['HOST_STRING']
-        username = os.environ['USERNAME']
-        passwd = os.environ['PASSWD']
-        browser = os.environ['BROWSER']
+        # get params from os.environ
+        host_string = os.environ.get('HOST_STRING')
+        username = os.environ.get('USERNAME')
+        passwd = os.environ.get('PASSWD')
+        browser = os.environ.get('BROWSER')
+        selenium_hub = os.environ.get('HUB')
 
+        # create host object
         self.host = Machine(host_string, username, passwd)
 
-        if browser == 'firefox':
-            self.driver = webdriver.Firefox()
+        # create selenium webdriver object
+        if not selenium_hub:
+            if browser == 'firefox':
+                self.driver = webdriver.Firefox()
+            else:
+                self.driver = webdriver.Chrome()
         else:
-            self.driver = webdriver.Chrome()
-        self.driver.set_window_size(1400, 1200)
+            if not browser:
+                browser = 'chrome'
+            elif browser == 'explorer':
+                browser = "internet explorer"
+            hub_url = 'http://%s:4444/wd/hub' % selenium_hub
+            desired_capabilities = {
+                'browserName': browser, 'acceptInsecureCerts': True}
+            self.driver = webdriver.Remote(
+                command_executor=hub_url, desired_capabilities=desired_capabilities)
+
+        # initialize webdriver
+        self.driver.set_window_size(1200, 1200)
         self.driver.set_page_load_timeout(90)
         self.screenshot_path = self.logdir
         self.open_url('http://%s:9090' % host_string)

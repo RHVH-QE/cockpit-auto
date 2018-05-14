@@ -4,6 +4,7 @@ import os
 import yaml
 import argparse
 import simplejson
+import subprocess
 from collections import OrderedDict
 
 
@@ -36,13 +37,26 @@ def gen_polarion_results(avocado_results_dir):
                 polarion_results, indent=4))
 
 
-def run(tags):
+def create_selenium_grid_by_docker():
+    subprocess.check_call(["docker-compose", "up", "-d"])
+
+
+def del_selenium_grid_by_docker():
+    subprocess.check_call(["docker-compose", "down"])
+
+
+def run_tests(tags, browser, grid):
     config_dict = yaml.load(open('./config.yml'))
 
     os.environ['HOST_STRING'] = config_dict['host_string']
     os.environ['USERNAME'] = config_dict['host_user']
     os.environ['PASSWD'] = config_dict['host_pass']
-    os.environ['BROWSER'] = config_dict['browser']
+    os.environ['BROWSER'] = browser
+    if grid == 'docker':
+        create_selenium_grid_by_docker()
+        os.environ['HUB'] = 'localhost'
+    elif grid == 'manual':
+        os.environ['HUB'] = config_dict['selenium_hub']
 
     avocado_root_dir = config_dict['avocado_results_dir']
     test_pkg_ver = config_dict['test_pkg_ver']
@@ -55,7 +69,9 @@ def run(tags):
     avocado_run_cmd = ' '.join(["avocado run", "./", "--job-results-dir " +
                                 avocado_results_dir, ' '.join(tag_filter_list)])
 
-    os.system(avocado_run_cmd)
+    subprocess.call(avocado_run_cmd, shell=True)
+    if grid == 'docker':
+        del_selenium_grid_by_docker()
     gen_polarion_results(avocado_results_dir)
 
 
@@ -69,9 +85,17 @@ def main():
               "and the tests with tag D, "
               "then should define the filter as 'A,B|C|D'. "
               "Refer to each test to see the actual avocado tags."))
+    parser.add_argument("-b", "--browser", choices=['firefox', 'chrome', 'explorer'],
+                        default='chrome',
+                        help="selenium browser choice")
+    parser.add_argument('-g', '--grid', choices=['none', 'docker', 'manual'],
+                        default='none',
+                        help=('selenium grid choice. none means not use grid, '
+                              'docker is to create grid by docker, '
+                              'manual is to use a grid created manually.'))
 
     args = parser.parse_args()
-    run(args.tags)
+    run_tests(args.tags, args.browser, args.grid)
 
 
 if __name__ == '__main__':
