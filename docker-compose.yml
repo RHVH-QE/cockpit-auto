@@ -9,7 +9,6 @@ version: "3"
 services:
   selenium-hub:
     image: selenium/hub
-    container_name: selenium-hub
     ports:
       - "4444:4444"
     networks:
@@ -17,7 +16,6 @@ services:
   
   chrome:
     image: selenium/node-chrome-debug
-    container_name: chrome
     volumes:
       - /dev/shm:/dev/shm
     ports:
@@ -32,7 +30,6 @@ services:
 
   firfox:
     image: selenium/node-firefox-debug
-    container_name: firefox
     volumes:
       - /dev/shm:/dev/shm
     ports:

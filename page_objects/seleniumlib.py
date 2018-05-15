@@ -7,6 +7,7 @@ from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import WebDriverException
@@ -72,15 +73,10 @@ class SeleniumTest(Test):
             else:
                 self.driver = webdriver.Chrome()
         else:
-            if not browser:
-                browser = 'chrome'
-            elif browser == 'explorer':
-                browser = "internet explorer"
             hub_url = 'http://%s:4444/wd/hub' % selenium_hub
-            desired_capabilities = {
-                'browserName': browser, 'acceptInsecureCerts': True}
+            capabilities = self._get_desired_capabilities(browser)
             self.driver = webdriver.Remote(
-                command_executor=hub_url, desired_capabilities=desired_capabilities)
+                command_executor=hub_url, desired_capabilities=capabilities)
 
         # initialize webdriver
         self.driver.set_window_size(1200, 1200)
@@ -92,6 +88,18 @@ class SeleniumTest(Test):
 
     def tearDown(self):
         self.driver.quit()
+
+    def _get_desired_capabilities(self, browser):
+        if browser == 'chrome':
+            capabilities = DesiredCapabilities.CHROME.copy()
+            capabilities['platform'] = 'LINUX'
+        elif browser == 'firefox':
+            capabilities = DesiredCapabilities.FIREFOX.copy()
+            capabilities['platform'] = 'LINUX'
+        elif browser == 'explorer':
+            capabilities = DesiredCapabilities.INTERNETEXPLORER.copy()
+
+        return capabilities
 
     def login(self, username, passwd):
         # login page elements

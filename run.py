@@ -52,7 +52,7 @@ def run_tests(tags, browser, grid):
     os.environ['USERNAME'] = config_dict['host_user']
     os.environ['PASSWD'] = config_dict['host_pass']
     os.environ['BROWSER'] = browser
-    if grid == 'docker':
+    if grid == 'auto':
         create_selenium_grid_by_docker()
         os.environ['HUB'] = 'localhost'
     elif grid == 'manual':
@@ -65,12 +65,12 @@ def run_tests(tags, browser, grid):
 
     tag_filter_list = ["--filter-by-tags=%s" %
                        x.replace(' ', '') for x in tags.split('|')]
+    avocado_run_cmd = ["avocado", "run", "./",
+                       "--job-results-dir", avocado_results_dir]
+    avocado_run_cmd.extend(tag_filter_list)
 
-    avocado_run_cmd = ' '.join(["avocado run", "./", "--job-results-dir " +
-                                avocado_results_dir, ' '.join(tag_filter_list)])
-
-    subprocess.call(avocado_run_cmd, shell=True)
-    if grid == 'docker':
+    subprocess.call(avocado_run_cmd)
+    if grid == 'auto':
         del_selenium_grid_by_docker()
     gen_polarion_results(avocado_results_dir)
 
@@ -80,19 +80,19 @@ def main():
     parser.add_argument(
         "tags", nargs='?',
         help=("Avocado tags filter specifying which tests need to be run. "
-              "For example, if want to run the tests with both tag A and tag B, "
+              "For example, if you want to run the tests with both tag A and tag B, "
               "the tests with tag C, "
               "and the tests with tag D, "
-              "then should define the filter as 'A,B|C|D'. "
+              "then you should define the filter as 'A,B|C|D'. "
               "Refer to each test to see the actual avocado tags."))
     parser.add_argument("-b", "--browser", choices=['firefox', 'chrome', 'explorer'],
                         default='chrome',
                         help="selenium browser choice")
-    parser.add_argument('-g', '--grid', choices=['none', 'docker', 'manual'],
+    parser.add_argument('-g', '--grid', choices=['none', 'auto', 'manual'],
                         default='none',
-                        help=('selenium grid choice. none means not use grid, '
-                              'docker is to create grid by docker, '
-                              'manual is to use a grid created manually.'))
+                        help=('selenium grid choice. none means not to use grid, '
+                              'auto is to create grid automatically by docker-compose on the local host, '
+                              'manual is to use a grid created manually in advance.'))
 
     args = parser.parse_args()
     run_tests(args.tags, args.browser, args.grid)
