@@ -91,7 +91,7 @@ def main():
     parser.add_argument('-g', '--grid', choices=['none', 'auto', 'manual'],
                         default='none',
                         help=('selenium grid choice. none means not to use grid, '
-                              'auto is to create grid automatically by docker-compose on the local host, '
+                              'auto is to create grid automatically by docker-compose on the local machine, '
                               'manual is to use a grid created manually in advance.'))
 
     args = parser.parse_args()

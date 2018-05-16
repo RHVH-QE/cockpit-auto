@@ -11,6 +11,9 @@ class TestOvirtDashboard(OvirtDashboardPage):
     """
 
     def test_health_status(self):
+        """
+        :avocado: tags=test
+        """
         nodectl_check = self.nodectl_check_on_host()
         expected_status = nodectl_check['status']
         expected_icon = self.gen_icon_from_status(expected_status)

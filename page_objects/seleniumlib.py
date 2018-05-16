@@ -82,7 +82,9 @@ class SeleniumTest(Test):
         self.driver.set_window_size(1200, 1200)
         self.driver.set_page_load_timeout(90)
         self.screenshot_path = self.logdir
-        self.open_url('http://%s:9090' % host_string)
+
+        # open target page
+        self.open_cockpit(host_string, browser)
         self.login(username, passwd)
         self.open_page()
 
@@ -100,6 +102,11 @@ class SeleniumTest(Test):
             capabilities = DesiredCapabilities.INTERNETEXPLORER.copy()
 
         return capabilities
+
+    def open_cockpit(self, host_string, browser=None):
+        self.driver.get('http://%s:9090' % host_string)
+        if browser == 'explorer':
+            self.click("ID{}overridelink")
 
     def login(self, username, passwd):
         # login page elements
@@ -122,9 +129,6 @@ class SeleniumTest(Test):
 
     def open_page(self):
         pass
-
-    def open_url(self, url):
-        self.driver.get(url)
 
     def get_current_url(self):
         return self.driver.current_url
