@@ -196,6 +196,17 @@ class OvirtHostedEnginePage(SeleniumTest):
         a = self.get_data('ovirt_hostedengine.yml')
         self.config_dict = yaml.load(open(a))
 
+    def prepare_env(self, storage_type='nfs'):
+        self.move_failed_setup_log()
+        self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
+        if storage_type == 'nfs':
+            self.clean_nfs_storage(self.config_dict['nfs_ip'],
+                                   self.config_dict['nfs_pass'],
+                                   self.config_dict['nfs_dir'])
+        else:
+            pass
+            # TODO for iscsi, fc, gluster
+
     def check_no_password_saved(self, root_pass, admin_pass):
         ret_log = self.host.execute(
             "find /var/log -type f |grep ovirt-hosted-engine-setup-ansible-bootstrap_local_vm.*.log"
@@ -280,13 +291,6 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.click(self.NEXT_BUTTON, 1500)
 
     def node_zero_default_deploy_process(self):
-        def prepare_env():
-            self.move_failed_setup_log()
-            self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
-            self.clean_nfs_storage(self.config_dict['nfs_ip'],
-                                   self.config_dict['nfs_pass'],
-                                   self.config_dict['nfs_dir'])
-
         def check_deploy():
             self.default_vm_engine_stage_config()
 
@@ -300,28 +304,14 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.FINISH_DEPLOYMENT)
             self.click(self.CLOSE_BUTTON, 1500)
 
-        prepare_env()
+        self.prepare_env('nfs')
         check_deploy()
-
-    def check_hostedengine_deployed(self):
-        self.assert_element_visible(self.HE_RUNNING)
-
-    def check_maintenance_hint(self):
-        self.assert_element_visible(self.MAINTENANCE_HINT)
-
-    def check_engine_vm_status(self):
-        self.assert_element_visible(self.ENGINE_UP_ICON)
-        self.assert_element_visible(self.HE_RUNNING)
 
     def check_no_password_saved_in_setup_log(self):
         self.check_no_password_saved(self.config_dict['he_vm_pass'],
                                      self.config_dict['admin_pass'])
 
     def node_zero_iscsi_deploy_process(self):
-        def prepare_env():
-            self.move_failed_setup_log()
-            self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
-
         def check_deploy():
             self.default_vm_engine_stage_config()
 
@@ -344,14 +334,10 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.FINISH_DEPLOYMENT)
             self.click(self.CLOSE_BUTTON, 1500)
 
-        prepare_env()
+        self.prepare_env('iscsi')
         check_deploy()
 
     def node_zero_fc_deploy_process(self):
-        def prepare_env():
-            self.move_failed_setup_log()
-            self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
-
         def check_deploy():
             self.default_vm_engine_stage_config()
 
@@ -367,14 +353,10 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.FINISH_DEPLOYMENT)
             self.click(self.CLOSE_BUTTON, 1500)
 
-        prepare_env()
+        self.prepare_env('fc')
         check_deploy()
 
     def node_zero_gluster_deploy_process(self):
-        def prepare_env():
-            self.move_failed_setup_log()
-            self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
-
         def check_deploy():
             self.default_vm_engine_stage_config()
 
@@ -390,17 +372,10 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.FINISH_DEPLOYMENT)
             self.click(self.CLOSE_BUTTON, 1500)
 
-        prepare_env()
+        self.prepare_env('gluster')
         check_deploy()
 
     def node_zero_static_v4_deploy_process(self):
-        def prepare_env():
-            self.move_failed_setup_log()
-            self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
-            self.clean_nfs_storage(self.config_dict['nfs_ip'],
-                                   self.config_dict['nfs_pass'],
-                                   self.config_dict['nfs_dir'])
-
         def check_deploy():
             # VM STAGE
             self.click(self.HE_START)
@@ -435,7 +410,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.FINISH_DEPLOYMENT)
             self.click(self.CLOSE_BUTTON, 1500)
 
-        prepare_env()
+        self.prepare_env('nfs')
         check_deploy()
 
     def hostedengine_redeploy_process(self):
@@ -454,19 +429,9 @@ class OvirtHostedEnginePage(SeleniumTest):
     
     def check_local_maintenance(self):
         self.put_host_to_local_maintenance()
-        self.assert_text_in_element(self.LOCAL_MAINTEN_STAT, 'true')
-
-    def check_migrated_he(self):
-        self.assert_text_in_element(self.VM_STATUS, 'down')
 
     def check_remove_maintenance(self):
         self.remove_host_from_maintenance()
-        self.assert_text_not_in_element(self.LOCAL_MAINTEN_STAT, 'true')
 
     def check_global_maintenance(self):
         self.put_cluster_to_global_maintenance()
-        self.assert_element_visible(self.GLOBAL_HINT)
-
-    def check_guide_link(self):
-        self.assert_element_visible(self.GETTING_START_LINK)
-        self.assert_element_visible(self.MORE_INFORMATION_LINK)

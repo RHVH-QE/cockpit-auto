@@ -12,7 +12,8 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     """
 
     def test_guide_link(self):
-        self.check_guide_link()
+        self.assert_element_visible(self.GETTING_START_LINK)
+        self.assert_element_visible(self.MORE_INFORMATION_LINK)
 
     def test_node_zero_default_deploy(self):
         # The default deployment means that HE deployment, DHCP network, NFS Auto version, No MNT Option
@@ -25,19 +26,20 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier1
         """
-        self.check_hostedengine_deployed()
+        self.assert_element_visible(self.HE_RUNNING)
 
     def test_maintenance_hint(self):
         """
         :avocado: tags=he_tier1
         """
-        self.check_maintenance_hint()
+        self.assert_element_visible(self.MAINTENANCE_HINT)
 
     def test_engine_vm_status(self):
         """
         :avocado: tags=he_tier1
         """
-        self.check_engine_vm_status()
+        self.assert_element_visible(self.ENGINE_UP_ICON)
+        self.assert_element_visible(self.HE_RUNNING)
 
     def test_no_password_saved(self):
         """
@@ -92,21 +94,24 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         :avocado: tags=he_tier1
         """
         self.check_local_maintenance()
+        self.assert_text_in_element(self.LOCAL_MAINTEN_STAT, 'true')
 
     def test_migrated_he(self):
         """
         :avocado: tags=he_tier1
         """
-        self.check_migrated_he()
+        self.assert_text_in_element(self.VM_STATUS, 'down')
 
     def test_remove_maintenance(self):
         """
         :avocado: tags=he_tier1
         """
         self.check_remove_maintenance()
+        self.assert_text_not_in_element(self.LOCAL_MAINTEN_STAT, 'true')
 
     def test_global_maintenance(self):
         """
         :avocado: tags=he_tier1
         """
-        self.check_global_maintenance
+        self.check_global_maintenance()
+        self.assert_element_visible(self.GLOBAL_HINT)
