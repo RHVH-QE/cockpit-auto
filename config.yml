@@ -7,7 +7,7 @@ host_user: root
 host_pass: yourpasswd
 
 # manually configured selenium hub
-selenuim_hub: ""
+selenium_hub: ""
 
 # avocado config
 avocado_results_dir: /home/yourname/avocado
