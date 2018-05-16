@@ -288,7 +288,7 @@ class OvirtHostedEnginePage(SeleniumTest):
                                    self.config_dict['nfs_dir'])
 
         def check_deploy():
-            self.default_VM_ENGINE_CONFIG()
+            self.default_vm_engine_stage_config()
 
             # STORAGE STAGE
             self.input_text(
@@ -323,7 +323,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
 
         def check_deploy():
-            self.default_VM_ENGINE_CONFIG()
+            self.default_vm_engine_stage_config()
 
             # STORAGE STAGE
             self.click(self.STORAGE_BUTTON)
@@ -353,7 +353,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
 
         def check_deploy():
-            self.default_VM_ENGINE_CONFIG()
+            self.default_vm_engine_stage_config()
 
             # STORAGE STAGE
             self.click(self.STORAGE_BUTTON)
@@ -376,7 +376,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
 
         def check_deploy():
-            self.default_VM_ENGINE_CONFIG()
+            self.default_vm_engine_stage_config()
 
             # STORAGE STAGE
             self.click(self.STORAGE_BUTTON)
