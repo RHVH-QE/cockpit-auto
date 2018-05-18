@@ -9,18 +9,14 @@ This project uses selenium and avocado to automate tests for:
 ## Usage
 
 1. Clone the repo
-
 2. Enter the project directory, install the dependency packages and enter to the virtualenv
-
 ```sh
 $ pipenv install
 $ pipenv shell
 ```
 
 3. Configure config.yml with correct parameters.
-
 4. Run tests
-
 ```sh
 $ python run.py $tags -g $grid -b $browser
 ```
@@ -42,13 +38,11 @@ $ python run.py $tags -g $grid -b $browser
 * Download Selenium Standalone Server and the Internet Explorer Driver Server [here](https://www.seleniumhq.org/download/).
 * Configure Internet Explorer. For Internet Explorer tests you should make some additional configuration on the browser. See [IE Required Configuration](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver#required-configuration)
 * Start selenium hub: 
-
 ```sh
 java -jar path-to-selenium-standalone-server -role hub
 ```
 
 * Start selenium node:
-
 ```sh
 java -Dwebdriver.ie.driver=path-to-ie-driver -jar path-to-selenium-standalone-server -role webdriver -hub http://hubip:4444/grid/register
 ```
