@@ -170,7 +170,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         else:
             pass
 
-    def wait_host_status(self, rhvm_ins, host_name, expect_status):
+    def wait_host_up(self, rhvm_ins, host_name, expect_status='up'):
         i = 0
         host_status = "unknown"
         while True:
@@ -236,8 +236,7 @@ class OvirtHostedEnginePage(SeleniumTest):
                                        rhvm_fqdn, engine_pass):
         rhvm = RhevmAction(rhvm_fqdn, "admin", engine_pass)
         rhvm.add_host(host_ip, host_name, host_pass, "Default", True)
-        if self.wait_host_status(rhvm, host_name, 'up'):
-            self.fail()
+        self.wait_host_up(rhvm, host_name, 'up')
 
     def put_host_to_local_maintenance(self):
         self.click(self.LOCAL_MAINTENANCE)
@@ -252,9 +251,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def clean_hostengine_env(self):
         project_path = os.path.dirname(os.path.dirname(__file__))
-        clean_he_file = ''.join(
-            project_path
-        ) + '/test_suites/test_ovirt_hostedengine.py.data/clean_he_env.py'
+        clean_he_file = project_path + '/test_suites/test_ovirt_hostedengine.py.data/clean_he_env.py'
         self.host.put_file(clean_he_file, '/root/clean_he_env.py')
         self.host.execute("python /root/clean_he_env.py")
 
