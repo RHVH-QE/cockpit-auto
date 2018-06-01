@@ -38,3 +38,17 @@ RHEVM-25116: test_ovirt_hostedengine.py:TestOvirtHostedEngine.test_node_zero_sta
 # RHEVM-24961
 # RHEVM-25010
 # RHEVM-25122
+
+RHEL-122285: test_machines_check.py:TestMachinesCheck.test_no_vm
+RHEL-113822: test_machines_check.py:TestMachinesCheck.test_overview_info
+RHEL-113823: test_machines_check.py:TestMachinesCheck.test_memory_usage_off
+RHEL-122432: test_machines_check.py:TestMachinesCheck.test_cpu_usage_off
+RHEL-113825: test_machines_check.py:TestMachinesCheck.test_disks_info
+RHEL-122436: test_machines_check.py:TestMachinesCheck.test_disk_notification
+RHEL-116892: test_machines_check.py:TestMachinesCheck.test_networks_info
+RHEL-116893: test_machines_check.py:TestMachinesCheck.test_network_unplug
+RHEL-116895: test_machines_check.py:TestMachinesCheck.test_network_plug
+RHEL-113833: test_machines_check.py:TestMachinesCheck.test_shutdown_vm
+RHEL-113834: test_machines_check.py:TestMachinesCheck.test_forceoff_vm
+RHEL-113836: test_machines_check.py:TestMachinesCheck.test_sendnmi_vm
+RHEL-113838: test_machines_check.py:TestMachinesCheck.test_delete_vm_without_storage
