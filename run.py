@@ -14,8 +14,8 @@ def gen_polarion_results(avocado_results_dir):
     polarion_test_map = yaml.load(open('./polarion_test_map.yml'))
 
     polarion_results = OrderedDict()
-    polarion_results['title'] = 'Auto_Test_' + \
-        avocado_results_dir.split('/')[-1]
+    vers = avocado_results_dir.split('/')
+    polarion_results['title'] = 'Auto_Test_' + vers[-2] + '_' + vers[-1]
     polarion_results['results'] = OrderedDict()
     for test in avocado_json_results['tests']:
         if test['status'] == 'PASS':
@@ -61,7 +61,8 @@ def run_tests(tags, browser, grid):
     avocado_root_dir = config_dict['avocado_results_dir']
     test_pkg_ver = config_dict['test_pkg_ver']
     test_sys_ver = config_dict['test_sys_ver']
-    avocado_results_dir = avocado_root_dir + test_pkg_ver + "_" + test_sys_ver
+    avocado_results_dir = avocado_root_dir + \
+        test_pkg_ver + "_" + test_sys_ver + "/" + browser
 
     tag_filter_list = ["--filter-by-tags=%s" %
                        x.replace(' ', '') for x in tags.split('|')]

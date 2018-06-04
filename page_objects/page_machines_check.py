@@ -63,14 +63,15 @@ class MachinesCheckPage(SeleniumTest):
         self.click(self.VM_ROW)
 
     def open_usage_subtab(self):
-        self.click(self.USAGE_TAB)
+        # self.click(self.USAGE_TAB)
+        self.hover_and_click(self.USAGE_TAB)
 
     def open_disks_subtab(self):
-        self.click(self.DISKS_TAB)
+        self.hover_and_click(self.DISKS_TAB)
         sleep(2)
 
     def open_networks_subtab(self):
-        self.click(self.NETWORKS_TAB)
+        self.hover_and_click(self.NETWORKS_TAB)
 
     def run_vm_on_ui(self):
         self.click(self.RUN_BUTTON)

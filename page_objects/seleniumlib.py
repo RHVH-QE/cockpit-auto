@@ -186,11 +186,19 @@ class SeleniumTest(Test):
         el_descriptor = "//*[contains(text(), '%s')]" % text
         self.click(el_descriptor, try_times)
 
-    def hover_and_click(self, el_hover, el_click, try_times=DEFAULT_TRY):
+    def hover_and_click(self, el_hover, el_click=None, try_times=DEFAULT_TRY):
         hover_element = self._wait(
             el_hover, cond=visible, try_times=try_times)
-        ActionChains(self.driver).move_to_element(hover_element).perform()
-        self.click(el_click, try_times)
+        actions = ActionChains(self.driver)
+        actions.move_to_element(hover_element)
+        if not el_click:
+            # hover and click the same element
+            actions.click(hover_element)
+            actions.perform()
+        else:
+            # hover to one element, then click another element
+            actions.perform()
+            self.click(el_click, try_times)
 
     def input_text(self, el_descriptor, new_value, clear=True, try_times=DEFAULT_TRY):
         element = self._wait(el_descriptor, cond=visible,

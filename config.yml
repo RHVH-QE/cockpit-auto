@@ -10,7 +10,7 @@ host_pass: yourpasswd
 selenium_hub: ""
 
 # avocado config
-avocado_results_dir: /home/yourname/avocado
+avocado_results_dir: /home/yourname/avocado/
 
 # versions of pkg/sys under test
 test_pkg_ver: cockpit-ovirt-dashboard-ver
