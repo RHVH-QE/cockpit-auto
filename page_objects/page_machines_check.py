@@ -36,10 +36,10 @@ class MachinesCheckPage(SeleniumTest):
 
     # usage subtab
     USAGE_TAB = _ID_PREFIX + "usage"
-    USED_MEMORY_VALUE = "//*[@id='chart-donut-0']//*[@class='donut-title-big-pf']"
-    USED_MEMORY_UNIT = "//*[@id='chart-donut-0']//*[@class='donut-title-small-pf']"
-    USED_CPU_VALUE = "//*[@id='chart-donut-1']//*[@class='donut-title-big-pf']"
-    USED_CPU_UNIT = "//*[@id='chart-donut-1']//*[@class='donut-title-small-pf']"
+    USED_MEMORY_VALUE = "CSS_SELECTOR{}#chart-donut-0 .donut-title-big-pf"
+    USED_MEMORY_UNIT = "CSS_SELECTOR{}#chart-donut-0 .donut-title-small-pf"
+    USED_CPU_VALUE = "CSS_SELECTOR{}#chart-donut-1 .donut-title-big-pf"
+    USED_CPU_UNIT = "CSS_SELECTOR{}#chart-donut-1 .donut-title-small-pf"
 
     # disks subtab
     DISKS_TAB = _ID_PREFIX + "disks"
