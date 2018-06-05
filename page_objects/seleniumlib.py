@@ -11,6 +11,8 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import ElementNotInteractableException
 from utils.machine import Machine
 
 
@@ -180,7 +182,12 @@ class SeleniumTest(Test):
     def click(self, el_descriptor, try_times=DEFAULT_TRY):
         element = self._wait(
             el_descriptor, cond=clickable, try_times=try_times)
-        element.click()
+        try:
+            element.click()
+        except (StaleElementReferenceException, ElementNotInteractableException):
+            element = self._wait(
+                el_descriptor, cond=clickable, try_times=try_times)
+            element.click()
 
     def click_text(self, text, try_times=DEFAULT_TRY):
         el_descriptor = "//*[contains(text(), '%s')]" % text
