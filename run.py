@@ -86,7 +86,7 @@ def main():
               "and the tests with tag D, "
               "then you should define the filter as 'A,B|C|D'. "
               "Refer to each test to see the actual avocado tags."))
-    parser.add_argument("-b", "--browser", choices=['firefox', 'chrome', 'explorer'],
+    parser.add_argument("-b", "--browser", choices=['firefox', 'chrome', 'ie'],
                         default='chrome',
                         help="selenium browser choice")
     parser.add_argument('-g', '--grid', choices=['none', 'auto', 'manual'],

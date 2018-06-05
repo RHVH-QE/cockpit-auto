@@ -103,14 +103,14 @@ class SeleniumTest(Test):
         elif browser == 'firefox':
             capabilities = DesiredCapabilities.FIREFOX.copy()
             capabilities['platform'] = 'LINUX'
-        elif browser == 'explorer':
+        elif browser == 'ie':
             capabilities = DesiredCapabilities.INTERNETEXPLORER.copy()
 
         return capabilities
 
     def open_cockpit(self, host_string, browser=None):
         self.driver.get('http://%s:9090' % host_string)
-        if browser == 'explorer':
+        if browser == 'ie':
             self.click("#overridelink")
 
     def login(self, username, passwd):
