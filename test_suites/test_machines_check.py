@@ -12,7 +12,7 @@ class TestMachinesCheck(MachinesCheckPage):
 
     def test_no_vm(self):
         self.prepare_no_vm()
-        self.assert_element_visible(self.NO_VM_TEXT)
+        self.assertEqual(self.get_no_vm_text_on_ui(), self.NO_VM_TEXT)
 
     def test_memory_usage_off(self):
         self.prepare_stop_vm()

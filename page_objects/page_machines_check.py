@@ -11,13 +11,14 @@ class MachinesCheckPage(SeleniumTest):
     WAIT_VM_UP = 10
     WATI_VM_DOWN = 5
 
-    MACHINES_LINK = "//*[@id='sidebar-menu']//*[text()='Virtual Machines']"
+    MACHINES_LINK = "#sidebar-menu a[href='/machines']"
     MACHINES_FRAME_NAME = "/machines"
 
-    NO_VM_TEXT = "//*[contains(text(), 'No VM is running or defined on this host')]"
+    NO_VM_EL = "#app tr td"
+    NO_VM_TEXT = 'No VM is running or defined on this host'
 
-    # id prefix, %s should be the actual vm name
-    _ID_PREFIX = "#vm-%s-" % VM_NAME
+    # id prefix, {} should be the actual vm name
+    _ID_PREFIX = "#vm-{}-".format(VM_NAME)
     VM_ROW = _ID_PREFIX + 'row'
     VM_STATE = _ID_PREFIX + 'state'
     RUN_BUTTON = _ID_PREFIX + 'run'
@@ -27,8 +28,8 @@ class MachinesCheckPage(SeleniumTest):
     FORCEOFF_BUTTON = _ID_PREFIX + 'forceOff'
     SENDNMI_BUTTON = _ID_PREFIX + 'sendNMI'
     DELETE_BUTTON = _ID_PREFIX + 'delete'
-    DELETE_STORAGE_CHECKBOX = "//input[@type='checkbox']"
-    DELETE_VM_BUTTON = "//*[@id='cockpit_modal_dialog']//button[text()='Delete']"
+    DELETE_STORAGE_CHECKBOX = "input[type=checkbox]"
+    DELETE_VM_BUTTON = "#cockpit_modal_dialog .modal-footer button:nth-of-type(2)"
 
     # overview subtab
     OVERVIEW_INFO_NAMES = ['memory', 'vcpus',
@@ -36,24 +37,26 @@ class MachinesCheckPage(SeleniumTest):
 
     # usage subtab
     USAGE_TAB = _ID_PREFIX + "usage"
-    USED_MEMORY_VALUE = "CSS_SELECTOR{}#chart-donut-0 .donut-title-big-pf"
-    USED_MEMORY_UNIT = "CSS_SELECTOR{}#chart-donut-0 .donut-title-small-pf"
-    USED_CPU_VALUE = "CSS_SELECTOR{}#chart-donut-1 .donut-title-big-pf"
-    USED_CPU_UNIT = "CSS_SELECTOR{}#chart-donut-1 .donut-title-small-pf"
+    USED_MEMORY_VALUE = "#chart-donut-0 .donut-title-big-pf"
+    USED_MEMORY_UNIT = "#chart-donut-0 .donut-title-small-pf"
+    USED_CPU_VALUE = "#chart-donut-1 .donut-title-big-pf"
+    USED_CPU_UNIT = "#chart-donut-1 .donut-title-small-pf"
 
     # disks subtab
     DISKS_TAB = _ID_PREFIX + "disks"
     DISKS_NOTIFICATION = DISKS_TAB + "-notification"
     DISKS_COUNT = DISKS_TAB + "-total-value"
-    DISK_COLUMN_TEMPLATE = DISKS_TAB + "-%s-"
+    DISK_COLUMN_TEMPLATE = DISKS_TAB + "-{}-"
     DISK_COLUMN_NAMES = ['device', 'target', 'bus', 'readonly', 'source']
+    DISK_COLUMN_READONLY = "//*[@id='{}bus']//parent::*//following-sibling::*"
+    DISK_COLUMN_SOURCE = "{}source .machines-disks-source-value"
 
     # networks subtab
     NETWORKS_TAB = _ID_PREFIX + "networks"
-    NETWORK_COLUMN_TEMPLATE = _ID_PREFIX + "network" + "-%s-"
+    NETWORK_COLUMN_TEMPLATE = _ID_PREFIX + "network" + "-{}-"
     NETWORK_COLUMN_NAMES = ['type', 'model',
                             'mac', 'target', 'source', 'state']
-    NETWORK1_PLUG_BUTTON = "//*[@id='vm-%s-network-1-state']/button" % VM_NAME
+    NETWORK1_PLUG_BUTTON = "#vm-{}-network-1-state button".format(VM_NAME)
 
     def open_page(self):
         self.click(self.MACHINES_LINK)
@@ -118,66 +121,58 @@ class MachinesCheckPage(SeleniumTest):
         elif 'shut off' == state:
             self.undefine_vm_by_virsh()
 
+    def _run_cmd_on_host(self, cmd):
+        ret = self.host.execute(cmd)
+        if not ret[0]:
+            raise Exception("ERR: Run `{}` failed on host".format(cmd))
+        return ret[1]
+
     def create_running_vm_by_virsh(self):
         """
         The vm.xml and vm.qcow2 should be copied to host beforehand,
         vm.qcow2 should be installed with OS.
         """
         cmd = 'virsh create /var/lib/libvirt/images/vm.xml'
-        ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
+        self._run_cmd_on_host(cmd)
         # wait for guest os to start up.
         sleep(self.WAIT_VM_UP)
 
     def create_stop_vm_by_virsh(self):
         cmd = 'virsh define /var/lib/libvirt/images/vm.xml'
-        ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
+        self._run_cmd_on_host(cmd)
 
     def start_vm_by_virsh(self):
-        cmd = 'virsh start %s' % self.VM_NAME
-        ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
+        cmd = 'virsh start {}'.format(self.VM_NAME)
+        self._run_cmd_on_host(cmd)
         sleep(self.WAIT_VM_UP)
 
     def stop_vm_by_virsh(self):
-        cmd = 'virsh shutdown %s' % self.VM_NAME
-        ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
+        cmd = 'virsh shutdown {}'.format(self.VM_NAME)
+        self._run_cmd_on_host(cmd)
         sleep(self.WATI_VM_DOWN)
 
     def destroy_vm_by_virsh(self):
-        cmd = 'virsh destroy %s' % self.VM_NAME
-        ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
+        cmd = 'virsh destroy {}'.format(self.VM_NAME)
+        self._run_cmd_on_host(cmd)
 
     def undefine_vm_by_virsh(self):
-        cmd = 'virsh undefine %s' % self.VM_NAME
-        ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
+        cmd = 'virsh undefine {}'.format(self.VM_NAME)
+        self._run_cmd_on_host(cmd)
+
+    def get_no_vm_text_on_ui(self):
+        return self.get_text(self.NO_VM_EL)
 
     def get_vm_list_on_host(self):
         cmd = 'virsh list --all'
-        ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
-        return ret[1]
+        return self._run_cmd_on_host(cmd)
 
     def get_dumpxml_on_host(self):
-        cmd = 'virsh dumpxml %s' % self.VM_NAME
-        ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
-        self.vm_xml_info = xmltodict.parse(ret[1])
+        cmd = 'virsh dumpxml {}'.format(self.VM_NAME)
+        ret = self._run_cmd_on_host(cmd)
+        self.vm_xml_info = xmltodict.parse(ret)
 
     def get_vm_state_on_host(self):
-        cmd = 'virsh domstate %s' % self.VM_NAME
+        cmd = 'virsh domstate {}'.format(self.VM_NAME)
         ret = self.host.execute(cmd)
         if not ret[0]:
             return None
@@ -188,11 +183,9 @@ class MachinesCheckPage(SeleniumTest):
         return self.get_text(self.VM_STATE)
 
     def get_autostart_state_on_host(self):
-        cmd = 'virsh dominfo %s | grep -i autostart' % self.VM_NAME
-        ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
-        return ret[1].split(' ')[-1]
+        cmd = 'virsh dominfo {} | grep -i autostart'.format(self.VM_NAME)
+        ret = self._run_cmd_on_host(cmd)
+        return ret.split(' ')[-1]
 
     def get_overview_info_in_xml(self, key):
         if key == 'memory':
@@ -251,16 +244,13 @@ class MachinesCheckPage(SeleniumTest):
         return value
 
     def get_disk_info_on_ui(self, target, column):
+        disk = self.DISK_COLUMN_TEMPLATE.format(target)
         if column == 'readonly':
-            disk_bus = self.DISK_COLUMN_TEMPLATE % target + 'bus'
-            el_descriptor = "//*[@id='%s']//parent::*//following-sibling::*" % disk_bus.lstrip(
-                '#')
+            el_descriptor = self.DISK_COLUMN_READONLY.format(disk.lstrip('#'))
         elif column == 'source':
-            disk_source = self.DISK_COLUMN_TEMPLATE % target + 'source'
-            el_descriptor = "//*[@id='%s']//*[@class='machines-disks-source-value']" % disk_source.lstrip(
-                '#')
+            el_descriptor = self.DISK_COLUMN_SOURCE.format(disk)
         else:
-            el_descriptor = self.DISK_COLUMN_TEMPLATE % target + column
+            el_descriptor = disk + column
         return self.get_text(el_descriptor)
 
     def get_disk_count_on_ui(self):
@@ -276,11 +266,9 @@ class MachinesCheckPage(SeleniumTest):
         return value
 
     def get_network_state_on_host(self, interface):
-        cmd = 'virsh domif-getlink %s %s' % (self.VM_NAME, interface)
-        ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
-        return ret[1].split(' ')[-1]
+        cmd = 'virsh domif-getlink {} {}'.format(self.VM_NAME, interface)
+        ret = self._run_cmd_on_host(cmd)
+        return ret.split(' ')[-1]
 
     def get_network_info_in_xml(self, network, key):
         if key == 'type':
@@ -313,10 +301,11 @@ class MachinesCheckPage(SeleniumTest):
             if column == 'button':
                 parent = 'state'
                 son = 'button'
-            parent_id = self.NETWORK_COLUMN_TEMPLATE % seq_num + parent
-            el_descriptor = "//*[@id='%s']/%s" % (parent_id.lstrip('#'), son)
+            parent_id = self.NETWORK_COLUMN_TEMPLATE.format(seq_num) + parent
+            el_descriptor = "{} {}".format(parent_id, son)
         else:
-            el_descriptor = self.NETWORK_COLUMN_TEMPLATE % seq_num + column
+            el_descriptor = self.NETWORK_COLUMN_TEMPLATE.format(
+                seq_num) + column
         return self.get_text(el_descriptor)
 
     def get_network1_state_on_ui(self):

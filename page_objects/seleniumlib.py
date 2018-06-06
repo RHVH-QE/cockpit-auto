@@ -34,20 +34,20 @@ BY_MAP = {'CSS_SELECTOR': By.CSS_SELECTOR,
           'CLASS_NAME': By.CLASS_NAME,
           }
 
-SEPERATOR = ":::"
-
 
 def locator(el_descriptor):
-    if re.match(r'^//', el_descriptor):
-        by = BY_MAP.get('XPATH')
-        path = el_descriptor
-    elif re.match(r'^#', el_descriptor):
-        by = BY_MAP.get('ID')
-        path = el_descriptor.lstrip('#')
+    for key in BY_MAP:
+        pattern = r'^%s#' % key
+        if re.match(pattern, el_descriptor):
+            by = BY_MAP.get(key)
+            path = el_descriptor.lstrip('%s#' % key)
+            break
     else:
-        el_format = el_descriptor.format(SEPERATOR)
-        by = BY_MAP.get(el_format.split(SEPERATOR)[0].strip())
-        path = el_format.split(SEPERATOR)[-1].strip()
+        if re.match(r'^//', el_descriptor):
+            by = BY_MAP.get('XPATH')
+        else:
+            by = BY_MAP.get('CSS_SELECTOR')
+        path = el_descriptor
     return (by, path)
 
 
@@ -173,7 +173,7 @@ class SeleniumTest(Test):
         return element
 
     def switch_to_frame(self, frame_name, try_times=DEFAULT_TRY):
-        el_descriptor = "//iframe[contains(@name,'%s')]" % frame_name
+        el_descriptor = "iframe[name*='%s']" % frame_name
         self._wait(el_descriptor, cond=frame, try_times=try_times)
 
     def switch_to_default_content(self):
