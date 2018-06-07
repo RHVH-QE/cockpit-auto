@@ -1,6 +1,7 @@
 from time import sleep
 import xmltodict
 from seleniumlib import SeleniumTest
+from utils.machine import RunCmdError
 
 
 class MachinesCheckPage(SeleniumTest):
@@ -121,70 +122,64 @@ class MachinesCheckPage(SeleniumTest):
         elif 'shut off' == state:
             self.undefine_vm_by_virsh()
 
-    def _run_cmd_on_host(self, cmd):
-        ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `{}` failed on host".format(cmd))
-        return ret[1]
-
     def create_running_vm_by_virsh(self):
         """
         The vm.xml and vm.qcow2 should be copied to host beforehand,
         vm.qcow2 should be installed with OS.
         """
         cmd = 'virsh create /var/lib/libvirt/images/vm.xml'
-        self._run_cmd_on_host(cmd)
+        self.host.execute(cmd)
         # wait for guest os to start up.
         sleep(self.WAIT_VM_UP)
 
     def create_stop_vm_by_virsh(self):
         cmd = 'virsh define /var/lib/libvirt/images/vm.xml'
-        self._run_cmd_on_host(cmd)
+        self.host.execute(cmd)
 
     def start_vm_by_virsh(self):
         cmd = 'virsh start {}'.format(self.VM_NAME)
-        self._run_cmd_on_host(cmd)
+        self.host.execute(cmd)
         sleep(self.WAIT_VM_UP)
 
     def stop_vm_by_virsh(self):
         cmd = 'virsh shutdown {}'.format(self.VM_NAME)
-        self._run_cmd_on_host(cmd)
+        self.host.execute(cmd)
         sleep(self.WATI_VM_DOWN)
 
     def destroy_vm_by_virsh(self):
         cmd = 'virsh destroy {}'.format(self.VM_NAME)
-        self._run_cmd_on_host(cmd)
+        self.host.execute(cmd)
 
     def undefine_vm_by_virsh(self):
         cmd = 'virsh undefine {}'.format(self.VM_NAME)
-        self._run_cmd_on_host(cmd)
+        self.host.execute(cmd)
 
     def get_no_vm_text_on_ui(self):
         return self.get_text(self.NO_VM_EL)
 
     def get_vm_list_on_host(self):
         cmd = 'virsh list --all'
-        return self._run_cmd_on_host(cmd)
+        return self.host.execute(cmd)
 
     def get_dumpxml_on_host(self):
         cmd = 'virsh dumpxml {}'.format(self.VM_NAME)
-        ret = self._run_cmd_on_host(cmd)
+        ret = self.host.execute(cmd)
         self.vm_xml_info = xmltodict.parse(ret)
 
     def get_vm_state_on_host(self):
         cmd = 'virsh domstate {}'.format(self.VM_NAME)
-        ret = self.host.execute(cmd)
-        if not ret[0]:
+        try:
+            ret = self.host.execute(cmd)
+            return ret.split('\n')[0]
+        except RunCmdError:
             return None
-        else:
-            return ret[1].split('\n')[0]
 
     def get_vm_state_on_ui(self):
         return self.get_text(self.VM_STATE)
 
     def get_autostart_state_on_host(self):
         cmd = 'virsh dominfo {} | grep -i autostart'.format(self.VM_NAME)
-        ret = self._run_cmd_on_host(cmd)
+        ret = self.host.execute(cmd)
         return ret.split(' ')[-1]
 
     def get_overview_info_in_xml(self, key):
@@ -267,7 +262,7 @@ class MachinesCheckPage(SeleniumTest):
 
     def get_network_state_on_host(self, interface):
         cmd = 'virsh domif-getlink {} {}'.format(self.VM_NAME, interface)
-        ret = self._run_cmd_on_host(cmd)
+        ret = self.host.execute(cmd)
         return ret.split(' ')[-1]
 
     def get_network_info_in_xml(self, network, key):

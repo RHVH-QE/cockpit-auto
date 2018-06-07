@@ -142,12 +142,8 @@ class OvirtHostedEnginePage(SeleniumTest):
     def install_rhvm_appliance(self, appliance_path):
         rhvm_appliance_link = self.get_latest_rhvm_appliance(appliance_path)
         local_rhvm_appliance = "/root/%s" % rhvm_appliance_link.split('/')[-1]
-        output = self.host.execute("curl -o %s %s" % (local_rhvm_appliance,
-                                                      rhvm_appliance_link), timeout=200)
-        if output[0] == "False":
-            raise Exception(
-                "ERR: Failed to download the latest rhvm appliance")
-
+        self.host.execute("curl -o %s %s" % (local_rhvm_appliance,
+                                             rhvm_appliance_link), timeout=200)
         self.host.execute("rpm -ivh %s --force" % local_rhvm_appliance)
         self.host.execute("rm -rf %s" % local_rhvm_appliance)
 
@@ -161,14 +157,11 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def move_failed_setup_log(self):
         cmd = "find /var/log -type f |grep ovirt-hosted-engine-setup-.*.log"
-        ret = self.host.execute(cmd)
-        if ret[0] == True:
-            if os.path.exists("/var/old_failed_setup_log") == False:
-                self.host.execute("mkdir -p /var/old_failed_setup_log")
-            self.host.execute("mv /var/log/ovirt-hosted-engine-setup/*.log \
-                         /var/old_failed_setup_log/")
-        else:
-            pass
+        self.host.execute(cmd)
+        if not os.path.exists("/var/old_failed_setup_log"):
+            self.host.execute("mkdir -p /var/old_failed_setup_log")
+        self.host.execute("mv /var/log/ovirt-hosted-engine-setup/*.log \
+                        /var/old_failed_setup_log/")
 
     def wait_host_up(self, rhvm_ins, host_name, expect_status='up'):
         i = 0
@@ -212,15 +205,15 @@ class OvirtHostedEnginePage(SeleniumTest):
             "find /var/log -type f |grep ovirt-hosted-engine-setup-ansible-bootstrap_local_vm.*.log"
         )
         appliance_str = "'APPLIANCE_PASSWORD': '%s'" % root_pass
-        appliance_cmd = "grep '%s' %s" % (appliance_str, ret_log[1])
+        appliance_cmd = "grep '%s' %s" % (appliance_str, ret_log)
 
         admin_str = "'ADMIN_PASSWORD': '%s'" % admin_pass
-        admin_cmd = "grep '%s' %s" % (admin_str, ret_log[1])
+        admin_cmd = "grep '%s' %s" % (admin_str, ret_log)
 
         output_appliance_pass = self.host.execute(appliance_cmd)
         output_admin_pass = self.host.execute(admin_cmd)
 
-        if output_appliance_pass[1] or output_admin_pass[1]:
+        if output_appliance_pass or output_admin_pass:
             self.fail()
 
     def check_no_large_messages(self):
@@ -229,7 +222,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         time.sleep(10)
         size2 = self.host.execute(
             "ls -lnt /var/log/messages | awk '{print $5}'")
-        if int(size2[1]) - int(size1[1]) > 500:
+        if int(size2) - int(size1) > 500:
             self.fail()
 
     def add_additional_host_to_cluster(self, host_ip, host_name, host_pass,
@@ -251,7 +244,8 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def clean_hostengine_env(self):
         project_path = os.path.dirname(os.path.dirname(__file__))
-        clean_he_file = project_path + '/test_suites/test_ovirt_hostedengine.py.data/clean_he_env.py'
+        clean_he_file = project_path + \
+            '/test_suites/test_ovirt_hostedengine.py.data/clean_he_env.py'
         self.host.put_file(clean_he_file, '/root/clean_he_env.py')
         self.host.execute("python /root/clean_he_env.py")
 
@@ -265,8 +259,7 @@ class OvirtHostedEnginePage(SeleniumTest):
                 raise RuntimeError(
                     "Timeout waitting for host to available running HE.")
             ret = host_ins.execute(cmd)
-            true, false = True, False
-            if eval(ret[1])["2"]["score"] == 3400:
+            if eval(ret)["2"]["score"] == 3400:
                 break
             time.sleep(10)
             i += 1
@@ -316,11 +309,16 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.STORAGE_BUTTON)
             self.click(self.STORAGE_ISCSI)
             self.click(self.STORAGE_ADVANCED)
-            self.input_text(self.PORTAL_IP_ADDR, self.config_dict['iscsi_portal_ip'])
-            self.input_text(self.PORTAL_USER, self.config_dict['iscsi_portal_user'])
-            self.input_text(self.PORTAL_PASS, self.config_dict['iscsi_portal_pass'])
-            self.input_text(self.DISCOVERY_USER, self.config_dict['iscsi_discovery_user'])
-            self.input_text(self.DISCOVERY_PASS, self.config_dict['iscsi_discovery_pass'])
+            self.input_text(self.PORTAL_IP_ADDR,
+                            self.config_dict['iscsi_portal_ip'])
+            self.input_text(self.PORTAL_USER,
+                            self.config_dict['iscsi_portal_user'])
+            self.input_text(self.PORTAL_PASS,
+                            self.config_dict['iscsi_portal_pass'])
+            self.input_text(self.DISCOVERY_USER,
+                            self.config_dict['iscsi_discovery_user'])
+            self.input_text(self.DISCOVERY_PASS,
+                            self.config_dict['iscsi_discovery_pass'])
 
             self.click(self.RETRIEVE_TARGET)
             self.click(self.SELECTED_TARGET, 60)
@@ -414,7 +412,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.clean_hostengine_env()
         self.refresh()
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.node_zero_default_deploy()
+        self.node_zero_default_deploy_process()
 
     def add_additional_host_to_cluster_process(self):
         self.add_additional_host_to_cluster(
@@ -423,7 +421,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.config_dict['admin_pass'])
         self.check_additional_host_socre(self.config_dict['second_host'],
                                          self.config_dict['second_pass'])
-    
+
     def check_local_maintenance(self):
         self.put_host_to_local_maintenance()
 

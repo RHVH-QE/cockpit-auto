@@ -107,23 +107,16 @@ class OvirtDashboardPage(SeleniumTest):
     def nodectl_check_on_host(self):
         cmd = 'nodectl check --machine-readable'
         ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
-        return simplejson.loads(ret[1])
+        return simplejson.loads(ret)
 
     def nodectl_info_on_host(self):
         cmd = 'nodectl info --machine-readable'
         ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
-        return simplejson.loads(ret[1])
+        return simplejson.loads(ret)
 
     def get_ssh_key_on_host(self):
         cmd = "cat /etc/ssh/ssh_host_rsa_key | tr -d '\r\n'"
-        ret = self.host.execute(cmd)
-        if not ret[0]:
-            raise Exception("ERR: Run `%s` failed on host" % cmd)
-        return ret[1]
+        return self.host.execute(cmd)
 
     def gen_icon_from_status(self, status):
         if status == 'ok':

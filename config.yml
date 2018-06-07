@@ -13,5 +13,5 @@ selenium_hub: ""
 avocado_results_dir: /home/yourname/avocado/
 
 # versions of pkg/sys under test
-test_pkg_ver: cockpit-ovirt-dashboard-ver
-test_sys_ver: rhvh-ver
+test_pkg_ver: test
+test_sys_ver: test
