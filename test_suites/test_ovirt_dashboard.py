@@ -45,13 +45,21 @@ class TestOvirtDashboard(OvirtDashboardPage):
         self.assertEqual(expected_current_layer, current_layer_on_ui)
 
     def test_node_information(self):
+        global mem
+        mem = None
+
         def check_contents(dict_a):
+            global mem
             for key, value in dict_a.items():
                 if not isinstance(value, dict):
                     text = self.get_arg_value_on_node_info(key)
                     self.assertEqual(value, text)
                     continue
-                self.open_item_on_node_info(key)
+                if 'rhvh' in key:
+                    if mem:
+                        self.toggle_item_on_node_info(mem)
+                    mem = key
+                self.toggle_item_on_node_info(key)
                 if key == "layers":
                     for k, v in value.items():
                         text = self.get_layer_on_node_info(k)

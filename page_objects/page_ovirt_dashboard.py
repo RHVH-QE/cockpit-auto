@@ -9,20 +9,19 @@ class OvirtDashboardPage(SeleniumTest):
     """
 
     OVIRT_DASHBOARD_FRAME_NAME = "/ovirt-dashboard"
-    DASHBOARD_LINK = "//a[@href='#/dashboard']"
+    DASHBOARD_LINK = "a[href='#/dashboard']"
 
     OK_ICON = "pficon-ok"
     WARN_ICON = "pficon-warning-triangle-o"
 
     # Node Health
-    _HEALTH = "//td[text()='Health']//following-sibling::td"
-    HEALTH_TEXT = _HEALTH + "//a/div"
-    HEALTH_ICON = _HEALTH + "//a//span"
+    HEALTH_TEXT = "tbody:nth-child(2) tr:nth-child(1) td:nth-child(2) a div"
+    HEALTH_ICON = HEALTH_TEXT + " span"
 
     NODE_HEALTH_ICON = "//*[text()='%s']//following-sibling::*//*[contains(@class, 'pficon')]"
 
     # Node layer
-    CURRENT_LAYER_LINK = "//*[text()='Current Layer']//following-sibling::*//a"
+    CURRENT_LAYER_LINK = "tbody:nth-child(2) tr:nth-child(2) td:nth-child(2) a"
 
     # Node information
     NODE_INFO_ITEM = "//*[@class='accordion-header' and text()='%s']"
@@ -30,20 +29,17 @@ class OvirtDashboardPage(SeleniumTest):
     NODE_INFO_LAYER = "//*[text()='%s']//following-sibling::*"
 
     # Rollback button
-    ROLLBACK_BUTTON_ON_HOME = "//button[text()='Rollback']"
-    ROLLBACK_BUTTON_ON_LAYERS_DISABLE = "//*[text()='Available Layers']//parent::*//following-sibling::*" \
-        "//*[text()='%s']//following-sibling::*/button[text()='Rollback' and contains(@class, 'disabled')]"
+    ROLLBACK_BUTTON_ON_HOME = "tbody:nth-child(2) tr:nth-child(2) td:nth-child(2) button"
     ROLLBACK_BUTTON_ON_LAYERS = "//*[text()='Available Layers']//parent::*//following-sibling::*" \
         "//*[text()='%s']//following-sibling::*/button[text()='Rollback']"
     ROLLBACK_ALERT = "//*[contains(@class, 'alert') and contains(text(), '%s')]"
 
     # System
-    _SYSTEM_INFO_LINK = "//*[contains(text(), '%s')]//following-sibling::*//a[text()='View']"
-    NETWORK_INFO_LINK = _SYSTEM_INFO_LINK % 'Networking Information'
-    SYSTEM_LOGS_LINK = _SYSTEM_INFO_LINK % 'System Logs'
-    STORAGE_LINK = _SYSTEM_INFO_LINK % 'Storage'
-    SSH_HOST_KEY_LINK = _SYSTEM_INFO_LINK % 'SSH Host Key'
-    SSH_HOST_KEY_CONTENT = "//*[contains(text(), 'BEGIN RSA PRIVATE KEY')]"
+    NETWORK_INFO_LINK = "tbody:nth-child(4) tr:nth-child(1) a"
+    SYSTEM_LOGS_LINK = "tbody:nth-child(4) tr:nth-child(2) a"
+    STORAGE_LINK = "tbody:nth-child(4) tr:nth-child(3) a"
+    SSH_HOST_KEY_LINK = "tbody:nth-child(5) a"
+    SSH_HOST_KEY_CONTENT = "tbody:nth-child(5) .modal-body div"
 
     def open_page(self):
         self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
@@ -70,7 +66,7 @@ class OvirtDashboardPage(SeleniumTest):
     def open_node_information_window(self):
         self.click(self.CURRENT_LAYER_LINK)
 
-    def open_item_on_node_info(self, item_name):
+    def toggle_item_on_node_info(self, item_name):
         self.click(self.NODE_INFO_ITEM % item_name)
 
     def get_arg_value_on_node_info(self, arg_name):
