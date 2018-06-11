@@ -143,8 +143,8 @@ class OvirtHostedEnginePage(SeleniumTest):
         rhvm_appliance_link = self.get_latest_rhvm_appliance(appliance_path)
         local_rhvm_appliance = "/root/%s" % rhvm_appliance_link.split('/')[-1]
         self.host.execute("curl -o %s %s" % (local_rhvm_appliance,
-                                             rhvm_appliance_link), timeout=200)
-        self.host.execute("rpm -ivh %s --force" % local_rhvm_appliance)
+                                             rhvm_appliance_link), timeout=400)
+        self.host.execute("rpm -ivh %s --force" % local_rhvm_appliance, timeout=100)
         self.host.execute("rm -rf %s" % local_rhvm_appliance)
 
     def add_to_etc_host(self):
@@ -157,11 +157,15 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def move_failed_setup_log(self):
         cmd = "find /var/log -type f |grep ovirt-hosted-engine-setup-.*.log"
-        self.host.execute(cmd)
         if not os.path.exists("/var/old_failed_setup_log"):
             self.host.execute("mkdir -p /var/old_failed_setup_log")
-        self.host.execute("mv /var/log/ovirt-hosted-engine-setup/*.log \
-                        /var/old_failed_setup_log/")
+
+        try:
+            self.host.execute(cmd)
+            self.host.execute("mv /var/log/ovirt-hosted-engine-setup/*.log \
+                            /var/old_failed_setup_log/")
+        except Exception as e:
+            pass
 
     def wait_host_up(self, rhvm_ins, host_name, expect_status='up'):
         i = 0
