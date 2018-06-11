@@ -204,16 +204,17 @@ class OvirtHostedEnginePage(SeleniumTest):
         ret_log = self.host.execute(
             "find /var/log -type f |grep ovirt-hosted-engine-setup-ansible-bootstrap_local_vm.*.log"
         )
-        appliance_str = "'APPLIANCE_PASSWORD': '%s'" % root_pass
-        appliance_cmd = "grep '%s' %s" % (appliance_str, ret_log)
+        appliance_str = "'APPLIANCE_PASSWORD': u'%s'" % root_pass
+        appliance_cmd = 'grep "%s" %s' % (appliance_str, ret_log)
 
-        admin_str = "'ADMIN_PASSWORD': '%s'" % admin_pass
-        admin_cmd = "grep '%s' %s" % (admin_str, ret_log)
+        admin_str = "'ADMIN_PASSWORD': u'%s'" % admin_pass
+        admin_cmd = 'grep "%s" %s' % (admin_str, ret_log)
 
-        output_appliance_pass = self.host.execute(appliance_cmd)
-        output_admin_pass = self.host.execute(admin_cmd)
-
-        if output_appliance_pass or output_admin_pass:
+        try:
+            self.host.execute(appliance_cmd) or self.host.execute(admin_cmd)
+        except Exception as e:
+            pass
+        else:
             self.fail()
 
     def check_no_large_messages(self):
