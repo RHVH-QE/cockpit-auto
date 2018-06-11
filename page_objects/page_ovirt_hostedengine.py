@@ -214,11 +214,10 @@ class OvirtHostedEnginePage(SeleniumTest):
         admin_str = "'ADMIN_PASSWORD': u'%s'" % admin_pass
         admin_cmd = 'grep "%s" %s' % (admin_str, ret_log)
 
-        try:
-            self.host.execute(appliance_cmd) or self.host.execute(admin_cmd)
-        except Exception as e:
-            pass
-        else:
+        output_appliance_pass = self.host.execute(appliance_cmd, raise_exception=False)
+        output_admin_pass = self.host.execute(admin_cmd, raise_exception=False)
+
+        if output_admin_pass.succeeded or output_appliance_pass.succeeded:
             self.fail()
 
     def check_no_large_messages(self):
