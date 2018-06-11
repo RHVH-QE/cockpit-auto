@@ -157,7 +157,8 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def move_failed_setup_log(self):
         cmd = "find /var/log -type f |grep ovirt-hosted-engine-setup-.*.log"
-        if not os.path.exists("/var/old_failed_setup_log"):
+        test_cmd = "test -e /var/old_failed_setup_log && echo exist"
+        if not self.host.execute(test_cmd, raise_exception=False).succeeded:
             self.host.execute("mkdir -p /var/old_failed_setup_log")
 
         try:
