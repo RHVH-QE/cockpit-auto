@@ -13,7 +13,7 @@ class Machine(object):
         self.host_user = host_user
         self.host_passwd = host_passwd
 
-    def execute(self, cmd, timeout=60):
+    def execute(self, cmd, timeout=60, raise_exception=True):
         with settings(
                 host_string=self.host_string,
                 user=self.host_user,
@@ -21,10 +21,9 @@ class Machine(object):
                 disable_known_hosts=True,
                 connection_attempts=60):
             ret = run(cmd, quiet=True, timeout=timeout)
-            if ret.succeeded:
-                return ret
-            else:
+            if not ret.succeeded and raise_exception:
                 raise RunCmdError("ERR: Run `{}` failed on host".format(cmd))
+            return ret
 
     def get_file(self, src_path, dst_path):
         with settings(
