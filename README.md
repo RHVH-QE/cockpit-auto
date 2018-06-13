@@ -18,7 +18,7 @@ $ pipenv shell
 3. Configure config.yml with correct parameters.
 4. Run tests
 ```sh
-$ python run.py $tags -g $grid -b $browser
+$ python run.py $tags -m $mode -b $browser
 ```
 
 **$tags** is the avocado tests filter, for example:
