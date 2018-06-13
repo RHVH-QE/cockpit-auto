@@ -6,6 +6,7 @@ import argparse
 import simplejson
 import subprocess
 from collections import OrderedDict
+from prepare_browser import setup_browser, destroy_browser
 
 
 def gen_polarion_results(avocado_results_dir):
@@ -37,32 +38,18 @@ def gen_polarion_results(avocado_results_dir):
                 polarion_results, indent=4))
 
 
-def create_selenium_grid_by_docker():
-    subprocess.check_call(["docker-compose", "up", "-d"])
-
-
-def del_selenium_grid_by_docker():
-    subprocess.check_call(["docker-compose", "down"])
-
-
-def run_tests(tags, browser, grid):
+def run_tests(tags):
     config_dict = yaml.load(open('./config.yml'))
 
     os.environ['HOST_STRING'] = config_dict['host_string']
     os.environ['USERNAME'] = config_dict['host_user']
     os.environ['PASSWD'] = config_dict['host_pass']
-    os.environ['BROWSER'] = browser
-    if grid == 'auto':
-        create_selenium_grid_by_docker()
-        os.environ['HUB'] = 'localhost'
-    elif grid == 'manual':
-        os.environ['HUB'] = config_dict['selenium_hub']
 
     avocado_root_dir = config_dict['avocado_results_dir']
     test_pkg_ver = config_dict['test_pkg_ver']
     test_sys_ver = config_dict['test_sys_ver']
     avocado_results_dir = avocado_root_dir + \
-        test_pkg_ver + "_" + test_sys_ver + "/" + browser
+        test_pkg_ver + "_" + test_sys_ver + "/" + os.environ['BROWSER']
 
     tag_filter_list = ["--filter-by-tags=%s" %
                        x.replace(' ', '') for x in tags.split('|')]
@@ -71,8 +58,6 @@ def run_tests(tags, browser, grid):
     avocado_run_cmd.extend(tag_filter_list)
 
     subprocess.call(avocado_run_cmd)
-    if grid == 'auto':
-        del_selenium_grid_by_docker()
     gen_polarion_results(avocado_results_dir)
 
 
@@ -89,14 +74,21 @@ def main():
     parser.add_argument("-b", "--browser", choices=['firefox', 'chrome', 'ie'],
                         default='chrome',
                         help="selenium browser choice")
-    parser.add_argument('-g', '--grid', choices=['none', 'auto', 'manual'],
-                        default='none',
-                        help=('selenium grid choice. none means not to use grid, '
-                              'auto is to create grid automatically by docker-compose on the local machine, '
-                              'manual is to use a grid created manually in advance.'))
+    parser.add_argument('-m', '--mode', choices=['local', 'grid', 'standalone', 'manual'],
+                        default='local',
+                        help=("browser setup mode. "
+                              "local is to use local webdriver; "
+                              "grid is to create grid automatically by docker-compose on local machine; "
+                              "standalone is to create a standalone selenium server by docker command line on local machine; "
+                              "manual is to use a grid or standalone server created manully."))
 
     args = parser.parse_args()
-    run_tests(args.tags, args.browser, args.grid)
+    mode = args.mode
+    browser = args.browser
+
+    setup_browser(mode, browser)
+    run_tests(args.tags)
+    destroy_browser(mode)
 
 
 if __name__ == '__main__':

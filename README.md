@@ -27,11 +27,13 @@ $ python run.py $tags -g $grid -b $browser
 >
 >`python run.py ovirt_hostedengine,tier1` is to run the tests tagged with both ovirt_hostedengine and tier1.
 
-**$grid** defines how to use selenium grid. It has three values, **none**, **auto** and **manual**. If this parameter is omitted, none is used.
+**$mode** defines how to setup browser. It has four values, **local**, **grid**, **standalone** and **manual**. If this parameter is omitted, **local** is used.
 
-**none** means not to use grid. The program will use local webdriver to run tests. Only chrome, firefox are supported in this case, you need to download chromedriver, geckodriver and put them under /usr/local/bin.
+**local** means to use local webdriver. You need to download chromedriver, geckodriver and put them under /usr/local/bin. Only chrome and firefox are supported.
   
-**auto** is to create grid automatically by docker-compose on the local machine. You have to install docker-compose beforehand. Only chrom, firefox are supported in this case.
+**grid** is to create grid automatically by docker-compose on local machine. You have to install docker-compose beforehand. Only chrome and firefox are supported.
+
+**standalone** is to create a standalone selenium server by docker command line on local machine. Only chrome and firefox are supported.
 
 **manual** is to use a grid created manually in advance. Here list the steps to configure a grid supporting Internet Explorer:
   
@@ -47,4 +49,4 @@ java -jar path-to-selenium-standalone-server -role hub
 java -Dwebdriver.ie.driver=path-to-ie-driver -jar path-to-selenium-standalone-server -role webdriver -hub http://hubip:4444/grid/register
 ```
 
-**$browser** defines browser type, includes chrome, firefox, explorer. If this option is omitted, chrome is used.
+**$browser** defines browser type, includes chrome, firefox, ie. If this option is omitted, chrome is used.
