@@ -157,12 +157,12 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def move_failed_setup_log(self):
         cmd = "find /var/log -type f |grep ovirt-hosted-engine-setup-.*.log"
-        test_cmd = "test -e /var/old_failed_setup_log && echo exist"
-        if not self.host.execute(test_cmd, raise_exception=False).succeeded:
-            self.host.execute("mkdir -p /var/old_failed_setup_log")
+        test_cmd = "test -e /var/old_failed_setup_log"
 
         try:
             self.host.execute(cmd)
+            if not self.host.execute(test_cmd, raise_exception=False).succeeded:
+                self.host.execute("mkdir -p /var/old_failed_setup_log")
             self.host.execute("mv /var/log/ovirt-hosted-engine-setup/*.log \
                             /var/old_failed_setup_log/")
         except Exception as e:
