@@ -75,7 +75,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier2
         """
-        self.node_zero_gluster_deploy_process()
+        self.node_zero_static_v4_deploy_process()
 
     def test_hostedengine_redeploy(self):
         """
