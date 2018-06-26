@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+
+first_host_name: first_host_name
+second_host_name: second_host_name
+
+# Engine
+fqdn: fqdn
+port: port
+username: username
+passwd: passwd

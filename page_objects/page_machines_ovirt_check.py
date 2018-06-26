@@ -1,10 +1,10 @@
-from time import sleep
+import os
+import yaml
 import xmltodict
+from time import sleep
 from seleniumlib import SeleniumTest
 from utils.machine import RunCmdError
 from utils.rhvmapi import RhevmAction
-import os
-
 
 class MachinesOvirtCheckPage(SeleniumTest):
     """
@@ -13,14 +13,8 @@ class MachinesOvirtCheckPage(SeleniumTest):
     WAIT_VM_UP = 10
     WATI_VM_DOWN = 5
     WAIT_VM_SUSPEND = 15
-    FIRST_HOST_NAME = "ibm-x3650m5-06.lab.eng.pek2.redhat.com"
-    SECOND_HOST_NAME = "cockpit-vm"
-    VM_NAME = "HostedEngine"
-    FQDN = "rhevh-hostedengine-vm-04.lab.eng.pek2.redhat.com"
-    PORT = "443"
 
-    USERNAME = "admin"
-    PASSWD = "password"
+    VM_NAME = "HostedEngine"
 
     MACHINES_OVIRT_LINK = "#sidebar-menu a[href='/machines']"
     MACHINES_OVIRT_FRAME_NAME = "/machines"
@@ -102,7 +96,11 @@ class MachinesOvirtCheckPage(SeleniumTest):
 
 
     def open_page(self):
-        self.rhvm = RhevmAction(self.FQDN, self.USERNAME, self.PASSWD)
+        a = self.get_data('ovirt_hostedengine.yml')
+        self.config_dict = yaml.load(open(a))
+
+        self.rhvm = RhevmAction(self.config_dict['fqdn'], self.config_dict['username'],
+                                 self.config_dict['passwd'])
         self.click(self.LOCALHOST_BUTTON)
         self.click(self.MACHINES_OVIRT_LINK)
         self.switch_to_frame(self.MACHINES_OVIRT_FRAME_NAME)
@@ -110,14 +108,14 @@ class MachinesOvirtCheckPage(SeleniumTest):
         test_cmd = "test -f /etc/cockpit/machines-ovirt.config"
         if not self.host.execute(test_cmd, raise_exception=False).succeeded:
             self.assert_element_visible(self.REGISTER_OVIRT_BUTTON)
-            self.input_text(self.INPUT_FQDN, self.FQDN)
-            self.input_text(self.INPUT_PORT, self.PORT)
+            self.input_text(self.INPUT_FQDN, self.config_dict['fqdn'])
+            self.input_text(self.INPUT_PORT, self.config_dict['port'])
             self.click(self.REGISTER_OVIRT_BUTTON)
 
         sleep(5)
         self.driver.get(self.get_current_url())
-        self.input_text(self.ENGINE_USERNAME, self.USERNAME)
-        self.input_text(self.ENGINE_PASSWD, self.PASSWD)
+        self.input_text(self.ENGINE_USERNAME, self.config_dict['username'])
+        self.input_text(self.ENGINE_PASSWD, self.config_dict['passwd'])
         self.click(self.LOGININ_BUTTON)
         sleep(5)
 
@@ -136,7 +134,7 @@ class MachinesOvirtCheckPage(SeleniumTest):
         while True:
             if i > 50:
                 raise RuntimeError("Timeout waitting for host to maintenance")
-            host_status = self.rhvm.get_host_status(self.FIRST_HOST_NAME)
+            host_status = self.rhvm.get_host_status(self.config_dict['first_host_name'])
 
             if host_status == 'maintenance':
                 return True
@@ -270,7 +268,7 @@ class MachinesOvirtCheckPage(SeleniumTest):
         if key == 'ovirt-description':
             value = self.get_vm_description()
         if key == 'ovirt-fqdn':
-            value = self.FQDN
+            value = self.config_dict['fqdn']
         if key == 'ovirt-starttime':
             value = ''  # Here is a bug
         return value
