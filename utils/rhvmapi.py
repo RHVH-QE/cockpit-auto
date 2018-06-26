@@ -306,6 +306,14 @@ class RhevmAction:
         else:
             return None
 
+    def get_host_status(self, host_name):
+        api_url_base = self.api_url.format(
+            rhevm_fqdn=self.rhevm_fqdn, item="hosts")
+        host = self.list_host(key="name", value=host_name)
+
+        if host:
+            return host.get('status')
+
     def update_available_check(self, host_id):
         rhvm_version = self.rhevm_fqdn.split('-')[0]
 
@@ -1092,6 +1100,20 @@ class RhevmAction:
         else:
             return
 
+    def get_vm_ovirt_info_on_engine(self, vm_name):
+        api_url_base = self.api_url.format(
+            rhevm_fqdn=self.rhevm_fqdn, item="vms")
+
+        vm_ovirt_info = {}
+        vm_ovirt_info['ovirt-description'] = self.list_vm(vm_name)['description']
+        vm_ovirt_info['ovirt-ostype'] = self.list_vm(vm_name)['os']['type']
+        # vm_ha: false-> disabled, vm_stateless : false -> no
+        vm_ovirt_info['ovirt-ha'] = self.list_vm(vm_name)['high_availability']['enabled']
+        vm_ovirt_info['ovirt-stateless'] = self.list_vm(vm_name)['stateless']
+        vm_ovirt_info['ovirt-optimizedfor'] = self.list_vm(vm_name)['type']
+        vm_ovirt_info['vm-status'] = self.list_vm(vm_name)['status']
+        vm_ovirt_info['host_id'] = self.list_vm(vm_name)['host']['id']
+        return vm_ovirt_info
 
 if __name__ == '__main__':
     rhvm = RhevmAction("rhvm42-vlan50-1.lab.eng.pek2.redhat.com")

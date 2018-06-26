@@ -115,3 +115,4 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         self.check_global_maintenance()
         self.assert_element_visible(self.GLOBAL_HINT)
+        self.check_remove_maintenance()
