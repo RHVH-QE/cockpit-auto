@@ -128,6 +128,73 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
         self.open_vm_row()
         self.sendnmi_vm_on_ui()
 
+    def test_vdsm_conf_in_ui(self):
+        """
+        :avocado: tags=ovirt
+        """
+        self.check_vdsm_conf_in_ui()
+
+    def test_save_vdsm_conf_in_ui(self):
+        """
+        :avocado: tags=ovirt
+        """
+        self.check_save_vdsm_conf_in_ui()
+
+    def test_vdsm_service_link(self):
+        """
+        :avocado: tags=ovirt
+        """
+        self.click_vdsm_service_mgmt()
+
+    def test_reload_vdsm_conf(self):
+        """
+        :avocado: tags=ovirt
+        """
+        self.check_reload_vdsm_conf_in_ui()
+
+    def test_cluster_info(self):
+        """
+        :avocado: tags=ovirt
+        """
+        self.get_dumpxml_on_host()
+        self.click(self.CLUSTER_TOPNAV)
+        for key in self.CLUSTER_INFO_NAME:
+            value_in_host = self.get_cluster_info_in_xml(key)
+            value_in_ui = self.get_cluster_info_in_ui(key)
+            self.assertEqual(value_in_host, value_in_ui)
+
+    def test_cluster_host_link(self):
+        """
+        :avocado: tags=ovirt
+        """
+        self.click(self.CLUSTER_TOPNAV)
+        self.click_cluster_host_link()
+
+    def test_template_info(self):
+        """
+        :avocado: tags=ovirt
+        """
+        self.click(self.TEMPLATES_TOPNAV)
+        for key in self.TEMPLATE_INFO_NAME:
+            value_in_host = self.get_template_info_on_host(key)
+            value_in_ui = self.get_template_info_in_ui(key)
+            self.assertEqual(value_in_host, value_in_ui)
+
+    def test_create_vm_by_template(self):
+        """
+        :avocado: tags=ovirt
+        """
+        self.click(self.TEMPLATES_TOPNAV)
+        self.create_vm_by_template()
+
+    def test_create_vm_twice(self):
+        """
+        :avocado: tags=ovirt
+        """
+        self.click(self.TEMPLATES_TOPNAV)
+        self.check_create_vm_twice()
+
+
 
 
 

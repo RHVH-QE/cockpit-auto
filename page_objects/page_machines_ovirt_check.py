@@ -15,7 +15,9 @@ class MachinesOvirtCheckPage(SeleniumTest):
     WAIT_VM_SUSPEND = 15
 
     VM_NAME = "HostedEngine"
+    TEMPLATE = "Blank"
 
+    # Host Page
     MACHINES_OVIRT_LINK = "#sidebar-menu a[href='/machines']"
     MACHINES_OVIRT_FRAME_NAME = "/machines"
 
@@ -94,9 +96,53 @@ class MachinesOvirtCheckPage(SeleniumTest):
     MIGRATE_VM_BUTTON = "#vm-{}-ovirt-migratetobutton".format(VM_NAME)
     CONFIRM_MIGRATE = "//button[text()='Confirm migration']"
 
+    _TOPNAV_TEMPLATE = "#ovirt-topnav-{}"
+    # Cluster Page
+    CLUSTER_TOPNAV = _TOPNAV_TEMPLATE.format('clustervms')
+    CLUSTER_VM_NAME = "tbody>tr>th"
+    CLUSTER_VM_DESCRIPTION = "tbody>tr>td:nth-of-type(2)>span"
+    CLUSTER_VM_TEMPLATE = "tbody>tr>td:nth-of-type(3)>span"
+    CLUSTER_VM_MEMORY = "tbody>tr>td:nth-of-type(4)>div"
+    CLUSTER_VM_VCPU = "tbody>tr>td:nth-of-type(5)>span"
+    CLUSTER_VM_OS = "tbody>tr>td:nth-of-type(6)>div"
+    CLUSTER_VM_HA = "tbody>tr>td:nth-of-type(7)>div"
+    CLUSTER_VM_STATELESS = "tbody>tr>td:nth-of-type(8)>div"
+    CLUSTER_HOST_LINK = "tbody>tr>td:nth-of-type(9)>a"
+    CLUSTER_VM_ACTION = "tbody>tr>td:nth-of-type(10)"
+    CLUSTER_VM_STATE = "tbody>tr>td:nth-of-type(11)>span>span"
+
+    CLUSTER_INFO_NAME = ['name', 'description', 'template', 'memory',
+                        'vcpus', 'os', 'ha', 'stateless', 'action', 'state']
+
+    # Templates Page
+    TEMPLATES_TOPNAV = _TOPNAV_TEMPLATE.format('clustertemplates')
+    TEMPLATE_INFO_NAME = ['name', 'version', 'base-template', 'description',
+                            'memory', 'vcpus', 'os', 'ha', 'stateless']
+    TEMPLATE_NAME = "tbody>tr>th"
+    TEMPLATE_VERSION = "tbody>tr>td:nth-of-type(2)"
+    TEMPLATE_BASE = "tbody>tr>td:nth-of-type(3)"
+    TEMPLATE_DESCRIPTION = "tbody>tr>td:nth-of-type(4)>span"
+    TEMPLATE_MEMORY = "tbody>tr>td:nth-of-type(5)>div"
+    TEMPLATE_VCPUS = "tbody>tr>td:nth-of-type(6)>span"
+    TEMPLATE_OS = "tbody>tr>td:nth-of-type(7)>div"
+    TEMPLATE_HA = "tbody>tr>td:nth-of-type(8)>div"
+    TEMPLATE_STATELESS = "tbody>tr>td:nth-of-type(9)>div"
+    TEMPLATE_ACTION = "tbody>tr>td:nth-of-type(10)>span>button"
+
+    TEMPLATE_NEW_VM = "//input[@placeholder='Enter New VM name']"
+    CREATE_NEW_VM_BUTTON = "//button[text()='Create']"
+    CREATE_NEW_VM_ERROR = "#clustervm-Blank-actionerror"
+
+    # VDSM Page
+    VDSM_TOPNAV = _TOPNAV_TEMPLATE.format('vdsm')
+    VDSM_TEXTAREA = ".ovirt-provider-vdsm-editor"
+    VDSM_SAVE_BUTTON = "//button[text()='Save']"
+    VDSM_SAVE_OK = "//button[text()='OK']"
+    VDSM_SERVICE_LINK = "//a[text()='VDSM Service Management']"
+    VDSM_RELOAD_BUTTON = "//button[text()='Reload']"
 
     def open_page(self):
-        a = self.get_data('ovirt_hostedengine.yml')
+        a = self.get_data('machines_ovirt.yml')
         self.config_dict = yaml.load(open(a))
 
         self.rhvm = RhevmAction(self.config_dict['fqdn'], self.config_dict['username'],
@@ -168,7 +214,8 @@ class MachinesOvirtCheckPage(SeleniumTest):
         sleep(self.WATI_VM_DOWN)
         #sleep(self.WAIT_VM_UP)
         self.assert_element_visible(self.BUTTON_WARN)
-        return self.get_text(self.BUTTON_WARN) == 'REBOOT action failed'
+        if self.get_text(self.BUTTON_WARN) != 'REBOOT action failed':
+            self.fail()
 
     def force_reboot_vm_on_ui(self):
         self.click(self.RESTART_DROPDOWN_BUTTON)
@@ -176,26 +223,30 @@ class MachinesOvirtCheckPage(SeleniumTest):
         sleep(self.WATI_VM_DOWN)
         #sleep(self.WAIT_VM_UP)
         self.assert_element_visible(self.BUTTON_WARN)
-        return self.get_text(self.BUTTON_WARN) == 'REBOOT action failed'
+        if self.get_text(self.BUTTON_WARN) != 'REBOOT action failed':
+            self.fail()
 
     def shutdown_vm_on_ui(self):
         self.click(self.SHUTDOWN_BUTTON)
         sleep(self.WATI_VM_DOWN)
         self.assert_element_visible(self.BUTTON_WARN)
-        return self.get_text(self.BUTTON_WARN) == 'SHUTDOWN action failed'
+        if self.get_text(self.BUTTON_WARN) != 'SHUTDOWN action failed':
+            self.fail()
 
     def forceoff_vm_on_ui(self):
         self.click(self.SHUTDOWN_DROPDOWN_BUTTON)
         self.click(self.FORCEOFF_BUTTON)
         sleep(self.WATI_VM_DOWN)
         self.assert_element_visible(self.BUTTON_WARN)
-        return self.get_text(self.BUTTON_WARN) == 'SHUTDOWN action failed'
+        if self.get_text(self.BUTTON_WARN) != 'SHUTDOWN action failed':
+            self.fail()
 
     def sendnmi_vm_on_ui(self):
         self.click(self.SHUTDOWN_DROPDOWN_BUTTON)
         self.click(self.SENDNMI_BUTTON)
         self.assert_element_visible(self.BUTTON_WARN)
-        return self.get_text(self.BUTTON_WARN) == 'VM SEND Non-Maskable Interrrupt action failed'
+        if self.get_text(self.BUTTON_WARN) != 'VM SEND Non-Maskable Interrrupt action failed':
+            self.fail()
 
     def suspend_vm_on_ui(self):
         # Maybe a bug here, should do more testing
@@ -439,3 +490,176 @@ class MachinesOvirtCheckPage(SeleniumTest):
                 return True
             sleep(10)
             i += 1
+
+    # Check the Cluster Page
+    def get_cluster_info_in_xml(self, key):
+        if key == 'memory':
+            value = int(self.dict_info['guestNumaNodes'][0]['memory']) / 1024 + 1
+        if key == 'vcpus':
+            value = len([i for i in self.dict_info['guestNumaNodes'][0]['cpus'].split(',')])
+        if key == 'os':
+            value = self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)['ovirt-ostype']
+        if key == 'template':
+            value = 'Blank'
+        if key == 'description':
+            value = self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)['ovirt-description']
+        if key == 'name':
+            value = self.VM_NAME
+        if key == 'ha':
+            value = self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)['ovirt-ha']
+        if key == 'stateless':
+            value = self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)['ovirt-stateless']
+        if key == 'state':
+            value = self.get_vm_state_on_host()
+        if key == 'action':
+            value = ''
+        # exclude the "host" key
+        return value
+
+    def get_cluster_info_in_ui(self, key):
+        if key == 'memory':
+            value = int(self.get_text(self.CLUSTER_VM_MEMORY).split(' ')[0].split('.')[0])
+        if key == 'vcpus':
+            value = int(self.get_text(self.CLUSTER_VM_VCPU))
+        if key == 'os':
+            value = self.get_text(self.CLUSTER_VM_OS)
+        if key == 'template':
+            value = self.get_text(self.CLUSTER_VM_TEMPLATE)
+        if key == 'description':
+            value = self.get_text(self.CLUSTER_VM_DESCRIPTION)
+        if key == 'name':
+            value = self.get_text(self.CLUSTER_VM_NAME)
+        if key == 'ha':
+            value = self.get_text(self.CLUSTER_VM_HA)
+            if value == 'no':
+                value = 'false'
+            else:
+                value = 'true'
+        if key == 'stateless':
+            value = self.get_text(self.CLUSTER_VM_STATELESS)
+            if value == 'no':
+                value = 'false'
+            else:
+                value = 'true'
+        if key == 'state':
+            value = self.get_text(self.CLUSTER_VM_STATE)
+        if key == 'action':
+            value = self.get_text(self.CLUSTER_VM_ACTION)
+        # exclude the "host" key
+        return value
+
+    def click_cluster_host_link(self):
+        self.click(self.CLUSTER_HOST_LINK)
+        link = self.get_current_url()
+        sleep(2)
+        if link != 'https://{}:9090/machines'.format(self.config_dict['host_ip']):
+            self.fail()
+
+    # Check the Templates Page
+    def get_template_info_on_host(self, key):
+        value = self.rhvm.get_template_info_on_engine(self.TEMPLATE)[key]
+        return value
+
+    def get_template_info_in_ui(self, key):
+        if key == 'name':
+            value = self.get_text(self.TEMPLATE_NAME)
+        if key == 'version':
+            value = self.get_text(self.TEMPLATE_VERSION)
+        if key == 'base-template':
+            value = self.get_text(self.TEMPLATE_BASE)
+            if value == 'Blank':
+                value = '00000000-0000-0000-0000-000000000000'
+            else:
+                value = '00000000-0000-0000-0000-000000000001' # Hard Code
+        if key == 'description':
+            value = self.get_text(self.TEMPLATE_DESCRIPTION)
+        if key == 'memory':
+            value = str(int(self.get_text(self.TEMPLATE_MEMORY).split(' ')[0])*1024*1024*1024)
+        if key == 'vcpus':
+            value = self.get_text(self.TEMPLATE_VCPUS)
+        if key == 'os':
+            value = self.get_text(self.TEMPLATE_OS)
+        if key == 'stateless':
+            value = self.get_text(self.TEMPLATE_STATELESS)
+            if value == 'no':
+                value = 'false'
+            else:
+                value = 'true'
+        if key == 'ha':
+            value = self.get_text(self.TEMPLATE_HA)
+            if value == 'no':
+                value = 'false'
+            else:
+                value = 'true'
+        return value
+
+    def create_vm_by_template(self):
+        self.click(self.TEMPLATE_ACTION)
+        self.input_text(self.TEMPLATE_NEW_VM, self.config_dict['new_vm'])
+        self.click(self.CREATE_NEW_VM_BUTTON)
+        sleep(2)
+        self.click(self.CLUSTER_TOPNAV)
+        sleep(10)
+
+        new_vm_name = self.rhvm.list_vm(self.config_dict['new_vm'])
+        if new_vm_name != self.config_dict['new_vm']:
+            self.fail()
+
+    def check_create_vm_twice(self):
+        self.click(self.TEMPLATE_ACTION)
+        self.input_text(self.TEMPLATE_NEW_VM, self.config_dict['new_vm'])
+        self.click(self.CREATE_NEW_VM_BUTTON)
+        sleep(2)
+        self.assert_element_visible(self.CREATE_NEW_VM_ERROR)
+
+    # Check the VDSM Page
+    def get_vdsm_conf_file(self):
+        try:
+            self.host.get_file("/etc/vdsm/vdsm.conf", "vdsm.conf")
+            fp = open('vdsm.conf', 'r+').read()
+        except RunCmdError:
+            return None
+        return fp
+
+    def check_vdsm_conf_in_ui(self):
+        self.click(self.VDSM_TOPNAV)
+        ret1 = self.get_vdsm_conf_file()
+        ret2 = self.get_attribute(self.VDSM_TEXTAREA, "value")
+
+        if ret1 != ret2:
+            self.fail()
+
+    def check_save_vdsm_conf_in_ui(self):
+        fp = self.get_data("vdsm.conf.template1")
+        content = open(fp, 'r+').read()
+        self.click(self.VDSM_TOPNAV)
+        self.input_text(self.VDSM_TEXTAREA, content)
+        self.click(self.VDSM_SAVE_BUTTON)
+        self.click(self.VDSM_SAVE_OK)
+
+        ret = self.get_vdsm_conf_file()
+        if ret != content:
+            self.fail()
+
+    def click_vdsm_service_mgmt(self):
+        self.click(self.VDSM_TOPNAV)
+        self.click(self.VDSM_SERVICE_LINK)
+        sleep(5)
+        link = self.get_current_url()
+        if link != 'https://{}:9090/system/services#/vdsmd.service':
+            self.fail()
+
+    def check_reload_vdsm_conf_in_ui(self):
+        fp = self.get_data("vdsm.conf.template2")
+        content = open(fp, 'r+').read()
+        self.click(self.VDSM_TOPNAV)
+        prev_value = self.get_attribute(self.VDSM_TEXTAREA, "value")
+        self.input_text(self.VDSM_TEXTAREA, content)
+        self.click(self.VDSM_RELOAD_BUTTON)
+        self.click(self.VDSM_SAVE_OK)
+        sleep(2)
+
+        next_value = self.get_attribute(self.VDSM_TEXTAREA, "value")
+
+        if prev_value != next_value:
+            self.fail()

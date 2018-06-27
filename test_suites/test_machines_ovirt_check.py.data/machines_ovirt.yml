@@ -9,3 +9,5 @@ fqdn: fqdn
 port: port
 username: username
 passwd: passwd
+host_ip: host_ip
+new_vm: newvm

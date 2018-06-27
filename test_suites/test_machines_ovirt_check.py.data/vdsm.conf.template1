@@ -1,0 +1,7 @@
+[vars]
+ssl = true
+ssl_ciphers = HIGH
+ssl_excludes = OP_NO_TLSv1,OP_NO_TLSv1_1
+
+[addresses]
+management_port = 12345
