@@ -206,50 +206,71 @@ class MachinesOvirtCheckPage(SeleniumTest):
     def open_ovirt_subtub(self):
         self.hover_and_click(self.OVIRT_TAB)
 
-    # def run_vm_on_ui(self):
-    #     self.click(self.RUN_BUTTON)
+    def run_ovirt_vm_on_ui(self):
+        self.click(self.RUN_BUTTON)
 
-    def reboot_vm_on_ui(self):
+    def reboot_he_vm_on_ui(self):
         self.click(self.RESTART_BUTTON)
         sleep(self.WATI_VM_DOWN)
         #sleep(self.WAIT_VM_UP)
         self.assert_element_visible(self.BUTTON_WARN)
-        if self.get_text(self.BUTTON_WARN) != 'REBOOT action failed':
-            self.fail()
+        warn_text = self.get_text(self.BUTTON_WARN)
+        self.assertEqual(warn_text, 'REBOOT action failed')
 
-    def force_reboot_vm_on_ui(self):
+    def reboot_ovirt_vm_on_ui(self):
+        self.click(self.RESTART_BUTTON)
+        sleep(self.WATI_VM_DOWN)
+
+    def force_reboot_he_vm_on_ui(self):
         self.click(self.RESTART_DROPDOWN_BUTTON)
         self.click(self.FORCERESTART_BUTTON)
         sleep(self.WATI_VM_DOWN)
         #sleep(self.WAIT_VM_UP)
         self.assert_element_visible(self.BUTTON_WARN)
-        if self.get_text(self.BUTTON_WARN) != 'REBOOT action failed':
-            self.fail()
+        warn_text = self.get_text(self.BUTTON_WARN)
+        self.assertEqual(warn_text, 'REBOOT action failed')
 
-    def shutdown_vm_on_ui(self):
+    def force_reboot_ovirt_vm_on_ui(self):
+        self.click(self.RESTART_DROPDOWN_BUTTON)
+        self.click(self.FORCERESTART_BUTTON)
+        sleep(self.WATI_VM_DOWN)
+
+    def shutdown_he_vm_on_ui(self):
         self.click(self.SHUTDOWN_BUTTON)
         sleep(self.WATI_VM_DOWN)
         self.assert_element_visible(self.BUTTON_WARN)
-        if self.get_text(self.BUTTON_WARN) != 'SHUTDOWN action failed':
-            self.fail()
+        warn_text = self.get_text(self.BUTTON_WARN)
+        self.assertEqual(warn_text, 'SHUTDOWN action failed')
 
-    def forceoff_vm_on_ui(self):
+    def shutdown_ovirt_vm_on_ui(self):
+        self.click(self.SHUTDOWN_BUTTON)
+        sleep(self.WATI_VM_DOWN)
+
+    def forceoff_he_vm_on_ui(self):
         self.click(self.SHUTDOWN_DROPDOWN_BUTTON)
         self.click(self.FORCEOFF_BUTTON)
         sleep(self.WATI_VM_DOWN)
         self.assert_element_visible(self.BUTTON_WARN)
-        if self.get_text(self.BUTTON_WARN) != 'SHUTDOWN action failed':
-            self.fail()
+        warn_text = self.get_text(self.BUTTON_WARN)
+        self.assertEqual(warn_text, 'SHUTDOWN action failed')
+
+    def forceoff_ovirt_vm_on_ui(self):
+        self.click(self.SHUTDOWN_DROPDOWN_BUTTON)
+        self.click(self.FORCEOFF_BUTTON)
+        sleep(self.WATI_VM_DOWN)
 
     def sendnmi_vm_on_ui(self):
         self.click(self.SHUTDOWN_DROPDOWN_BUTTON)
         self.click(self.SENDNMI_BUTTON)
         self.assert_element_visible(self.BUTTON_WARN)
-        if self.get_text(self.BUTTON_WARN) != 'VM SEND Non-Maskable Interrrupt action failed':
-            self.fail()
 
-    def suspend_vm_on_ui(self):
-        # Maybe a bug here, should do more testing
+    def suspend_he_vm_on_ui(self):
+        # TODO
+        # When supend the HE-VM , it is a bad request from the console, because 
+        # the HE-VM is not managed by engine, but now the UI don't pop any warnings.
+        pass
+
+    def suspend_ovirt_vm_on_ui(self):
         self.click(self.SUSPEND_BUTTON)
         i = 0
         while True:
@@ -279,7 +300,10 @@ class MachinesOvirtCheckPage(SeleniumTest):
         self.host.get_file("/root/info.txt", "info.txt")
         fp = open("info.txt",'rw+')
 
-        self.dict_info = eval(fp.read())[0]
+        vm_info_list = eval(fp.read())
+        for i in range(0, len(vm_info_list)):
+            if vm_info_list[i]['vmName'] == self.VM_NAME:
+                self.dict_info = vm_info_list[i]
         return self.dict_info
 
     def get_vmxml_on_host(self):
@@ -452,7 +476,11 @@ class MachinesOvirtCheckPage(SeleniumTest):
     def click_network1_plug_button(self):
         self.click(self.NETWORK1_PLUG_BUTTON)
         sleep(2)
-        self.assert_element_visible(self.PLUG_WARNING)
+
+    def prepare_network1_plug_button(self, expected_text):
+        plug_text = self.get_network1_plug_button_text()
+        if plug_text != expected_text:
+            self.click_network1_plug_button()
 
     def get_ovirt_info_on_host(self, key):
         if key == 'ovirt-ha':
@@ -549,10 +577,12 @@ class MachinesOvirtCheckPage(SeleniumTest):
         return value
 
     def click_cluster_host_link(self):
+        host_name = self.get_text(self.CLUSTER_HOST_LINK)
+        sleep(2)
         self.click(self.CLUSTER_HOST_LINK)
         link = self.get_current_url()
-        sleep(2)
-        if link != 'https://{}:9090/machines'.format(self.config_dict['host_ip']):
+        sleep(5)
+        if link != 'https://{}:9090/machines'.format(host_name):
             self.fail()
 
     # Check the Templates Page
@@ -602,7 +632,7 @@ class MachinesOvirtCheckPage(SeleniumTest):
         sleep(10)
 
         new_vm_name = self.rhvm.list_vm(self.config_dict['new_vm'])
-        if new_vm_name != self.config_dict['new_vm']:
+        if not new_vm_name:
             self.fail()
 
     def check_create_vm_twice(self):
@@ -644,9 +674,9 @@ class MachinesOvirtCheckPage(SeleniumTest):
     def click_vdsm_service_mgmt(self):
         self.click(self.VDSM_TOPNAV)
         self.click(self.VDSM_SERVICE_LINK)
-        sleep(5)
+        sleep(10)
         link = self.get_current_url()
-        if link != 'https://{}:9090/system/services#/vdsmd.service':
+        if link != 'https://{}:9090/system/services#/vdsmd.service'.format(self.config_dict['host_ip']):
             self.fail()
 
     def check_reload_vdsm_conf_in_ui(self):

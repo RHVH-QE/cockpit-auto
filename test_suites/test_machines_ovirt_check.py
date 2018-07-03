@@ -71,7 +71,7 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
         """
         self.open_vm_row()
         self.open_ovirt_subtub()
-        for key in self.OVIRT_INFO_NAMES: 
+        for key in self.OVIRT_INFO_NAMES:
             value_in_host = self.get_ovirt_info_on_host(key)
             value_in_ui = self.get_ovirt_info_on_ui(key)
             self.assertEqual(value_in_host, value_in_ui)
@@ -84,42 +84,55 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
         self.open_ovirt_subtub()
         self.migrate_vm_to_additional_host()
 
+    def test_network_unplug(self):
+        """
+        :avocado: tags=ovirt
+        """
+        self.open_vm_row()
+        self.open_networks_subtab()
+        self.prepare_network1_plug_button('Plug')
+        self.click_network1_plug_button()
+        self.assertEqual(self.get_network1_plug_button_text(), 'Unplug')
+        self.assertEqual(self.get_network1_state_on_ui(), 'up')
+
     def test_network_plug(self):
         """
         :avocado: tags=ovirt
         """
-        # The Plug/Unplug shouldn't be successfully
         self.open_vm_row()
         self.open_networks_subtab()
+        self.prepare_network1_plug_button('Unplug')
         self.click_network1_plug_button()
+        self.assertEqual(self.get_network1_plug_button_text(), 'Plug')
+        self.assertEqual(self.get_network1_state_on_ui(), 'down')
 
     def test_restart_vm(self):
         """
         :avocado: tags=ovirt
         """
         self.open_vm_row()
-        self.reboot_vm_on_ui()
+        self.reboot_he_vm_on_ui()
 
     def test_force_reboot_vm(self):
         """
         :avocado: tags=ovirt
         """
         self.open_vm_row()
-        self.force_reboot_vm_on_ui()
+        self.force_reboot_he_vm_on_ui()
 
     def test_shutdown_vm(self):
         """
         :avocado: tags=ovirt
         """
         self.open_vm_row()
-        self.shutdown_vm_on_ui()
+        self.shutdown_he_vm_on_ui()
 
     def test_forceoff_vm(self):
         """
         :avocado: tags=ovirt
         """
         self.open_vm_row()
-        self.forceoff_vm_on_ui()
+        self.forceoff_he_vm_on_ui()
 
     def test_sendnmi_vm(self):
         """
@@ -193,11 +206,3 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
         """
         self.click(self.TEMPLATES_TOPNAV)
         self.check_create_vm_twice()
-
-
-
-
-
-
-
-

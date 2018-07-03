@@ -52,3 +52,28 @@ RHEL-113833: test_machines_check.py:TestMachinesCheck.test_shutdown_vm
 RHEL-113834: test_machines_check.py:TestMachinesCheck.test_forceoff_vm
 RHEL-113836: test_machines_check.py:TestMachinesCheck.test_sendnmi_vm
 RHEL-113838: test_machines_check.py:TestMachinesCheck.test_delete_vm_without_storage
+
+
+# cockpit-machines-ovirt
+RHEL-118144: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_disable_create_new_vm
+RHEL-114114: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_host_to_maintenance
+RHEL-113784: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_overview_info
+RHEL-113787: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_disks_info
+RHEL-118139: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_networks_info
+RHEL-113794: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_ovirt_info
+RHEL-113795: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_vm_migration
+RHEL-118140: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_network_plug
+RHEL-113796: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_restart_vm
+RHEL-113797: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_force_reboot_vm
+RHEL-113798: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_shutdown_vm
+RHEL-113799: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_forceoff_vm
+RHEL-113800: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_sendnmi_vm
+RHEL-113776: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_save_vdsm_conf_in_ui
+RHEL-113777: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_vdsm_service_link
+RHEL-113778: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_reload_vdsm_conf
+RHEL-113781: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_cluster_info
+RHEL-113782: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_cluster_host_link
+RHEL-118147: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_template_info
+RHEL-113779: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_create_vm_by_template
+RHEL-113780: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_create_vm_twice
+
