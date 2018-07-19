@@ -306,6 +306,14 @@ class RhevmAction:
         else:
             return None
 
+    def get_host_status(self, host_name):
+        api_url_base = self.api_url.format(
+            rhevm_fqdn=self.rhevm_fqdn, item="hosts")
+        host = self.list_host(key="name", value=host_name)
+
+        if host:
+            return host.get('status')
+
     def update_available_check(self, host_id):
         rhvm_version = self.rhevm_fqdn.split('-')[0]
 
@@ -1091,6 +1099,55 @@ class RhevmAction:
                     return disk
         else:
             return
+
+    def list_template(self, template_name):
+        api_url_base = self.api_url.format(
+            rhevm_fqdn=self.rhevm_fqdn, item="templates")
+
+        r = self.req.get(
+            api_url_base, headers=self.headers, verify=self.rhevm_cert)
+
+        if r.status_code != 200:
+            raise RuntimeError("Failed to list template "
+                               "%s as\n%s" % (template_name, r.text))
+
+        templates = r.json()
+        if templates:
+            for template in templates['template']:
+                if template['name'] == template_name:
+                    return template
+        else:
+            return
+
+    def get_vm_ovirt_info_on_engine(self, vm_name):
+        vm_ovirt_info = {}
+        vm_ovirt_info['ovirt-description'] = self.list_vm(vm_name)['description']
+        vm_ovirt_info['ovirt-ostype'] = self.list_vm(vm_name)['os']['type']
+        # vm_ha: false-> disabled, vm_stateless : false -> no
+        vm_ovirt_info['ovirt-ha'] = self.list_vm(vm_name)['high_availability']['enabled']
+        vm_ovirt_info['ovirt-stateless'] = self.list_vm(vm_name)['stateless']
+        vm_ovirt_info['ovirt-optimizedfor'] = self.list_vm(vm_name)['type']
+        vm_ovirt_info['vm-status'] = self.list_vm(vm_name)['status']
+        vm_ovirt_info['host_id'] = self.list_vm(vm_name)['host']['id']
+        return vm_ovirt_info
+
+    def get_template_info_on_engine(self, template_name):
+        template_info = {}
+        template_info['name'] = self.list_template(template_name)['name']
+        template_info['version'] = self.list_template(template_name)['version']['version_name']
+        template_info['description'] = self.list_template(template_name)['description']
+        # base template id
+        template_info['base-template'] = self.list_template(template_name)['version']['base_template']['id']
+        # memory 1024*1024*1024  1G
+        template_info['memory'] = self.list_template(template_name)['memory']
+        template_info['vcpus'] = self.list_template(template_name)['cpu']['topology']['cores']
+        template_info['os'] = self.list_template(template_name)['os']['type']
+        # false
+        template_info['ha'] = self.list_template(template_name)['high_availability']['enabled']
+        # false
+        template_info['stateless'] = self.list_template(template_name)['stateless']
+
+        return template_info
 
 
 if __name__ == '__main__':

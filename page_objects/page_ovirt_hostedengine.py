@@ -255,6 +255,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.host.execute("python /root/clean_he_env.py")
 
     def check_additional_host_socre(self, ip, passwd):
+        true, false = True, False
         cmd = "hosted-engine --vm-status --json"
         host_ins = Machine(
             host_string=ip, host_user='root', host_passwd=passwd)
