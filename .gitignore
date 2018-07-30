@@ -4,3 +4,4 @@ geckodriver.log
 logs
 .venv
 *.log
+*.qcow2

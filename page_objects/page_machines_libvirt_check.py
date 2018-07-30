@@ -4,7 +4,7 @@ from seleniumlib import SeleniumTest
 from utils.machine import RunCmdError
 
 
-class MachinesCheckPage(SeleniumTest):
+class MachinesLibvirtCheckPage(SeleniumTest):
     """
     :avocado: disable
     """
@@ -22,8 +22,12 @@ class MachinesCheckPage(SeleniumTest):
     _ID_PREFIX = "#vm-{}-".format(VM_NAME)
     VM_ROW = _ID_PREFIX + 'row'
     VM_STATE = _ID_PREFIX + 'state'
+
+    # operation button
     RUN_BUTTON = _ID_PREFIX + 'run'
     RESTART_BUTTON = _ID_PREFIX + 'reboot'
+    RESTART_DROPDOWN_BUTTON = RESTART_BUTTON + '-caret'
+    FORCE_RESTART_BUTTON = _ID_PREFIX + 'forceReboot'
     SHUTDOWN_BUTTON = _ID_PREFIX + 'off'
     SHUTDOWN_DROPDOWN_BUTTON = SHUTDOWN_BUTTON + '-caret'
     FORCEOFF_BUTTON = _ID_PREFIX + 'forceOff'
@@ -33,8 +37,20 @@ class MachinesCheckPage(SeleniumTest):
     DELETE_VM_BUTTON = "#cockpit_modal_dialog .modal-footer button:nth-of-type(2)"
 
     # overview subtab
-    OVERVIEW_INFO_NAMES = ['memory', 'vcpus',
+    OVERVIEW_INFO_NAMES = ['memory', 'vcpus-count',
                            'cputype', 'emulatedmachine', 'bootorder', 'autostart']
+    VCPU_DETAILS_LINK = _ID_PREFIX + 'vcpus-count'
+    VCPU_DETAILS_WINDOW = ".vcpu-detail-modal-table"
+    VCPU_CAUTION = "td.machines-vcpu-caution"
+    VCPU_MAXIMUM_INPUT = "#machines-vcpu-max-field"
+    VCPU_COUNT_INPUT = "#machines-vcpu-count-field"
+    VCPU_SOCKETS_SELECT_BUTTON = "#socketsSelect"
+    VCPU_SOCKETS_ITEM = "#socketsSelect ul li:nth-of-type({})"
+    VCPU_CORES_SELECT_BUTTON = "#coresSelect"
+    VCPU_CORES_ITEM = "#coresSelect ul li:nth-of-type({})"
+    VCPU_THREADS_SELECT_BUTTON = "#threadsSelect"
+    VCPU_THREADS_ITEM = "#threadsSelect ul li:nth-of-type({})"
+    VCPU_APPLY_BUTTON = "button.apply"
 
     # usage subtab
     USAGE_TAB = _ID_PREFIX + "usage"
@@ -59,6 +75,47 @@ class MachinesCheckPage(SeleniumTest):
                             'mac', 'target', 'source', 'state']
     NETWORK1_PLUG_BUTTON = "#vm-{}-network-1-state button".format(VM_NAME)
 
+    # consoles subtab
+    CONSOLES_TAB = _ID_PREFIX + "consoles"
+    CONSOLE_TYPE_BUTTON = "#console-type-select button"
+    CONSOLE_TYPE_TEXT = "#console-type-select button span:nth-of-type(1)"
+    # Inline console
+    INLINE_CONSOLE_TYPE = "Graphics Console (VNC)"
+    INLINE_CONSOLE_FRAME_NAME = "vm-{}-novnc-frame-container".format(VM_NAME)
+    INLINE_CTRL_ALT_DEL_BUTTON = _ID_PREFIX + "vnc-ctrl-alt-del"
+    INLINE_CANVAS = "#noVNC_canvas"
+    # External console
+    EXTERNAL_CONSOLE_NAME = "Graphics Console in Desktop Viewer"
+    EXTERNAL_CONSOLE_SELECT_ITEM = "li[data-data='desktop']"
+    LAUNCH_REMOTE_VIEWER_BUTTON = _ID_PREFIX + "consoles-launch"
+    VV_FILE_ATTR = ("data:application/x-virt-viewer,%5Bvirt-viewer%5D%0Atype%3Dspice"
+                    "%0Ahost%3D{}%0Aport%3D{}%0Adelete-this-file%3D1%0Afullscreen%3D0%0A")
+    DYNAMICAL_FILE = "#dynamically-generated-file"
+    MORE_INFO_LINK = ".machines-desktop-viewer-block a[href='#']"
+    CONSOLE_MANUAL_ADDRESS = _ID_PREFIX + 'consoles-manual-address'
+    CONSOLE_MANUAL_PORT = _ID_PREFIX + 'consoles-manual-port-{}'
+    # serial console
+    SERIAL_CONSOLE_NAME = "Serial Console"
+    SERIAL_CONSOLE_SELECT_ITEM = "li[data-data='serial-browser']"
+    SERIAL_CANVAS = "div.terminal canvas.xterm-text-layer"
+    SERIAL_CONSOLE_DISCONNECT_BUTTON = "#{}-serialconsole-disconnect".format(
+        VM_NAME)
+    SERIAL_CONSOLE_RECONNECT_BUTTON = "#{}-serialconsole-reconnect".format(
+        VM_NAME)
+
+    # non root user operation alert
+    ALERT_CLOSE_BUTTON = "div.alert-warning span.pficon-close"
+    LAST_MESSAGE = _ID_PREFIX + 'last-message'
+    RESTART_ALERT_TEXT = "VM REBOOT action failed"
+    FORCE_RESTART_ALERT_TEXT = "VM FORCE REBOOT action failed"
+    SHUTDOWN_ALERT_TEXT = "VM SHUT DOWN action failed"
+    FORCE_SHUTDOWN_ALERT_TEXT = "VM FORCE OFF action failed"
+    SEND_NMI_ALEART_TEXT = "VM SEND Non-Maskable Interrrupt action failed"
+    DELETE_VM_ALEART_TEXT = ("error: failed to connect to the hypervisor "
+                             "error: authentication "
+                             "failed: access denied by policy")
+    DELETE_VM_ALEART = "div.alert-danger.dialog-error span:nth-of-type(2)"
+
     def open_page(self):
         self.click(self.MACHINES_LINK)
         self.switch_to_frame(self.MACHINES_FRAME_NAME)
@@ -77,8 +134,18 @@ class MachinesCheckPage(SeleniumTest):
     def open_networks_subtab(self):
         self.hover_and_click(self.NETWORKS_TAB)
 
+    def open_consoles_subtab(self):
+        self.hover_and_click(self.CONSOLES_TAB)
+
     def run_vm_on_ui(self):
         self.click(self.RUN_BUTTON)
+
+    def restart_vm_on_ui(self):
+        self.click(self.RESTART_BUTTON)
+
+    def force_restart_vm_on_ui(self):
+        self.click(self.RESTART_DROPDOWN_BUTTON)
+        self.click(self.FORCE_RESTART_BUTTON)
 
     def shutdown_vm_on_ui(self):
         self.click(self.SHUTDOWN_BUTTON)
@@ -92,13 +159,10 @@ class MachinesCheckPage(SeleniumTest):
         self.click(self.SHUTDOWN_DROPDOWN_BUTTON)
         self.click(self.SENDNMI_BUTTON)
 
-    def open_delete_vm_dialog(self):
+    def delete_vm_on_ui(self, del_storage=True):
         self.click(self.DELETE_BUTTON)
-
-    def check_storage_box(self):
-        self.click(self.DELETE_STORAGE_CHECKBOX)
-
-    def delete_vm_on_ui(self):
+        if not del_storage:
+            self.click(self.DELETE_STORAGE_CHECKBOX)
         self.click(self.DELETE_VM_BUTTON)
 
     def prepare_running_vm(self):
@@ -127,7 +191,8 @@ class MachinesCheckPage(SeleniumTest):
         The vm.xml and vm.qcow2 should be copied to host beforehand,
         vm.qcow2 should be installed with OS.
         """
-        cmd = 'virsh create /var/lib/libvirt/images/vm.xml'
+        self.create_stop_vm_by_virsh()
+        cmd = 'virsh start {}'.format(self.VM_NAME)
         self.host.execute(cmd)
         # wait for guest os to start up.
         sleep(self.WAIT_VM_UP)
@@ -186,7 +251,7 @@ class MachinesCheckPage(SeleniumTest):
         if key == 'memory':
             value = int(self.vm_xml_info['domain']
                         ['memory']['#text']) / (1024 * 1024)
-        if key == 'vcpus':
+        if key == 'vcpus-count':
             value = self.vm_xml_info['domain']['vcpu']['#text']
         if key == 'cputype':
             mode = self.vm_xml_info['domain']['cpu']['@mode']
@@ -322,12 +387,141 @@ class MachinesCheckPage(SeleniumTest):
         target = self.get_network_info_on_ui('1', 'target')
         return self.get_network_state_on_host(target)
 
-    def get_memory_usage_on_ui(self):
-        value = self.get_text(self.USED_MEMORY_VALUE)
+    def get_memory_usage_on_ui(self, state='off'):
+        if state == 'running':
+            count = 0
+            while count < 5:
+                value = self.get_text(self.USED_MEMORY_VALUE)
+                if value != '0.00':
+                    break
+                count = count + 1
+                sleep(1)
+        else:
+            value = self.get_text(self.USED_MEMORY_VALUE)
         unit = self.get_text(self.USED_MEMORY_UNIT)
         return value + unit
 
-    def get_cpu_usage_on_ui(self):
-        value = self.get_text(self.USED_CPU_VALUE)
+    def get_cpu_usage_on_ui(self, state='off'):
+        if state == 'running':
+            count = 0
+            while count < 15:
+                value = self.get_text(self.USED_CPU_VALUE)
+                if value != '0.0':
+                    break
+                count = count + 1
+                sleep(1)
+        else:
+            value = self.get_text(self.USED_CPU_VALUE)
         unit = self.get_text(self.USED_CPU_UNIT)
         return value + unit
+
+    def get_console_type(self):
+        return self.get_text(self.CONSOLE_TYPE_TEXT)
+
+    def send_ctrl_alt_del(self):
+        self.click(self.INLINE_CTRL_ALT_DEL_BUTTON)
+
+    def check_canvas_width_during_reboot(self):
+        def get_canvas_width(init_width):
+            count = 0
+            while count < 10:
+                width = self.get_attribute(self.INLINE_CANVAS, 'width')
+                if width != init_width:
+                    break
+                count = count + 1
+                sleep(2)
+            return width
+        self.switch_to_frame(self.INLINE_CONSOLE_FRAME_NAME)
+        width = get_canvas_width('1024')
+        if width != '720':
+            return False
+        width = get_canvas_width('720')
+        if width != '1024':
+            return False
+        return True
+
+    def open_external_console_page(self):
+        self.click(self.CONSOLE_TYPE_BUTTON)
+        self.click(self.EXTERNAL_CONSOLE_SELECT_ITEM)
+
+    def get_external_console_info_in_xml(self):
+        self.get_dumpxml_on_host()
+        viewer_list = []
+        graphic_list = self.vm_xml_info['domain']['devices']['graphics']
+        if not isinstance(graphic_list, list):
+            viewer_list.append(graphic_list)
+        else:
+            viewer_list = graphic_list
+        viewer_info_list = []
+        for viewer in viewer_list:
+            viewer_info = {}
+            viewer_info['type'] = viewer['@type']
+            viewer_info['port'] = viewer['@port']
+            viewer_info['ip'] = viewer['@listen']
+            viewer_info_list.append(viewer_info)
+        return viewer_info_list
+
+    def get_external_console_info_in_vv(self):
+        from seleniumlib import invisible
+        return self.get_attribute(self.DYNAMICAL_FILE, 'href', cond=invisible)
+
+    def launch_remote_viewer(self):
+        self.click(self.LAUNCH_REMOTE_VIEWER_BUTTON)
+
+    def toggle_more_info(self):
+        self.click(self.MORE_INFO_LINK)
+
+    def get_consoles_manual_address_on_ui(self):
+        return self.get_text(self.CONSOLE_MANUAL_ADDRESS)
+
+    def get_consoles_manual_port_on_ui(self, con_type):
+        return self.get_text(self.CONSOLE_MANUAL_PORT.format(con_type))
+
+    def open_serial_console_page(self):
+        self.click(self.CONSOLE_TYPE_BUTTON)
+        self.click(self.SERIAL_CONSOLE_SELECT_ITEM)
+
+    def disconnect_serial_console(self):
+        self.click(self.SERIAL_CONSOLE_DISCONNECT_BUTTON)
+
+    def reconnect_serial_console(self):
+        self.click(self.SERIAL_CONSOLE_RECONNECT_BUTTON)
+
+    def login_non_root_user(self):
+        cmd = 'echo redhat | passwd --stdin test'
+        self.host.execute(cmd)
+        self.logout()
+        self.login('test', 'redhat')
+
+    def get_last_message_text(self):
+        value = self.get_text(self.LAST_MESSAGE)
+        self.click(self.ALERT_CLOSE_BUTTON)
+        return value
+
+    def get_delete_vm_alert_text(self):
+        return self.get_text(self.DELETE_VM_ALEART)
+
+    def open_vcpu_details_window(self):
+        self.click(self.VCPU_DETAILS_LINK)
+
+    def set_vcpu_details(self):
+        self.input_text(self.VCPU_MAXIMUM_INPUT, '8', control=True)
+        self.input_text(self.VCPU_COUNT_INPUT, '4', control=True)
+        self.click(self.VCPU_SOCKETS_SELECT_BUTTON)
+        self.click(self.VCPU_SOCKETS_ITEM.format('2'))
+        self.click(self.VCPU_CORES_SELECT_BUTTON)
+        self.click(self.VCPU_CORES_ITEM.format('2'))
+        self.click(self.VCPU_THREADS_SELECT_BUTTON)
+        self.click(self.VCPU_THREADS_ITEM.format('2'))
+        self.click(self.VCPU_APPLY_BUTTON)
+
+    def get_vcpu_count_on_ui(self):
+        return self.get_text(self.VCPU_DETAILS_LINK)
+
+    def get_vcpu_topology_in_xml(self):
+        self.get_dumpxml_on_host()
+        cpu_topo = self.vm_xml_info['domain']['cpu']['topology']
+        value = []
+        for i in ['@sockets', '@cores', '@threads']:
+            value.append(cpu_topo[i])
+        return value

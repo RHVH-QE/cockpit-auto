@@ -24,6 +24,7 @@ def create_selenium_standalone(browser):
         "--name {} selenium/standalone-{}-debug".format(
             STANDALONE_CONTAINER_NAME, browser)
     subprocess.check_call(cmd, shell=True)
+    time.sleep(3)
 
 
 def del_selenium_standalone():

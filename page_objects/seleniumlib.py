@@ -207,11 +207,13 @@ class SeleniumTest(Test):
             actions.perform()
             self.click(el_click, try_times)
 
-    def input_text(self, el_descriptor, new_value, clear=True, try_times=DEFAULT_TRY):
+    def input_text(self, el_descriptor, new_value, clear=True, control=False, try_times=DEFAULT_TRY):
         element = self._wait(el_descriptor, cond=visible,
                              try_times=try_times)
         if clear:
             element.clear()
+        if control:
+            element.send_keys(Keys.CONTROL + 'a')
         if not new_value.endswith('\n'):
             element.send_keys(new_value)
         else:
@@ -224,9 +226,8 @@ class SeleniumTest(Test):
                              try_times=try_times)
         return element.text
 
-    def get_attribute(self, el_descriptor, attr_name, try_times=DEFAULT_TRY):
-        element = self._wait(el_descriptor, cond=visible,
-                             try_times=try_times)
+    def get_attribute(self, el_descriptor, attr_name, cond=visible, try_times=DEFAULT_TRY):
+        element = self._wait(el_descriptor, cond=cond, try_times=try_times)
         return element.get_attribute(attr_name)
 
     def assert_element_visible(self, el_descriptor, try_times=DEFAULT_TRY):
@@ -256,3 +257,9 @@ class SeleniumTest(Test):
         if text in element_text:
             self.fail("The unexpected text '%s' is in element %s." %
                       (text, el_descriptor))
+
+    def assert_frame_available(self, frame_name, try_times=DEFAULT_TRY):
+        try:
+            self.switch_to_frame(frame_name, try_times)
+        except NoElementError:
+            self.fail()

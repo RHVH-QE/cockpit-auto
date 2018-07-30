@@ -39,19 +39,34 @@ RHEVM-25116: test_ovirt_hostedengine.py:TestOvirtHostedEngine.test_node_zero_sta
 # RHEVM-25010
 # RHEVM-25122
 
-RHEL-122285: test_machines_check.py:TestMachinesCheck.test_no_vm
-RHEL-113822: test_machines_check.py:TestMachinesCheck.test_overview_info
-RHEL-113823: test_machines_check.py:TestMachinesCheck.test_memory_usage_off
-RHEL-122432: test_machines_check.py:TestMachinesCheck.test_cpu_usage_off
-RHEL-113825: test_machines_check.py:TestMachinesCheck.test_disks_info
-RHEL-122436: test_machines_check.py:TestMachinesCheck.test_disk_notification
-RHEL-116892: test_machines_check.py:TestMachinesCheck.test_networks_info
-RHEL-116893: test_machines_check.py:TestMachinesCheck.test_network_unplug
-RHEL-116895: test_machines_check.py:TestMachinesCheck.test_network_plug
-RHEL-113833: test_machines_check.py:TestMachinesCheck.test_shutdown_vm
-RHEL-113834: test_machines_check.py:TestMachinesCheck.test_forceoff_vm
-RHEL-113836: test_machines_check.py:TestMachinesCheck.test_sendnmi_vm
-RHEL-113838: test_machines_check.py:TestMachinesCheck.test_delete_vm_without_storage
+# cockpit-machines
+RHEL-113808: test_machines_libvirt_package.py:TestMachinesLibvirtPackage.test_install_pkg
+RHEL-114013: test_machines_libvirt_package.py:TestMachinesLibvirtPackage.test_upgrade_pkg
+RHEL-115592: test_machines_libvirt_package.py:TestMachinesLibvirtPackage.test_remove_pkg
+
+RHEL-122285: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_no_vm
+RHEL-113822: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_overview_info
+RHEL-113823: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_memory_usage_off
+RHEL-122434: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_memory_usage_running
+RHEL-122432: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_cpu_usage_off
+RHEL-122435: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_cpu_usage_running
+RHEL-113825: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_disks_info
+RHEL-122436: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_disk_notification
+RHEL-116892: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_networks_info
+RHEL-116893: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_network_unplug
+RHEL-116895: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_network_plug
+RHEL-113829: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_inline_console
+RHEL-113824: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_external_console
+RHEL-116896: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_serial_console
+RHEL-122789: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_run_vm
+RHEL-113827: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_restart_vm
+RHEL-113832: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_force_restart_vm
+RHEL-113833: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_shutdown_vm
+RHEL-113834: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_force_off_vm
+RHEL-113836: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_sendnmi_vm
+RHEL-113838: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_delete_vm_without_storage
+RHEL-114014: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_non_root_operation
+RHEL-138707: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_change_vcpu_of_running_vm
 
 
 # cockpit-machines-ovirt
