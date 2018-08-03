@@ -1121,14 +1121,20 @@ class RhevmAction:
 
     def get_vm_ovirt_info_on_engine(self, vm_name):
         vm_ovirt_info = {}
-        vm_ovirt_info['ovirt-description'] = self.list_vm(vm_name)['description']
+        try:
+            vm_ovirt_info['ovirt-description'] = self.list_vm(vm_name)['description']
+        except Exception as e:
+            vm_ovirt_info['ovirt-description'] = ''
         vm_ovirt_info['ovirt-ostype'] = self.list_vm(vm_name)['os']['type']
         # vm_ha: false-> disabled, vm_stateless : false -> no
         vm_ovirt_info['ovirt-ha'] = self.list_vm(vm_name)['high_availability']['enabled']
         vm_ovirt_info['ovirt-stateless'] = self.list_vm(vm_name)['stateless']
         vm_ovirt_info['ovirt-optimizedfor'] = self.list_vm(vm_name)['type']
         vm_ovirt_info['vm-status'] = self.list_vm(vm_name)['status']
-        vm_ovirt_info['host_id'] = self.list_vm(vm_name)['host']['id']
+        try:
+            vm_ovirt_info['host_id'] = self.list_vm(vm_name)['host']['id']
+        except Exception as e:
+            vm_ovirt_info['host_id'] = ''
         return vm_ovirt_info
 
     def get_template_info_on_engine(self, template_name):
