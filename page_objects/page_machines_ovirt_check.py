@@ -42,6 +42,7 @@ class MachinesOvirtCheckPage(SeleniumTest):
     VM_ROW = _ID_PREFIX + 'row'
     VM_STATE = _ID_PREFIX + 'state'
     RUN_BUTTON = _ID_PREFIX + 'run'
+    CLUSTER_RUN_BUTTON = "#cluster-{}-run".format(VM_NAME)
     RESTART_BUTTON = _ID_PREFIX + 'reboot'
     BUTTON_WARN = "#vm-{}-last-message".format(VM_NAME)
     SHUTDOWN_BUTTON = _ID_PREFIX + 'off'
@@ -60,6 +61,23 @@ class MachinesOvirtCheckPage(SeleniumTest):
     OVERVIEW_INFO_NAMES = ['memory', 'vcpus',
                            'cputype', 'emulatedmachine', 'bootorder', 'autostart',
                            'ovirt-description', 'ovirt-fqdn', 'ovirt-starttime']
+
+    VCPU_DETAILS_LINK = _ID_PREFIX + 'vcpus-count'
+    VCPU_DETAILS_WINDOW = ".vcpu-detail-modal-table"
+    # VCPU_CAUTION = "td.machines-vcpu-caution"
+    # VCPU_MAXIMUM_INPUT = "#machines-vcpu-max-field"
+    VCPU_COUNT_INPUT = "#machines-vcpu-count-field"
+    # VCPU_SOCKETS_SELECT_BUTTON = "#socketsSelect"
+    # VCPU_SOCKETS_ITEM = "#socketsSelect ul li:nth-of-type({})"
+    # VCPU_CORES_SELECT_BUTTON = "#coresSelect"
+    # VCPU_CORES_ITEM = "#coresSelect ul li:nth-of-type({})"
+    # VCPU_THREADS_SELECT_BUTTON = "#threadsSelect"
+    # VCPU_THREADS_ITEM = "#threadsSelect ul li:nth-of-type({})"
+    VCPU_SOCKETS_COUNT_INPUT = "#socketsInput"
+    VCPU_CORES_COUNT_INPUT = "#coresInput"
+    VCPU_THREAD_COUNT_INPUT = "#threadsInput"
+    VCPU_APPLY_BUTTON = "button.apply"
+    VCPU_CANCEL_BUTTON = "button.cancel"
 
     # usage subtab
     USAGE_TAB = _ID_PREFIX + "usage"
@@ -94,6 +112,7 @@ class MachinesOvirtCheckPage(SeleniumTest):
     INLINE_CONSOLE_TYPE = "Graphics Console (VNC)"
     INLINE_CONSOLE_FRAME_NAME = "vm-{}-novnc-frame-container".format(VM_NAME)
     INLINE_CTRL_ALT_DEL_BUTTON = _ID_PREFIX + "vnc-ctrl-alt-del"
+    #INLINE_CTRL_ALT_DEL_BUTTON = "//button[text()='Ctrl+Alt+Del']"
     INLINE_CANVAS = "#noVNC_canvas"
     # External console
     EXTERNAL_CONSOLE_NAME = "Graphics Console in Desktop Viewer"
@@ -170,6 +189,8 @@ class MachinesOvirtCheckPage(SeleniumTest):
     VDSM_SAVE_OK = "//button[text()='OK']"
     VDSM_SERVICE_LINK = "//a[text()='VDSM Service Management']"
     VDSM_RELOAD_BUTTON = "//button[text()='Reload']"
+
+    VM_ICON = ".ovirt-provider-overview-icon"
 
     def open_page(self):
         a = self.get_data('machines_ovirt.yml')
@@ -649,6 +670,13 @@ class MachinesOvirtCheckPage(SeleniumTest):
         if link != 'https://{}:9090/machines'.format(host_name):
             self.fail()
 
+    def run_vm_in_cluster(self):
+        self.click(self.SHUTDOWN_BUTTON)
+        self.wait_vm_status("down", 3)
+        self.click(self.CLUSTER_TOPNAV)
+        self.click(self.CLUSTER_RUN_BUTTON)
+        self.wait_vm_status("up", 10)
+
     # Check the Templates Page
     def get_template_info_on_host(self, key):
         value = self.rhvm.get_template_info_on_engine(self.TEMPLATE)[key]
@@ -768,25 +796,8 @@ class MachinesOvirtCheckPage(SeleniumTest):
 
     def send_ctrl_alt_del(self):
         self.click(self.INLINE_CTRL_ALT_DEL_BUTTON)
-
-    # def check_canvas_width_during_reboot(self):
-    #     def get_canvas_width(init_width):
-    #         count = 0
-    #         while count < 10:
-    #             width = self.get_attribute(self.INLINE_CANVAS, 'width')
-    #             if width != init_width:
-    #                 break
-    #             count = count + 1
-    #             sleep(2)
-    #         return width
-    #     self.switch_to_frame(self.INLINE_CONSOLE_FRAME_NAME)
-    #     width = get_canvas_width('1024')
-    #     if width != '720':
-    #         return False
-    #     width = get_canvas_width('720')
-    #     if width != '1024':
-    #         return False
-    #     return True
+        self.wait_vm_status("reboot_in_progress", 3)
+        self.wait_vm_status("up", 10)
 
     def open_external_console_page(self):
         self.click(self.CONSOLE_TYPE_BUTTON)
@@ -834,3 +845,40 @@ class MachinesOvirtCheckPage(SeleniumTest):
 
     def get_vm_status_on_engine(self):
         return self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)['vm-status']
+
+    def get_vm_icon_data_on_host(self):
+        return self.rhvm.get_vm_icon_data(self.VM_NAME)
+
+    def get_vm_icon_data_on_ui(self):
+        return self.get_attribute(self.VM_ICON, 'src').split(',')[-1]
+
+    def login_non_root_user(self):
+        cmd = 'echo redhat | passwd --stdin node'
+        self.host.execute(cmd)
+        self.logout()
+        self.login('node', 'redhat')
+        sleep(10)
+
+    # check vcpu
+    def get_vcpu_topology_on_engine(self):
+        value = []
+        for cpu_topo in ['sockets', 'cores', 'threads']:
+            value.append(self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)[cpu_topo])
+        return value
+
+    def get_vcpu_topology_on_ui(self):
+        '''
+        Cannot get value from the disabled attribute
+        '''
+        # TODO
+        pass
+
+    def set_vcpu_details(self):
+        # TODO
+        pass
+
+    def open_vcpu_details_window(self):
+        self.click(self.VCPU_DETAILS_LINK)
+
+    def get_vcpu_count_on_ui(self):
+        return self.get_text(self.VCPU_DETAILS_LINK)

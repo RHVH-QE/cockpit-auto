@@ -61,6 +61,14 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
         else:
             self.assertEqual(self.get_console_type(), self.EXTERNAL_CONSOLE_NAME)
 
+    def test_ctrl_alt_del(self):
+        self.open_vm_row()
+        self.open_consoles_subtub()
+        if self.check_inline_vnc_console():
+            self.send_ctrl_alt_del()
+        else:
+            self.assertEqual(self.get_console_type(), self.EXTERNAL_CONSOLE_NAME)
+
     def test_external_console(self):
         self.open_vm_row()
         self.open_consoles_subtub()
@@ -191,6 +199,10 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
         self.click(self.CLUSTER_TOPNAV)
         self.click_cluster_host_link()
 
+    def test_run_vm_in_cluster(self):
+        self.open_vm_row()
+        self.run_vm_in_cluster()
+
     def test_template_info(self):
         self.click(self.TEMPLATES_TOPNAV)
         for key in self.TEMPLATE_INFO_NAME:
@@ -213,3 +225,32 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
 
     def test_host_to_maintenance(self):
         self.host_to_maintenance()
+
+    def test_vm_icon(self):
+        self.open_vm_row()
+        self.assertEqual (self.get_vm_icon_data_on_host(), 
+                self.get_vm_icon_data_on_ui())
+
+    def test_non_root_user(self):
+        self.login_non_root_user()
+        self.assert_element_invisible(self.VM_ROW)
+
+    def test_vcpu_topology_info(self):
+        """
+        :avocado: tags=123
+        """
+        self.open_vm_row()
+        self.open_vcpu_details_window()
+        values = self.get_vcpu_topology_on_engine()
+        vcpu_count = int(values[0])*int(values[1])*int(values[2])
+        self.assertEqual(self.get_vcpu_count_on_ui(), str(vcpu_count))
+
+    def test_1(self):
+        """
+        :avocado: tags=123123
+        """
+        self.open_vm_row()
+        self.open_vcpu_details_window()
+        print self.check_1()
+        print self.check2()
+        print self.check_3()

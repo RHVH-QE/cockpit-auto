@@ -1131,6 +1131,9 @@ class RhevmAction:
         vm_ovirt_info['ovirt-stateless'] = self.list_vm(vm_name)['stateless']
         vm_ovirt_info['ovirt-optimizedfor'] = self.list_vm(vm_name)['type']
         vm_ovirt_info['vm-status'] = self.list_vm(vm_name)['status']
+        vm_ovirt_info['cores'] = self.list_vm(vm_name)['cpu']['topology']['cores']
+        vm_ovirt_info['sockets'] = self.list_vm(vm_name)['cpu']['topology']['sockets']
+        vm_ovirt_info['threads'] = self.list_vm(vm_name)['cpu']['topology']['threads']
         try:
             vm_ovirt_info['host_id'] = self.list_vm(vm_name)['host']['id']
         except Exception as e:
@@ -1154,6 +1157,27 @@ class RhevmAction:
         template_info['stateless'] = self.list_template(template_name)['stateless']
 
         return template_info
+
+    def get_vm_icon_data(self, vm_name):
+        vm_icon_id = self.list_vm(vm_name)['large_icon']['id']
+
+        api_url_base = self.api_url.format(
+            rhevm_fqdn=self.rhevm_fqdn, item="icons")
+
+        r = self.req.get(
+            api_url_base, headers=self.headers, verify=self.rhevm_cert)
+
+        if r.status_code != 200:
+            raise RuntimeError("Failed to list template "
+                               "%s as\n%s" % (template_name, r.text))
+
+        icons = r.json()
+        if icons:
+            for icon in icons['icon']:
+                if icon['id'] == vm_icon_id:
+                    return icon['data']
+        else:
+            return
 
 
 if __name__ == '__main__':

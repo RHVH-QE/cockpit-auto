@@ -106,13 +106,12 @@ RHEL-118147: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_template_i
 RHEL-113779: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_create_vm_by_template
 RHEL-113780: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_create_vm_twice
 
-# Check pkg
-# RHEL-113768
-# RHEL-113962
-# RHEL-113961
-# RHEL-113770
+# Check cockpit-machines-ovirt pkg
+RHEL-113768: test_machines_ovirt_package.py:TestMachinesOvirtPackage.test_install_pkg
+RHEL-113962: test_machines_ovirt_package.py:TestMachinesOvirtPackage.test_upgrade_pkg
+RHEL-113961: test_machines_ovirt_package.py:TestMachinesOvirtPackage.test_remove_pkg
 
-# RHEL-113786
-# RHEL-113789
-# RHEL-113974
-# RHEL-114121
+RHEL-113786: test_machines_ovirt_package.py:TestMachinesOvirtPackage.test_vm_icon
+RHEL-113789: test_machines_ovirt_package.py:TestMachinesOvirtPackage.test_ctrl_alt_del
+RHEL-113974: test_machines_ovirt_package.py:TestMachinesOvirtPackage.test_non_root_user
+RHEL-114121: test_machines_ovirt_package.py:TestMachinesOvirtPackage.test_run_vm_in_cluster
