@@ -236,21 +236,9 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
         self.assert_element_invisible(self.VM_ROW)
 
     def test_vcpu_topology_info(self):
-        """
-        :avocado: tags=123
-        """
+        # TODO
         self.open_vm_row()
         self.open_vcpu_details_window()
         values = self.get_vcpu_topology_on_engine()
         vcpu_count = int(values[0])*int(values[1])*int(values[2])
         self.assertEqual(self.get_vcpu_count_on_ui(), str(vcpu_count))
-
-    def test_1(self):
-        """
-        :avocado: tags=123123
-        """
-        self.open_vm_row()
-        self.open_vcpu_details_window()
-        print self.check_1()
-        print self.check2()
-        print self.check_3()

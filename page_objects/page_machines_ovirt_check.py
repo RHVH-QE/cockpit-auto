@@ -14,7 +14,7 @@ class MachinesOvirtCheckPage(SeleniumTest):
     WATI_VM_DOWN = 5
     WAIT_VM_SUSPEND = 15
 
-    VM_NAME = "yzhao_vm2"
+    VM_NAME = "HostedEngine"
     TEMPLATE = "Blank"
 
     # Host Page
@@ -358,15 +358,6 @@ class MachinesOvirtCheckPage(SeleniumTest):
     def change_network_status(self):
         self.click_network1_plug_button()
         self.assert_element_visible(self.PLUG_WARNING)
-
-    def remove_libvirt_auth(self):
-        '''
-        If remove the libvirt auth, the vdsm auth will fail, then the vm will be down,
-        so this method cannot be used.
-        '''
-        remove_cmd = "sed -i '/auth_unix_rw/'d /etc/libvirt/libvirtd.conf"
-        self.host.execute(remove_cmd, raise_exception=False)
-        self.host.execute("systemctl restart libvirtd", raise_exception=False)
 
     def get_dumpxml_on_host(self):
         project_path = os.path.dirname(os.path.dirname(__file__))
