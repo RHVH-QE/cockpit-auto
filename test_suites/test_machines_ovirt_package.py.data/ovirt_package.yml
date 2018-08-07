@@ -1,0 +1,6 @@
+%YAML 1.2
+---
+
+old_pkg: cockpit-machines-ovirt-169-3.el7.noarch.rpm
+new_pkg: cockpit-machines-ovirt-172-2.el7.noarch.rpm
+base_url: http://download.eng.bos.redhat.com/brewroot/packages/cockpit

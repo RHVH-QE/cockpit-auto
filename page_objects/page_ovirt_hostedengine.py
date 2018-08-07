@@ -22,7 +22,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     # Guide Links
     GETTING_START_LINK = "//a[contains(text(), 'Installation Guide')]"
-    MORE_INFORMATION_LINK = "//a[contains(text(), 'oVirt Homepage')]"
+    MORE_INFORMATION_LINK = "//a[contains(text(), 'RHEV Documentation')]"
 
     # VM STAGE
     _TITLE = "//input[@title='%s']"

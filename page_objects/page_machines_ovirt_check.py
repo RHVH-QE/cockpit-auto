@@ -42,6 +42,7 @@ class MachinesOvirtCheckPage(SeleniumTest):
     VM_ROW = _ID_PREFIX + 'row'
     VM_STATE = _ID_PREFIX + 'state'
     RUN_BUTTON = _ID_PREFIX + 'run'
+    CLUSTER_RUN_BUTTON = "#cluster-{}-run".format(VM_NAME)
     RESTART_BUTTON = _ID_PREFIX + 'reboot'
     BUTTON_WARN = "#vm-{}-last-message".format(VM_NAME)
     SHUTDOWN_BUTTON = _ID_PREFIX + 'off'
@@ -60,6 +61,23 @@ class MachinesOvirtCheckPage(SeleniumTest):
     OVERVIEW_INFO_NAMES = ['memory', 'vcpus',
                            'cputype', 'emulatedmachine', 'bootorder', 'autostart',
                            'ovirt-description', 'ovirt-fqdn', 'ovirt-starttime']
+
+    VCPU_DETAILS_LINK = _ID_PREFIX + 'vcpus-count'
+    VCPU_DETAILS_WINDOW = ".vcpu-detail-modal-table"
+    # VCPU_CAUTION = "td.machines-vcpu-caution"
+    # VCPU_MAXIMUM_INPUT = "#machines-vcpu-max-field"
+    VCPU_COUNT_INPUT = "#machines-vcpu-count-field"
+    # VCPU_SOCKETS_SELECT_BUTTON = "#socketsSelect"
+    # VCPU_SOCKETS_ITEM = "#socketsSelect ul li:nth-of-type({})"
+    # VCPU_CORES_SELECT_BUTTON = "#coresSelect"
+    # VCPU_CORES_ITEM = "#coresSelect ul li:nth-of-type({})"
+    # VCPU_THREADS_SELECT_BUTTON = "#threadsSelect"
+    # VCPU_THREADS_ITEM = "#threadsSelect ul li:nth-of-type({})"
+    VCPU_SOCKETS_COUNT_INPUT = "#socketsInput"
+    VCPU_CORES_COUNT_INPUT = "#coresInput"
+    VCPU_THREAD_COUNT_INPUT = "#threadsInput"
+    VCPU_APPLY_BUTTON = "button.apply"
+    VCPU_CANCEL_BUTTON = "button.cancel"
 
     # usage subtab
     USAGE_TAB = _ID_PREFIX + "usage"
@@ -86,6 +104,37 @@ class MachinesOvirtCheckPage(SeleniumTest):
     NETWORK1_PLUG_BUTTON = "#vm-{}-network-1-state button".format(VM_NAME)
     PLUG_WARNING = ".machines-status-alert"
 
+    # consoles subtab
+    CONSOLES_TAB = _ID_PREFIX + "consoles"
+    CONSOLE_TYPE_BUTTON = "#console-type-select button"
+    CONSOLE_TYPE_TEXT = "#console-type-select button span:nth-of-type(1)"
+    # Inline console
+    INLINE_CONSOLE_TYPE = "Graphics Console (VNC)"
+    INLINE_CONSOLE_FRAME_NAME = "vm-{}-novnc-frame-container".format(VM_NAME)
+    INLINE_CTRL_ALT_DEL_BUTTON = _ID_PREFIX + "vnc-ctrl-alt-del"
+    #INLINE_CTRL_ALT_DEL_BUTTON = "//button[text()='Ctrl+Alt+Del']"
+    INLINE_CANVAS = "#noVNC_canvas"
+    # External console
+    EXTERNAL_CONSOLE_NAME = "Graphics Console in Desktop Viewer"
+    EXTERNAL_CONSOLE_SELECT_ITEM = "li[data-data='desktop']"
+    LAUNCH_REMOTE_VIEWER_BUTTON = _ID_PREFIX + "consoles-launch"
+    VV_FILE_ATTR = ("data:application/x-virt-viewer,%5Bvirt-viewer%5D%0Atype%3Dspice"
+                    "%0Ahost%3D{}%0Aport%3D{}%0Adelete-this-file%3D1%0Afullscreen%3D0%0A")
+    DYNAMICAL_FILE = "#dynamically-generated-file"
+    MORE_INFO_LINK = ".machines-desktop-viewer-block a[href='#']"
+    CONSOLE_MANUAL_ADDRESS = _ID_PREFIX + 'consoles-manual-address'
+    CONSOLE_MANUAL_PORT = _ID_PREFIX + 'consoles-manual-port-{}'
+    CONSOLE_SPICE_PORT = CONSOLE_MANUAL_PORT.format("spice")
+    CONSOLE_SPICE_TLS_PORT = CONSOLE_MANUAL_PORT.format("spice-tls")
+    CONSOLE_VNC_PORT = CONSOLE_MANUAL_PORT.format("vnc")
+    # serial console
+    SERIAL_CONSOLE_NAME = "Serial Console"
+    SERIAL_CONSOLE_SELECT_ITEM = "li[data-data='serial-browser']"
+    SERIAL_CANVAS = "div.terminal canvas.xterm-text-layer"
+    SERIAL_CONSOLE_DISCONNECT_BUTTON = "#{}-serialconsole-disconnect".format(
+        VM_NAME)
+    SERIAL_CONSOLE_RECONNECT_BUTTON = "#{}-serialconsole-reconnect".format(
+        VM_NAME)
 
     # ovirt subtab
     _OVIRT_TEMPLATE = "//td[@id='vm-{}-{}']"
@@ -140,6 +189,8 @@ class MachinesOvirtCheckPage(SeleniumTest):
     VDSM_SAVE_OK = "//button[text()='OK']"
     VDSM_SERVICE_LINK = "//a[text()='VDSM Service Management']"
     VDSM_RELOAD_BUTTON = "//button[text()='Reload']"
+
+    VM_ICON = ".ovirt-provider-overview-icon"
 
     def open_page(self):
         a = self.get_data('machines_ovirt.yml')
@@ -201,7 +252,7 @@ class MachinesOvirtCheckPage(SeleniumTest):
         self.hover_and_click(self.NETWORKS_TAB)
 
     def open_consoles_subtub(self):
-        pass
+        self.hover_and_click(self.CONSOLES_TAB)
 
     def open_ovirt_subtub(self):
         self.hover_and_click(self.OVIRT_TAB)
@@ -209,23 +260,34 @@ class MachinesOvirtCheckPage(SeleniumTest):
     def run_ovirt_vm_on_ui(self):
         self.click(self.RUN_BUTTON)
 
+    def wait_vm_status(self, expect_status, times):
+        i = 0
+        while True:
+            if i > times:
+                raise RuntimeError("Timeout waitting for vm to expect status...")
+            vm_status = self.get_vm_status_on_engine()
+
+            if vm_status == expect_status:
+                return True
+            sleep(10)
+            i += 1
+
     def reboot_he_vm_on_ui(self):
         self.click(self.RESTART_BUTTON)
         sleep(self.WATI_VM_DOWN)
-        #sleep(self.WAIT_VM_UP)
         self.assert_element_visible(self.BUTTON_WARN)
         warn_text = self.get_text(self.BUTTON_WARN)
         self.assertEqual(warn_text, 'REBOOT action failed')
 
     def reboot_ovirt_vm_on_ui(self):
         self.click(self.RESTART_BUTTON)
-        sleep(self.WATI_VM_DOWN)
+        self.wait_vm_status("reboot_in_progress", 3)
+        self.wait_vm_status("up", 10)
 
     def force_reboot_he_vm_on_ui(self):
         self.click(self.RESTART_DROPDOWN_BUTTON)
         self.click(self.FORCERESTART_BUTTON)
         sleep(self.WATI_VM_DOWN)
-        #sleep(self.WAIT_VM_UP)
         self.assert_element_visible(self.BUTTON_WARN)
         warn_text = self.get_text(self.BUTTON_WARN)
         self.assertEqual(warn_text, 'REBOOT action failed')
@@ -233,7 +295,8 @@ class MachinesOvirtCheckPage(SeleniumTest):
     def force_reboot_ovirt_vm_on_ui(self):
         self.click(self.RESTART_DROPDOWN_BUTTON)
         self.click(self.FORCERESTART_BUTTON)
-        sleep(self.WATI_VM_DOWN)
+        self.wait_vm_status("reboot_in_progress", 3)
+        self.wait_vm_status("up", 10)
 
     def shutdown_he_vm_on_ui(self):
         self.click(self.SHUTDOWN_BUTTON)
@@ -244,7 +307,9 @@ class MachinesOvirtCheckPage(SeleniumTest):
 
     def shutdown_ovirt_vm_on_ui(self):
         self.click(self.SHUTDOWN_BUTTON)
-        sleep(self.WATI_VM_DOWN)
+        self.wait_vm_status("down", 3)
+        self.rhvm.start_vm(self.VM_NAME)
+        self.wait_vm_status("up", 10)
 
     def forceoff_he_vm_on_ui(self):
         self.click(self.SHUTDOWN_DROPDOWN_BUTTON)
@@ -255,14 +320,28 @@ class MachinesOvirtCheckPage(SeleniumTest):
         self.assertEqual(warn_text, 'SHUTDOWN action failed')
 
     def forceoff_ovirt_vm_on_ui(self):
+        '''
+        shutdown_ovirt_vm_on_ui() and forceoff_ovirt_vm_on_ui() functions
+        now just run the one about them, because if run both functions, the
+        function shutdown the vm and start vm, maybe the vm have chance to be
+        up in the additional host, so the second function will be failed, 
+        because there is no vm in first host. 
+        '''
         self.click(self.SHUTDOWN_DROPDOWN_BUTTON)
         self.click(self.FORCEOFF_BUTTON)
-        sleep(self.WATI_VM_DOWN)
+        self.wait_vm_status("down", 3)
+        self.rhvm.start_vm(self.VM_NAME)
+        self.wait_vm_status("up", 10)
 
-    def sendnmi_vm_on_ui(self):
+    def sendnmi_he_vm_on_ui(self):
         self.click(self.SHUTDOWN_DROPDOWN_BUTTON)
         self.click(self.SENDNMI_BUTTON)
         self.assert_element_visible(self.BUTTON_WARN)
+
+    def sendnmi_ovirt_vm_on_ui(self):
+        self.click(self.SHUTDOWN_DROPDOWN_BUTTON)
+        self.click(self.SENDNMI_BUTTON)
+        self.assert_element_invisible(self.BUTTON_WARN)
 
     def suspend_he_vm_on_ui(self):
         # TODO
@@ -272,80 +351,65 @@ class MachinesOvirtCheckPage(SeleniumTest):
 
     def suspend_ovirt_vm_on_ui(self):
         self.click(self.SUSPEND_BUTTON)
-        i = 0
-        while True:
-            if i > 20:
-                raise RuntimeError("Timeout for waiting for the vm to supend status")
-            vm_status = self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)['vm-status']
+        self.wait_vm_status("suspended", 20)
+        self.rhvm.start_vm(self.VM_NAME)
+        self.wait_vm_status("up", 10)
 
-            if vm_status == 'supend':
-                return True
-            sleep(10)
-            i += 1
-
-    def remove_libvirt_auth(self):
-        '''
-        If remove the libvirt auth, the vdsm auth will fail, then the vm will be down,
-        so this method cannot be used.
-        '''
-        remove_cmd = "sed -i '/auth_unix_rw/'d /etc/libvirt/libvirtd.conf"
-        self.host.execute(remove_cmd, raise_exception=False)
-        self.host.execute("systemctl restart libvirtd", raise_exception=False)
+    def change_network_status(self):
+        self.click_network1_plug_button()
+        self.assert_element_visible(self.PLUG_WARNING)
 
     def get_dumpxml_on_host(self):
-        false, true = False, True
-        cmd = 'vdsm-client Host getVMFullList vmName={} > /root/info.txt'.format(self.VM_NAME)
-        self.host.execute(cmd)
+        project_path = os.path.dirname(os.path.dirname(__file__))
+        pexpect_file = project_path + \
+            '/test_suites/test_machines_ovirt_check.py.data/pexpect_auth_virsh.py'
+        self.host.put_file(pexpect_file, '/root/pexpect_file.py')
 
-        self.host.get_file("/root/info.txt", "info.txt")
-        fp = open("info.txt",'rw+')
-
-        vm_info_list = eval(fp.read())
-        for i in range(0, len(vm_info_list)):
-            if vm_info_list[i]['vmName'] == self.VM_NAME:
-                self.dict_info = vm_info_list[i]
-        return self.dict_info
-
-    def get_vmxml_on_host(self):
-        self.vm_xml_info = xmltodict.parse(self.get_dumpxml_on_host()['xml'])
-        return self.vm_xml_info
+        cmd = "virsh dumpxml {}".format(self.VM_NAME)
+        ret = self.host.execute("python /root/pexpect_file.py '{}'".format(cmd))
+        self.vm_xml_info = xmltodict.parse(ret)
 
     def get_vm_state_on_host(self):
-        info = self.get_dumpxml_on_host()
-        if info['status'] == 'Up':
-            state = 'running'
-        else:
-            state = 'shut off'
-        return state
+        cmd = 'virsh domstate {}'.format(self.VM_NAME)
+        try:
+            ret = self.host.execute("python /root/pexpect_file.py '{}'".format(cmd))
+            return ret.split('\n')[0]
+        except RunCmdError:
+            return None
 
     def get_vm_state_on_ui(self):
         return self.get_text(self.VM_STATE)
 
     def get_autostart_state_on_host(self):
-        pass
+        cmd = 'virsh dominfo {}'.format(self.VM_NAME)
+        ret = self.host.execute("python /root/pexpect_file.py '{}'".format(cmd))
+        return ret.split('Autostart:')[-1].split('\n')[0].strip()
 
     def get_vm_description(self):
         return self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)['ovirt-description']
 
     def get_overview_info_in_xml(self, key):
         if key == 'memory':
-            value = int(self.dict_info['guestNumaNodes'][0]['memory']) / 1024 + 1
+            value = int(self.vm_xml_info['domain']
+                        ['memory']['#text']) / (1024 * 1024) + 1
         if key == 'vcpus':
-            value = len([i for i in self.dict_info['guestNumaNodes'][0]['cpus'].split(',')])
+            value = int(self.vm_xml_info['domain']['vcpu']['@current'])
         if key == 'cputype':
-            value = "custom (" + self.dict_info['cpuType'] + ")"
+            mode = self.vm_xml_info['domain']['cpu']['@mode']
+            model = self.vm_xml_info['domain']['cpu']['model']['#text']
+            value = mode + " (" + model + ")"
         if key == 'emulatedmachine':
-            value = self.dict_info['emulatedMachine']
+            value = self.vm_xml_info['domain']['os']['type']['@machine']
         if key == 'bootorder':
             value = 'disk' # This is hard code, should modify the value from xml
         if key == 'autostart':
-            value = 'disabled'  # This is hard code, should modify the value from xml
+            value = self.get_autostart_state_on_host() + 'd'
         if key == 'ovirt-description':
             value = self.get_vm_description()
         if key == 'ovirt-fqdn':
             value = self.config_dict['fqdn']
         if key == 'ovirt-starttime':
-            value = ''  # Here is a bug
+            value = ''  # For HE VM, this field is none
         return value
 
     def get_overview_info_on_ui(self, key):
@@ -361,39 +425,45 @@ class MachinesOvirtCheckPage(SeleniumTest):
         return value
 
     def get_memory_usage_on_ui(self):
+        sleep(15)
         value = self.get_text(self.USED_MEMORY_VALUE)
         unit = self.get_text(self.USED_MEMORY_UNIT)
         return value + unit
 
     def get_cpu_usage_on_ui(self):
+        sleep(15)
         value = self.get_text(self.USED_CPU_VALUE)
         unit = self.get_text(self.USED_CPU_UNIT)
         return value + unit
 
     def get_disk_list_in_xml(self):
         value = []
-        for i in range(0, len(self.dict_info['devices'])):
-            if self.dict_info['devices'][i]['type'] == 'disk':
-                value.append(self.dict_info['devices'][i])
-
+        ret = self.vm_xml_info['domain']['devices']['disk']
+        if not isinstance(ret, list):
+            value.append(ret)
+        else:
+            value = ret
         return value
 
     def get_disk_info_in_xml(self, disk, key):
-        # disk is a dict , include the whole disk information
         if key == 'device':
-            value = disk['device']
+            value = disk['@device']
         if key == 'target':
-            value = disk['name']
+            value = disk['target']['@dev']
         if key == 'bus':
-            value = disk['iface']
+            value = disk['target']['@bus']
         # The "used" and "capacity" is not listed
         if key == 'readonly':
-            if disk['readonly'] == 'False':
-                value = 'no'
-            else:
+            try:
+                ret = disk['readonly']
                 value = 'yes'
+            except Exception as e:
+                value = 'no'
         if key == 'source':
-            value = disk['path']
+            try:
+                value = disk['source']['@file']
+            except Exception as e:
+                value = ''
         return value
 
     def get_disk_info_on_ui(self, target, column):
@@ -424,8 +494,10 @@ class MachinesOvirtCheckPage(SeleniumTest):
             value = ret
         return value
 
-    def get_network_state_on_host(self):
-        return self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)['vm-status']
+    def get_network_state_on_host(self, interface):
+        cmd = 'virsh domif-getlink {} {}'.format(self.VM_NAME, interface)
+        ret = self.host.execute("python /root/pexpect_file.py '{}'".format(cmd))
+        return ret.split(' ')[-1]
 
     def get_network_info_in_xml(self, network, key):
         # network is a xmltodict object
@@ -436,17 +508,16 @@ class MachinesOvirtCheckPage(SeleniumTest):
         if key == 'mac':
             value = network['mac']['@address']
         if key == 'target':
-            #value = network['target']['@dev']
-            value = 'vnet0' # Hard Code
+            value = network['target']['@dev']
         if key == 'source':
             net_type = '@' + network['@type']
             value = network['source'][net_type]
         if key == 'state':
-            #value = network['link']['@state']
-            value = self.get_network_state_on_host()
+            value = network['link']['@state']
+            # value = self.get_network_state_on_host()
         if key == 'button':
-            #state = network['link']['@state']
-            state = self.get_network_state_on_host()
+            state = network['link']['@state']
+            #state = self.get_network_state_on_host()
             if state == 'up':
                 value = 'Unplug'
             else:
@@ -482,6 +553,10 @@ class MachinesOvirtCheckPage(SeleniumTest):
         if plug_text != expected_text:
             self.click_network1_plug_button()
 
+    def get_network1_state_on_host(self):
+        target = self.get_network_info_on_ui('1', 'target')
+        return self.get_network_state_on_host(target)
+
     def get_ovirt_info_on_host(self, key):
         if key == 'ovirt-ha':
             if self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)[key] == 'false':
@@ -505,7 +580,7 @@ class MachinesOvirtCheckPage(SeleniumTest):
         return value
 
     def migrate_vm_to_additional_host(self):
-        vm_on_first_host = self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)['test']
+        vm_on_first_host = self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)['host_id']
         self.click(self.MIGRATE_VM_BUTTON)
         self.click(self.CONFIRM_MIGRATE)
         i = 0
@@ -522,9 +597,10 @@ class MachinesOvirtCheckPage(SeleniumTest):
     # Check the Cluster Page
     def get_cluster_info_in_xml(self, key):
         if key == 'memory':
-            value = int(self.dict_info['guestNumaNodes'][0]['memory']) / 1024 + 1
+            value = int(self.vm_xml_info['domain']
+                        ['memory']['#text']) / (1024 * 1024) + 1
         if key == 'vcpus':
-            value = len([i for i in self.dict_info['guestNumaNodes'][0]['cpus'].split(',')])
+            value = int(self.vm_xml_info['domain']['vcpu']['@current'])
         if key == 'os':
             value = self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)['ovirt-ostype']
         if key == 'template':
@@ -584,6 +660,13 @@ class MachinesOvirtCheckPage(SeleniumTest):
         sleep(5)
         if link != 'https://{}:9090/machines'.format(host_name):
             self.fail()
+
+    def run_vm_in_cluster(self):
+        self.click(self.SHUTDOWN_BUTTON)
+        self.wait_vm_status("down", 3)
+        self.click(self.CLUSTER_TOPNAV)
+        self.click(self.CLUSTER_RUN_BUTTON)
+        self.wait_vm_status("up", 10)
 
     # Check the Templates Page
     def get_template_info_on_host(self, key):
@@ -693,3 +776,100 @@ class MachinesOvirtCheckPage(SeleniumTest):
 
         if prev_value != next_value:
             self.fail()
+
+    def get_console_type(self):
+        return self.get_text(self.CONSOLE_TYPE_TEXT)
+
+    def check_inline_vnc_console(self):
+        if self.get_console_type() == self.INLINE_CONSOLE_TYPE:
+            return True
+        return False
+
+    def send_ctrl_alt_del(self):
+        self.click(self.INLINE_CTRL_ALT_DEL_BUTTON)
+        self.wait_vm_status("reboot_in_progress", 3)
+        self.wait_vm_status("up", 10)
+
+    def open_external_console_page(self):
+        self.click(self.CONSOLE_TYPE_BUTTON)
+        sleep(2)
+        self.click(self.EXTERNAL_CONSOLE_SELECT_ITEM)
+        sleep(2)
+
+    def get_external_console_info_in_xml(self):
+        self.get_dumpxml_on_host()
+        viewer_list = []
+        graphic_list = self.vm_xml_info['domain']['devices']['graphics']
+        if not isinstance(graphic_list, list):
+            viewer_list.append(graphic_list)
+        else:
+            viewer_list = graphic_list
+        viewer_info_list = []
+        for viewer in viewer_list:
+            viewer_info = {}
+            try:
+                viewer_info['tlsPort'] = viewer['@tlsPort']
+            except Exception as e:
+                viewer_info['tlsPort'] = ''
+            viewer_info['type'] = viewer['@type']
+            viewer_info['port'] = viewer['@port']
+            viewer_info['ip'] = viewer['@listen']
+            viewer_info_list.append(viewer_info)
+        return viewer_info_list
+
+    def get_external_console_info_in_vv(self):
+        from seleniumlib import invisible
+        return self.get_attribute(self.DYNAMICAL_FILE, 'href', cond=invisible)
+
+    def launch_remote_viewer(self):
+        self.click(self.LAUNCH_REMOTE_VIEWER_BUTTON)
+        sleep(10)
+
+    def toggle_more_info(self):
+        self.click(self.MORE_INFO_LINK)
+
+    def get_consoles_manual_address_on_ui(self):
+        return self.get_text(self.CONSOLE_MANUAL_ADDRESS)
+
+    def get_consoles_manual_port_on_ui(self, con_type):
+        return self.get_text(self.CONSOLE_MANUAL_PORT.format(con_type))
+
+    def get_vm_status_on_engine(self):
+        return self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)['vm-status']
+
+    def get_vm_icon_data_on_host(self):
+        return self.rhvm.get_vm_icon_data(self.VM_NAME)
+
+    def get_vm_icon_data_on_ui(self):
+        return self.get_attribute(self.VM_ICON, 'src').split(',')[-1]
+
+    def login_non_root_user(self):
+        cmd = 'echo redhat | passwd --stdin node'
+        self.host.execute(cmd)
+        self.logout()
+        self.login('node', 'redhat')
+        sleep(10)
+
+    # check vcpu
+    def get_vcpu_topology_on_engine(self):
+        value = []
+        for cpu_topo in ['sockets', 'cores', 'threads']:
+            value.append(self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)[cpu_topo])
+        return value
+
+    def get_vcpu_topology_on_ui(self):
+        '''
+        Cannot get value from the disabled attribute
+        '''
+        # TODO
+        pass
+
+    def set_vcpu_details(self):
+        # TODO
+        pass
+
+    def open_vcpu_details_window(self):
+        self.click(self.VCPU_DETAILS_LINK)
+
+    def get_vcpu_count_on_ui(self):
+        return self.get_text(self.VCPU_DETAILS_LINK)
