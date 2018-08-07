@@ -1,29 +1,23 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
 pyyaml = "*"
 selenium = "*"
-fabric = "*"
+fabric = "<2.0"
 flask = "*"
 avocado-framework = "*"
 avocado-framework-plugin-result-html = "*"
 simplejson = "*"
 requests = "*"
 xmltodict = "*"
-
+avocado-framework-plugin-varianter-yaml-to-mux = "*"
 
 [dev-packages]
-
 pylint = "*"
 "autopep8" = "*"
 
-
 [requires]
-
 python_version = "2.7"

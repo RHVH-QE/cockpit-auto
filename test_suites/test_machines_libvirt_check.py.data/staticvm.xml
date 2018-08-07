@@ -1,5 +1,5 @@
 <domain type='kvm'>
-  <name>vmtest</name>
+  <name>staticvm</name>
   <memory unit='GiB'>1</memory>
   <currentMemory unit='GiB'>1</currentMemory>
   <vcpu placement='static'>1</vcpu>
@@ -10,18 +10,13 @@
   <features>
     <acpi/>
   </features>
-  <cpu mode='custom' match='exact' check='full'>
+  <cpu mode='custom' match='exact' check='partial'>
     <model fallback='forbid'>Opteron_G3</model>
-    <feature policy='disable' name='monitor'/>
-    <feature policy='require' name='x2apic'/>
-    <feature policy='require' name='hypervisor'/>
-    <feature policy='disable' name='rdtscp'/>
-    <feature policy='disable' name='svm'/>
   </cpu>
   <devices>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/var/lib/libvirt/images/vm.qcow2'/>
+      <source file='/var/lib/libvirt/images/staticvm.qcow2'/>
       <backingStore/>
       <target dev='vda' bus='virtio'/>
     </disk>

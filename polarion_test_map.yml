@@ -68,6 +68,11 @@ RHEL-113838: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_delete
 RHEL-114014: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_non_root_operation
 RHEL-138707: test_machines_libvirt_check.py:TestMachinesLibvirtCheck.test_change_vcpu_of_running_vm
 
+RHEL-113839: test_machines_libvirt_create.py:TestMachinesLibvirtCreate.test_create_many_vms
+RHEL-138709: test_machines_libvirt_create.py:TestMachinesLibvirtCreate.test_configure_vcpu_when_create_vm
+RHEL-113838: test_machines_libvirt_create.py:TestMachinesLibvirtCreate.test_delete_vm_with_storage
+RHEL-131325: test_machines_libvirt_create.py:TestMachinesLibvirtCreate.test_create_vm_with_iso
+RHEL-131326: test_machines_libvirt_create.py:TestMachinesLibvirtCreate.test_create_vm_with_url
 
 # cockpit-machines-ovirt
 RHEL-118144: test_machines_ovirt_check.py:TestMachinesOvirtCheck.test_disable_create_new_vm

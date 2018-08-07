@@ -2,10 +2,10 @@ import os
 import re
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from page_objects.page_machines_libvirt_check import MachinesLibvirtCheckPage
+from page_objects.page_machines_libvirt_check import PageMachinesLibvirtCheck
 
 
-class TestMachinesLibvirtCheck(MachinesLibvirtCheckPage):
+class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
     """
     :avocado: enable
     :avocado: tags=machines_check
@@ -13,13 +13,13 @@ class TestMachinesLibvirtCheck(MachinesLibvirtCheckPage):
 
     def test_prepare_files(self):
         root_dir = "/var/lib/libvirt/images"
-        for f in ['vm.xml', 'vm.qcow2']:
+        for f in ['staticvm.xml', 'staticvm.qcow2']:
             cmd = 'test -e {}/{}'.format(root_dir, f)
             ret = self.host.execute(cmd, raise_exception=False)
             if not ret.succeeded:
                 local_path = self.get_data(f)
                 self.host.put_file(local_path, root_dir)
-                if f == 'vm.xml':
+                if f == 'staticvm.xml':
                     if re.match(r'^10.', self.host.host_string):
                         ip = self.host.host_string
                     else:
@@ -49,8 +49,9 @@ class TestMachinesLibvirtCheck(MachinesLibvirtCheckPage):
     def test_disk_notification(self):
         self.prepare_stop_vm()
         self.open_vm_row()
-        self.open_disks_subtab()
-        self.assert_element_visible(self.DISKS_NOTIFICATION)
+        self.open_disks_subtab(state='stop')
+        self.assert_element_visible(
+            self.DISKS_NOTIFICATION.format(self.vmname))
 
     def test_vm_status(self):
         self.prepare_running_vm()
@@ -133,9 +134,10 @@ class TestMachinesLibvirtCheck(MachinesLibvirtCheckPage):
         self.open_vm_row()
         self.open_consoles_subtab()
         self.assertEqual(self.get_console_type(), self.INLINE_CONSOLE_TYPE)
-        self.assert_frame_available(self.INLINE_CONSOLE_FRAME_NAME)
-        # self.send_ctrl_alt_del()
-        # self.assertTrue(self.check_canvas_width_during_reboot())
+        self.assert_frame_available(
+            self.INLINE_CONSOLE_FRAME_NAME.format(self.vmname))
+        self.send_ctrl_alt_del()
+        self.assertTrue(self.wait_canvas_change())
 
     def test_external_console(self):
         self.prepare_running_vm()
@@ -173,13 +175,13 @@ class TestMachinesLibvirtCheck(MachinesLibvirtCheckPage):
         self.open_vm_row()
         self.sendnmi_vm_on_ui()
         self.assertEqual(self.get_vm_state_on_ui(), 'running')
-        self.assert_element_invisible(self.SENDNMI_BUTTON)
+        self.assert_element_invisible(self.SENDNMI_BUTTON.format(self.vmname))
 
     def test_shutdown_vm(self):
         self.prepare_running_vm()
         self.open_vm_row()
         self.shutdown_vm_on_ui()
-        self.assert_element_visible(self.RUN_BUTTON)
+        self.assert_element_visible(self.RUN_BUTTON.format(self.vmname))
         self.assertEqual(self.get_vm_state_on_ui(), 'shut off')
         self.assertEqual(self.get_vm_state_on_host(), 'shut off')
 
@@ -187,23 +189,23 @@ class TestMachinesLibvirtCheck(MachinesLibvirtCheckPage):
         self.prepare_stop_vm()
         self.open_vm_row()
         self.run_vm_on_ui()
-        self.assert_element_visible(self.RESTART_BUTTON)
+        self.assert_element_visible(self.RESTART_BUTTON.format(self.vmname))
         self.assertEqual(self.get_vm_state_on_ui(), 'running')
         self.assertEqual(self.get_vm_state_on_host(), 'running')
 
     def test_restart_vm(self):
         self.prepare_running_vm()
         self.open_vm_row()
-        self.open_consoles_subtab()
         self.restart_vm_on_ui()
-        self.assertTrue(self.check_canvas_width_during_reboot())
+        self.open_consoles_subtab()
+        self.assertTrue(self.wait_canvas_change())
 
     def test_force_restart_vm(self):
         self.prepare_running_vm()
         self.open_vm_row()
-        self.open_consoles_subtab()
         self.force_restart_vm_on_ui()
-        self.assertTrue(self.check_canvas_width_during_reboot())
+        self.open_consoles_subtab()
+        self.assertTrue(self.wait_canvas_change())
 
     def test_non_root_operation(self):
         self.prepare_running_vm()
@@ -233,11 +235,13 @@ class TestMachinesLibvirtCheck(MachinesLibvirtCheckPage):
         self.open_vm_row()
         self.open_vcpu_details_window()
         self.assert_element_visible(self.VCPU_CAUTION)
-        self.set_vcpu_details()
+        self.set_vcpu_details('8', '4', '2', '2', '2')
         self.assert_element_invisible(self.VCPU_DETAILS_WINDOW)
+        self.assertNotEqual(self.get_vcpu_count_on_ui(), '4')
         self.shutdown_vm_on_ui()
+        self.wait_visible(self.RUN_BUTTON.format(self.vmname))
         self.run_vm_on_ui()
-        self.assert_element_visible(self.RESTART_BUTTON)
+        self.wait_visible(self.RESTART_BUTTON.format(self.vmname))
         self.assertEqual(self.get_vcpu_count_on_ui(), '4')
         self.assertEqual(self.get_vcpu_topology_in_xml(), ['2', '2', '2'])
 
@@ -245,7 +249,7 @@ class TestMachinesLibvirtCheck(MachinesLibvirtCheckPage):
         self.prepare_running_vm()
         self.open_vm_row()
         self.forceoff_vm_on_ui()
-        self.assert_element_visible(self.RUN_BUTTON)
+        self.assert_element_visible(self.RUN_BUTTON.format(self.vmname))
         self.assertEqual(self.get_vm_state_on_ui(), 'shut off')
         self.assertEqual(self.get_vm_state_on_host(), 'shut off')
 
@@ -253,5 +257,5 @@ class TestMachinesLibvirtCheck(MachinesLibvirtCheckPage):
         self.prepare_stop_vm()
         self.open_vm_row()
         self.delete_vm_on_ui(del_storage=False)
-        self.assert_element_invisible(self.VM_ROW)
-        self.assertNotIn(self.VM_NAME, self.get_vm_list_on_host())
+        self.assert_element_invisible(self.VM_ROW.format(self.vmname))
+        self.assertNotIn(self.vmname, self.get_vm_list_on_host())

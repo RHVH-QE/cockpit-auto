@@ -14,9 +14,16 @@ def gen_polarion_results(avocado_results_dir):
         open(os.path.join(avocado_results_dir, 'latest', 'results.json')))
     polarion_test_map = yaml.load(open('./polarion_test_map.yml'))
 
+    test_ver_dir = os.path.dirname(avocado_results_dir)
+    polarion_dir = os.path.join(test_ver_dir, 'polarion')
+    if not os.path.exists(polarion_dir):
+        os.mkdir(polarion_dir)
+    test_ver = os.path.basename(test_ver_dir)
+    polarion_file_name = os.path.basename(avocado_results_dir) + ".json"
+
     polarion_results = OrderedDict()
-    vers = avocado_results_dir.split('/')
-    polarion_results['title'] = 'Auto_Test_' + vers[-2] + '_' + vers[-1]
+    polarion_results['title'] = 'Auto_Test_' + \
+        test_ver + '_' + polarion_file_name.rstrip('.json')
     polarion_results['results'] = OrderedDict()
     for test in avocado_json_results['tests']:
         if test['status'] == 'PASS':
@@ -26,11 +33,10 @@ def gen_polarion_results(avocado_results_dir):
 
         test_name = test['id'].split('/')[-1]
         for key, value in polarion_test_map.items():
-            if value == test_name:
+            if value == test_name.split(';')[0]:
                 polarion_results['results'][key] = test_status
 
-    polarion_results_file = os.path.join(
-        avocado_results_dir, 'latest', 'polarion_results.json')
+    polarion_results_file = os.path.join(polarion_dir, polarion_file_name)
 
     with open(polarion_results_file, 'w') as json_file:
         json_file.write(
@@ -39,39 +45,57 @@ def gen_polarion_results(avocado_results_dir):
 
 
 def run_tests(tags):
+    cmd = "avocado list ./ -t {}|awk '{{print $2}}'|awk -F':' '{{print $1}}'|sed -n '1p'".format(
+        tags)
+    test_dir = subprocess.check_output(cmd, shell=True).strip()
+    if not test_dir:
+        raise RuntimeError("No tests tagged with {}".format(tags))
+
     config_dict = yaml.load(open('./config.yml'))
 
     os.environ['HOST_STRING'] = config_dict['host_string']
     os.environ['USERNAME'] = config_dict['host_user']
     os.environ['PASSWD'] = config_dict['host_pass']
 
-    avocado_root_dir = config_dict['avocado_results_dir']
-    test_pkg_ver = config_dict['test_pkg_ver']
-    test_sys_ver = config_dict['test_sys_ver']
-    avocado_results_dir = avocado_root_dir + \
-        test_pkg_ver + "_" + test_sys_ver + "/" + os.environ['BROWSER']
+    # compose job os.path.joinresults dir
+    log_root_dir = config_dict['avocado_results_dir']
+    test_ver = config_dict['test_pkg_ver'] + "_" + config_dict['test_sys_ver']
+    log_ver_dir = os.path.join(log_root_dir, test_ver)
+    browser = os.environ['BROWSER']
+    tag_and_br = tags.replace(',', '_')
+    if browser != 'none':
+        tag_and_br = tag_and_br + "_" + browser
+    log_dir = os.path.join(log_ver_dir, tag_and_br)
 
-    tag_filter_list = ["--filter-by-tags=%s" %
-                       x.replace(' ', '') for x in tags.split('|')]
+    # compose avocado run
     avocado_run_cmd = ["avocado", "run", "./",
-                       "--job-results-dir", avocado_results_dir]
-    avocado_run_cmd.extend(tag_filter_list)
-
+                       "-t", tags, "--job-results-dir", log_dir]
+    # check yaml-to-mux
+    test_file_name = test_dir.split('/')[-1]
+    params_yaml_file = test_dir + '.data/' + \
+        test_file_name.rstrip('py') + 'yml'
+    if os.path.exists(params_yaml_file):
+        avocado_run_cmd.extend(["-m", params_yaml_file])
+    # run
     subprocess.call(avocado_run_cmd)
-    gen_polarion_results(avocado_results_dir)
+    gen_polarion_results(log_dir)
 
 
 def main():
     parser = argparse.ArgumentParser(description='Run Cockpit Avocado test(s)')
     parser.add_argument(
         "tags", nargs='?',
-        help=("Avocado tags filter specifying which tests need to be run. "
-              "For example, if you want to run the tests with both tag A and tag B, "
-              "the tests with tag C, "
-              "and the tests with tag D, "
-              "then you should define the filter as 'A,B|C|D'. "
-              "Refer to each test to see the actual avocado tags."))
-    parser.add_argument("-b", "--browser", choices=['firefox', 'chrome', 'ie'],
+        help=("Limited Avocado tags specifying which tests to run. "
+              "The limitations are: "
+              "1) Each test_*.py must has one unique file level tag, zero or more subtags. "
+              "2) tags can only contain one file level tag. "
+              "3) tests in different test_*.py files can't be run together. "
+              "Example: "
+              "There is a test_a.py with file level tag 'TEST_A', and a subtag 'SUB1'. "
+              "tags='TEST_A' means to run all tests in test_a.py, "
+              "tags='TEST_A,SUB1' means to run tests tagged with 'SUB1' in test_a.py, "
+              "tags='TEST_A,-SUB1' means to run tests not tagged with 'SUB1' in test_a.py"))
+    parser.add_argument("-b", "--browser", choices=['firefox', 'chrome', 'ie', 'none'],
                         default='chrome',
                         help="selenium browser choice")
     parser.add_argument('-m', '--mode', choices=['local', 'grid', 'standalone', 'manual'],

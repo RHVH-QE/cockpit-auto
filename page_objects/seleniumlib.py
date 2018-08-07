@@ -23,6 +23,8 @@ visible = EC.visibility_of_element_located
 clickable = EC.element_to_be_clickable
 invisible = EC.invisibility_of_element_located
 frame = EC.frame_to_be_available_and_switch_to_it
+present = EC.presence_of_element_located
+text_in = EC.text_to_be_present_in_element
 
 BY_MAP = {'CSS_SELECTOR': By.CSS_SELECTOR,
           'ID': By.ID,
@@ -37,10 +39,10 @@ BY_MAP = {'CSS_SELECTOR': By.CSS_SELECTOR,
 
 def locator(el_descriptor):
     for key in BY_MAP:
-        pattern = r'^%s#' % key
+        pattern = r'^{}#'.format(key)
         if re.match(pattern, el_descriptor):
             by = BY_MAP.get(key)
-            path = el_descriptor.lstrip('%s#' % key)
+            path = el_descriptor.lstrip('{}#'.format(key))
             break
     else:
         if re.match(r'^//', el_descriptor):
@@ -51,8 +53,39 @@ def locator(el_descriptor):
     return (by, path)
 
 
-class NoElementError(Exception):
+class WaitElementTimeOutError(Exception):
     pass
+
+
+class WaitResults(object):
+    def __init__(self):
+        self._succeeded = False
+        self._element = ""
+        self._screenshot = ""
+
+    @property
+    def succeeded(self):
+        return self._succeeded
+
+    @succeeded.setter
+    def succeeded(self, val):
+        self._succeeded = val
+
+    @property
+    def element(self):
+        return self._element
+
+    @element.setter
+    def element(self, val):
+        self._element = val
+
+    @property
+    def screenshot(self):
+        return self._screenshot
+
+    @screenshot.setter
+    def screenshot(self, val):
+        self._screenshot = val
 
 
 class SeleniumTest(Test):
@@ -78,7 +111,7 @@ class SeleniumTest(Test):
             else:
                 self.driver = webdriver.Chrome()
         else:
-            hub_url = 'http://%s:4444/wd/hub' % selenium_hub
+            hub_url = 'http://{}:4444/wd/hub'.format(selenium_hub)
             capabilities = self._get_desired_capabilities(browser)
             self.driver = webdriver.Remote(
                 command_executor=hub_url, desired_capabilities=capabilities)
@@ -109,7 +142,7 @@ class SeleniumTest(Test):
         return capabilities
 
     def open_cockpit(self, host_string, browser=None):
-        self.driver.get('http://%s:9090' % host_string)
+        self.driver.get('http://{}:9090'.format(host_string))
         if browser == 'ie':
             self.click("#overridelink")
 
@@ -144,20 +177,18 @@ class SeleniumTest(Test):
     def get_title(self):
         return self.driver.title
 
-    def _wait(self, el_descriptor, cond, try_times):
-        """
-        el_descriptor - The descriptor of an element, shoule be like "XPATH{}//..", "ID{}id"
-        """
-        element = None
+    def _wait(self, cond, try_times):
+        result = WaitResults()
         for count in range(0, try_times):
             try:
                 element = WebDriverWait(
-                    self.driver, DEFAULT_EXPLICIT_WAIT).until(cond(locator(el_descriptor)))
+                    self.driver, DEFAULT_EXPLICIT_WAIT).until(cond)
+                result.succeeded = True
+                result.element = element
                 break
             except:
                 pass
-
-        if not element:
+        else:
             screenshot_file = "screenshot-%s.png" % str(inspect.stack()[2][3])
             try:
                 self.driver.save_screenshot(
@@ -165,37 +196,76 @@ class SeleniumTest(Test):
             except Exception as e:
                 screenshot_file = "Unable to catch screenshot: {0} ({1})".format(
                     screenshot_file, e)
-                pass
             finally:
-                raise NoElementError('Unable to locate %s' %
-                                     str(el_descriptor), screenshot_file)
+                result.screenshot = screenshot_file
 
-        return element
+        return result
+
+    def wait_present(self, el_descriptor, try_times=DEFAULT_TRY):
+        cond = present(locator(el_descriptor))
+        ret = self._wait(cond, try_times)
+        if not ret.succeeded:
+            raise WaitElementTimeOutError("Wait '{}' present timeout.".format(
+                el_descriptor), ret.screenshot)
+        return ret.element
+
+    def wait_visible(self, el_descriptor, try_times=DEFAULT_TRY):
+        cond = visible(locator(el_descriptor))
+        ret = self._wait(cond, try_times)
+        if not ret.succeeded:
+            raise WaitElementTimeOutError("Wait '{}' visible timeout.".format(
+                el_descriptor), ret.screenshot)
+        return ret.element
+
+    def wait_invisible(self, el_descriptor, try_times=DEFAULT_TRY):
+        cond = invisible(locator(el_descriptor))
+        ret = self._wait(cond, try_times)
+        if not ret.succeeded:
+            raise WaitElementTimeOutError("Wait '{}' invisible timeout.".format(
+                el_descriptor), ret.screenshot)
+        return ret.element
+
+    def wait_clickable(self, el_descriptor, try_times=DEFAULT_TRY):
+        cond = clickable(locator(el_descriptor))
+        ret = self._wait(cond, try_times)
+        if not ret.succeeded:
+            raise WaitElementTimeOutError("Wait '{}' clickable timeout.".format(
+                el_descriptor), ret.screenshot)
+        return ret.element
+
+    def wait_in_text(self, el_descriptor, text, try_times=DEFAULT_TRY):
+        cond = text_in(locator(el_descriptor), text)
+        ret = self._wait(cond, try_times)
+        if not ret.succeeded:
+            raise WaitElementTimeOutError("Wait '{}' in '{}' timeout.".format(
+                text, el_descriptor), ret.screenshot)
 
     def switch_to_frame(self, frame_name, try_times=DEFAULT_TRY):
-        el_descriptor = "iframe[name*='%s']" % frame_name
-        self._wait(el_descriptor, cond=frame, try_times=try_times)
+        el_descriptor = "iframe[name*='{}']".format(frame_name)
+        cond = frame(locator(el_descriptor))
+        ret = self._wait(cond, try_times=try_times)
+        if not ret.succeeded:
+            raise WaitElementTimeOutError(
+                "Wait switch to frame {} timeout.".format(frame_name), ret.screenshot)
 
     def switch_to_default_content(self):
         self.driver.switch_to.default_content()
 
     def click(self, el_descriptor, try_times=DEFAULT_TRY):
-        element = self._wait(
-            el_descriptor, cond=clickable, try_times=try_times)
+        def find_click():
+            element = self.wait_clickable(el_descriptor, try_times)
+            element.click()
         try:
-            element.click()
+            find_click()
         except (StaleElementReferenceException, ElementNotInteractableException):
-            element = self._wait(
-                el_descriptor, cond=clickable, try_times=try_times)
-            element.click()
+            find_click()
 
     def click_text(self, text, try_times=DEFAULT_TRY):
-        el_descriptor = "//*[contains(text(), '%s')]" % text
+        el_descriptor = "//*[contains(text(), '{}')]".format(text)
         self.click(el_descriptor, try_times)
 
     def hover_and_click(self, el_hover, el_click=None, try_times=DEFAULT_TRY):
-        hover_element = self._wait(
-            el_hover, cond=visible, try_times=try_times)
+        hover_element = self.wait_visible(el_hover, try_times)
         actions = ActionChains(self.driver)
         actions.move_to_element(hover_element)
         if not el_click:
@@ -208,8 +278,7 @@ class SeleniumTest(Test):
             self.click(el_click, try_times)
 
     def input_text(self, el_descriptor, new_value, clear=True, control=False, try_times=DEFAULT_TRY):
-        element = self._wait(el_descriptor, cond=visible,
-                             try_times=try_times)
+        element = self.wait_visible(el_descriptor, try_times)
         if clear:
             element.clear()
         if control:
@@ -222,44 +291,49 @@ class SeleniumTest(Test):
             element.send_keys(Keys.RETURN)
 
     def get_text(self, el_descriptor, try_times=DEFAULT_TRY):
-        element = self._wait(el_descriptor, cond=visible,
-                             try_times=try_times)
+        element = self.wait_visible(el_descriptor, try_times)
         return element.text
 
-    def get_attribute(self, el_descriptor, attr_name, cond=visible, try_times=DEFAULT_TRY):
-        element = self._wait(el_descriptor, cond=cond, try_times=try_times)
+    def get_attribute(self, el_descriptor, attr_name, try_times=DEFAULT_TRY):
+        element = self.wait_present(el_descriptor, try_times)
         return element.get_attribute(attr_name)
 
     def assert_element_visible(self, el_descriptor, try_times=DEFAULT_TRY):
         try:
-            self._wait(el_descriptor, cond=visible, try_times=try_times)
-        except NoElementError:
+            self.wait_visible(el_descriptor, try_times)
+        except WaitElementTimeOutError:
             self.fail()
 
     def assert_element_invisible(self, el_descriptor, try_times=DEFAULT_TRY):
         try:
-            self._wait(el_descriptor, cond=invisible, try_times=try_times)
-        except NoElementError:
+            self.wait_invisible(el_descriptor, try_times)
+        except WaitElementTimeOutError:
+            self.fail()
+
+    def assert_in_text(self, el_descriptor, text, try_times=DEFAULT_TRY):
+        try:
+            self.wait_in_text(el_descriptor, text, try_times)
+        except WaitElementTimeOutError:
+            self.fail()
+
+    def assert_frame_available(self, frame_name, try_times=DEFAULT_TRY):
+        try:
+            self.switch_to_frame(frame_name, try_times)
+        except WaitElementTimeOutError:
             self.fail()
 
     def assert_text_visible(self, text, try_times=DEFAULT_TRY):
-        el_descriptor = "//*[contains(text(), '%s')]" % text
+        el_descriptor = "//*[contains(text(), '{}')]".format(text)
         self.assert_element_visible(el_descriptor, try_times)
 
     def assert_text_in_element(self, el_descriptor, text, try_times=DEFAULT_TRY):
         element_text = self.get_text(el_descriptor, try_times)
         if text not in element_text:
-            self.fail("The expected text '%s' is not in element %s." %
-                      (text, el_descriptor))
+            self.fail("The expected text '{}' is not in element {}.".format(
+                text, el_descriptor))
 
     def assert_text_not_in_element(self, el_descriptor, text, try_times=DEFAULT_TRY):
         element_text = self.get_text(el_descriptor, try_times)
         if text in element_text:
-            self.fail("The unexpected text '%s' is in element %s." %
-                      (text, el_descriptor))
-
-    def assert_frame_available(self, frame_name, try_times=DEFAULT_TRY):
-        try:
-            self.switch_to_frame(frame_name, try_times)
-        except NoElementError:
-            self.fail()
+            self.fail("The unexpected text '{}' is in element {}.".format(
+                text, el_descriptor))
