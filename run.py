@@ -44,6 +44,27 @@ def gen_polarion_results(avocado_results_dir):
                 polarion_results, indent=4))
 
 
+def post_deal_with_polarion_results(file_path):
+    tag_and_br = os.path.basename(file_path).rstrip('.json')
+    test_ver = os.path.basename(os.path.dirname(os.path.dirname(file_path)))
+
+    polarion_results = OrderedDict()
+    polarion_results['title'] = 'Auto_Test_' + test_ver + '_' + tag_and_br
+    polarion_results['results'] = OrderedDict()
+    for line in open(file_path).readlines():
+        split_line = line.split(':')
+        case_id = split_line[0].strip()
+        case_state = split_line[1].strip()
+        pre_state = polarion_results['results'].get(case_id)
+        if pre_state == case_state or pre_state == 'failed':
+            continue
+        polarion_results['results'][case_id] = case_state
+    with open(file_path, 'w') as json_file:
+        json_file.write(
+            simplejson.dumps(
+                polarion_results, indent=4))
+
+
 def run_tests(tags):
     cmd = "avocado list ./ -t {}|awk '{{print $2}}'|awk -F':' '{{print $1}}'|sed -n '1p'".format(
         tags)
@@ -57,7 +78,7 @@ def run_tests(tags):
     os.environ['USERNAME'] = config_dict['host_user']
     os.environ['PASSWD'] = config_dict['host_pass']
 
-    # compose job os.path.joinresults dir
+    # compose avocado job results dir
     log_root_dir = config_dict['avocado_results_dir']
     test_ver = config_dict['test_pkg_ver'] + "_" + config_dict['test_sys_ver']
     log_ver_dir = os.path.join(log_root_dir, test_ver)
@@ -66,6 +87,15 @@ def run_tests(tags):
     if browser != 'none':
         tag_and_br = tag_and_br + "_" + browser
     log_dir = os.path.join(log_ver_dir, tag_and_br)
+
+    # create polarion result file
+    polarion_dir = os.path.join(log_ver_dir, "polarion")
+    if not os.path.exists(polarion_dir):
+        os.makedirs(polarion_dir)
+    polarion_file = os.path.join(polarion_dir, tag_and_br + '.json')
+    f = open(polarion_file, 'w')
+    f.close()
+    os.environ['POLARION_RESULT_FILE'] = polarion_file
 
     # compose avocado run
     avocado_run_cmd = ["avocado", "run", "./",
@@ -78,7 +108,8 @@ def run_tests(tags):
         avocado_run_cmd.extend(["-m", params_yaml_file])
     # run
     subprocess.call(avocado_run_cmd)
-    gen_polarion_results(log_dir)
+    # gen_polarion_results(log_dir)
+    post_deal_with_polarion_results(polarion_file)
 
 
 def main():

@@ -14,6 +14,7 @@ from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import ElementNotInteractableException
 from utils.machine import Machine
+from utils.caseid import check_case_id
 
 
 DEFAULT_EXPLICIT_WAIT = 1
@@ -94,6 +95,10 @@ class SeleniumTest(Test):
     """
 
     def setUp(self):
+        # initialize polarion case
+        self.case_id = None
+        self.case_state = None
+
         # get params from os.environ
         host_string = os.environ.get('HOST_STRING')
         username = os.environ.get('USERNAME')
@@ -126,6 +131,7 @@ class SeleniumTest(Test):
         self.login(username, passwd)
         self.open_page()
 
+    @check_case_id
     def tearDown(self):
         self.driver.quit()
 

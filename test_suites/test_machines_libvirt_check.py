@@ -3,6 +3,7 @@ import re
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from page_objects.page_machines_libvirt_check import PageMachinesLibvirtCheck
+from utils.caseid import add_case_id
 
 
 class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
@@ -30,22 +31,26 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
                         ip, root_dir, f)
                     self.host.execute(cmd)
 
+    @add_case_id("RHEL-122285")
     def test_no_vm(self):
         self.prepare_no_vm()
         self.assertEqual(self.get_no_vm_text_on_ui(), self.NO_VM_TEXT)
 
+    @add_case_id("RHEL-113823")
     def test_memory_usage_off(self):
         self.prepare_stop_vm()
         self.open_vm_row()
         self.open_usage_subtab()
         self.assertEqual(self.get_memory_usage_on_ui(), "0.00GiB")
 
+    @add_case_id("RHEL-122432")
     def test_cpu_usage_off(self):
         self.prepare_stop_vm()
         self.open_vm_row()
         self.open_usage_subtab()
         self.assertEqual(self.get_cpu_usage_on_ui(), "0.0%")
 
+    @add_case_id("RHEL-122436")
     def test_disk_notification(self):
         self.prepare_stop_vm()
         self.open_vm_row()
@@ -59,6 +64,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         value_on_ui = self.get_vm_state_on_ui()
         self.assertEqual(value_on_host, value_on_ui)
 
+    @add_case_id("RHEL-113784")
     def test_overview_info(self):
         self.prepare_running_vm()
         self.get_dumpxml_on_host()
@@ -68,6 +74,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
             value_on_ui = self.get_overview_info_on_ui(key)
             self.assertEqual(value_in_xml, value_on_ui)
 
+    @add_case_id("RHEL-122434")
     def test_memory_usage_running(self):
         self.prepare_running_vm()
         self.open_vm_row()
@@ -75,12 +82,14 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.assertNotEqual(self.get_memory_usage_on_ui(
             state='running'), "0.00GiB")
 
+    @add_case_id("RHEL-122435")
     def test_cpu_usage_running(self):
         self.prepare_running_vm()
         self.open_vm_row()
         self.open_usage_subtab()
         self.assertNotEqual(self.get_cpu_usage_on_ui(state='running'), "0.0%")
 
+    @add_case_id("RHEL-113825")
     def test_disks_info(self):
         self.prepare_running_vm()
         self.get_dumpxml_on_host()
@@ -96,6 +105,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
                 value_on_ui = self.get_disk_info_on_ui(target, column)
                 self.assertEqual(value_in_xml, value_on_ui)
 
+    @add_case_id("RHEL-116892")
     def test_networks_info(self):
         self.prepare_running_vm()
         self.get_dumpxml_on_host()
@@ -109,6 +119,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
                 value_on_ui = self.get_network_info_on_ui(i + 1, column)
                 self.assertEqual(value_in_xml, value_on_ui)
 
+    @add_case_id("RHEL-116893")
     def test_network_unplug(self):
         self.prepare_running_vm()
         self.open_vm_row()
@@ -119,6 +130,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.assertEqual(self.get_network1_state_on_ui(), 'down')
         self.assertEqual(self.get_network1_state_on_host(), 'down')
 
+    @add_case_id("RHEL-116895")
     def test_network_plug(self):
         self.prepare_running_vm()
         self.open_vm_row()
@@ -129,6 +141,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.assertEqual(self.get_network1_state_on_ui(), 'up')
         self.assertEqual(self.get_network1_state_on_host(), 'up')
 
+    @add_case_id("RHEL-113829")
     def test_inline_console(self):
         self.prepare_running_vm()
         self.open_vm_row()
@@ -139,6 +152,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.send_ctrl_alt_del()
         self.assertTrue(self.wait_canvas_change())
 
+    @add_case_id("RHEL-113824")
     def test_external_console(self):
         self.prepare_running_vm()
         self.open_vm_row()
@@ -159,6 +173,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
             self.assertEqual(self.get_consoles_manual_port_on_ui(
                 viewer['type']), viewer['port'])
 
+    @add_case_id("RHEL-116896")
     def test_serial_console(self):
         self.prepare_running_vm()
         self.open_vm_row()
@@ -170,6 +185,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.reconnect_serial_console()
         self.assert_element_visible(self.SERIAL_CANVAS)
 
+    @add_case_id("RHEL-113836")
     def test_sendnmi_vm(self):
         self.prepare_running_vm()
         self.open_vm_row()
@@ -177,6 +193,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.assertEqual(self.get_vm_state_on_ui(), 'running')
         self.assert_element_invisible(self.SENDNMI_BUTTON.format(self.vmname))
 
+    @add_case_id("RHEL-113833")
     def test_shutdown_vm(self):
         self.prepare_running_vm()
         self.open_vm_row()
@@ -185,6 +202,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.assertEqual(self.get_vm_state_on_ui(), 'shut off')
         self.assertEqual(self.get_vm_state_on_host(), 'shut off')
 
+    @add_case_id("RHEL-122789")
     def test_run_vm(self):
         self.prepare_stop_vm()
         self.open_vm_row()
@@ -193,6 +211,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.assertEqual(self.get_vm_state_on_ui(), 'running')
         self.assertEqual(self.get_vm_state_on_host(), 'running')
 
+    @add_case_id("RHEL-113827")
     def test_restart_vm(self):
         self.prepare_running_vm()
         self.open_vm_row()
@@ -200,6 +219,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.open_consoles_subtab()
         self.assertTrue(self.wait_canvas_change())
 
+    @add_case_id("RHEL-113832")
     def test_force_restart_vm(self):
         self.prepare_running_vm()
         self.open_vm_row()
@@ -207,6 +227,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.open_consoles_subtab()
         self.assertTrue(self.wait_canvas_change())
 
+    @add_case_id("RHEL-114014")
     def test_non_root_operation(self):
         self.prepare_running_vm()
         self.login_non_root_user()
@@ -230,6 +251,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.assertEqual(self.get_delete_vm_alert_text(),
                          self.DELETE_VM_ALEART_TEXT)
 
+    @add_case_id("RHEL-138707")
     def test_change_vcpu_of_running_vm(self):
         self.prepare_running_vm()
         self.open_vm_row()
@@ -245,6 +267,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.assertEqual(self.get_vcpu_count_on_ui(), '4')
         self.assertEqual(self.get_vcpu_topology_in_xml(), ['2', '2', '2'])
 
+    @add_case_id("RHEL-113834")
     def test_force_off_vm(self):
         self.prepare_running_vm()
         self.open_vm_row()
@@ -253,6 +276,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.assertEqual(self.get_vm_state_on_ui(), 'shut off')
         self.assertEqual(self.get_vm_state_on_host(), 'shut off')
 
+    @add_case_id("RHEL-113838")
     def test_delete_vm_without_storage(self):
         self.prepare_stop_vm()
         self.open_vm_row()

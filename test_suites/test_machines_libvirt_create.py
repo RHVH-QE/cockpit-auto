@@ -2,6 +2,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from page_objects.page_machines_libvirt_create import PageMachinesLibvirtCreate
+from utils.caseid import add_case_id
 
 
 class TestMachinesLibvirtCreate(PageMachinesLibvirtCreate):
@@ -9,7 +10,7 @@ class TestMachinesLibvirtCreate(PageMachinesLibvirtCreate):
     :avocado: enable
     :avocado: tags=machines_create
     """
-
+    @add_case_id("RHEL-131325")
     def test_create_vm_with_iso(self):
         self.create_new_vm('vm_iso',
                            location=self.params.get('iso_file'),
@@ -28,6 +29,7 @@ class TestMachinesLibvirtCreate(PageMachinesLibvirtCreate):
         self.assert_frame_available(
             self.INLINE_CONSOLE_FRAME_NAME.format(self.vmname))
 
+    @add_case_id("RHEL-131326")
     def test_create_vm_with_url(self):
         self.create_new_vm('vm_url',
                            is_filesystem_location=False,
@@ -45,6 +47,7 @@ class TestMachinesLibvirtCreate(PageMachinesLibvirtCreate):
         self.assert_frame_available(
             self.INLINE_CONSOLE_FRAME_NAME.format(self.vmname))
 
+    @add_case_id("RHEL-138709")
     def test_configure_vcpu_when_create_vm(self):
         self.create_new_vm('vm_vcpu',
                            location=self.params.get('iso_file'),
@@ -62,6 +65,7 @@ class TestMachinesLibvirtCreate(PageMachinesLibvirtCreate):
         self.install_vm()
         self.wait_after_install()
 
+    @add_case_id("RHEL-113838")
     def test_delete_vm_with_storage(self):
         self.create_new_vm('vm_delete',
                            location=self.params.get('iso_file'),
@@ -76,6 +80,7 @@ class TestMachinesLibvirtCreate(PageMachinesLibvirtCreate):
         self.assertNotIn(self.vmname, self.get_vm_list_on_host())
         self.assertNotIn("vm_delete.qcow2", self.get_storage_list_on_host())
 
+    @add_case_id("RHEL-113839")
     def test_create_many_vms(self):
         for i in range(0, 20):
             self.create_new_vm('vm_{}'.format(i),

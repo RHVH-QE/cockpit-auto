@@ -2,6 +2,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from page_objects.page_ovirt_dashboard import OvirtDashboardPage
+from utils.caseid import add_case_id
 
 
 class TestOvirtDashboard(OvirtDashboardPage):
@@ -9,7 +10,7 @@ class TestOvirtDashboard(OvirtDashboardPage):
     :avocado: enable
     :avocado: tags=ovirt_dashboard
     """
-
+    @add_case_id("RHEVM-23308")
     def test_health_status(self):
         nodectl_check = self.nodectl_check_on_host()
         expected_status = nodectl_check['status']
@@ -19,6 +20,7 @@ class TestOvirtDashboard(OvirtDashboardPage):
         self.assertEqual(status_on_ui, expected_status)
         self.assertIn(status_on_ui, icon_on_ui)
 
+    @add_case_id("RHEVM-23309")
     def test_node_health(self):
         def check_icons(dict_a):
             for key, value in dict_a.items():
@@ -38,12 +40,14 @@ class TestOvirtDashboard(OvirtDashboardPage):
         self.open_node_health_window()
         check_icons(nodectl_check)
 
+    @add_case_id("RHEVM-23308")
     def test_current_layer(self):
         nodectl_info = self.nodectl_info_on_host()
         expected_current_layer = nodectl_info['current_layer']
         current_layer_on_ui = self.get_current_layer_text()
         self.assertEqual(expected_current_layer, current_layer_on_ui)
 
+    @add_case_id("RHEVM-23311")
     def test_node_information(self):
         global mem
         mem = None
@@ -71,6 +75,7 @@ class TestOvirtDashboard(OvirtDashboardPage):
         self.open_node_information_window()
         check_contents(nodectl_info)
 
+    @add_case_id("RHEVM-23313")
     def test_rollback(self):
         nodectl_info = self.nodectl_info_on_host()
         current_layer = nodectl_info['current_layer']
@@ -88,18 +93,22 @@ class TestOvirtDashboard(OvirtDashboardPage):
             self.execute_rollback_on_layer(available_layer)
             self.assert_element_visible(self.ROLLBACK_ALERT % available_layer)
 
+    @add_case_id("RHEVM-23317")
     def test_network_info_link(self):
         self.open_network_info_link()
         self.assertIn('Networking', self.get_title())
 
+    @add_case_id("RHEVM-23318")
     def test_system_log_link(self):
         self.open_system_logs_link()
         self.assertIn('Logs', self.get_title())
 
+    @add_case_id("RHEVM-23319")
     def test_storage_link(self):
         self.open_storage_link()
         self.assertIn('Storage', self.get_title())
 
+    @add_case_id("RHEVM-23320")
     def test_ssh_host_key_link(self):
         ssh_key_on_host = self.get_ssh_key_on_host()
         ssh_key_on_ui = self.get_ssh_key_on_page()
