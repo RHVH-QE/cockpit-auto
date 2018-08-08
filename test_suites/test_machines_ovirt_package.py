@@ -4,6 +4,7 @@ import yaml
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from avocado import Test
 from utils.machine import Machine
+from utils.caseid import add_case_id 
 
 BASE_URL = "{base}/{ver1}/{ver2}/{arch}/{name}"
 
@@ -38,6 +39,7 @@ class TestMachinesOvirtPackage(Test):
             cmd = 'curl -o {} {}'.format(rpm_name, url)
             self.host.execute(cmd)
 
+    @add_case_id("RHEL-113962")
     def test_upgrade_pkg(self):
         cmd = 'rpm -e cockpit-machines-ovirt --nodeps'
         self.host.execute(cmd)
@@ -49,6 +51,7 @@ class TestMachinesOvirtPackage(Test):
         ret = self.host.execute(cmd, raise_exception=False)
         self.assertEqual(ret + '.rpm', self.NEW_MACHINES_RPM_NAME)
 
+    @add_case_id("RHEL-113961")
     def test_remove_pkg(self):
         cmd = 'rpm -e cockpit-machines-ovirt --nodeps'
         self.host.execute(cmd)
@@ -56,6 +59,7 @@ class TestMachinesOvirtPackage(Test):
         ret = self.host.execute(cmd, raise_exception=False)
         self.assertEqual(ret, '')
 
+    @add_case_id("RHEL-113768")
     def test_install_pkg(self):
         cmd = 'rpm -ivh {}'.format(self.NEW_MACHINES_RPM_NAME)
         self.host.execute(cmd)
