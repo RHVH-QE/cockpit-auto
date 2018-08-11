@@ -5,6 +5,8 @@ from avocado import Test
 from utils.machine import Machine
 from utils.caseid import add_case_id, check_case_id
 
+URL_VER = "/{ver1}/{ver2}/{arch}/{name}"
+
 
 class TestMachinesLibvirtPackage(Test):
     """
@@ -36,7 +38,7 @@ class TestMachinesLibvirtPackage(Test):
             args['ver2'] = '.'.join([split_dot[0], split_dot[1]])
             args['arch'] = split_dot[2]
             args['name'] = rpm_name
-            url = self.base_url.format(**args)
+            url = self.base_url + URL_VER.format(**args)
             cmd = 'wget {}'.format(url)
             self.host.execute(cmd)
 
@@ -56,6 +58,9 @@ class TestMachinesLibvirtPackage(Test):
 
     @add_case_id("RHEL-115592")
     def test_remove_pkg(self):
+        """
+        :avocado: tags=test
+        """
         cmd = 'rpm -e cockpit-machines'
         self.host.execute(cmd)
         cmd = 'rpm -qa | grep cockpit-machines'

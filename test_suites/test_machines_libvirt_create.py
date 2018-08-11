@@ -16,8 +16,8 @@ class TestMachinesLibvirtCreate(PageMachinesLibvirtCreate):
                            location=self.params.get('iso_file'),
                            memory_size='2',
                            storage_size='2',
-                           os_vendor='CentOS',
-                           os_name='CentOS 7.0')
+                           os_vendor='Unspecified',
+                           os_name='Other OS')
         self.assert_element_visible(self.VM_ROW.format(self.vmname))
         vm_state = self.VM_STATE.format(self.vmname)
         self.assert_in_text(vm_state, 'creating VM')
@@ -61,7 +61,7 @@ class TestMachinesLibvirtCreate(PageMachinesLibvirtCreate):
         self.assert_element_invisible(self.VCPU_CAUTION)
         self.set_vcpu_details('8', '4', '2', '2', '2')
         self.assert_element_invisible(self.VCPU_DETAILS_WINDOW)
-        self.assertEqual(self.get_vcpu_count_on_ui(), '4')
+        self.assert_in_text(self.VCPU_DETAILS_LINK.format(self.vmname), '4')
         self.install_vm()
         self.wait_after_install()
 
