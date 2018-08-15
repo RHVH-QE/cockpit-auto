@@ -1,5 +1,6 @@
-from page_machines_libvirt_check import PageMachinesLibvirtCheck as COMM
+import os
 from time import sleep
+from page_machines_libvirt_check import PageMachinesLibvirtCheck as COMM
 
 
 class PageMachinesLibvirtCreate(COMM):
@@ -12,7 +13,7 @@ class PageMachinesLibvirtCreate(COMM):
     NAME = "#vm-name"
     INSTALL_SOURCE_TYPE = "#source-type"
     INSTALL_SOURCE_FILE_INPUT = "#source-file input"
-    INSTALL_SOURCE_ITEM = "//*[@id='source-file']//a[text()='test.iso']"
+    INSTALL_SOURCE_ITEM = "//*[@id='source-file']//a[text()='{}']"
     INSTALL_SOURCE_URL_INPUT = "#source-url"
     OS_VENDER = "#vendor-select"
     OPERATING_SYSTEM = "#system-select"
@@ -43,7 +44,8 @@ class PageMachinesLibvirtCreate(COMM):
             self._select_from_dropdown(
                 self.INSTALL_SOURCE_TYPE, 'Filesystem')
             self.input_text(self.INSTALL_SOURCE_FILE_INPUT, location)
-            self.wait_present(self.INSTALL_SOURCE_ITEM)
+            self.wait_present(self.INSTALL_SOURCE_ITEM.format(
+                os.path.basename(location)))
         else:
             self._select_from_dropdown(
                 self.INSTALL_SOURCE_TYPE, 'URL')

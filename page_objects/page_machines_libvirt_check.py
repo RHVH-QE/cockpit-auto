@@ -143,7 +143,7 @@ class PageMachinesLibvirtCheck(SeleniumTest):
         self.click(self.RUN_BUTTON.format(self.vmname))
 
     def restart_vm_on_ui(self):
-        self.click(self.RESTART_BUTTON.format(self.vmname))
+        self.hover_and_click(self.RESTART_BUTTON.format(self.vmname))
 
     def force_restart_vm_on_ui(self):
         self.click(self.RESTART_DROPDOWN_BUTTON.format(self.vmname))
@@ -267,7 +267,10 @@ class PageMachinesLibvirtCheck(SeleniumTest):
             value = self.vm_xml_info['domain']['os']['type']['@machine']
         if key == 'bootorder':
             value_list = []
-            for boot in self.vm_xml_info['domain']['os']['boot']:
+            boot_list = self.vm_xml_info['domain']['os']['boot']
+            if not isinstance(boot_list, list):
+                boot_list = [boot_list]
+            for boot in boot_list:
                 dev = boot['@dev']
                 if dev == 'hd':
                     dev = 'disk'
@@ -440,7 +443,8 @@ class PageMachinesLibvirtCheck(SeleniumTest):
     # inline console
     def send_ctrl_alt_del(self):
         self._switch_back_to_main_frame()
-        self.click(self.INLINE_CTRL_ALT_DEL_BUTTON.format(self.vmname))
+        self.hover_and_click(
+            self.INLINE_CTRL_ALT_DEL_BUTTON.format(self.vmname))
 
     def wait_canvas_change(self):
         def wait(expected_width):

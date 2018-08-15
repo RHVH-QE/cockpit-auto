@@ -2,6 +2,7 @@ import os
 import inspect
 import time
 import re
+from functools import wraps
 from avocado import Test
 from selenium import webdriver
 from selenium.webdriver import ActionChains
@@ -54,6 +55,29 @@ def locator(el_descriptor):
     return (by, path)
 
 
+def retry(attemps=2):
+    """
+    Decorator to retry operation when
+    StaleElementReferenceException, ElementNotInteractableException occurs.
+    """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            for count in range(0, attemps):
+                try:
+                    ret = func(*args, **kwargs)
+                    return ret
+                except (StaleElementReferenceException, ElementNotInteractableException):
+                    continue
+                except Exception as e:
+                    raise e
+            else:
+                raise RuntimeError(
+                    "Too many retries for {}".format(func.__name__))
+        return wrapper
+    return decorator
+
+
 class WaitElementTimeOutError(Exception):
     pass
 
@@ -103,7 +127,7 @@ class SeleniumTest(Test):
         host_string = os.environ.get('HOST_STRING')
         username = os.environ.get('USERNAME')
         passwd = os.environ.get('PASSWD')
-        browser = os.environ.get('BROWSER')
+        self.browser = os.environ.get('BROWSER')
         selenium_hub = os.environ.get('HUB')
 
         # create host object
@@ -111,13 +135,13 @@ class SeleniumTest(Test):
 
         # create selenium webdriver object
         if not selenium_hub:
-            if browser == 'firefox':
+            if self.browser == 'firefox':
                 self.driver = webdriver.Firefox()
             else:
                 self.driver = webdriver.Chrome()
         else:
             hub_url = 'http://{}:4444/wd/hub'.format(selenium_hub)
-            capabilities = self._get_desired_capabilities(browser)
+            capabilities = self._get_desired_capabilities()
             self.driver = webdriver.Remote(
                 command_executor=hub_url, desired_capabilities=capabilities)
 
@@ -127,7 +151,7 @@ class SeleniumTest(Test):
         self.screenshot_path = self.logdir
 
         # open target page
-        self.open_cockpit(host_string, browser)
+        self.open_cockpit(host_string)
         self.login(username, passwd)
         self.open_page()
 
@@ -135,21 +159,21 @@ class SeleniumTest(Test):
     def tearDown(self):
         self.driver.quit()
 
-    def _get_desired_capabilities(self, browser):
-        if browser == 'chrome':
+    def _get_desired_capabilities(self):
+        if self.browser == 'chrome':
             capabilities = DesiredCapabilities.CHROME.copy()
             capabilities['platform'] = 'LINUX'
-        elif browser == 'firefox':
+        elif self.browser == 'firefox':
             capabilities = DesiredCapabilities.FIREFOX.copy()
             capabilities['platform'] = 'LINUX'
-        elif browser == 'ie':
+        elif self.browser == 'ie':
             capabilities = DesiredCapabilities.INTERNETEXPLORER.copy()
 
         return capabilities
 
-    def open_cockpit(self, host_string, browser=None):
+    def open_cockpit(self, host_string):
         self.driver.get('http://{}:9090'.format(host_string))
-        if browser == 'ie':
+        if self.browser == 'ie':
             self.click("#overridelink")
 
     def login(self, username, passwd):
@@ -257,14 +281,10 @@ class SeleniumTest(Test):
     def switch_to_default_content(self):
         self.driver.switch_to.default_content()
 
+    @retry(attemps=2)
     def click(self, el_descriptor, try_times=DEFAULT_TRY):
-        def find_click():
-            element = self.wait_clickable(el_descriptor, try_times)
-            element.click()
-        try:
-            find_click()
-        except (StaleElementReferenceException, ElementNotInteractableException):
-            find_click()
+        element = self.wait_clickable(el_descriptor, try_times)
+        element.click()
 
     def click_text(self, text, try_times=DEFAULT_TRY):
         el_descriptor = "//*[contains(text(), '{}')]".format(text)
@@ -283,6 +303,7 @@ class SeleniumTest(Test):
             actions.perform()
             self.click(el_click, try_times)
 
+    @retry(attemps=2)
     def input_text(self, el_descriptor, new_value, clear=True, control=False, try_times=DEFAULT_TRY):
         element = self.wait_visible(el_descriptor, try_times)
         if clear:
@@ -296,10 +317,12 @@ class SeleniumTest(Test):
             element.send_keys(new_value)
             element.send_keys(Keys.RETURN)
 
+    @retry(attemps=2)
     def get_text(self, el_descriptor, try_times=DEFAULT_TRY):
         element = self.wait_visible(el_descriptor, try_times)
         return element.text
 
+    @retry(attemps=2)
     def get_attribute(self, el_descriptor, attr_name, try_times=DEFAULT_TRY):
         element = self.wait_present(el_descriptor, try_times)
         return element.get_attribute(attr_name)

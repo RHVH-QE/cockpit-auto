@@ -21,11 +21,15 @@ $ pipenv shell
 $ python run.py $tags -m $mode -b $browser
 ```
 
-**$tags** is the avocado tests filter, for example:
+**$tags** is the avocado tests filter, each test_*.py file must has one unique file level tag, zero or more subtags. For example, there is a test_a.py with a file level tag 'TEST_A', and a subtag 'SUB1', then:
+```sh
+tags='TEST_A' means to run all tests in test_a.py
+tags='TEST_A,SUB1' means to run tests tagged with 'SUB1' in test_a.py
+tags='TEST_A,-SUB1' means to run tests not tagged with 'SUB1' in test_a.py
+```
 
->`python run.py ovirt_dashboard|ovirt_hostedengine` is to run the tests tagged with ovirt_dashboard, and the tests tagged with ovirt_hostedengine.
->
->`python run.py ovirt_hostedengine,tier1` is to run the tests tagged with both ovirt_hostedengine and tier1.
+**Note**:
+In order to implement yaml-to-mux plugin of Avocado, only tests in one test_*.py file can be run at a time.
 
 **$mode** defines how to setup browser. It has four values, **local**, **grid**, **standalone** and **manual**. If this parameter is omitted, **local** is used.
 
@@ -37,7 +41,7 @@ $ python run.py $tags -m $mode -b $browser
 
 **manual** is to use a grid created manually in advance. Here list the steps to configure a grid supporting Internet Explorer:
   
-* Download Selenium Standalone Server and the Internet Explorer Driver Server [here](https://www.seleniumhq.org/download/).
+* Download Selenium Standalone Server and the 32bit Internet Explorer Driver Server [here](https://www.seleniumhq.org/download/).
 * Configure Internet Explorer. For Internet Explorer tests you should make some additional configuration on the browser. See [IE Required Configuration](https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver#required-configuration)
 * Start selenium hub: 
 ```sh

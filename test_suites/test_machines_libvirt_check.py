@@ -96,8 +96,8 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.open_vm_row()
         self.open_disks_subtab()
         disk_list = self.get_disk_list_in_xml()
-        disk_count_on_ui = self.get_disk_count_on_ui()
-        self.assertEqual(disk_count_on_ui, str(len(disk_list)))
+        #disk_count_on_ui = self.get_disk_count_on_ui()
+        #self.assertEqual(disk_count_on_ui, str(len(disk_list)))
         for disk in disk_list:
             target = self.get_disk_info_in_xml(disk, 'target')
             for column in self.DISK_COLUMN_NAMES:
@@ -143,6 +143,9 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
 
     @add_case_id("RHEL-113829")
     def test_inline_console(self):
+        """
+        :avocado: tags=test
+        """
         self.prepare_running_vm()
         self.open_vm_row()
         self.open_consoles_subtab()
@@ -193,6 +196,22 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.assertEqual(self.get_vm_state_on_ui(), 'running')
         self.assert_element_invisible(self.SENDNMI_BUTTON.format(self.vmname))
 
+    @add_case_id("RHEL-113827")
+    def test_restart_vm(self):
+        self.prepare_running_vm()
+        self.open_vm_row()
+        self.restart_vm_on_ui()
+        self.open_consoles_subtab()
+        self.assertTrue(self.wait_canvas_change())
+
+    @add_case_id("RHEL-113832")
+    def test_force_restart_vm(self):
+        self.prepare_running_vm()
+        self.open_vm_row()
+        self.force_restart_vm_on_ui()
+        self.open_consoles_subtab()
+        self.assertTrue(self.wait_canvas_change())
+
     @add_case_id("RHEL-113833")
     def test_shutdown_vm(self):
         self.prepare_running_vm()
@@ -210,22 +229,6 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.assert_element_visible(self.RESTART_BUTTON.format(self.vmname))
         self.assertEqual(self.get_vm_state_on_ui(), 'running')
         self.assertEqual(self.get_vm_state_on_host(), 'running')
-
-    @add_case_id("RHEL-113827")
-    def test_restart_vm(self):
-        self.prepare_running_vm()
-        self.open_vm_row()
-        self.restart_vm_on_ui()
-        self.open_consoles_subtab()
-        self.assertTrue(self.wait_canvas_change())
-
-    @add_case_id("RHEL-113832")
-    def test_force_restart_vm(self):
-        self.prepare_running_vm()
-        self.open_vm_row()
-        self.force_restart_vm_on_ui()
-        self.open_consoles_subtab()
-        self.assertTrue(self.wait_canvas_change())
 
     @add_case_id("RHEL-114014")
     def test_non_root_operation(self):
@@ -264,7 +267,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
         self.wait_visible(self.RUN_BUTTON.format(self.vmname))
         self.run_vm_on_ui()
         self.wait_visible(self.RESTART_BUTTON.format(self.vmname))
-        self.assertEqual(self.get_vcpu_count_on_ui(), '4')
+        self.assert_in_text(self.VCPU_DETAILS_LINK.format(self.vmname), '4')
         self.assertEqual(self.get_vcpu_topology_in_xml(), ['2', '2', '2'])
 
     @add_case_id("RHEL-113834")
