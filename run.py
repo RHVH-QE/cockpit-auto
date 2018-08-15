@@ -22,8 +22,8 @@ def gen_polarion_results(avocado_results_dir):
     polarion_file_name = os.path.basename(avocado_results_dir) + ".json"
 
     polarion_results = OrderedDict()
-    polarion_results['title'] = 'Auto_Test_' + \
-        test_ver + '_' + polarion_file_name.rstrip('.json')
+    polarion_results['title'] = test_ver + \
+        '_' + polarion_file_name.rstrip('.json')
     polarion_results['results'] = OrderedDict()
     for test in avocado_json_results['tests']:
         if test['status'] == 'PASS':
