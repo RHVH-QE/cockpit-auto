@@ -4,7 +4,7 @@ import yaml
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from avocado import Test
 from utils.machine import Machine
-from utils.caseid import add_case_id 
+from utils.caseid import add_case_id, check_case_id
 
 BASE_URL = "{base}/{ver1}/{ver2}/{arch}/{name}"
 
@@ -16,6 +16,10 @@ class TestMachinesOvirtPackage(Test):
     """
 
     def setUp(self):
+        # initialize polarion case
+        self.case_id = None
+        self.case_state = None
+
         a = self.get_data('ovirt_package.yml')
         self.config_dict = yaml.load(open(a))
         self.OLD_MACHINES_RPM_NAME = self.config_dict['old_pkg']
@@ -38,6 +42,10 @@ class TestMachinesOvirtPackage(Test):
             url = BASE_URL.format(**args)
             cmd = 'curl -o {} {}'.format(rpm_name, url)
             self.host.execute(cmd)
+
+    @check_case_id
+    def tearDown(self):
+        pass
 
     @add_case_id("RHEL-113962")
     def test_upgrade_pkg(self):

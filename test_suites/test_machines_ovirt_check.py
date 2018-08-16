@@ -8,7 +8,7 @@ from utils.caseid import add_case_id
 class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
     """
     :avocado: enable
-    :avocado: tags=he_vm
+    :avocado: tags=machines_ovirt_check
     """
     @add_case_id("RHEL-118144")
     def test_disable_create_new_vm(self):
@@ -36,8 +36,8 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
         self.open_vm_row()
         self.open_disks_subtab()
         disk_list = self.get_disk_list_in_xml()
-        disk_count_on_ui = self.get_disk_count_on_ui()
-        self.assertEqual(disk_count_on_ui, str(len(disk_list)))
+        # disk_count_on_ui = self.get_disk_count_on_ui()
+        # self.assertEqual(disk_count_on_ui, str(len(disk_list)))
         for disk in disk_list:
             for column in self.DISK_COLUMN_NAMES:
                 target = self.get_disk_info_in_xml(disk, 'target')
@@ -69,6 +69,9 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
 
     @add_case_id("RHEL-113789")
     def test_ctrl_alt_del(self):
+        """
+        :avocado: tags=ovirtVM
+        """
         self.open_vm_row()
         self.open_consoles_subtub()
         if self.check_inline_vnc_console():
@@ -111,16 +114,28 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
 
     @add_case_id("RHEL-139377")
     def test_heVm_network_change(self):
+        """
+        :avocado: tags=heVM
+        """
         self.open_vm_row()
         self.open_networks_subtab()
         self.prepare_network1_plug_button('Unplug')
         self.click_network1_plug_button()
-        self.assertNotEqual(self.get_network1_plug_button_text(), 'Plug')
-        self.assertNotEqual(self.get_network1_state_on_ui(), 'down')
-        self.assertNotEqual(self.get_network1_state_on_host(), 'down')
+        self.assertEqual(self.get_network1_plug_button_text(), 'Plug')
+        self.assertEqual(self.get_network1_state_on_ui(), 'down')
+        self.assertEqual(self.get_network1_state_on_host(), 'down')
+
+        self.prepare_network1_plug_button('Plug')
+        self.click_network1_plug_button()
+        self.assertEqual(self.get_network1_plug_button_text(), 'Unplug')
+        self.assertEqual(self.get_network1_state_on_ui(), 'up')
+        self.assertEqual(self.get_network1_state_on_host(), 'up')
 
     @add_case_id("RHEL-118140")
     def test_ovirtVm_network_unplug(self):
+        """
+        :avocado: tags=ovirtVM
+        """
         self.open_vm_row()
         self.open_networks_subtab()
         self.prepare_network1_plug_button('Unplug')
@@ -131,6 +146,9 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
 
     @add_case_id("RHEL-139378")
     def test_ovirtVm_network_plug(self):
+        """
+        :avocado: tags=ovirtVM
+        """
         self.open_vm_row()
         self.open_networks_subtab()
         self.prepare_network1_plug_button('Plug')
@@ -141,26 +159,41 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
 
     @add_case_id("RHEL-138481")
     def test_restart_heVm(self):
+        """
+        :avocado: tags=heVM
+        """
         self.open_vm_row()
         self.reboot_he_vm_on_ui()
 
     @add_case_id("RHEL-138482")
     def test_force_reboot_heVm(self):
+        """
+        :avocado: tags=heVM
+        """
         self.open_vm_row()
         self.force_reboot_he_vm_on_ui()
 
     @add_case_id("RHEL-138483")
     def test_shutdown_heVm(self):
+        """
+        :avocado: tags=heVM
+        """
         self.open_vm_row()
         self.shutdown_he_vm_on_ui()
 
     @add_case_id("RHEL-138484")
     def test_forceoff_heVm(self):
+        """
+        :avocado: tags=heVM
+        """
         self.open_vm_row()
         self.forceoff_he_vm_on_ui()
 
     @add_case_id("RHEL-139379")
     def test_sendnmi_heVm(self):
+        """
+        :avocado: tags=heVM
+        """
         self.open_vm_row()
         self.sendnmi_he_vm_on_ui()
 
@@ -172,31 +205,49 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
 
     @add_case_id("RHEL-113796")
     def test_restart_ovirtVm(self):
+        """
+        :avocado: tags=ovirtVM
+        """
         self.open_vm_row()
         self.reboot_ovirt_vm_on_ui()
 
     @add_case_id("RHEL-113797")
     def test_force_reboot_ovirtVm(self):
+        """
+        :avocado: tags=ovirtVM
+        """
         self.open_vm_row()
         self.force_reboot_ovirt_vm_on_ui()
 
     @add_case_id("RHEL-113798")
     def test_shutdown_ovirtVm(self):
+        """
+        :avocado: tags=ovirtVM
+        """
         self.open_vm_row()
         self.shutdown_ovirt_vm_on_ui()
 
     @add_case_id("RHEL-113799")
     def test_forceoff_ovirtVm(self):
+        """
+        :avocado: tags=ovirtVM
+        """
         self.open_vm_row()
         self.forceoff_ovirt_vm_on_ui()
 
     @add_case_id("RHEL-113800")
     def test_sendnmi_ovirtVm(self):
+        """
+        :avocado: tags=ovirtVM
+        """
         self.open_vm_row()
         self.sendnmi_ovirt_vm_on_ui()
 
     @add_case_id("RHEL-113820")
     def test_supend_ovirtVm(self):
+        """
+        :avocado: tags=ovirtVM
+        """
         self.open_vm_row()
         self.suspend_ovirt_vm_on_ui()
 
@@ -231,6 +282,9 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
 
     @add_case_id("RHEL-114121")
     def test_run_vm_in_cluster(self):
+        """
+        :avocado: tags=ovirtVM
+        """
         self.open_vm_row()
         self.run_vm_in_cluster()
 
@@ -252,16 +306,6 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
         self.click(self.TEMPLATES_TOPNAV)
         self.check_create_vm_twice()
 
-    @add_case_id("RHEL-113795")
-    def test_vm_migration(self):
-        self.open_vm_row()
-        self.open_ovirt_subtub()
-        self.migrate_vm_to_additional_host()
-
-    @add_case_id("RHEL-114114")
-    def test_host_to_maintenance(self):
-        self.host_to_maintenance()
-
     @add_case_id("RHEL-113786")
     def test_vm_icon(self):
         self.open_vm_row()
@@ -273,10 +317,20 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
         self.login_non_root_user()
         self.assert_element_invisible(self.VM_ROW)
 
-    def test_vcpu_topology_info(self):
-        # TODO
+    @add_case_id("RHEL-113795")
+    def test_vm_migration(self):
         self.open_vm_row()
-        self.open_vcpu_details_window()
-        values = self.get_vcpu_topology_on_engine()
-        vcpu_count = int(values[0])*int(values[1])*int(values[2])
-        self.assertEqual(self.get_vcpu_count_on_ui(), str(vcpu_count))
+        self.open_ovirt_subtub()
+        self.migrate_vm_to_additional_host()
+
+    @add_case_id("RHEL-114114")
+    def test_host_to_maintenance(self):
+        self.host_to_maintenance()
+
+    # def test_vcpu_topology_info(self):
+    #     # TODO
+    #     self.open_vm_row()
+    #     self.open_vcpu_details_window()
+    #     values = self.get_vcpu_topology_on_engine()
+    #     vcpu_count = int(values[0])*int(values[1])*int(values[2])
+    #     self.assertEqual(self.get_vcpu_count_on_ui(), str(vcpu_count))

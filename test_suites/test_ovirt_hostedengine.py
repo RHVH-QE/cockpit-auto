@@ -86,7 +86,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-23828")
     def test_global_maintenance(self):
         """
-        :avocado: tags=he_tier11
+        :avocado: tags=he_tier1
         """
         self.check_global_maintenance()
         self.assert_element_visible(self.GLOBAL_HINT)

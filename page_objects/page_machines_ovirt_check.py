@@ -152,7 +152,7 @@ class MachinesOvirtCheckPage(SeleniumTest):
     CLUSTER_VM_DESCRIPTION = "tbody>tr>td:nth-of-type(2)>span"
     CLUSTER_VM_TEMPLATE = "tbody>tr>td:nth-of-type(3)>span"
     CLUSTER_VM_MEMORY = "tbody>tr>td:nth-of-type(4)>div"
-    CLUSTER_VM_VCPU = "tbody>tr>td:nth-of-type(5)>span"
+    CLUSTER_VM_VCPU = "tbody>tr>td:nth-of-type(5)>a"
     CLUSTER_VM_OS = "tbody>tr>td:nth-of-type(6)>div"
     CLUSTER_VM_HA = "tbody>tr>td:nth-of-type(7)>div"
     CLUSTER_VM_STATELESS = "tbody>tr>td:nth-of-type(8)>div"
@@ -172,7 +172,7 @@ class MachinesOvirtCheckPage(SeleniumTest):
     TEMPLATE_BASE = "tbody>tr>td:nth-of-type(3)"
     TEMPLATE_DESCRIPTION = "tbody>tr>td:nth-of-type(4)>span"
     TEMPLATE_MEMORY = "tbody>tr>td:nth-of-type(5)>div"
-    TEMPLATE_VCPUS = "tbody>tr>td:nth-of-type(6)>span"
+    TEMPLATE_VCPUS = "tbody>tr>td:nth-of-type(6)>a"
     TEMPLATE_OS = "tbody>tr>td:nth-of-type(7)>div"
     TEMPLATE_HA = "tbody>tr>td:nth-of-type(8)>div"
     TEMPLATE_STATELESS = "tbody>tr>td:nth-of-type(9)>div"
@@ -336,7 +336,7 @@ class MachinesOvirtCheckPage(SeleniumTest):
     def sendnmi_he_vm_on_ui(self):
         self.click(self.SHUTDOWN_DROPDOWN_BUTTON)
         self.click(self.SENDNMI_BUTTON)
-        self.assert_element_visible(self.BUTTON_WARN)
+        self.assert_element_invisible(self.BUTTON_WARN)
 
     def sendnmi_ovirt_vm_on_ui(self):
         self.click(self.SHUTDOWN_DROPDOWN_BUTTON)
@@ -844,10 +844,12 @@ class MachinesOvirtCheckPage(SeleniumTest):
         return self.get_attribute(self.VM_ICON, 'src').split(',')[-1]
 
     def login_non_root_user(self):
-        cmd = 'echo redhat | passwd --stdin node'
+        cmd = 'useradd test'
+        self.host.execute(cmd)
+        cmd = 'echo redhat | passwd --stdin test'
         self.host.execute(cmd)
         self.logout()
-        self.login('node', 'redhat')
+        self.login('test', 'redhat')
         sleep(10)
 
     # check vcpu
