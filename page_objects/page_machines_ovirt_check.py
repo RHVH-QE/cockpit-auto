@@ -14,7 +14,8 @@ class MachinesOvirtCheckPage(SeleniumTest):
     WATI_VM_DOWN = 5
     WAIT_VM_SUSPEND = 15
 
-    VM_NAME = "HostedEngine"
+    #VM_NAME = "HostedEngine"
+    VM_NAME = "vm1"
     TEMPLATE = "Blank"
 
     # Host Page
@@ -42,7 +43,8 @@ class MachinesOvirtCheckPage(SeleniumTest):
     VM_ROW = _ID_PREFIX + 'row'
     VM_STATE = _ID_PREFIX + 'state'
     RUN_BUTTON = _ID_PREFIX + 'run'
-    CLUSTER_RUN_BUTTON = "#cluster-{}-run".format(VM_NAME)
+    # CLUSTER_RUN_BUTTON = "#cluster-{}-run".format(VM_NAME)
+    CLUSTER_RUN_BUTTON = "//button[text()='Run']"
     RESTART_BUTTON = _ID_PREFIX + 'reboot'
     BUTTON_WARN = "#vm-{}-last-message".format(VM_NAME)
     SHUTDOWN_BUTTON = _ID_PREFIX + 'off'
@@ -159,6 +161,10 @@ class MachinesOvirtCheckPage(SeleniumTest):
     CLUSTER_HOST_LINK = "tbody>tr>td:nth-of-type(9)>a"
     CLUSTER_VM_ACTION = "tbody>tr>td:nth-of-type(10)"
     CLUSTER_VM_STATE = "tbody>tr>td:nth-of-type(11)>span>span"
+
+    CLUSTER_VCPU_LINK = "#cluster-{}-cpus".format(VM_NAME)
+    CLUSTER_RUN_BUTTON_DROPDOWN = "#cluster-{}-run-caret".format(VM_NAME)
+    CLUSTER_RUN_HERE_BUTTON = "#cluster-{}-run-here".format(VM_NAME)
 
     CLUSTER_INFO_NAME = ['name', 'description', 'template', 'memory',
                         'vcpus', 'os', 'ha', 'stateless', 'action', 'state']
@@ -309,6 +315,21 @@ class MachinesOvirtCheckPage(SeleniumTest):
         self.click(self.SHUTDOWN_BUTTON)
         self.wait_vm_status("down", 3)
         self.rhvm.start_vm(self.VM_NAME)
+        self.wait_vm_status("up", 10)
+
+    def shutdown_vm_on_engine(self):
+        self.rhvm.operate_vm(self.VM_NAME, 'shutdown')
+        self.wait_vm_status("down", 3)
+
+    def start_vm_on_engine(self):
+        self.rhvm.start_vm(self.VM_NAME)
+        self.wait_vm_status("up", 10)
+
+    def start_vm_on_cluster_page(self):
+        # self.click(self.CLUSTER_RUN_BUTTON_DROPDOWN)
+        # self.click(self.CLUSTER_RUN_HERE_BUTTON)
+        sleep(5)
+        self.click(self.CLUSTER_RUN_BUTTON)
         self.wait_vm_status("up", 10)
 
     def forceoff_he_vm_on_ui(self):
@@ -859,19 +880,40 @@ class MachinesOvirtCheckPage(SeleniumTest):
             value.append(self.rhvm.get_vm_ovirt_info_on_engine(self.VM_NAME)[cpu_topo])
         return value
 
-    def get_vcpu_topology_on_ui(self):
-        '''
-        Cannot get value from the disabled attribute
-        '''
-        # TODO
-        pass
+    def set_vcpu_details_on_cluster_page(self, sockets, cores, threads):
+        self.input_text(self.VCPU_SOCKETS_COUNT_INPUT, sockets, control=True)
+        self.input_text(self.VCPU_CORES_COUNT_INPUT, cores, control=True)
+        self.input_text(self.VCPU_THREAD_COUNT_INPUT, threads, control=True)
+        self.click(self.VCPU_APPLY_BUTTON)
 
-    def set_vcpu_details(self):
-        # TODO
-        pass
-
-    def open_vcpu_details_window(self):
+    def open_vcpu_details_window_on_host_page(self):
         self.click(self.VCPU_DETAILS_LINK)
+
+    def open_vcpu_details_window_on_cluster_page(self):
+        self.click(self.CLUSTER_VCPU_LINK)
 
     def get_vcpu_count_on_ui(self):
         return self.get_text(self.VCPU_DETAILS_LINK)
+
+    def get_vcpu_topology_on_ui(self):
+        '''
+        Cannot get vcpu topology information from host or cluster page
+        '''
+        # TODO
+        pass
+
+    def set_vcpu_details_on_host_page(self):
+        '''
+        1. VCPU information in host and cluster page is different, exist bug
+        2. If modify the value, should shutdown the vm, then the vm is displayed in cluster page
+        3. Cannot modify the value while the vm is running
+        '''
+        # TODO
+        pass
+
+    def add_disk_when_vm_running(self):
+        '''
+        1. Cannot add disk when vm is shutdown because the stopped vm is not displayed in host page
+        2. Cannot add disk when vm is running, exist bug
+        '''
+        pass
