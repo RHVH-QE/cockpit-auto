@@ -273,7 +273,8 @@ class OvirtHostedEnginePage(SeleniumTest):
     def default_vm_engine_stage_config(self):
         # VM STAGE
         self.click(self.HE_START)
-        self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'])
+        time.sleep(20)
+        self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 100)
         self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
         self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
         self.click(self.NEXT_BUTTON)
@@ -284,7 +285,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
         # PREPARE VM
         self.click(self.PREPARE_VM_BUTTON)
-        self.click(self.NEXT_BUTTON, 1500)
+        self.click(self.NEXT_BUTTON, 2000)
 
     def node_zero_default_deploy_process(self):
         def check_deploy():
@@ -298,7 +299,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
             # FINISH STAGE
             self.click(self.FINISH_DEPLOYMENT)
-            self.click(self.CLOSE_BUTTON, 1500)
+            self.click(self.CLOSE_BUTTON, 2000)
 
         self.prepare_env('nfs')
         check_deploy()
@@ -333,7 +334,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
             # FINISH STAGE
             self.click(self.FINISH_DEPLOYMENT)
-            self.click(self.CLOSE_BUTTON, 1500)
+            self.click(self.CLOSE_BUTTON, 2000)
 
         self.prepare_env('iscsi')
         check_deploy()
@@ -380,7 +381,8 @@ class OvirtHostedEnginePage(SeleniumTest):
         def check_deploy():
             # VM STAGE
             self.click(self.HE_START)
-            self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'])
+            time.sleep(30)
+            self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
             self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
             self.click(self.NETWORK_DROPDOWN)
             self.click(self.NETWORK_STATIC)
