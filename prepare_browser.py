@@ -24,7 +24,16 @@ def create_selenium_standalone(browser):
         "--name {} selenium/standalone-{}-debug".format(
             STANDALONE_CONTAINER_NAME, browser)
     subprocess.check_call(cmd, shell=True)
-    time.sleep(5)
+    for count in range(0, 10):
+        cmd = "curl http://localhost:4444/grid/console > /dev/null 2>&1"
+        try:
+            subprocess.check_call(cmd, shell=True)
+            break
+        except Exception:
+            time.sleep(2)
+    else:
+        del_selenium_standalone()
+        raise RuntimeError("The selenium standalone server is not ready!")
 
 
 def del_selenium_standalone():
