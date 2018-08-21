@@ -9,47 +9,12 @@ from collections import OrderedDict
 from prepare_browser import setup_browser, destroy_browser
 
 
-def gen_polarion_results(avocado_results_dir):
-    avocado_json_results = simplejson.load(
-        open(os.path.join(avocado_results_dir, 'latest', 'results.json')))
-    polarion_test_map = yaml.load(open('./polarion_test_map.yml'))
-
-    test_ver_dir = os.path.dirname(avocado_results_dir)
-    polarion_dir = os.path.join(test_ver_dir, 'polarion')
-    if not os.path.exists(polarion_dir):
-        os.mkdir(polarion_dir)
-    test_ver = os.path.basename(test_ver_dir)
-    polarion_file_name = os.path.basename(avocado_results_dir) + ".json"
-
-    polarion_results = OrderedDict()
-    polarion_results['title'] = test_ver + \
-        '_' + polarion_file_name.rstrip('.json')
-    polarion_results['results'] = OrderedDict()
-    for test in avocado_json_results['tests']:
-        if test['status'] == 'PASS':
-            test_status = 'passed'
-        else:
-            test_status = 'failed'
-
-        test_name = test['id'].split('/')[-1]
-        for key, value in polarion_test_map.items():
-            if value == test_name.split(';')[0]:
-                polarion_results['results'][key] = test_status
-
-    polarion_results_file = os.path.join(polarion_dir, polarion_file_name)
-
-    with open(polarion_results_file, 'w') as json_file:
-        json_file.write(
-            simplejson.dumps(
-                polarion_results, indent=4))
-
-
 def post_deal_with_polarion_results(file_path):
     tag_and_br = os.path.basename(file_path).rstrip('.json')
     test_ver = os.path.basename(os.path.dirname(os.path.dirname(file_path)))
 
     polarion_results = OrderedDict()
-    polarion_results['title'] = 'Auto_Test_' + test_ver + '_' + tag_and_br
+    polarion_results['title'] = test_ver + '_' + tag_and_br
     polarion_results['results'] = OrderedDict()
     for line in open(file_path).readlines():
         split_line = line.split(':')
@@ -108,7 +73,6 @@ def run_tests(tags):
         avocado_run_cmd.extend(["-m", params_yaml_file])
     # run
     subprocess.call(avocado_run_cmd)
-    # gen_polarion_results(log_dir)
     post_deal_with_polarion_results(polarion_file)
 
 
