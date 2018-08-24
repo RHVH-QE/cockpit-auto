@@ -144,7 +144,7 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
     @add_case_id("RHEL-113829")
     def test_inline_console(self):
         """
-        :avocado: tags=test
+        :avocado: tags=tests
         """
         self.prepare_running_vm()
         self.open_vm_row()
@@ -157,6 +157,9 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
 
     @add_case_id("RHEL-113824")
     def test_external_console(self):
+        """
+        :avocado: tags=test
+        """
         self.prepare_running_vm()
         self.open_vm_row()
         self.open_consoles_subtab()
@@ -178,6 +181,9 @@ class TestMachinesLibvirtCheck(PageMachinesLibvirtCheck):
 
     @add_case_id("RHEL-116896")
     def test_serial_console(self):
+        """
+        :avocado: tags=test
+        """
         self.prepare_running_vm()
         self.open_vm_row()
         self.open_consoles_subtab()

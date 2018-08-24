@@ -78,9 +78,10 @@ class PageMachinesLibvirtCheck(SeleniumTest):
 
     # consoles subtab
     CONSOLES_TAB = _ID_PREFIX + "consoles"
-    CONSOLE_TYPE_BUTTON = "#console-type-select button"
-    CONSOLE_TYPE_TEXT = "#console-type-select button span:nth-of-type(1)"
-    CONSOLE_DROPDOWN_MENU = "#console-type-select .dropdown-menu"
+    CONSOLE_TYPE_SELECT = "#console-type-select"
+    CONSOLE_TYPE_BUTTON = "{} button".format(CONSOLE_TYPE_SELECT)
+    CONSOLE_TYPE_TEXT = "{} span:nth-of-type(1)".format(CONSOLE_TYPE_BUTTON)
+    CONSOLE_DROPDOWN_MENU = "{} .dropdown-menu".format(CONSOLE_TYPE_SELECT)
     # Inline console
     INLINE_CONSOLE_TYPE = "Graphics Console (VNC)"
     INLINE_CONSOLE_FRAME_NAME = "vm-{}-novnc-frame-container"
@@ -88,7 +89,8 @@ class PageMachinesLibvirtCheck(SeleniumTest):
     INLINE_CANVAS = "#noVNC_canvas"
     # External console
     EXTERNAL_CONSOLE_NAME = "Graphics Console in Desktop Viewer"
-    EXTERNAL_CONSOLE_SELECT_ITEM = "li[data-data='desktop']"
+    EXTERNAL_CONSOLE_SELECT_ITEM = "{} li:nth-of-type(2) a".format(
+        CONSOLE_DROPDOWN_MENU)
     LAUNCH_REMOTE_VIEWER_BUTTON = _ID_PREFIX + "consoles-launch"
     VV_FILE_ATTR = ("data:application/x-virt-viewer,%5Bvirt-viewer%5D%0Atype%3Dspice"
                     "%0Ahost%3D{}%0Aport%3D{}%0Adelete-this-file%3D1%0Afullscreen%3D0%0A")
@@ -98,7 +100,8 @@ class PageMachinesLibvirtCheck(SeleniumTest):
     CONSOLE_MANUAL_PORT = _ID_PREFIX + 'consoles-manual-port-{}'
     # serial console
     SERIAL_CONSOLE_NAME = "Serial Console"
-    SERIAL_CONSOLE_SELECT_ITEM = "li[data-data='serial-browser']"
+    SERIAL_CONSOLE_SELECT_ITEM = "{} li:nth-of-type(3) a".format(
+        CONSOLE_DROPDOWN_MENU)
     SERIAL_CANVAS = "div.terminal canvas.xterm-text-layer"
     SERIAL_CONSOLE_DISCONNECT_BUTTON = "#{}-serialconsole-disconnect"
     SERIAL_CONSOLE_RECONNECT_BUTTON = "#{}-serialconsole-reconnect"
@@ -138,6 +141,7 @@ class PageMachinesLibvirtCheck(SeleniumTest):
 
     def open_consoles_subtab(self):
         self.hover_and_click(self.CONSOLES_TAB.format(self.vmname))
+        sleep(2)
 
     def run_vm_on_ui(self):
         self.click(self.RUN_BUTTON.format(self.vmname))
@@ -434,7 +438,8 @@ class PageMachinesLibvirtCheck(SeleniumTest):
     def _select_console_menu(self, console_item):
         self._switch_back_to_main_frame()
         self.click(self.CONSOLE_TYPE_BUTTON)
-        self.hover_and_click(console_item)
+        sleep(3)
+        self.click(console_item)
         self.wait_invisible(self.CONSOLE_DROPDOWN_MENU)
 
     def get_console_type(self):

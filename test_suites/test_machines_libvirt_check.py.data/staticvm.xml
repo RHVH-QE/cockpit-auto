@@ -10,8 +10,8 @@
   <features>
     <acpi/>
   </features>
-  <cpu mode='custom' match='exact' check='partial'>
-    <model fallback='forbid'>Opteron_G3</model>
+  <cpu mode='host-model'>
+    <model fallback='forbid'/>
   </cpu>
   <devices>
     <disk type='file' device='disk'>
