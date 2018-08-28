@@ -327,10 +327,23 @@ class TestMachinesOvirtCheck(MachinesOvirtCheckPage):
     def test_host_to_maintenance(self):
         self.host_to_maintenance()
 
-    # def test_vcpu_topology_info(self):
-    #     # TODO
-    #     self.open_vm_row()
-    #     self.open_vcpu_details_window()
-    #     values = self.get_vcpu_topology_on_engine()
-    #     vcpu_count = int(values[0])*int(values[1])*int(values[2])
-    #     self.assertEqual(self.get_vcpu_count_on_ui(), str(vcpu_count))
+    @add_case_id("RHEL-144275")
+    def test_vcpu_count(self):
+        self.open_vm_row()
+        self.open_vcpu_details_window_on_host_page()
+        values = self.get_vcpu_topology_on_engine()
+        vcpu_count = int(values[0])*int(values[1])*int(values[2])
+        self.assertEqual(self.get_vcpu_count_on_ui(), str(vcpu_count))
+
+    @add_case_id("RHEL-144276")
+    def test_change_vcpu_topology_on_cluster_page(self):
+        """
+        :avocado: tags=ovirtVM
+        """
+        self.shutdown_vm_on_engine()
+        self.click(self.CLUSTER_TOPNAV)
+        self.open_vcpu_details_window_on_cluster_page()
+        self.set_vcpu_details_on_cluster_page('2', '1', '1')
+        self.start_vm_on_cluster_page()
+        self.assertEqual(self.get_vcpu_topology_on_engine(), ['2', '1', '1'])
+
