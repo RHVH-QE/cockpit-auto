@@ -520,7 +520,7 @@ class PageMachinesLibvirtCheck(SeleniumTest):
         sleep(1)
 
     def login_non_root_user(self):
-        cmd = 'echo redhat | passwd --stdin test'
+        cmd = 'id test || useradd test && echo redhat | passwd --stdin test'
         self.host.execute(cmd)
         self.logout()
         self.login('test', 'redhat')
