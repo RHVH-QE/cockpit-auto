@@ -44,9 +44,9 @@ def del_selenium_standalone():
 
 
 def setup_browser(mode, browser):
-    if mode != 'manual' and browser == 'ie':
+    if mode != 'manual' and browser in ['ie', 'edge']:
         raise ValueError(
-            "{} mode doesn't support Internet Explorer".format(mode))
+            "{} mode doesn't support Windows browser".format(mode))
 
     os.environ['BROWSER'] = browser
     if mode == 'grid':

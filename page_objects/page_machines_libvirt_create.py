@@ -54,10 +54,10 @@ class PageMachinesLibvirtCreate(COMM):
         self._select_from_dropdown(self.OS_VENDER, os_vendor)
         self._select_from_dropdown(self.OPERATING_SYSTEM, os_name)
 
-        self.input_text(self.MEMORY_SIZE_INPUT, memory_size)
+        self.input_text(self.MEMORY_SIZE_INPUT, memory_size, control=True)
         self._select_from_dropdown(self.MEMORY_UNIT, memory_size_unit)
 
-        self.input_text(self.STORAGE_SIZE_INPUT, storage_size)
+        self.input_text(self.STORAGE_SIZE_INPUT, storage_size, control=True)
         self._select_from_dropdown(self.STORAGE_UNIT, storage_size_unit)
 
         if start_vm:

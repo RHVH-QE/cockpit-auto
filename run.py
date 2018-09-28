@@ -90,7 +90,7 @@ def main():
               "tags='TEST_A' means to run all tests in test_a.py, "
               "tags='TEST_A,SUB1' means to run tests tagged with 'SUB1' in test_a.py, "
               "tags='TEST_A,-SUB1' means to run tests not tagged with 'SUB1' in test_a.py"))
-    parser.add_argument("-b", "--browser", choices=['firefox', 'chrome', 'ie', 'none'],
+    parser.add_argument("-b", "--browser", choices=['firefox', 'chrome', 'edge', 'ie', 'none'],
                         default='chrome',
                         help="selenium browser choice")
     parser.add_argument('-m', '--mode', choices=['local', 'grid', 'standalone', 'manual'],

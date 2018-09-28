@@ -166,6 +166,8 @@ class SeleniumTest(Test):
         elif self.browser == 'firefox':
             capabilities = DesiredCapabilities.FIREFOX.copy()
             capabilities['platform'] = 'LINUX'
+        elif self.browser == 'edge':
+            capabilities = DesiredCapabilities.EDGE.copy()
         elif self.browser == 'ie':
             capabilities = DesiredCapabilities.INTERNETEXPLORER.copy()
 
@@ -173,6 +175,9 @@ class SeleniumTest(Test):
 
     def open_cockpit(self, host_string):
         self.driver.get('http://{}:9090'.format(host_string))
+        if self.browser == 'edge':
+            self.click("#moreInformationDropdownSpan")
+            self.click("#invalidcert_continue")
         if self.browser == 'ie':
             self.click("#overridelink")
 

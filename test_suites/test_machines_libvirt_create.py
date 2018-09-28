@@ -8,7 +8,7 @@ from utils.caseid import add_case_id
 class TestMachinesLibvirtCreate(PageMachinesLibvirtCreate):
     """
     :avocado: enable
-    :avocado: tags=machines_create
+    :avocado: tags=machines_create,dbus
     """
     @add_case_id("RHEL-131325")
     def test_create_vm_with_iso(self):
@@ -59,9 +59,9 @@ class TestMachinesLibvirtCreate(PageMachinesLibvirtCreate):
         self.wait_before_install()
         self.open_vcpu_details_window()
         self.assert_element_invisible(self.VCPU_CAUTION)
-        self.set_vcpu_details('8', '4', '2', '2', '2')
+        self.set_vcpu_details('16', '16', '4', '4', '1')
         self.assert_element_invisible(self.VCPU_DETAILS_WINDOW)
-        self.assert_in_text(self.VCPU_DETAILS_LINK.format(self.vmname), '4')
+        self.assert_in_text(self.VCPU_DETAILS_LINK.format(self.vmname), '16')
         self.install_vm()
         self.wait_after_install()
 
