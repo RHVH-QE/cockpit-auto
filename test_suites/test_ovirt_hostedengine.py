@@ -100,7 +100,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_iscsi_deployment(self):
         # Need to deploy HE on iscsi storage
         """
-        :avocado: tags=he_pass
+        :avocado: tags=he_tier2
         """
         self.node_zero_iscsi_deploy_process()
 
@@ -124,7 +124,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_static_v4_deploy(self):
         # Need to deploy HE with static ip
         """
-        :avocado: tags=he2
+        :avocado: tags=he_debug
         """
         self.node_zero_static_v4_deploy_process()
 
@@ -132,6 +132,6 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_hostedengine_redeploy(self):
         # Re-deploy HE on the host
         """
-        :avocado: tags=he_tier2
+        :avocado: tags=he_pass
         """
         self.hostedengine_redeploy_process()

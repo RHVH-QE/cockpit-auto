@@ -205,9 +205,9 @@ class OvirtHostedEnginePage(SeleniumTest):
             #TODO: 1.modify InitiatorName and restart services. 2. Clean old data on iscsi disk.
             pass
         else:
+            # TODO fc, gluster
             pass
-            # TODO for fc, gluster
-
+            
     def check_no_password_saved(self, root_pass, admin_pass):
         ret_log = self.host.execute(
             "find /var/log -type f |grep ovirt-hosted-engine-setup-ansible-bootstrap_local_vm.*.log"
@@ -255,7 +255,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         clean_he_file = project_path + \
             '/test_suites/test_ovirt_hostedengine.py.data/clean_he_env.py'
         self.host.put_file(clean_he_file, '/root/clean_he_env.py')
-        self.host.execute("python /root/clean_he_env.py")
+        self.host.execute("python /root/clean_he_env.py", timeout=70)
 
     def check_additional_host_socre(self, ip, passwd):
         true, false = True, False
