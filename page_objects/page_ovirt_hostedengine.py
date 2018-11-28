@@ -201,9 +201,12 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.clean_nfs_storage(self.config_dict['nfs_ip'],
                                    self.config_dict['nfs_pass'],
                                    self.config_dict['nfs_dir'])
+        elif storage_type == 'iscsi':
+            #TODO: 1.modify InitiatorName and restart services. 2. Clean old data on iscsi disk.
+            pass
         else:
             pass
-            # TODO for iscsi, fc, gluster
+            # TODO for fc, gluster
 
     def check_no_password_saved(self, root_pass, admin_pass):
         ret_log = self.host.execute(
@@ -378,6 +381,9 @@ class OvirtHostedEnginePage(SeleniumTest):
         check_deploy()
 
     def node_zero_static_v4_deploy_process(self):
+        self.clean_hostengine_env()
+        self.refresh()
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         def check_deploy():
             # VM STAGE
             self.click(self.HE_START)
@@ -387,7 +393,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.NETWORK_DROPDOWN)
             self.click(self.NETWORK_STATIC)
             self.input_text(self.VM_IP, self.config_dict['he_vm_ip'])
-            self.input_text(self.IP_PREFIX, self.config_dict['he_ip_prefix'])
+            self.input_text(self.IP_PREFIX, self.config_dict['he_vm_ip_prefix'])
             self.input_text(self.DNS_SERVER, self.config_dict['dns_server'])
             self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
             self.click(self.NEXT_BUTTON)
@@ -438,3 +444,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def check_global_maintenance(self):
         self.put_cluster_to_global_maintenance()
+
+    def check_migrated_he(self):
+        time.sleep(5000)
+        self.assert_text_in_element(self.VM_STATUS, 'down')

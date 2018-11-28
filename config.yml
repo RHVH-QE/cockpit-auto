@@ -2,16 +2,16 @@
 ---
 
 # host infos
-host_string: yourip
-host_user: root
-host_pass: yourpasswd
+host_string: '10.73.73.105'
+host_user: 'root'
+host_pass: 'redhat'
 
 # manually configured selenium hub
-selenium_hub: ""
+selenium_hub: ''
 
 # avocado config
-avocado_results_dir: /home/yourname/avocado/
+avocado_results_dir: '/home/weiwang/work_autocode/cockpit_proj/avocado-results'
 
 # versions of pkg/sys under test
-test_pkg_ver: test
-test_sys_ver: test
+test_pkg_ver: 'cockpit-ovirt-dashboard-0.12.0-0.0.beta1'
+test_sys_ver: 'rhvh-4.3.0.0-0.20181122.0'

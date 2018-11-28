@@ -13,6 +13,9 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     """
     @add_case_id("RHEVM-25794")
     def test_guide_link(self):
+        """
+        :avocado: tags=he_tier1
+        """
         self.assert_element_visible(self.GETTING_START_LINK)
         self.assert_element_visible(self.MORE_INFORMATION_LINK)
 
@@ -71,9 +74,10 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-23829")
     def test_migrated_he(self):
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he
         """
-        self.assert_text_in_element(self.VM_STATUS, 'down')
+        self.check_migrated_he()
+        #self.assert_text_in_element(self.VM_STATUS, 'down')
 
     @add_case_id("RHEVM-23827")
     def test_remove_maintenance(self):
@@ -96,7 +100,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_iscsi_deployment(self):
         # Need to deploy HE on iscsi storage
         """
-        :avocado: tags=he_tier2
+        :avocado: tags=he_pass
         """
         self.node_zero_iscsi_deploy_process()
 
@@ -104,7 +108,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_fc_deployment(self):
         # Need to deploy HE on FC Storage
         """
-        :avocado: tags=he_tier2
+        :avocado: tags=linda
         """
         self.node_zero_fc_deploy_process()
 
@@ -112,7 +116,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_gluster_deployment(self):
         # Need to deploy HE on gluster storage
         """
-        :avocado: tags=he_tier2
+        :avocado: tags=gluster
         """
         self.node_zero_gluster_deploy_process()
 
@@ -120,7 +124,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_static_v4_deploy(self):
         # Need to deploy HE with static ip
         """
-        :avocado: tags=he_tier2
+        :avocado: tags=he2
         """
         self.node_zero_static_v4_deploy_process()
 

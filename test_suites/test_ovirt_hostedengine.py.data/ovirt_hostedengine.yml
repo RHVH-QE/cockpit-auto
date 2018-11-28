@@ -2,37 +2,37 @@
 ---
 
 # RHVM
-rhvm_appliance_path: rhvm_appliance_path
+rhvm_appliance_path: 'http://10.66.10.22:8090/rhevm-appliance/'
 
 # NFS
-nfs_ip: nfs_ip
-nfs_pass: nfs_pass
-nfs_dir: nfs_dir
+nfs_ip: '10.66.8.174'
+nfs_pass: 'Redhat,123456'
+nfs_dir: '/home/wangwei/nfs'
 
 # ISCSI
-iscsi_portal_ip: isci_portal_ip
-iscsi_portal_user: iscsi_portal_user
-iscsi_portal_pass: iscsi_portal_pass
-iscsi_discovery_user: iscsi_discovery_user
-iscsi_discovery_pass: iscsi_discovery_pass
+iscsi_portal_ip: '10.73.64.13'
+iscsi_portal_user: ''
+iscsi_portal_pass: ''
+iscsi_discovery_user: ''
+iscsi_discovery_pass: ''
 
 # FC -- Machine:hp-dl385pg8-11
 
 # GLUSTERFS
-gluster_ip: gluster_ip
-gluster_dir: gluster_dir
+gluster_ip: '10.66.10.89'
+gluster_dir: '/gv1'
 
 # ENGINE VM
-he_vm_fqdn: he_vm_fqdn
-he_vm_mac: he_vm_mac
-he_vm_ip: he_vm_ip
-vm_ip_prefix: vm_ip_prefix
-he_vm_pass: he_vm_pass
-dns_server: dns_server
+he_vm_fqdn: 'rhevh-hostedengine-vm-06.lab.eng.pek2.redhat.com'
+he_vm_mac: '52:54:00:34:04:b0'
+he_vm_ip: '10.73.73.102'
+he_vm_ip_prefix: '22'
+he_vm_pass: 'redhat'
+dns_server: '10.73.2.107'
 
-admin_pass: admin_pass
+admin_pass: 'password'
 
-first_host: first_host
-second_host: second_host
-second_pass: second_pass
-second_vm_fqdn: second_vm_fqdn
+first_host: '10.73.73.105'
+second_host: '10.73.73.106'
+second_pass: 'redhat'
+second_vm_fqdn: 'cockpit-vm'
