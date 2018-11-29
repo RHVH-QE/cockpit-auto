@@ -17,6 +17,7 @@ iscsi_discovery_user: ''
 iscsi_discovery_pass: ''
 
 # FC -- Machine:hp-dl385pg8-11
+host_fc_string: '10.73.73.15'
 
 # GLUSTERFS
 gluster_ip: '10.66.10.89'

@@ -116,6 +116,15 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     FAILED_TEXT = "//div[text()='Deployment failed']"
 
+    def setUp(self):
+        case_name = self._testMethodName
+        config = self.get_data('ovirt_hostedengine.yml')
+        self.config_dict = yaml.load(open(config))
+       
+        if 'fc' in case_name.split('_'):
+            os.environ['HOST_STRING'] = self.config_dict['host_fc_string']
+        super(OvirtHostedEnginePage,self).setUp()
+
     def get_latest_rhvm_appliance(self, appliance_path):
         """
         Purpose:
@@ -191,8 +200,6 @@ class OvirtHostedEnginePage(SeleniumTest):
     def open_page(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         self.click(self.HOSTEDENGINE_LINK)
-        a = self.get_data('ovirt_hostedengine.yml')
-        self.config_dict = yaml.load(open(a))
 
     def prepare_env(self, storage_type='nfs'):
         self.move_failed_setup_log()
@@ -204,8 +211,11 @@ class OvirtHostedEnginePage(SeleniumTest):
         elif storage_type == 'iscsi':
             #TODO: 1.modify InitiatorName and restart services. 2. Clean old data on iscsi disk.
             pass
+        elif storage_type == 'fc':
+            # TODO: 1. modify ip address, 2. fresh page
+            pass
         else:
-            # TODO fc, gluster
+            # TODO gluster
             pass
             
     def check_no_password_saved(self, root_pass, admin_pass):
