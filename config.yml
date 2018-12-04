@@ -2,8 +2,7 @@
 ---
 
 # host infos
-host_string: '10.73.73.106'
-host_fc_string: '10.73.73.15'
+host_string: '10.73.73.105'
 host_user: 'root'
 host_pass: 'redhat'
 

@@ -14,13 +14,15 @@ class OvirtHostedEnginePage(SeleniumTest):
     :avocado: disable
     """
 
+    # GENERAL
     OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
     HOSTEDENGINE_LINK = "//a[@href='#/he']"
 
-    # Start button
+    # LANDING PAGE
+    ## Start button
     HE_START = "//span[@class='deployment-option-panel-container']/button[text()='Start']"
 
-    # Guide Links
+    ## Guide Links
     GETTING_START_LINK = "//a[contains(text(), 'Installation Guide')]"
     MORE_INFORMATION_LINK = "//a[contains(text(), 'RHEV Documentation')]"
 
@@ -32,11 +34,11 @@ class OvirtHostedEnginePage(SeleniumTest):
     ROOT_PASS = "//label[text()='Root Password']//parent::*//input[@type='password']"
     VM_ADVANCED = "//a[text()='Advanced']"
 
-    # TODO
+    ## VM NETWORK
     _DROPDOWN_MENU = "//label[text()='%s']//parent::*//button[contains(@class, 'dropdown-toggle')]"
     NETWORK_DROPDOWN = _DROPDOWN_MENU % 'Network Configuration'
-    # TODO
-    # BRIDGE_DROPDOWN
+
+    ### BRIDGE_DROPDOWN
     SSH_ACCESS_DROPDOWN = _DROPDOWN_MENU % 'Root SSH Access'
     _DROPDOWN_VALUE = "//ul[@class='dropdown-menu']/li[@value='%s']"
     NETWORK_DHCP = _DROPDOWN_VALUE % 'dhcp'
@@ -59,7 +61,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     PREPARE_VM_SUCCESS_TEXT = "//h3[contains(text(), 'successfully')]"
 
     # STORAGE STAGE
-    # NFS
+    ## NFS
     _STORAGE_TYPE = "//ul[@class='dropdown-menu']/li[@value='%s']"
     STORAGE_BUTTON = _DROPDOWN_MENU % 'Storage Type'
     STORAGE_NFS = _STORAGE_TYPE % 'nfs'
@@ -72,9 +74,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     NFS_V4 = _DROPDOWN_VALUE % 'v4'
     NFS_V41 = _DROPDOWN_VALUE % 'v4_1'
 
-    # NFS_V42
-
-    # ISCSI
+    ## ISCSI
     _TEXT_LABEL = "//label[text()='%s']//parent::*//input[@type='text']"
     _PASSWORD_LABEL = "//label[text()='%s']//parent::*//input[@type='password']"
     STORAGE_ISCSI = _STORAGE_TYPE % 'iscsi'
@@ -83,37 +83,36 @@ class OvirtHostedEnginePage(SeleniumTest):
     PORTAL_PASS = _PASSWORD_LABEL % 'Portal Password'
     DISCOVERY_USER = _TEXT_LABEL % 'Discovery Username'
     DISCOVERY_PASS = _PASSWORD_LABEL % 'Discovery Password'
-
     RETRIEVE_TARGET = "//button[text()='Retrieve Target List']"
     SELECTED_TARGET = "//input[@type='radio'][@name='target']"
     SELECTED_ISCSI_LUN = "//input[@type='radio'][@name='lun']"
 
-    # FC
+    ## FC
     STORAGE_FC = _STORAGE_TYPE % 'fc'
     SELECTED_FC_LUN = "//input[@type='radio'][@value='36005076300810b3e0000000000000027']"
     FC_DISCOVER = "//button[@text()='Discover']"
 
-    # GLUSTERFS
+    ## GLUSTERFS
     STORAGE_GLUSTERFS = _STORAGE_TYPE % 'glusterfs'
 
     # FINISH STAGE
     FINISH_DEPLOYMENT = "//button[text()='Finish Deployment']"
     CLOSE_BUTTON = "//button[text()='Close']"
 
-    # CHECKPOINTS
+    # DEPLOYED PAGE
+    ## HINT&ICON
     MAINTENANCE_HINT = "//div[contains(text(), 'Local maintenance')]"
     GLOBAL_HINT = "//div[contains(text(), 'global maintenance')]"
     ENGINE_UP_ICON = "//span[contains(@class, 'pficon-ok')]"
-
+    ## MAINTENANCE BUTTONS
     _MAINTENANCE = "//button[contains(text(), '%s')]"
     LOCAL_MAINTENANCE = _MAINTENANCE % 'local'
     REMOVE_MAINTENANCE = _MAINTENANCE % 'Remove'
     GLOBAL_MAINTENANCE = _MAINTENANCE % 'global'
-
+    ## STATUS
     LOCAL_MAINTEN_STAT = "//div[contains(text(), 'Agent')]"
     VM_STATUS = "//div[contains(text(), 'State')]"
     HE_RUNNING = "//p[contains(text(),'Hosted Engine is running on')]"
-
     FAILED_TEXT = "//div[text()='Deployment failed']"
 
     def setUp(self):
@@ -212,8 +211,11 @@ class OvirtHostedEnginePage(SeleniumTest):
             #TODO: 1.modify InitiatorName and restart services. 2. Clean old data on iscsi disk.
             pass
         elif storage_type == 'fc':
-            # TODO: 1. modify ip address, 2. fresh page
-            pass
+            # TODO:
+            luns_fc_storage = self.config_dict['luns_fc_storage']
+            for lun_id in luns_fc_storage:
+                self.clear_data(lun_id)
+                
         else:
             # TODO gluster
             pass
@@ -286,7 +288,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     def default_vm_engine_stage_config(self):
         # VM STAGE
         self.click(self.HE_START)
-        time.sleep(20)
+        time.sleep(30)
         self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 100)
         self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
         self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
@@ -353,6 +355,9 @@ class OvirtHostedEnginePage(SeleniumTest):
         check_deploy()
 
     def node_zero_fc_deploy_process(self):
+        self.clean_hostengine_env()
+        self.refresh()
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         def check_deploy():
             self.default_vm_engine_stage_config()
 
@@ -458,3 +463,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     def check_migrated_he(self):
         time.sleep(5000)
         self.assert_text_in_element(self.VM_STATUS, 'down')
+
+    def clear_data(self, id):
+        cmd = 'dd if=/dev/zero of=/dev/mapper/{} bs=10M'.format(id)
+        self.host.execute(cmd,timeout=1200,raise_exception=False)
