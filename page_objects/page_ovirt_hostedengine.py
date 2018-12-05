@@ -1,6 +1,7 @@
 import os
 import yaml
 import time
+import datetime
 import simplejson
 import urllib2
 from seleniumlib import SeleniumTest
@@ -130,27 +131,20 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.click(self.HOSTEDENGINE_LINK)
     
     # internal functions
-    def move_failed_setup_log(self):
-        ### TODO:
-        # The related hosted-engine log files:
-        # 1. Ansible related log files: /var/log/ovirt-hosted-engine-setup/*.log
-        # 2. HA log files: /var/log/ovirt-hosted-engine-ha/*.log
-        # 3. Logs under /var/log/libvirt/qemu/*.log
-        # 4. other logs (no need to care about in this function): engine vm logs, messages, vdsm.log, supervdsm.log
-        # using for path in [x,x,x]: cmd = 
-        ######
+    def backup_remove_logs(self):
+        log_backup = os.path.join('/var/old_hosted_engine_log/',datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+        self.host.execute("mkdir -p {}".format(log_backup))
 
-        cmd = "find /var/log -type f |grep ovirt-hosted-engine-setup-.*.log"
-        test_cmd = "test -e /var/old_failed_setup_log"
-
-        try:
-            self.host.execute(cmd)
-            if not self.host.execute(test_cmd, raise_exception=False).succeeded:
-                self.host.execute("mkdir -p /var/old_failed_setup_log")
-            self.host.execute("mv /var/log/ovirt-hosted-engine-setup/*.log \
-                            /var/old_failed_setup_log/")
-        except Exception as e:
-            pass
+        for filter in ['ovirt-hosted-engine-setup*','agent','broker','HostedEngine*']:
+            cmd = "find /var/log -type f |grep {}".format(filter)
+            try:
+                log_list = self.host.execute(cmd).rsplit("\n")
+                for each_entry in log_list:
+                    self.host.execute("mv {0} {1}".format(each_entry.replace("\r",""),log_backup))
+            except Exception as e:
+                pass
+            finally:
+                self.host.execute("rm -rf /var/log/ovirt-hosted-engine-setup/*",raise_exception=False)
 
     def get_latest_rhvm_appliance(self, appliance_path):
         ### TODO: For 4.x , get the related latest rhvm appliance URL
@@ -186,7 +180,10 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def prepare_env(self, storage_type='nfs'):
         # TODO: if hosted-engine --vm-status result has vm running: 
-        self.move_failed_setup_log()
+        self.backup_remove_logs()
+        self.clean_hostengine_env()
+        self.refresh()
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
         # end if
         

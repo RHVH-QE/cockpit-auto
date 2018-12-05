@@ -23,7 +23,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_default_deploy(self):
         # The default deployment means that HE deployment, DHCP network, NFS Auto version, No MNT Option
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=test_linda
         """
         self.node_zero_default_deploy_process()
 
