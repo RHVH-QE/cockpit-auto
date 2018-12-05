@@ -115,6 +115,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     HE_RUNNING = "//p[contains(text(),'Hosted Engine is running on')]"
     FAILED_TEXT = "//div[text()='Deployment failed']"
 
+    # override functions
     def setUp(self):
         case_name = self._testMethodName
         config = self.get_data('ovirt_hostedengine.yml')
@@ -124,7 +125,35 @@ class OvirtHostedEnginePage(SeleniumTest):
             os.environ['HOST_STRING'] = self.config_dict['host_fc_string']
         super(OvirtHostedEnginePage,self).setUp()
 
+    def open_page(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.HOSTEDENGINE_LINK)
+    
+    # internal functions
+    def move_failed_setup_log(self):
+        ### TODO:
+        # The related hosted-engine log files:
+        # 1. Ansible related log files: /var/log/ovirt-hosted-engine-setup/*.log
+        # 2. HA log files: /var/log/ovirt-hosted-engine-ha/*.log
+        # 3. Logs under /var/log/libvirt/qemu/*.log
+        # 4. other logs (no need to care about in this function): engine vm logs, messages, vdsm.log, supervdsm.log
+        # using for path in [x,x,x]: cmd = 
+        ######
+
+        cmd = "find /var/log -type f |grep ovirt-hosted-engine-setup-.*.log"
+        test_cmd = "test -e /var/old_failed_setup_log"
+
+        try:
+            self.host.execute(cmd)
+            if not self.host.execute(test_cmd, raise_exception=False).succeeded:
+                self.host.execute("mkdir -p /var/old_failed_setup_log")
+            self.host.execute("mv /var/log/ovirt-hosted-engine-setup/*.log \
+                            /var/old_failed_setup_log/")
+        except Exception as e:
+            pass
+
     def get_latest_rhvm_appliance(self, appliance_path):
+        ### TODO: For 4.x , get the related latest rhvm appliance URL
         """
         Purpose:
             Get the latest rhvm appliance from appliance parent path
@@ -155,26 +184,75 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.host.execute("rpm -ivh %s --force" % local_rhvm_appliance, timeout=100)
         self.host.execute("rm -rf %s" % local_rhvm_appliance)
 
-    def add_to_etc_host(self):
-        pass
-
+    def prepare_env(self, storage_type='nfs'):
+        # TODO: if hosted-engine --vm-status result has vm running: 
+        self.move_failed_setup_log()
+        self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
+        # end if
+        
+        if storage_type == 'nfs':
+            self.clean_nfs_storage(self.config_dict['nfs_ip'],
+                                   self.config_dict['nfs_pass'],
+                                   self.config_dict['nfs_dir'])
+        elif storage_type == 'iscsi':
+            #TODO: 1.modify InitiatorName and restart services. 2. Clean old data on iscsi disk.
+            pass
+        elif storage_type == 'fc':
+            # TODO:
+            luns_fc_storage = self.config_dict['luns_fc_storage']
+            for lun_id in luns_fc_storage:
+                self.clear_block_data(lun_id)          
+        else:
+            # TODO gluster
+            pass
+    
     def clean_nfs_storage(self, nfs_ip, nfs_pass, nfs_path):
         host_ins = Machine(
             host_string=nfs_ip, host_user='root', host_passwd=nfs_pass)
         host_ins.execute("rm -rf %s/*" % nfs_path)
 
-    def move_failed_setup_log(self):
-        cmd = "find /var/log -type f |grep ovirt-hosted-engine-setup-.*.log"
-        test_cmd = "test -e /var/old_failed_setup_log"
+    def clear_block_data(self, id):
+        cmd = 'dd if=/dev/zero of=/dev/mapper/{} bs=10M'.format(id)
+        self.host.execute(cmd,timeout=1200,raise_exception=False)
 
-        try:
-            self.host.execute(cmd)
-            if not self.host.execute(test_cmd, raise_exception=False).succeeded:
-                self.host.execute("mkdir -p /var/old_failed_setup_log")
-            self.host.execute("mv /var/log/ovirt-hosted-engine-setup/*.log \
-                            /var/old_failed_setup_log/")
-        except Exception as e:
-            pass
+    def default_vm_engine_stage_config(self):
+        # VM STAGE
+        self.click(self.HE_START)
+        time.sleep(30)
+        self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 100)
+        self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
+        self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
+        self.click(self.NEXT_BUTTON)
+
+        # ENGINE STAGE
+        self.input_text(self.ADMIN_PASS, self.config_dict['admin_pass'])
+        self.click(self.NEXT_BUTTON)
+
+        # PREPARE VM
+        self.click(self.PREPARE_VM_BUTTON)
+        self.click(self.NEXT_BUTTON, 2000)
+
+    def check_no_password_saved(self, root_pass, admin_pass):
+        ret_log = self.host.execute(
+            "find /var/log -type f |grep ovirt-hosted-engine-setup-ansible-bootstrap_local_vm.*.log"
+        )
+        appliance_str = "'APPLIANCE_PASSWORD': u'%s'" % root_pass
+        appliance_cmd = 'grep "%s" %s' % (appliance_str, ret_log)
+
+        admin_str = "'ADMIN_PASSWORD': u'%s'" % admin_pass
+        admin_cmd = 'grep "%s" %s' % (admin_str, ret_log)
+
+        output_appliance_pass = self.host.execute(appliance_cmd, raise_exception=False)
+        output_admin_pass = self.host.execute(admin_cmd, raise_exception=False)
+
+        if output_admin_pass.succeeded or output_appliance_pass.succeeded:
+            self.fail()
+
+    def add_additional_host_to_cluster(self, host_ip, host_name, host_pass,
+                                       rhvm_fqdn, engine_pass):
+        rhvm = RhevmAction(rhvm_fqdn, "admin", engine_pass)
+        rhvm.add_host(host_ip, host_name, host_pass, "Default", True)
+        self.wait_host_up(rhvm, host_name, 'up')
 
     def wait_host_up(self, rhvm_ins, host_name, expect_status='up'):
         i = 0
@@ -195,62 +273,23 @@ class OvirtHostedEnginePage(SeleniumTest):
                                    (expect_status, host_status))
             time.sleep(10)
             i += 1
-
-    def open_page(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.HOSTEDENGINE_LINK)
-
-    def prepare_env(self, storage_type='nfs'):
-        self.move_failed_setup_log()
-        self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
-        if storage_type == 'nfs':
-            self.clean_nfs_storage(self.config_dict['nfs_ip'],
-                                   self.config_dict['nfs_pass'],
-                                   self.config_dict['nfs_dir'])
-        elif storage_type == 'iscsi':
-            #TODO: 1.modify InitiatorName and restart services. 2. Clean old data on iscsi disk.
-            pass
-        elif storage_type == 'fc':
-            # TODO:
-            luns_fc_storage = self.config_dict['luns_fc_storage']
-            for lun_id in luns_fc_storage:
-                self.clear_data(lun_id)
-                
-        else:
-            # TODO gluster
-            pass
-            
-    def check_no_password_saved(self, root_pass, admin_pass):
-        ret_log = self.host.execute(
-            "find /var/log -type f |grep ovirt-hosted-engine-setup-ansible-bootstrap_local_vm.*.log"
-        )
-        appliance_str = "'APPLIANCE_PASSWORD': u'%s'" % root_pass
-        appliance_cmd = 'grep "%s" %s' % (appliance_str, ret_log)
-
-        admin_str = "'ADMIN_PASSWORD': u'%s'" % admin_pass
-        admin_cmd = 'grep "%s" %s' % (admin_str, ret_log)
-
-        output_appliance_pass = self.host.execute(appliance_cmd, raise_exception=False)
-        output_admin_pass = self.host.execute(admin_cmd, raise_exception=False)
-
-        if output_admin_pass.succeeded or output_appliance_pass.succeeded:
-            self.fail()
-
-    def check_no_large_messages(self):
-        size1 = self.host.execute(
-            "ls -lnt /var/log/messages | awk '{print $5}'")
-        time.sleep(10)
-        size2 = self.host.execute(
-            "ls -lnt /var/log/messages | awk '{print $5}'")
-        if int(size2) - int(size1) > 500:
-            self.fail()
-
-    def add_additional_host_to_cluster(self, host_ip, host_name, host_pass,
-                                       rhvm_fqdn, engine_pass):
-        rhvm = RhevmAction(rhvm_fqdn, "admin", engine_pass)
-        rhvm.add_host(host_ip, host_name, host_pass, "Default", True)
-        self.wait_host_up(rhvm, host_name, 'up')
-
+    
+    def check_additional_host_socre(self, ip, passwd):
+        true, false = True, False
+        cmd = "hosted-engine --vm-status --json"
+        host_ins = Machine(
+            host_string=ip, host_user='root', host_passwd=passwd)
+        i = 0
+        while True:
+            if i > 10:
+                raise RuntimeError(
+                    "Timeout waitting for host to available running HE.")
+            ret = host_ins.execute(cmd)
+            if eval(ret)["2"]["score"] == 3400:
+                break
+            time.sleep(10)
+            i += 1
+    
     def put_host_to_local_maintenance(self):
         self.click(self.LOCAL_MAINTENANCE)
         time.sleep(240)
@@ -269,39 +308,13 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.host.put_file(clean_he_file, '/root/clean_he_env.py')
         self.host.execute("python /root/clean_he_env.py", timeout=70)
 
-    def check_additional_host_socre(self, ip, passwd):
-        true, false = True, False
-        cmd = "hosted-engine --vm-status --json"
-        host_ins = Machine(
-            host_string=ip, host_user='root', host_passwd=passwd)
-        i = 0
-        while True:
-            if i > 10:
-                raise RuntimeError(
-                    "Timeout waitting for host to available running HE.")
-            ret = host_ins.execute(cmd)
-            if eval(ret)["2"]["score"] == 3400:
-                break
-            time.sleep(10)
-            i += 1
+    ###### no need?
+    # def add_to_etc_host(self):
+    #     pass
+    ######
 
-    def default_vm_engine_stage_config(self):
-        # VM STAGE
-        self.click(self.HE_START)
-        time.sleep(30)
-        self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 100)
-        self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
-        self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
-        self.click(self.NEXT_BUTTON)
-
-        # ENGINE STAGE
-        self.input_text(self.ADMIN_PASS, self.config_dict['admin_pass'])
-        self.click(self.NEXT_BUTTON)
-
-        # PREPARE VM
-        self.click(self.PREPARE_VM_BUTTON)
-        self.click(self.NEXT_BUTTON, 2000)
-
+    ## Case called
+    # tier1_1
     def node_zero_default_deploy_process(self):
         def check_deploy():
             self.default_vm_engine_stage_config()
@@ -319,10 +332,48 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.prepare_env('nfs')
         check_deploy()
 
+    # tier1_2
     def check_no_password_saved_in_setup_log(self):
         self.check_no_password_saved(self.config_dict['he_vm_pass'],
                                      self.config_dict['admin_pass'])
 
+    # tier1_3
+    def check_no_large_messages(self):
+        size1 = self.host.execute(
+            "ls -lnt /var/log/messages | awk '{print $5}'")
+        time.sleep(10)
+        size2 = self.host.execute(
+            "ls -lnt /var/log/messages | awk '{print $5}'")
+        if int(size2) - int(size1) > 500:
+            self.fail()
+
+    # tier1_4
+    def add_additional_host_to_cluster_process(self):
+        self.add_additional_host_to_cluster(
+            self.config_dict['second_host'], self.config_dict['second_vm_fqdn'],
+            self.config_dict['second_pass'], self.config_dict['he_vm_fqdn'],
+            self.config_dict['admin_pass'])
+        self.check_additional_host_socre(self.config_dict['second_host'],
+                                         self.config_dict['second_pass'])
+
+    # tier1_5
+    def check_local_maintenance(self):
+        self.put_host_to_local_maintenance()
+
+    # tier1_6
+    def check_migrated_he(self):
+        time.sleep(5000)
+        self.assert_text_in_element(self.VM_STATUS, 'down')
+    
+    # tier1_7
+    def check_remove_maintenance(self):
+        self.remove_host_from_maintenance()
+
+    # tier1_8
+    def check_global_maintenance(self):
+        self.put_cluster_to_global_maintenance()
+
+    # tier2_1
     def node_zero_iscsi_deploy_process(self):
         def check_deploy():
             self.default_vm_engine_stage_config()
@@ -354,6 +405,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.prepare_env('iscsi')
         check_deploy()
 
+    # tier2_2
     def node_zero_fc_deploy_process(self):
         self.clean_hostengine_env()
         self.refresh()
@@ -376,6 +428,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.prepare_env('fc')
         check_deploy()
 
+    # tier2_3
     def node_zero_gluster_deploy_process(self):
         def check_deploy():
             self.default_vm_engine_stage_config()
@@ -395,6 +448,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.prepare_env('gluster')
         check_deploy()
 
+    # tier2_4
     def node_zero_static_v4_deploy_process(self):
         self.clean_hostengine_env()
         self.refresh()
@@ -437,33 +491,9 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.prepare_env('nfs')
         check_deploy()
 
+    # tier2_5
     def hostedengine_redeploy_process(self):
         self.clean_hostengine_env()
         self.refresh()
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         self.node_zero_default_deploy_process()
-
-    def add_additional_host_to_cluster_process(self):
-        self.add_additional_host_to_cluster(
-            self.config_dict['second_host'], self.config_dict['second_vm_fqdn'],
-            self.config_dict['second_pass'], self.config_dict['he_vm_fqdn'],
-            self.config_dict['admin_pass'])
-        self.check_additional_host_socre(self.config_dict['second_host'],
-                                         self.config_dict['second_pass'])
-
-    def check_local_maintenance(self):
-        self.put_host_to_local_maintenance()
-
-    def check_remove_maintenance(self):
-        self.remove_host_from_maintenance()
-
-    def check_global_maintenance(self):
-        self.put_cluster_to_global_maintenance()
-
-    def check_migrated_he(self):
-        time.sleep(5000)
-        self.assert_text_in_element(self.VM_STATUS, 'down')
-
-    def clear_data(self, id):
-        cmd = 'dd if=/dev/zero of=/dev/mapper/{} bs=10M'.format(id)
-        self.host.execute(cmd,timeout=1200,raise_exception=False)
