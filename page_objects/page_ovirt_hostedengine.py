@@ -4,6 +4,7 @@ import time
 import datetime
 import simplejson
 import urllib2
+import traceback
 from seleniumlib import SeleniumTest
 from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
@@ -176,11 +177,10 @@ class OvirtHostedEnginePage(SeleniumTest):
         try:
             self.host.execute("yum install -y {}".format(rhvm_appliance_link))
         except:
-            import traceback
             traceback.print_exc()
 
     def prepare_env(self, storage_type='nfs'):
-        if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0 :
+        if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0:
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
         else:
             self.backup_remove_logs()
@@ -194,7 +194,20 @@ class OvirtHostedEnginePage(SeleniumTest):
                                    self.config_dict['nfs_dir'])
         elif storage_type == 'iscsi':
             #TODO: 1.modify InitiatorName and restart services. 2. Clean old data on iscsi disk.
-            pass
+            try:
+                self.host.get_file('/etc/iscsi/initiatorname.iscsi','./initiatorname.iscsi')
+                new_line = ''
+                with open('./initiatorname.iscsi') as config_file:
+                    for line in config_file:
+                        if line.startswith('InitiatorName'):
+                            new_line = line.replace(line.split('=')[-1],self.config_dict['iscsi_initiator_name'])
+                with open('./initiatorname.iscsi', 'w') as config_file:
+                    config_file.write(new_line)
+                self.host.put_file('./initiatorname.iscsi','/etc/iscsi/initiatorname.iscsi')
+                os.remove('./initiatorname.iscsi')
+                self.host.execute('systemctl restart iscsid iscsi')
+            except:
+                traceback.print_exc()            
         elif storage_type == 'fc':
             # TODO:
             luns_fc_storage = self.config_dict['luns_fc_storage']
@@ -401,7 +414,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.CLOSE_BUTTON, 2000)
 
         self.prepare_env('iscsi')
-        check_deploy()
+        # check_deploy()
 
     # tier2_2
     def node_zero_fc_deploy_process(self):

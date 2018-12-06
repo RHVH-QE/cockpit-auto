@@ -10,6 +10,7 @@ nfs_pass: 'Redhat,123456'
 nfs_dir: '/home/wangwei/nfs'
 
 # ISCSI
+iscsi_initiator_name: 'iqn.1994-05.com.redhat:6acc055d3232'
 iscsi_portal_ip: '10.73.64.13'
 iscsi_portal_user: ''
 iscsi_portal_pass: ''

@@ -23,7 +23,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_default_deploy(self):
         # The default deployment means that HE deployment, DHCP network, NFS Auto version, No MNT Option
         """
-        :avocado: tags=test_linda
+        :avocado: tags=he_tier1
         """
         self.node_zero_default_deploy_process()
 
@@ -100,7 +100,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_iscsi_deployment(self):
         # Need to deploy HE on iscsi storage
         """
-        :avocado: tags=he_tier2
+        :avocado: tags=test_linda
         """
         self.node_zero_iscsi_deploy_process()
 
