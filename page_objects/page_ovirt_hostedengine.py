@@ -4,7 +4,6 @@ import time
 import datetime
 import simplejson
 import urllib2
-import traceback
 from seleniumlib import SeleniumTest
 from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
@@ -176,8 +175,8 @@ class OvirtHostedEnginePage(SeleniumTest):
         rhvm_appliance_link = self.get_rhvm_appliance(appliance_path)
         try:
             self.host.execute("yum install -y {}".format(rhvm_appliance_link))
-        except:
-            traceback.print_exc()
+        except Exception as e:
+            pass
 
     def prepare_env(self, storage_type='nfs'):
         if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0:
@@ -193,7 +192,6 @@ class OvirtHostedEnginePage(SeleniumTest):
                                    self.config_dict['nfs_pass'],
                                    self.config_dict['nfs_dir'])
         elif storage_type == 'iscsi':
-            #TODO: 1.modify InitiatorName and restart services. 2. Clean old data on iscsi disk.
             try:
                 self.host.get_file('/etc/iscsi/initiatorname.iscsi','./initiatorname.iscsi')
                 new_line = ''
@@ -206,13 +204,14 @@ class OvirtHostedEnginePage(SeleniumTest):
                 self.host.put_file('./initiatorname.iscsi','/etc/iscsi/initiatorname.iscsi')
                 os.remove('./initiatorname.iscsi')
                 self.host.execute('systemctl restart iscsid iscsi')
-            except:
-                traceback.print_exc()            
+                self.clear_iscsi_storage(self.config_dict['iscsi_portal_ip'])
+            except Exception as e:
+                pass           
         elif storage_type == 'fc':
             # TODO:
             luns_fc_storage = self.config_dict['luns_fc_storage']
             for lun_id in luns_fc_storage:
-                self.clear_block_data(lun_id)          
+                self.clear_fc_storage(lun_id)          
         else:
             # TODO gluster
             pass
@@ -222,14 +221,23 @@ class OvirtHostedEnginePage(SeleniumTest):
             host_string=nfs_ip, host_user='root', host_passwd=nfs_pass)
         host_ins.execute("rm -rf %s/*" % nfs_path)
 
-    def clear_block_data(self, id):
+    def clear_fc_storage(self, id):
         cmd = 'dd if=/dev/zero of=/dev/mapper/{} bs=10M'.format(id)
         self.host.execute(cmd,timeout=1200,raise_exception=False)
 
+    def clear_iscsi_storage(self, iscsi_ip):
+        try:
+            str = self.host.execute('iscsiadm --mode discoverydb --type sendtargets --portal {} --discover'.format(iscsi_ip))
+            print(str.split(' ')[-1])
+            self.host.execute('iscsiadm --mode node --targetname {0} --portal {1}:3260 --login'.format(str.split(' ')[-1], iscsi_ip))
+            self.host.execute('dd if=/dev/zero of=/dev/sdb bs=10M', timeout=1200)
+            self.host.execute('iscsiadm --mode node --targetname {0} --portal {1}:3260 --logout'.format(str.split(' ')[-1], iscsi_ip))
+        except Exception as e:
+            pass
     def default_vm_engine_stage_config(self):
         # VM STAGE
         self.click(self.HE_START)
-        time.sleep(30)
+        time.sleep(40)
         self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 100)
         self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
         self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
@@ -414,7 +422,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.CLOSE_BUTTON, 2000)
 
         self.prepare_env('iscsi')
-        # check_deploy()
+        check_deploy()
 
     # tier2_2
     def node_zero_fc_deploy_process(self):
