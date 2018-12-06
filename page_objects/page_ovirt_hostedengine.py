@@ -147,11 +147,6 @@ class OvirtHostedEnginePage(SeleniumTest):
                 self.host.execute("rm -rf /var/log/ovirt-hosted-engine-setup/*",raise_exception=False)
 
     def get_rhvm_appliance(self, appliance_path):
-        ### TODO: For 4.x , get the related latest rhvm appliance URL
-        """
-        Purpose:
-            Get the latest rhvm appliance from appliance parent path
-        """
         req = urllib2.Request(appliance_path)
         rhvm_appliance_html = urllib2.urlopen(req).read()
 
@@ -178,11 +173,6 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def install_rhvm_appliance(self, appliance_path):
         rhvm_appliance_link = self.get_rhvm_appliance(appliance_path)
-        # local_rhvm_appliance = "/root/%s" % rhvm_appliance_link.split('/')[-1]
-        # self.host.execute("curl -o %s %s" % (local_rhvm_appliance,
-                                            #  rhvm_appliance_link), timeout=400)
-        # self.host.execute("rpm -ivh %s --force" % local_rhvm_appliance, timeout=100)
-        # self.host.execute("rm -rf %s" % local_rhvm_appliance)
         try:
             self.host.execute("yum install -y {}".format(rhvm_appliance_link))
         except:
