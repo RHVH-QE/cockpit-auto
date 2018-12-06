@@ -179,14 +179,14 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.host.execute("rm -rf %s" % local_rhvm_appliance)
 
     def prepare_env(self, storage_type='nfs'):
-        # TODO: if hosted-engine --vm-status result has vm running: 
-        self.backup_remove_logs()
-        self.clean_hostengine_env()
-        self.refresh()
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
-        # end if
-        
+        if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0 :
+            self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
+        else:
+            self.backup_remove_logs()
+            self.clean_hostengine_env()
+            self.refresh()
+            self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+
         if storage_type == 'nfs':
             self.clean_nfs_storage(self.config_dict['nfs_ip'],
                                    self.config_dict['nfs_pass'],
