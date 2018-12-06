@@ -146,7 +146,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             finally:
                 self.host.execute("rm -rf /var/log/ovirt-hosted-engine-setup/*",raise_exception=False)
 
-    def get_latest_rhvm_appliance(self, appliance_path):
+    def get_rhvm_appliance(self, appliance_path):
         ### TODO: For 4.x , get the related latest rhvm appliance URL
         """
         Purpose:
@@ -160,23 +160,34 @@ class OvirtHostedEnginePage(SeleniumTest):
         mp.close()
         mp.a_texts.sort()
 
-        rhvm42_link_list = []
-        all_link = mp.a_texts
-        for link in all_link:
-            if "4.2" in link:
-                rhvm42_link_list.append(link)
-
-        latest_rhvm_appliance_name = rhvm42_link_list[-1]
-        latest_rhvm_appliance = appliance_path + latest_rhvm_appliance_name
-        return latest_rhvm_appliance
+        rhvm_appliance_dict = {'v4.2':[], 'v4.3':[]}
+        all_appliance = mp.a_texts
+        for appliance in all_appliance:
+            if "4.2" in appliance:
+                rhvm_appliance_dict.get('v4.2').append(appliance)
+            elif "4.3" in appliance:
+                rhvm_appliance_dict.get('v4.3').append(appliance)
+        
+        img_ver = self.host.execute("imgbase w", raise_exception=False).split(' ')[-1]
+        if '4.2' in img_ver:
+            rhvm_appliance = rhvm_appliance_dict.get('v4.2')[-1]
+        elif '4.3' in img_ver:
+            rhvm_appliance = rhvm_appliance_dict.get('v4.3')[-1]
+        rhvm_appliance_link = appliance_path + rhvm_appliance
+        return rhvm_appliance_link
 
     def install_rhvm_appliance(self, appliance_path):
-        rhvm_appliance_link = self.get_latest_rhvm_appliance(appliance_path)
-        local_rhvm_appliance = "/root/%s" % rhvm_appliance_link.split('/')[-1]
-        self.host.execute("curl -o %s %s" % (local_rhvm_appliance,
-                                             rhvm_appliance_link), timeout=400)
-        self.host.execute("rpm -ivh %s --force" % local_rhvm_appliance, timeout=100)
-        self.host.execute("rm -rf %s" % local_rhvm_appliance)
+        rhvm_appliance_link = self.get_rhvm_appliance(appliance_path)
+        # local_rhvm_appliance = "/root/%s" % rhvm_appliance_link.split('/')[-1]
+        # self.host.execute("curl -o %s %s" % (local_rhvm_appliance,
+                                            #  rhvm_appliance_link), timeout=400)
+        # self.host.execute("rpm -ivh %s --force" % local_rhvm_appliance, timeout=100)
+        # self.host.execute("rm -rf %s" % local_rhvm_appliance)
+        try:
+            self.host.execute("yum install -y {}".format(rhvm_appliance_link))
+        except:
+            import traceback
+            traceback.print_exc()
 
     def prepare_env(self, storage_type='nfs'):
         if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0 :
