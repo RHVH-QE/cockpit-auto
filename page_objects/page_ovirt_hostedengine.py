@@ -223,14 +223,14 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def clear_fc_storage(self, id):
         cmd = 'dd if=/dev/zero of=/dev/mapper/{} bs=10M'.format(id)
-        self.host.execute(cmd,timeout=1200,raise_exception=False)
+        self.host.execute(cmd,timeout=2000,raise_exception=False)
 
     def clear_iscsi_storage(self, iscsi_ip):
         try:
             str = self.host.execute('iscsiadm --mode discoverydb --type sendtargets --portal {} --discover'.format(iscsi_ip))
             print(str.split(' ')[-1])
             self.host.execute('iscsiadm --mode node --targetname {0} --portal {1}:3260 --login'.format(str.split(' ')[-1], iscsi_ip))
-            self.host.execute('dd if=/dev/zero of=/dev/sdb bs=10M', timeout=1200)
+            self.host.execute('dd if=/dev/zero of=/dev/sdb bs=10M', timeout=2000)
             self.host.execute('iscsiadm --mode node --targetname {0} --portal {1}:3260 --logout'.format(str.split(' ')[-1], iscsi_ip))
         except Exception as e:
             pass
@@ -290,7 +290,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             elif host_status == 'non_operational':
                 raise RuntimeError("Host is not %s as current status is: %s" %
                                    (expect_status, host_status))
-            time.sleep(10)
+            time.sleep(15)
             i += 1
     
     def check_additional_host_socre(self, ip, passwd):
@@ -325,7 +325,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         clean_he_file = project_path + \
             '/test_suites/test_ovirt_hostedengine.py.data/clean_he_env.py'
         self.host.put_file(clean_he_file, '/root/clean_he_env.py')
-        self.host.execute("python /root/clean_he_env.py", timeout=70)
+        self.host.execute("python /root/clean_he_env.py", timeout=120)
 
     ###### no need?
     # def add_to_etc_host(self):
@@ -426,9 +426,6 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     # tier2_2
     def node_zero_fc_deploy_process(self):
-        self.clean_hostengine_env()
-        self.refresh()
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         def check_deploy():
             self.default_vm_engine_stage_config()
 
@@ -469,9 +466,6 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     # tier2_4
     def node_zero_static_v4_deploy_process(self):
-        self.clean_hostengine_env()
-        self.refresh()
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         def check_deploy():
             # VM STAGE
             self.click(self.HE_START)
@@ -512,7 +506,4 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     # tier2_5
     def hostedengine_redeploy_process(self):
-        self.clean_hostengine_env()
-        self.refresh()
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         self.node_zero_default_deploy_process()
