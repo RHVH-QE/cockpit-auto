@@ -204,36 +204,78 @@ class OvirtHostedEnginePage(SeleniumTest):
                 self.host.put_file('./initiatorname.iscsi','/etc/iscsi/initiatorname.iscsi')
                 os.remove('./initiatorname.iscsi')
                 self.host.execute('systemctl restart iscsid iscsi')
-                self.clear_iscsi_storage(self.config_dict['iscsi_portal_ip'])
+                self.clean_iscsi_storage(self.config_dict['iscsi_portal_ip'])
             except Exception as e:
                 pass           
         elif storage_type == 'fc':
-            # TODO:
             luns_fc_storage = self.config_dict['luns_fc_storage']
             for lun_id in luns_fc_storage:
-                self.clear_fc_storage(lun_id)          
-        else:
-            # TODO gluster
-            pass
+                self.clean_fc_storage(lun_id)          
+        elif storage_type == 'gluster':
+            glusterfs_servers = list(self.config_dict['gluster_ips'].values())
+            for ip in glusterfs_servers:
+                self.clean_glusterfs_storage_pre(ip, self.config_dict['root_passwd'])
+            self.clean_glusterfs_storage_post(glusterfs_servers[0],self.config_dict['root_passwd'])
     
     def clean_nfs_storage(self, nfs_ip, nfs_pass, nfs_path):
-        host_ins = Machine(
-            host_string=nfs_ip, host_user='root', host_passwd=nfs_pass)
-        host_ins.execute("rm -rf %s/*" % nfs_path)
+        try:
+            host_ins = Machine(
+                host_string=nfs_ip, host_user='root', host_passwd=nfs_pass)
+            host_ins.execute("rm -rf %s/*" % nfs_path)
+        except:
+            import traceback
+            traceback.print_exc()
+            self.error()
 
-    def clear_fc_storage(self, id):
+    def clean_fc_storage(self, id):
         cmd = 'dd if=/dev/zero of=/dev/mapper/{} bs=10M'.format(id)
         self.host.execute(cmd,timeout=2000,raise_exception=False)
 
-    def clear_iscsi_storage(self, iscsi_ip):
+    def clean_iscsi_storage(self, iscsi_ip):
         try:
             str = self.host.execute('iscsiadm --mode discoverydb --type sendtargets --portal {} --discover'.format(iscsi_ip))
             print(str.split(' ')[-1])
             self.host.execute('iscsiadm --mode node --targetname {0} --portal {1}:3260 --login'.format(str.split(' ')[-1], iscsi_ip))
             self.host.execute('dd if=/dev/zero of=/dev/sdb bs=10M', timeout=2000)
             self.host.execute('iscsiadm --mode node --targetname {0} --portal {1}:3260 --logout'.format(str.split(' ')[-1], iscsi_ip))
-        except Exception as e:
-            pass
+        except:
+            import traceback
+            traceback.print_exc()
+            self.error()
+
+    def clean_glusterfs_storage_pre(self, glusterfs_ip, password):
+        host_glusterfs_server = Machine(host_string=glusterfs_ip, host_user='root', host_passwd=password)
+        try:
+            if glusterfs_ip == list(self.config_dict['gluster_ips'].values())[0]:
+                host_glusterfs_server.execute("yes|gluster volume stop {}".format(self.config_dict['gluster_volume']))
+                host_glusterfs_server.execute("yes|gluster v delete {}".format(self.config_dict['gluster_volume']))
+            host_glusterfs_server.execute("umount {}".format(self.config_dict['gluster_volume_mount']))
+            host_glusterfs_server.execute("mkfs.ext4 /dev/sdb1")
+            host_glusterfs_server.execute("mount /dev/sdb1 {}".format(self.config_dict['gluster_volume_mount']))
+            host_glusterfs_server.execute("mkdir {0}/{1}".format(self.config_dict['gluster_volume_mount'],self.config_dict['gluster_volume']))
+        except:
+            import traceback
+            traceback.print_exc()
+            self.error()
+
+    def clean_glusterfs_storage_post(self, glusterfs_ip, password):
+        host_glusterfs_server = Machine(host_string=glusterfs_ip, host_user='root', host_passwd=password)
+        try:
+            # host_glusterfs_server.execute("gluster v create gv1 replica 3 bootp-73-75-51.lab.eng.pek2.redhat.com:/data/gluster/gv1 bootp-73-75-26.lab.eng.pek2.redhat.com:/data/gluster/gv1 bootp-73-75-85.lab.eng.pek2.redhat.com:/data/gluster/gv1")  
+            host_glusterfs_server.execute("gluster v create gv1 replica 3 {0}:/data/gluster/gv1 {1}:/data/gluster/gv1 {2}:/data/gluster/gv1".format(*self.config_dict['gluster_ips'].keys()))
+            host_glusterfs_server.execute("gluster volume set gv1 cluster.quorum-type auto")
+            host_glusterfs_server.execute("gluster volume set gv1 network.ping-timeout 10")
+            host_glusterfs_server.execute("gluster volume set gv1 auth.allow \*")
+            host_glusterfs_server.execute("gluster volume set gv1 group virt")
+            host_glusterfs_server.execute("gluster volume set gv1 storage.owner-uid 36")
+            host_glusterfs_server.execute("gluster volume set gv1 storage.owner-gid 36")
+            host_glusterfs_server.execute("gluster volume set gv1 server.allow-insecure on")
+            host_glusterfs_server.execute("gluster volume start {}".format(self.config_dict['gluster_volume']))
+        except:
+            import traceback
+            traceback.print_exc()
+            self.error()
+
     def default_vm_engine_stage_config(self):
         # VM STAGE
         self.click(self.HE_START)
@@ -381,7 +423,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     # tier1_6
     def check_migrated_he(self):
-        time.sleep(5000)
+        time.sleep(30)
         self.assert_text_in_element(self.VM_STATUS, 'down')
     
     # tier1_7
@@ -454,7 +496,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.STORAGE_GLUSTERFS)
             self.input_text(
                 self.STORAGE_CONN,
-                self.config_dict['gluster_ip'] + ':' + self.config_dict['gluster_dir'])
+                list(self.config_dict['gluster_ips'].values())[0] + ':/' + self.config_dict['gluster_volume'])
             self.click(self.NEXT_BUTTON)
 
             # FINISH STAGE

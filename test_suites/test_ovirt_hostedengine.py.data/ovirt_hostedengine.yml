@@ -22,8 +22,10 @@ host_fc_string: '10.73.73.15'
 luns_fc_storage: ['36005076300810b3e0000000000000026','36005076300810b3e0000000000000027']
 
 # GLUSTERFS
-gluster_ip: '10.73.75.51'
-gluster_dir: '/gv1'
+gluster_ips: {'bootp-73-75-51.lab.eng.pek2.redhat.com':'10.73.75.51','bootp-73-75-26.lab.eng.pek2.redhat.com':'10.73.75.26','bootp-73-75-85.lab.eng.pek2.redhat.com':'10.73.75.85'}
+gluster_volume: 'gv1'
+gluster_volume_mount: '/data/gluster'
+root_passwd: 'redhat'
 
 # ENGINE VM
 he_vm_fqdn: 'rhevh-hostedengine-vm-06.lab.eng.pek2.redhat.com'
