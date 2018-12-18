@@ -180,6 +180,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def prepare_env(self, storage_type='nfs'):
         if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0:
+            #TODO: and rhvm_appliance rpm is not exist
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
         else:
             self.backup_remove_logs()
@@ -353,6 +354,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     
     def put_host_to_local_maintenance(self):
         self.click(self.LOCAL_MAINTENANCE)
+        #TODO check whether the vm will be migrated. 4.2 fail
         time.sleep(240)
 
     def remove_host_from_maintenance(self):
@@ -548,4 +550,6 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     # tier2_5
     def hostedengine_redeploy_process(self):
+        additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root', host_passwd=self.config_dict['second_pass'])
+        additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=150)
         self.node_zero_default_deploy_process()

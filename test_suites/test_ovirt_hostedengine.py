@@ -16,6 +16,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier1
         """
+        self.prepare_env()
         self.assert_element_visible(self.GETTING_START_LINK)
         self.assert_element_visible(self.MORE_INFORMATION_LINK)
 
@@ -132,6 +133,6 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_hostedengine_redeploy(self):
         # Re-deploy HE on the host
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he
         """
         self.hostedengine_redeploy_process()
