@@ -179,8 +179,10 @@ class OvirtHostedEnginePage(SeleniumTest):
             pass
 
     def prepare_env(self, storage_type='nfs'):
-        if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0:
-            #TODO: and rhvm_appliance rpm is not exist
+        additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root', host_passwd=self.config_dict['second_pass'])
+        if 'not' in additional_host.execute('hosted-engine --check-deployed',raise_exception=False) == False:
+            additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=150)
+        if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0 and len(self.host.execute('rpm -qa|grep rhvm-appliance')) == 0:
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
         else:
             self.backup_remove_logs()
@@ -349,13 +351,12 @@ class OvirtHostedEnginePage(SeleniumTest):
             ret = host_ins.execute(cmd)
             if eval(ret)["2"]["score"] == 3400:
                 break
-            time.sleep(10)
+            time.sleep(15)
             i += 1
     
-    def put_host_to_local_maintenance(self):
+    def     put_host_to_local_maintenance(self):
         self.click(self.LOCAL_MAINTENANCE)
-        #TODO check whether the vm will be migrated. 4.2 fail
-        time.sleep(240)
+        time.sleep(500)
 
     def remove_host_from_maintenance(self):
         self.click(self.REMOVE_MAINTENANCE)
@@ -371,12 +372,8 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.host.put_file(clean_he_file, '/root/clean_he_env.py')
         self.host.execute("python /root/clean_he_env.py", timeout=120)
 
-    ###### no need?
-    # def add_to_etc_host(self):
-    #     pass
-    ######
 
-    ## Case called
+    ## Cases
     # tier1_1
     def node_zero_default_deploy_process(self):
         def check_deploy():
@@ -470,6 +467,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     # tier2_2
     def node_zero_fc_deploy_process(self):
+        self.host.execute("hostnamectl set-hostname {}".format(self.config_dict['host_fc_hostname']),raise_exception=False)
         def check_deploy():
             self.default_vm_engine_stage_config()
 
@@ -550,6 +548,4 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     # tier2_5
     def hostedengine_redeploy_process(self):
-        additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root', host_passwd=self.config_dict['second_pass'])
-        additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=150)
         self.node_zero_default_deploy_process()

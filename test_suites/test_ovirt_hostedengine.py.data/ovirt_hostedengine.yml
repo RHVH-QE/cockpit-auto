@@ -19,6 +19,7 @@ iscsi_discovery_pass: ''
 
 # FC -- Machine:hp-dl385pg8-11
 host_fc_string: '10.73.73.15'
+host_fc_hostname: ''
 luns_fc_storage: ['36005076300810b3e0000000000000026','36005076300810b3e0000000000000027']
 
 # GLUSTERFS
