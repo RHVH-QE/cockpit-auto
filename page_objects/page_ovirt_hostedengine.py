@@ -182,7 +182,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root', host_passwd=self.config_dict['second_pass'])
         if 'not' in additional_host.execute('hosted-engine --check-deployed',raise_exception=False) == False:
             additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=150)
-        if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0 and len(self.host.execute('rpm -qa|grep rhvm-appliance')) == 0:
+        if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0 and len(self.host.execute('rpm -qa|grep rhvm-appliance',raise_exception=False)) == 0:
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
         else:
             self.backup_remove_logs()
@@ -228,11 +228,16 @@ class OvirtHostedEnginePage(SeleniumTest):
         except:
             import traceback
             traceback.print_exc()
-            self.error()
+            self.fail()
 
     def clean_fc_storage(self, id):
         cmd = 'dd if=/dev/zero of=/dev/mapper/{} bs=10M'.format(id)
-        self.host.execute(cmd,timeout=2000,raise_exception=False)
+        try:
+            self.host.execute(cmd,timeout=2000)
+        except:
+            import traceback
+            traceback.print_exc()
+            self.fail()
 
     def clean_iscsi_storage(self, iscsi_ip):
         try:
@@ -244,7 +249,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         except:
             import traceback
             traceback.print_exc()
-            self.error()
+            self.fail()
 
     def clean_glusterfs_storage_pre(self, glusterfs_ip, password):
         host_glusterfs_server = Machine(host_string=glusterfs_ip, host_user='root', host_passwd=password)
@@ -259,7 +264,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         except:
             import traceback
             traceback.print_exc()
-            self.error()
+            self.fail()
 
     def clean_glusterfs_storage_post(self, glusterfs_ip, password):
         host_glusterfs_server = Machine(host_string=glusterfs_ip, host_user='root', host_passwd=password)
@@ -277,7 +282,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         except:
             import traceback
             traceback.print_exc()
-            self.error()
+            self.fail()
 
     def default_vm_engine_stage_config(self):
         # VM STAGE
@@ -354,7 +359,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             time.sleep(15)
             i += 1
     
-    def     put_host_to_local_maintenance(self):
+    def put_host_to_local_maintenance(self):
         self.click(self.LOCAL_MAINTENANCE)
         time.sleep(500)
 
@@ -401,9 +406,11 @@ class OvirtHostedEnginePage(SeleniumTest):
     def check_no_large_messages(self):
         size1 = self.host.execute(
             "ls -lnt /var/log/messages | awk '{print $5}'")
+        print(size1)
         time.sleep(10)
         size2 = self.host.execute(
             "ls -lnt /var/log/messages | awk '{print $5}'")
+        print(size2)
         if int(size2) - int(size1) > 500:
             self.fail()
 
