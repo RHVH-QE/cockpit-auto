@@ -25,7 +25,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     ## Guide Links
     GETTING_START_LINK = "//a[contains(text(), 'Installation Guide')]"
-    MORE_INFORMATION_LINK = "//a[contains(text(), 'RHEV Documentation')]"
+    MORE_INFORMATION_LINK = "//a[contains(text(), 'RHV Documentation')]"
 
     # VM STAGE
     _TITLE = "//input[@title='%s']"
@@ -168,12 +168,15 @@ class OvirtHostedEnginePage(SeleniumTest):
             rhvm_appliance = rhvm_appliance_dict.get('v4.2')[-1]
         elif '4.3' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.3')[-1]
+        else:
+            rhvm_appliance = rhvm_appliance_dict.get('v4.2')[-1]
         rhvm_appliance_link = appliance_path + rhvm_appliance
         return rhvm_appliance_link
 
     def install_rhvm_appliance(self, appliance_path):
         rhvm_appliance_link = self.get_rhvm_appliance(appliance_path)
         try:
+            # for STIG, need to add option "--nogpgcheck"
             self.host.execute("yum install -y {}".format(rhvm_appliance_link))
         except Exception as e:
             pass
@@ -181,8 +184,8 @@ class OvirtHostedEnginePage(SeleniumTest):
     def prepare_env(self, storage_type='nfs'):
         additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root', host_passwd=self.config_dict['second_pass'])
         if 'not' in additional_host.execute('hosted-engine --check-deployed',raise_exception=False) == False:
-            additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=150)
-        if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0 and len(self.host.execute('rpm -qa|grep rhvm-appliance',raise_exception=False)) == 0:
+            additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
+        if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0 and len(self.host.execute('rpm -qa|grep appliance',raise_exception=False)) == 0:
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
         else:
             self.backup_remove_logs()
@@ -233,7 +236,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     def clean_fc_storage(self, id):
         cmd = 'dd if=/dev/zero of=/dev/mapper/{} bs=10M'.format(id)
         try:
-            self.host.execute(cmd,timeout=2000)
+            self.host.execute(cmd,timeout=2000,raise_exception=False)
         except:
             import traceback
             traceback.print_exc()
@@ -244,7 +247,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             str = self.host.execute('iscsiadm --mode discoverydb --type sendtargets --portal {} --discover'.format(iscsi_ip))
             print(str.split(' ')[-1])
             self.host.execute('iscsiadm --mode node --targetname {0} --portal {1}:3260 --login'.format(str.split(' ')[-1], iscsi_ip))
-            self.host.execute('dd if=/dev/zero of=/dev/sdb bs=10M', timeout=2000)
+            self.host.execute('dd if=/dev/zero of=/dev/sdb bs=10M', timeout=2000,raise_exception=False)
             self.host.execute('iscsiadm --mode node --targetname {0} --portal {1}:3260 --logout'.format(str.split(' ')[-1], iscsi_ip))
         except:
             import traceback
@@ -287,8 +290,8 @@ class OvirtHostedEnginePage(SeleniumTest):
     def default_vm_engine_stage_config(self):
         # VM STAGE
         self.click(self.HE_START)
-        time.sleep(40)
-        self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 100)
+        time.sleep(100)
+        self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
         self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
         self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
         self.click(self.NEXT_BUTTON)
@@ -353,6 +356,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             if i > 10:
                 raise RuntimeError(
                     "Timeout waitting for host to available running HE.")
+            print(cmd)
             ret = host_ins.execute(cmd)
             if eval(ret)["2"]["score"] == 3400:
                 break
@@ -376,7 +380,6 @@ class OvirtHostedEnginePage(SeleniumTest):
             '/test_suites/test_ovirt_hostedengine.py.data/clean_he_env.py'
         self.host.put_file(clean_he_file, '/root/clean_he_env.py')
         self.host.execute("python /root/clean_he_env.py", timeout=120)
-
 
     ## Cases
     # tier1_1
@@ -411,7 +414,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         size2 = self.host.execute(
             "ls -lnt /var/log/messages | awk '{print $5}'")
         print(size2)
-        if int(size2) - int(size1) > 500:
+        if int(size2) - int(size1) > 800:
             self.fail()
 
     # tier1_4
@@ -420,6 +423,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.config_dict['second_host'], self.config_dict['second_vm_fqdn'],
             self.config_dict['second_pass'], self.config_dict['he_vm_fqdn'],
             self.config_dict['admin_pass'])
+        time.sleep(50)
         self.check_additional_host_socre(self.config_dict['second_host'],
                                          self.config_dict['second_pass'])
 
@@ -518,7 +522,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         def check_deploy():
             # VM STAGE
             self.click(self.HE_START)
-            time.sleep(30)
+            time.sleep(150)
             self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
             self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
             self.click(self.NETWORK_DROPDOWN)

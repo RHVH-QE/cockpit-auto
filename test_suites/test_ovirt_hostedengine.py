@@ -28,14 +28,14 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         self.node_zero_default_deploy_process()
 
-    @add_case_id("RHEVM-24594")
+    @add_case_id("RHEVM-26161")
     def test_maintenance_hint(self):
         """
         :avocado: tags=he_tier1
         """
         self.assert_element_visible(self.MAINTENANCE_HINT)
 
-    @add_case_id("RHEVM-23817")
+    @add_case_id("RHEVM-26151")
     def test_engine_vm_status(self):
         """
         :avocado: tags=he_tier1
@@ -50,21 +50,36 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         self.check_no_password_saved_in_setup_log()
 
-    @add_case_id("RHEVM-23832")
+    @add_case_id("RHEVM-26157")
     def test_no_large_messages(self):
         """
         :avocado: tags=he_tier1
         """
         self.check_no_large_messages()
 
-    @add_case_id("RHEVM-23816")
+    @add_case_id("RHEVM-25065")
+    def test_clean_environment(self):
+        """
+        :avocado: tags=he_tier1
+        """
+        self.clean_hostengine_env()
+        
+    @add_case_id("RHEVM-26159")
+    def test_hostedengine_redeploy(self):
+        # Re-deploy HE on the host
+        """
+        :avocado: tags=he_tier1
+        """
+        self.hostedengine_redeploy_process()
+
+    @add_case_id("RHEVM-26150")
     def test_additional_host(self):
         """
         :avocado: tags=he_tier1
         """
         self.add_additional_host_to_cluster_process()
 
-    @add_case_id("RHEVM-23826")
+    @add_case_id("RHEVM-26153")
     def test_local_maintenance(self):
         """
         :avocado: tags=he_tier1
@@ -72,14 +87,14 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         self.check_local_maintenance()
         self.assert_text_in_element(self.LOCAL_MAINTEN_STAT, 'true')
 
-    @add_case_id("RHEVM-23829")
+    @add_case_id("RHEVM-26156")
     def test_migrated_he(self):
         """
         :avocado: tags=he_tier1
         """
         self.check_migrated_he()
 
-    @add_case_id("RHEVM-23827")
+    @add_case_id("RHEVM-26154")
     def test_remove_maintenance(self):
         """
         :avocado: tags=he_tier1
@@ -87,7 +102,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         self.check_remove_maintenance()
         self.assert_text_not_in_element(self.LOCAL_MAINTEN_STAT, 'true')
 
-    @add_case_id("RHEVM-23828")
+    @add_case_id("RHEVM-26155")
     def test_global_maintenance(self):
         """
         :avocado: tags=he_tier1
@@ -100,7 +115,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_iscsi_deployment(self):
         # Need to deploy HE on iscsi storage
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier2
         """
         self.node_zero_iscsi_deploy_process()
 
@@ -108,7 +123,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_fc_deployment(self):
         # Need to deploy HE on FC Storage
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier2
         """
         self.node_zero_fc_deploy_process()
 
@@ -116,7 +131,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_gluster_deployment(self):
         # Need to deploy HE on gluster storage
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier2
         """
         self.node_zero_gluster_deploy_process()
 
@@ -124,14 +139,6 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_node_zero_static_v4_deploy(self):
         # Need to deploy HE with static ip
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier2
         """
         self.node_zero_static_v4_deploy_process()
-
-    @add_case_id("RHEVM-23834")
-    def test_hostedengine_redeploy(self):
-        # Re-deploy HE on the host
-        """
-        :avocado: tags=he_tier1
-        """
-        self.hostedengine_redeploy_process()
