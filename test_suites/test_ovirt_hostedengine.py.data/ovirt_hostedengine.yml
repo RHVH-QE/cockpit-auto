@@ -6,7 +6,7 @@ rhvm_appliance_path: 'http://10.66.10.22:8090/rhevm-appliance/'
 
 # NFS
 nfs_ip: '10.66.8.174'
-nfs_pass: 'Redhat,123456'
+nfs_pass: 'xxxxxxx'
 nfs_dir: '/home/wangwei/nfs'
 
 # ISCSI
