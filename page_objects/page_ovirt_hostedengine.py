@@ -185,7 +185,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root', host_passwd=self.config_dict['second_pass'])
         if 'not' in additional_host.execute('hosted-engine --check-deployed',raise_exception=False) == False:
             additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
-        if len(self.host.execute('ls /var/log/ovirt-hosted-engine-setup')) == 0 and len(self.host.execute('rpm -qa|grep appliance',raise_exception=False)) == 0:
+        if len(self.host.execute('rpm -qa|grep appliance',raise_exception=False)) == 0:
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
         else:
             self.backup_remove_logs()
@@ -258,8 +258,8 @@ class OvirtHostedEnginePage(SeleniumTest):
         host_glusterfs_server = Machine(host_string=glusterfs_ip, host_user='root', host_passwd=password)
         try:
             if glusterfs_ip == list(self.config_dict['gluster_ips'].values())[0]:
-                host_glusterfs_server.execute("yes|gluster volume stop {}".format(self.config_dict['gluster_volume']))
-                host_glusterfs_server.execute("yes|gluster v delete {}".format(self.config_dict['gluster_volume']))
+                host_glusterfs_server.execute("yes|gluster volume stop {}".format(self.config_dict['gluster_volume']), raise_exception=False)
+                host_glusterfs_server.execute("yes|gluster v delete {}".format(self.config_dict['gluster_volume']), raise_exception=False)
             host_glusterfs_server.execute("umount {}".format(self.config_dict['gluster_volume_mount']))
             host_glusterfs_server.execute("mkfs.ext4 /dev/sdb1")
             host_glusterfs_server.execute("mount /dev/sdb1 {}".format(self.config_dict['gluster_volume_mount']))
@@ -272,7 +272,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     def clean_glusterfs_storage_post(self, glusterfs_ip, password):
         host_glusterfs_server = Machine(host_string=glusterfs_ip, host_user='root', host_passwd=password)
         try:
-            # host_glusterfs_server.execute("gluster v create gv1 replica 3 bootp-73-75-51.lab.eng.pek2.redhat.com:/data/gluster/gv1 bootp-73-75-26.lab.eng.pek2.redhat.com:/data/gluster/gv1 bootp-73-75-85.lab.eng.pek2.redhat.com:/data/gluster/gv1")  
+            #host_glusterfs_server.execute("gluster v create gv1 replica 3 bootp-73-75-51.lab.eng.pek2.redhat.com:/data/gluster/gv1 bootp-73-75-26.lab.eng.pek2.redhat.com:/data/gluster/gv1 bootp-73-75-85.lab.eng.pek2.redhat.com:/data/gluster/gv1")  
             host_glusterfs_server.execute("gluster v create gv1 replica 3 {0}:/data/gluster/gv1 {1}:/data/gluster/gv1 {2}:/data/gluster/gv1".format(*self.config_dict['gluster_ips'].keys()))
             host_glusterfs_server.execute("gluster volume set gv1 cluster.quorum-type auto")
             host_glusterfs_server.execute("gluster volume set gv1 network.ping-timeout 10")
