@@ -26,7 +26,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     ## Guide Links
     GETTING_START_LINK = "//a[contains(text(), 'Installation Guide')]"
-    MORE_INFORMATION_LINK = "//a[contains(text(), 'RHV Documentation')]"
+    MORE_INFORMATION_LINK = "//a[contains(text(), 'RHEV Documentation')]"
 
     # VM STAGE
     # VM_PAGE_ERR = "//div[@id='he-errors-on-page-err']/strong[text()='Please correct errors before moving to the next step.']"
@@ -328,7 +328,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
         self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
         self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
-        time.sleep(50)
+        # time.sleep(50)
         self.click(self.NEXT_BUTTON)
 
         # ENGINE STAGE
