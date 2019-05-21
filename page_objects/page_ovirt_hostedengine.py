@@ -21,15 +21,15 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     # LANDING PAGE
     ## Start button
-    HE_START = "//span[@class='deployment-option-panel-container']/button[text()='Start']"
-    # HE_START = "//span[@class='deployment-option-panel-container']/button[@id='he-wizard-btn']"
+    # -----HE_START = "//span[@class='deployment-option-panel-container']/button[text()='Start']"
+    HE_START = "//span[@class='deployment-option-panel-container']/button[@id='he-wizard-btn']"
 
     ## Guide Links
     GETTING_START_LINK = "//a[contains(text(), 'Installation Guide')]"
     MORE_INFORMATION_LINK = "//a[contains(text(), 'RHV Documentation')]"
 
     # VM STAGE
-    # VM_PAGE_ERR = "//div[@id='he-errors-on-page-err']/strong[text()='Please correct errors before moving to the next step.']"
+    VM_PAGE_ERR = "//div[@id='he-errors-on-page-err']/strong[text()='Please correct errors before moving to the next step.']"
     # VM_FQDN_INVALID_ERR = "//span[@id='he-invalid-engine-fqdn-err']"
     # HOST_FQDN_INVALID_ERR = "//span[@id='he-invalid-host-fqdn-err']"
     # GATEWAY_INVALID_ERR = "//span[@id='he-static-ip-invalid-gateway']"
@@ -38,17 +38,19 @@ class OvirtHostedEnginePage(SeleniumTest):
     # VM_FQDN_VALIDATING_WARN = "//div[@id='he-validating-fqdn-warn']/strong[contains(text(), 'xxxxxx')]"   ?????
     # VM_FQDN_INVALID_WARN = "//div[@id='he-invalid-engine-fqdn-warn']/strong[contains(text(), 'The VM FQDN could not be resolved.')]"
     # HOST_FQDN_VALIDATING_WARN = "//div[@id='he-invalid-host-fqdn-warn']/strong[contains(text(), 'The host FQDN could not be resolved.')]"
-    _TITLE = "//input[@title='%s']"
-    _PLACEHOLDER = "//input[@placeholder='%s']"
-    VM_FQDN = _PLACEHOLDER % 'ovirt-engine.example.com'
-    # VM_FQDN = "//label[text()='Engine VM FQDN']//parent::*//input[@id='he-engine-fqdn-input']"
-    # VM_FQDN_VALIDATE_BTN = "//label[text()='Engine VM FQDN']//parent::*//button[contains(@class, 'fqdn-validation-btn')]"
-    # VM_FQDN_VALIDATING_MSG = "//label[text()='Engine VM FQDN']//parent::*//span//span[@id='he-validating-engine-fqdn-msg']"
-    MAC_ADDRESS = _TITLE % 'Enter the MAC address for the VM.'
-    # MAC_ADDRESS = "//input[@id='he-engine-mac-address-input']"
+    
+    # ---------_TITLE = "//input[@title='%s']"
+    # ----------_PLACEHOLDER = "//input[@placeholder='%s']"
+    # ---------VM_FQDN = _PLACEHOLDER % 'ovirt-engine.example.com'
+    VM_FQDN = "//label[text()='Engine VM FQDN']//parent::*//input[@id='he-engine-fqdn-input']"
+    ## VM_FQDN_VALIDATE_BTN = "//label[text()='Engine VM FQDN']//parent::*//button[contains(@class, 'fqdn-validation-btn')]"
+    VM_FQDN_VALIDATING_MSG = "//label[text()='Engine VM FQDN']//parent::*//span//span[@id='he-validating-engine-fqdn-msg']"
+    # -----------MAC_ADDRESS = _TITLE % 'Enter the MAC address for the VM.'
+    MAC_ADDRESS = "//input[@id='he-engine-mac-address-input']"
     ROOT_PASS = "//label[text()='Root Password']//parent::*//input[@type='password']"
-    VM_ADVANCED = "//a[text()='Advanced']"
-    # VM_ADVANCED = "//a[@id='he-advanced-menu']"
+    
+    # -------------VM_ADVANCED = "//a[text()='Advanced']"
+    VM_ADVANCED = "//a[@id='he-advanced-menu']"
     # VM_SSH_PUB_KEY_TETAREA = "//textarea[@id='he-ssh-pubkey-input']"
     # VM_ETC_HOSTS_CHKBOX = "//input[@id='he-edit-etc-hosts-chkbox']"
     # VM_BRIDGE_NAME_INPUT = "//input[@id='he-bridge-name-input']"
@@ -58,7 +60,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     # VM_MEM_SIZE_INPUT = "//input[@id='he-memory-size-input']"
     # HOST_FQDN_INPUT = "//input[@id='he-host-fqdn-input']"
     # HOST_FQDN_VALIDATING_MSG = "//span[@id='he-validating-host-fqdn-msg']"
-    # HOST_FQDN_VALIDATE_BTN = "//label[text()='Host FQDN']//parent::*//button[contains(@class, 'fqdn-validation-btn')]"
+    ## HOST_FQDN_VALIDATE_BTN = "//label[text()='Host FQDN']//parent::*//button[contains(@class, 'fqdn-validation-btn')]"
 
     ## VM NETWORK
     _DROPDOWN_MENU = "//label[text()='%s']//parent::*//button[contains(@class, 'dropdown-toggle')]"
@@ -70,9 +72,9 @@ class OvirtHostedEnginePage(SeleniumTest):
     NETWORK_DHCP = _DROPDOWN_VALUE % 'dhcp'
 
     NETWORK_STATIC = _DROPDOWN_VALUE % 'static'
-    VM_IP = _PLACEHOLDER % '192.168.1.2'
-    # VM_IP = "//input[@id='he-static-ip-address-input']"
-    IP_PREFIX = _PLACEHOLDER % '24'
+    # ------------VM_IP = _PLACEHOLDER % '192.168.1.2'
+    VM_IP = "//input[@id='he-static-ip-address-input']"
+    IP_PREFIX = "//input[@placeholder='%s']" % '24'
     # GATEWAY_INPUT = "//input[@id='he-static-ip-gateway-input']"
     # GATEWAY_VERIFYING_MSG = "//span[@id='he-static-ip-verifying-gateway']"
     DNS_SERVER = "//div[contains(@class, 'multi-row-text-box-input')]" \
@@ -81,8 +83,8 @@ class OvirtHostedEnginePage(SeleniumTest):
     # ENGINE STAGE
     # ENGINE_PAGE_ERR = "//span[@id='he-errors-on-page-err']"
     # ADMIN_PASS_ERR = "//span[@id='he-admin-password-err']"
-    ADMIN_PASS = "//label[text()='Admin Portal Password']//parent::*//input[@type='password']"
-    # ADMIN_PASS = "//UnmaskablePasswordContainer[@id='he-admin-password-input']"
+    # -------------ADMIN_PASS = "//label[text()='Admin Portal Password']//parent::*//input[@type='password']"
+    ADMIN_PASS = "//input[@id='he-admin-password-input']"
     # NOTIFICATION_SERVER_INPUT = "//input[@id='he-notification-server-input']"
     # NOTIFICATION_SERVER_PORT_INPUT = "//input[@id='he-notification-smtp-port-input']"
     # SENDER_EMAIL_ADDR_INPUT = "//input[@id='he-sender-email-input']"
@@ -100,7 +102,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     _STORAGE_TYPE = "//ul[@class='dropdown-menu']/li[@value='%s']"
     STORAGE_BUTTON = _DROPDOWN_MENU % 'Storage Type'
     STORAGE_NFS = _STORAGE_TYPE % 'nfs'
-    STORAGE_CONN = _PLACEHOLDER % 'host:/path'
+    STORAGE_CONN = "//input[@placeholder='%s']" % 'host:/path'
     MNT_OPT = "//label[text()='Mount Options']//parent::*//input[@type='text']"
     STORAGE_ADVANCED = "//form/div[@class='form-group']/child::*//a[text()='Advanced']"
     NFS_VER_DROPDOWN = _DROPDOWN_MENU % 'NFS Version'
@@ -328,6 +330,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
         self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
         self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
+        self.assert_text_in_element(self.VM_FQDN_VALIDATING_MSG, "Validating FQDN...")
         time.sleep(50)
         self.click(self.NEXT_BUTTON)
 
@@ -566,6 +569,8 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.input_text(self.IP_PREFIX, self.config_dict['he_vm_ip_prefix'])
             self.input_text(self.DNS_SERVER, self.config_dict['dns_server'])
             self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
+            self.assert_text_in_element(self.VM_FQDN_VALIDATING_MSG, "Validating FQDN...")
+            time.sleep(50)
             self.click(self.NEXT_BUTTON)
 
             # ENGINE STAGE
