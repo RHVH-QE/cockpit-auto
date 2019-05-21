@@ -20,6 +20,12 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         self.assert_element_visible(self.GETTING_START_LINK)
         self.assert_element_visible(self.MORE_INFORMATION_LINK)
 
+    def test_errors_warnings_engine_vm_setting(self):
+        # Check the error message and warning message display when setting engine vm with illego value.
+        """
+        :avocado: tags=he
+        """
+        self.errors_warnings_engine_vm_setting()
     @add_case_id("RHEVM-23815")
     def test_node_zero_default_deploy(self):
         # The default deployment means that HE deployment, DHCP network, NFS Auto version, No MNT Option

@@ -29,21 +29,22 @@ class OvirtHostedEnginePage(SeleniumTest):
     MORE_INFORMATION_LINK = "//a[contains(text(), 'RHV Documentation')]"
 
     # VM STAGE
-    VM_PAGE_ERR = "//div[@id='he-errors-on-page-err']/strong[text()='Please correct errors before moving to the next step.']"
-    # VM_FQDN_INVALID_ERR = "//span[@id='he-invalid-engine-fqdn-err']"
-    # HOST_FQDN_INVALID_ERR = "//span[@id='he-invalid-host-fqdn-err']"
-    # GATEWAY_INVALID_ERR = "//span[@id='he-static-ip-invalid-gateway']"
-    # DEFAULT_GATEWAY_INVALID_ERR = "//span[@id='he-invalid-default-gateway-err']"
+    VM_PAGE_ERR = "//div[@id='he-errors-on-page-err']/div/strong[text()='Please correct errors before moving to the next step.']"
+    VM_FQDN_INVALID_ERR = "//span[@id='he-invalid-engine-fqdn-err']"
+    HOST_FQDN_INVALID_ERR = "//span[@id='he-invalid-host-fqdn-err']"  ###Unable to resolve address
+    GATEWAY_INVALID_ERR = "//span[@id='he-static-ip-invalid-gateway']"
+    # DEFAULT_GATEWAY_INVALID_ERR = "//span[@id='he-invalid-default-gateway-err']"   ?????
     # VM_MEM_WARN = "//div[@id='he-not-enough-memory-warn']/strong[text()='xxxxxxxxxxx']"   ???? 
     # VM_FQDN_VALIDATING_WARN = "//div[@id='he-validating-fqdn-warn']/strong[contains(text(), 'xxxxxx')]"   ?????
-    # VM_FQDN_INVALID_WARN = "//div[@id='he-invalid-engine-fqdn-warn']/strong[contains(text(), 'The VM FQDN could not be resolved.')]"
+    VM_FQDN_INVALID_WARN = "//div[@id='he-invalid-engine-fqdn-warn']/div/strong[text()='The VM FQDN could not be resolved. Please ensure that the FQDN is resolvable before attempting preparation of the VM.']"
     # HOST_FQDN_VALIDATING_WARN = "//div[@id='he-invalid-host-fqdn-warn']/strong[contains(text(), 'The host FQDN could not be resolved.')]"
-    
+    #FQDN validation is in progress. Please wait for validation to complete and try again.
+
     # ---------_TITLE = "//input[@title='%s']"
     # ----------_PLACEHOLDER = "//input[@placeholder='%s']"
     # ---------VM_FQDN = _PLACEHOLDER % 'ovirt-engine.example.com'
     VM_FQDN = "//label[text()='Engine VM FQDN']//parent::*//input[@id='he-engine-fqdn-input']"
-    ## VM_FQDN_VALIDATE_BTN = "//label[text()='Engine VM FQDN']//parent::*//button[contains(@class, 'fqdn-validation-btn')]"
+    ## ----------VM_FQDN_VALIDATE_BTN = "//label[text()='Engine VM FQDN']//parent::*//button[contains(@class, 'fqdn-validation-btn')]"
     VM_FQDN_VALIDATING_MSG = "//label[text()='Engine VM FQDN']//parent::*//span//span[@id='he-validating-engine-fqdn-msg']"
     # -----------MAC_ADDRESS = _TITLE % 'Enter the MAC address for the VM.'
     MAC_ADDRESS = "//input[@id='he-engine-mac-address-input']"
@@ -58,9 +59,9 @@ class OvirtHostedEnginePage(SeleniumTest):
     # DEFAULT_GATEWAY_VERIFYING_MSG = "//span[@id='he-verifying-default-gateway-msg']"
     # VM_VCPU_NUM_INPUT = "//input[@id='he-vcpus-number-input']"
     # VM_MEM_SIZE_INPUT = "//input[@id='he-memory-size-input']"
-    # HOST_FQDN_INPUT = "//input[@id='he-host-fqdn-input']"
-    # HOST_FQDN_VALIDATING_MSG = "//span[@id='he-validating-host-fqdn-msg']"
-    ## HOST_FQDN_VALIDATE_BTN = "//label[text()='Host FQDN']//parent::*//button[contains(@class, 'fqdn-validation-btn')]"
+    HOST_FQDN_INPUT = "//input[@id='he-host-fqdn-input']"
+    HOST_FQDN_VALIDATING_MSG = "//span[@id='he-validating-host-fqdn-msg']"
+    ## -------------------HOST_FQDN_VALIDATE_BTN = "//label[text()='Host FQDN']//parent::*//button[contains(@class, 'fqdn-validation-btn')]"
 
     ## VM NETWORK
     _DROPDOWN_MENU = "//label[text()='%s']//parent::*//button[contains(@class, 'dropdown-toggle')]"
@@ -75,8 +76,8 @@ class OvirtHostedEnginePage(SeleniumTest):
     # ------------VM_IP = _PLACEHOLDER % '192.168.1.2'
     VM_IP = "//input[@id='he-static-ip-address-input']"
     IP_PREFIX = "//input[@placeholder='%s']" % '24'
-    # GATEWAY_INPUT = "//input[@id='he-static-ip-gateway-input']"
-    # GATEWAY_VERIFYING_MSG = "//span[@id='he-static-ip-verifying-gateway']"
+    GATEWAY_INPUT = "//input[@id='he-static-ip-gateway-input']"
+    # ----------------GATEWAY_VERIFYING_MSG = "//span[@id='he-static-ip-verifying-gateway']"
     DNS_SERVER = "//div[contains(@class, 'multi-row-text-box-input')]" \
         "/input[@type='text']"
 
@@ -420,6 +421,41 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.host.execute("python /root/clean_he_env.py", timeout=120)
 
     ## Cases
+    # tier1_0
+    def errors_warnings_engine_vm_setting(self):
+        # def check_errors_warnings():            
+        self.click(self.HE_START)
+        time.sleep(40)
+        self.click(self.NEXT_BUTTON)
+        self.assert_element_visible(self.VM_PAGE_ERR)
+        self.assert_text_in_element(self.VM_PAGE_ERR, "Please correct errors before moving to the next step.")
+        self.assert_element_visible(self.VM_FQDN_INVALID_ERR)
+        self.assert_text_in_element(self.VM_FQDN_INVALID_ERR, "Required field")
+        # self.prepare_env('nfs')
+        # check_errors_warnings()
+        self.input_text(self.VM_FQDN, "invalid", 60)
+        self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
+        time.sleep(30)
+        self.assert_element_visible(self.VM_FQDN_INVALID_WARN)
+        self.assert_text_in_element(self.VM_FQDN_INVALID_WARN, "The VM FQDN could not be resolved. Please ensure that the FQDN is resolvable before attempting preparation of the VM.")
+        self.assert_element_visible(self.VM_FQDN_INVALID_ERR)
+        self.assert_text_in_element(self.VM_FQDN_INVALID_ERR, "Unable to resolve address")
+
+        self.click(self.VM_ADVANCED)
+        self.input_text(self.HOST_FQDN_INPUT, "invalid", 60)
+        self.click(self.NEXT_BUTTON)
+        self.assert_text_in_element(self.HOST_FQDN_VALIDATING_MSG, "Validating FQDN...")
+        time.sleep(30)
+        self.assert_text_in_element(self.HOST_FQDN_INVALID_ERR, "Unable to resolve address")
+
+
+        self.click(self.NETWORK_DROPDOWN)
+        self.click(self.NETWORK_STATIC)
+        self.input_text(self.GATEWAY_INPUT, "10.73.254", 60)
+        time.sleep(5)
+        self.assert_element_visible(self.GATEWAY_INVALID_ERR)
+        self.assert_text_in_element(self.GATEWAY_INVALID_ERR, "Invalid format for IP address")
+
     # tier1_1
     def node_zero_default_deploy_process(self):
         def check_deploy():
