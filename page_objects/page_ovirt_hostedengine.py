@@ -70,7 +70,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         "/input[@type='text']"
 
     # ENGINE STAGE
-    ENGINE_PAGE_ERR = "//span[@id='he-errors-on-page-err']"
+    ENGINE_PAGE_ERR = "//span[@id='he-errors-on-page-err']//parent::*//strong[text()='Please correct errors before moving to the next step.']"
     ADMIN_PASS_ERR = "//span[@id='he-admin-password-err']"
     ADMIN_PASS = "//input[@id='he-admin-password-input']"
     # NOTIFICATION_SERVER_INPUT = "//input[@id='he-notification-server-input']"
@@ -409,7 +409,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     ## Cases
     # tier1_0
-    def errors_warnings_engine_vm_setting(self):           
+    def errors_warnings_vm_setting(self):           
         self.click(self.HE_START)
         time.sleep(40)
         self.click(self.NEXT_BUTTON)
@@ -445,6 +445,19 @@ class OvirtHostedEnginePage(SeleniumTest):
         time.sleep(5)
         self.assert_element_visible(self.GATEWAY_INVALID_ERR)
         self.assert_text_in_element(self.GATEWAY_INVALID_ERR, "Invalid format for IP address")
+
+    def errors_warnings_engine_setting(self):
+        self.click(self.HE_START)
+        time.sleep(40)
+        self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
+        self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
+        self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
+        time.sleep(40)
+        self.click(self.NEXT_BUTTON)
+        time.sleep(5)
+        self.click(self.NEXT_BUTTON)
+        self.assert_text_in_element(self.ENGINE_PAGE_ERR, "Please correct errors before moving to the next step.")
+        self.assert_text_in_element(self.ADMIN_PASS_ERR, "Required field")
 
     # tier1_1
     def node_zero_default_deploy_process(self):
