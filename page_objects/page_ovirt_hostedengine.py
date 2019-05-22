@@ -31,14 +31,13 @@ class OvirtHostedEnginePage(SeleniumTest):
     # VM STAGE
     VM_PAGE_ERR = "//div[@id='he-errors-on-page-err']/div/strong[text()='Please correct errors before moving to the next step.']"
     VM_FQDN_INVALID_ERR = "//span[@id='he-invalid-engine-fqdn-err']"
-    HOST_FQDN_INVALID_ERR = "//span[@id='he-invalid-host-fqdn-err']"  ###Unable to resolve address
+    HOST_FQDN_INVALID_ERR = "//span[@id='he-invalid-host-fqdn-err']"
     GATEWAY_INVALID_ERR = "//span[@id='he-static-ip-invalid-gateway']"
-    # DEFAULT_GATEWAY_INVALID_ERR = "//span[@id='he-invalid-default-gateway-err']"   ?????
-    # VM_MEM_WARN = "//div[@id='he-not-enough-memory-warn']/strong[text()='xxxxxxxxxxx']"   ???? 
-    # VM_FQDN_VALIDATING_WARN = "//div[@id='he-validating-fqdn-warn']/strong[contains(text(), 'xxxxxx')]"   ?????
+    # VM_MEM_WARN = "//div[@id='he-not-enough-memory-warn']/strong[text()='xxxxxxxxxxx']"   #No environment.
+    VM_FQDN_VALIDATING_WARN = "//div[@id='he-validating-fqdn-warn']/div/strong[text()='FQDN validation is in progress. Please wait for validation to complete and try again.']"
     VM_FQDN_INVALID_WARN = "//div[@id='he-invalid-engine-fqdn-warn']/div/strong[text()='The VM FQDN could not be resolved. Please ensure that the FQDN is resolvable before attempting preparation of the VM.']"
-    # HOST_FQDN_VALIDATING_WARN = "//div[@id='he-invalid-host-fqdn-warn']/strong[contains(text(), 'The host FQDN could not be resolved.')]"
-    #FQDN validation is in progress. Please wait for validation to complete and try again.
+    HOST_FQDN_INVALID_WARN = "//div[@id='he-invalid-host-fqdn-warn']"
+    #
 
     # ---------_TITLE = "//input[@title='%s']"
     # ----------_PLACEHOLDER = "//input[@placeholder='%s']"
@@ -55,8 +54,8 @@ class OvirtHostedEnginePage(SeleniumTest):
     # VM_SSH_PUB_KEY_TETAREA = "//textarea[@id='he-ssh-pubkey-input']"
     # VM_ETC_HOSTS_CHKBOX = "//input[@id='he-edit-etc-hosts-chkbox']"
     # VM_BRIDGE_NAME_INPUT = "//input[@id='he-bridge-name-input']"
-    # VM_DEFAULT_GATEWAY_INPUT = "//input[@id='he-default-gateway-input']"
-    # DEFAULT_GATEWAY_VERIFYING_MSG = "//span[@id='he-verifying-default-gateway-msg']"
+    VM_DEFAULT_GATEWAY_INPUT = "//input[@id='he-default-gateway-input']"
+    DEFAULT_GATEWAY_INVALID_ERR = "//span[@id='he-invalid-default-gateway-err']"
     # VM_VCPU_NUM_INPUT = "//input[@id='he-vcpus-number-input']"
     # VM_MEM_SIZE_INPUT = "//input[@id='he-memory-size-input']"
     HOST_FQDN_INPUT = "//input[@id='he-host-fqdn-input']"
@@ -422,8 +421,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     ## Cases
     # tier1_0
-    def errors_warnings_engine_vm_setting(self):
-        # def check_errors_warnings():            
+    def errors_warnings_engine_vm_setting(self):           
         self.click(self.HE_START)
         time.sleep(40)
         self.click(self.NEXT_BUTTON)
@@ -431,11 +429,12 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.assert_text_in_element(self.VM_PAGE_ERR, "Please correct errors before moving to the next step.")
         self.assert_element_visible(self.VM_FQDN_INVALID_ERR)
         self.assert_text_in_element(self.VM_FQDN_INVALID_ERR, "Required field")
-        # self.prepare_env('nfs')
-        # check_errors_warnings()
+
         self.input_text(self.VM_FQDN, "invalid", 60)
         self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
-        time.sleep(30)
+        self.click(self.NEXT_BUTTON)
+        self.assert_text_in_element(self.VM_FQDN_VALIDATING_WARN, "FQDN validation is in progress. Please wait for validation to complete and try again.")
+        time.sleep(40)
         self.assert_element_visible(self.VM_FQDN_INVALID_WARN)
         self.assert_text_in_element(self.VM_FQDN_INVALID_WARN, "The VM FQDN could not be resolved. Please ensure that the FQDN is resolvable before attempting preparation of the VM.")
         self.assert_element_visible(self.VM_FQDN_INVALID_ERR)
@@ -445,8 +444,11 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.input_text(self.HOST_FQDN_INPUT, "invalid", 60)
         self.click(self.NEXT_BUTTON)
         self.assert_text_in_element(self.HOST_FQDN_VALIDATING_MSG, "Validating FQDN...")
-        time.sleep(30)
+        time.sleep(40)
         self.assert_text_in_element(self.HOST_FQDN_INVALID_ERR, "Unable to resolve address")
+        # self.assert_element_visible(self.HOST_FQDN_INVALID_WARN)
+        self.input_text(self.VM_DEFAULT_GATEWAY_INPUT, "10.73", 60)
+        self.assert_text_in_element(self.DEFAULT_GATEWAY_INVALID_ERR, "Invalid format for IP address")
 
 
         self.click(self.NETWORK_DROPDOWN)
