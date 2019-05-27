@@ -240,7 +240,8 @@ class OvirtHostedEnginePage(SeleniumTest):
         elif storage_type == 'fc':
             luns_fc_storage = self.config_dict['luns_fc_storage']
             for lun_id in luns_fc_storage:
-                self.clean_fc_storage(lun_id)          
+                self.clean_fc_storage(lun_id)  
+                pass        
         elif storage_type == 'gluster':
             glusterfs_servers = list(self.config_dict['gluster_ips'].values())
             for ip in glusterfs_servers:
@@ -319,7 +320,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
         self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
         self.assert_text_in_element(self.VM_FQDN_VALIDATING_MSG, "Validating FQDN...")
-        time.sleep(50)
+        time.sleep(80)
         self.click(self.NEXT_BUTTON)
 
         # ENGINE STAGE
@@ -609,7 +610,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.input_text(self.DNS_SERVER, self.config_dict['dns_server'])
             self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
             self.assert_text_in_element(self.VM_FQDN_VALIDATING_MSG, "Validating FQDN...")
-            time.sleep(50)
+            time.sleep(70)
             self.click(self.NEXT_BUTTON)
 
             # ENGINE STAGE
