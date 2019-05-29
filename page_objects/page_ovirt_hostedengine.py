@@ -272,7 +272,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     def clean_glusterfs_storage_post(self, glusterfs_ip, password):
         host_glusterfs_server = Machine(host_string=glusterfs_ip, host_user='root', host_passwd=password)
         try:
-            #host_glusterfs_server.execute("gluster v create gv1 replica 3 bootp-73-75-51.lab.eng.pek2.redhat.com:/data/gluster/gv1 bootp-73-75-26.lab.eng.pek2.redhat.com:/data/gluster/gv1 bootp-73-75-85.lab.eng.pek2.redhat.com:/data/gluster/gv1")  
+            #host_glusterfs_server.execute("gluster v create gv1 replica 3 bootp-73-131-238.rhts.eng.pek2.redhat.com:/data/gluster/gv1 bootp-73-131-184.rhts.eng.pek2.redhat.com:/data/gluster/gv1 bootp-73-131-188.rhts.eng.pek2.redhat.com:/data/gluster/gv1")   
             host_glusterfs_server.execute("gluster v create gv1 replica 3 {0}:/data/gluster/gv1 {1}:/data/gluster/gv1 {2}:/data/gluster/gv1".format(*self.config_dict['gluster_ips'].keys()))
             host_glusterfs_server.execute("gluster volume set gv1 cluster.quorum-type auto")
             host_glusterfs_server.execute("gluster volume set gv1 network.ping-timeout 10")

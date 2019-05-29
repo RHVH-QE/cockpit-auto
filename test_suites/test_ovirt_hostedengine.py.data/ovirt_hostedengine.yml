@@ -23,7 +23,7 @@ host_fc_hostname: 'hp-dl385pg8-11.lab.eng.pek2.redhat.com'
 luns_fc_storage: ['36005076300810b3e0000000000000026','36005076300810b3e0000000000000027']
 
 # GLUSTERFS
-gluster_ips: {'bootp-73-75-51.lab.eng.pek2.redhat.com':'10.73.75.51','bootp-73-75-26.lab.eng.pek2.redhat.com':'10.73.75.26','bootp-73-75-85.lab.eng.pek2.redhat.com':'10.73.75.85'}
+gluster_ips: {'bootp-73-131-238.rhts.eng.pek2.redhat.com':'10.73.131.238','bootp-73-131-184.rhts.eng.pek2.redhat.com':'10.73.131.184','bootp-73-131-188.rhts.eng.pek2.redhat.com':'10.73.131.188'}
 gluster_volume: 'gv1'
 gluster_volume_mount: '/data/gluster'
 root_passwd: 'redhat'
