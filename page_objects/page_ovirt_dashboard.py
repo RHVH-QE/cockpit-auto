@@ -8,6 +8,8 @@ class OvirtDashboardPage(SeleniumTest):
     :avocado: disable
     """
 
+    SLEEP_TIME = 5
+
     OVIRT_DASHBOARD_FRAME_NAME = "/ovirt-dashboard"
     DASHBOARD_LINK = "a[href='#/dashboard']"
 
@@ -83,18 +85,19 @@ class OvirtDashboardPage(SeleniumTest):
 
     def open_network_info_link(self):
         self.click(self.NETWORK_INFO_LINK)
-        self.refresh()
+        time.sleep(self.SLEEP_TIME)
 
     def open_system_logs_link(self):
         self.click(self.SYSTEM_LOGS_LINK)
-        self.refresh()
+        time.sleep(self.SLEEP_TIME)
 
     def open_storage_link(self):
         self.click(self.STORAGE_LINK)
-        self.refresh()
+        time.sleep(self.SLEEP_TIME)
 
     def get_ssh_key_on_page(self):
         self.click(self.SSH_HOST_KEY_LINK)
+        time.sleep(self.SLEEP_TIME)
         return self.get_text(self.SSH_HOST_KEY_CONTENT).replace('\n', '')
 
     def execute_rollback_on_layer(self, layer_name):

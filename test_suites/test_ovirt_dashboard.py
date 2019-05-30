@@ -95,21 +95,33 @@ class TestOvirtDashboard(OvirtDashboardPage):
 
     @add_case_id("RHEVM-23317")
     def test_network_info_link(self):
+        """
+        :avocado: tags=dashboard_tier2
+        """
         self.open_network_info_link()
         self.assertIn('Networking', self.get_title())
 
     @add_case_id("RHEVM-23318")
     def test_system_log_link(self):
+        """
+        :avocado: tags=dashboard_tier2
+        """
         self.open_system_logs_link()
         self.assertIn('Logs', self.get_title())
 
     @add_case_id("RHEVM-23319")
     def test_storage_link(self):
+        """
+        :avocado: tags=dashboard_tier2
+        """
         self.open_storage_link()
         self.assertIn('Storage', self.get_title())
 
     @add_case_id("RHEVM-23320")
     def test_ssh_host_key_link(self):
+        """
+        :avocado: tags=dashboard_tier2
+        """
         ssh_key_on_host = self.get_ssh_key_on_host()
         ssh_key_on_ui = self.get_ssh_key_on_page()
         self.assertEqual(ssh_key_on_host, ssh_key_on_ui)
