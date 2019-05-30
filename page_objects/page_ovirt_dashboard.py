@@ -21,6 +21,7 @@ class OvirtDashboardPage(SeleniumTest):
     DOMAIN_NODE_STATUS = "//table[@class='cockpit-info-table info-table-ct']/tbody/tr/td/h4[text()='Node Status']"
     DOMAIN_SYSTEM = "//table[@class='cockpit-info-table info-table-ct']/tbody[position()=3]/tr/td/h4[text()='System']"
     DOMAIN_VM = "//div[@id='content']/div/div[@class='row']/div[@class='col-md-6']/div/ul/li/div/div[text()='Virtual Machines']"
+    VM_QUANTITY = "//div[@id='content']/div/div[@class='row']/div[@class='col-md-6']/div/ul/li/div/div[text()=' Running']/strong[text()='%s']"
 
     # Node Health
     HEALTH_TEXT = "tbody:nth-child(2) tr:nth-child(1) td:nth-child(2) a div"
@@ -52,6 +53,9 @@ class OvirtDashboardPage(SeleniumTest):
     def open_page(self):
         self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
         self.click(self.DASHBOARD_LINK)
+
+    def check_vm_quantity(self):
+        self.assert_element_visible(self.VM_QUANTITY % '1')
 
     def check_function_domains(self):
         self.assert_element_visible(self.DOMAIN_NODE_STATUS)

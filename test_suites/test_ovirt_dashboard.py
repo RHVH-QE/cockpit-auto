@@ -10,6 +10,14 @@ class TestOvirtDashboard(OvirtDashboardPage):
     :avocado: enable
     :avocado: tags=ovirt_dashboard
     """
+
+    @add_case_id("RHEVM-23307")
+    def test_node_vm_quantity(self):
+        """
+        :avocado: tags=dashboard_tier1
+        """
+        self.check_vm_quantity()
+
     @add_case_id("RHEVM-23308")
     def test_node_status(self):
         """
@@ -17,19 +25,12 @@ class TestOvirtDashboard(OvirtDashboardPage):
         """
         self.check_function_domains()
         self.check_node_status_items()
-        
-        # nodectl_check = self.nodectl_check_on_host()
-        # expected_status = nodectl_check['status']
-        # expected_icon = self.gen_icon_from_status(expected_status)
-        # status_on_ui = self.get_health_text()
-        # print(status_on_ui)
-        # icon_on_ui = self.get_health_icon()
-        # print(icon_on_ui)
-        # self.assertEqual(status_on_ui, expected_status)
-        # self.assertIn(status_on_ui, icon_on_ui)
 
     @add_case_id("RHEVM-23309")
     def test_node_health(self):
+        """
+        :avocado: tags=dashboard_tier1
+        """
         def check_icons(dict_a):
             for key, value in dict_a.items():
                 expected_name = self.gen_expected_name_from_nodectl_check(key)
@@ -48,15 +49,11 @@ class TestOvirtDashboard(OvirtDashboardPage):
         self.open_node_health_window()
         check_icons(nodectl_check)
 
-    @add_case_id("RHEVM-23308")
-    def test_current_layer(self):
-        nodectl_info = self.nodectl_info_on_host()
-        expected_current_layer = nodectl_info['current_layer']
-        current_layer_on_ui = self.get_current_layer_text()
-        self.assertEqual(expected_current_layer, current_layer_on_ui)
-
     @add_case_id("RHEVM-23311")
     def test_node_information(self):
+        """
+        :avocado: tags=dashboard_tier2
+        """
         global mem
         mem = None
 
@@ -85,6 +82,9 @@ class TestOvirtDashboard(OvirtDashboardPage):
 
     @add_case_id("RHEVM-23313")
     def test_rollback(self):
+        """
+        :avocado: tags=dashboard_tier2
+        """
         nodectl_info = self.nodectl_info_on_host()
         current_layer = nodectl_info['current_layer']
         layers = nodectl_info['layers'].values()
