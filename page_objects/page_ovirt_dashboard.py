@@ -1,5 +1,6 @@
 import simplejson
 import time
+import yaml
 from seleniumlib import SeleniumTest
 
 
