@@ -1,5 +1,6 @@
 import simplejson
 import time
+import yaml
 from seleniumlib import SeleniumTest
 
 
@@ -15,6 +16,11 @@ class OvirtDashboardPage(SeleniumTest):
 
     OK_ICON = "pficon-ok"
     WARN_ICON = "pficon-warning-triangle-o"
+
+    #Node Status:
+    DOMAIN_NODE_STATUS = "//table[@class='cockpit-info-table info-table-ct']/tbody/tr/td/h4[text()='Node Status']"
+    DOMAIN_SYSTEM = "//table[@class='cockpit-info-table info-table-ct']/tbody[position()=3]/tr/td/h4[text()='System']"
+    DOMAIN_VM = "//div[@id='content']/div/div[@class='row']/div[@class='col-md-6']/div/ul/li/div/div[text()='Virtual Machines']"
 
     # Node Health
     HEALTH_TEXT = "tbody:nth-child(2) tr:nth-child(1) td:nth-child(2) a div"
@@ -46,6 +52,18 @@ class OvirtDashboardPage(SeleniumTest):
     def open_page(self):
         self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
         self.click(self.DASHBOARD_LINK)
+
+    def check_function_domains(self):
+        self.assert_element_visible(self.DOMAIN_NODE_STATUS)
+        self.assert_element_visible(self.DOMAIN_SYSTEM)
+        self.assert_element_visible(self.DOMAIN_VM)
+
+    def check_node_status_items(self):
+        self.assertEqual(self.get_health_text(), 'ok', 'node status health should be ok')
+        config_dict = yaml.load(open('./config.yml'))
+        current_layer_text = config_dict['test_sys_ver'] + '+1'
+        self.assertEqual(self.get_current_layer_text(), current_layer_text, 'Current layer should be <rhvh-version>+1')
+        self.assert_element_visible(self.ROLLBACK_BUTTON_ON_HOME)
 
     def get_health_text(self):
         return self.get_text(self.HEALTH_TEXT)

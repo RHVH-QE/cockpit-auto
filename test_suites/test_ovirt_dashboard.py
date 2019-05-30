@@ -11,14 +11,22 @@ class TestOvirtDashboard(OvirtDashboardPage):
     :avocado: tags=ovirt_dashboard
     """
     @add_case_id("RHEVM-23308")
-    def test_health_status(self):
-        nodectl_check = self.nodectl_check_on_host()
-        expected_status = nodectl_check['status']
-        expected_icon = self.gen_icon_from_status(expected_status)
-        status_on_ui = self.get_health_text()
-        icon_on_ui = self.get_health_icon()
-        self.assertEqual(status_on_ui, expected_status)
-        self.assertIn(status_on_ui, icon_on_ui)
+    def test_node_status(self):
+        """
+        :avocado: tags=dashboard_tier1
+        """
+        self.check_function_domains()
+        self.check_node_status_items()
+        
+        # nodectl_check = self.nodectl_check_on_host()
+        # expected_status = nodectl_check['status']
+        # expected_icon = self.gen_icon_from_status(expected_status)
+        # status_on_ui = self.get_health_text()
+        # print(status_on_ui)
+        # icon_on_ui = self.get_health_icon()
+        # print(icon_on_ui)
+        # self.assertEqual(status_on_ui, expected_status)
+        # self.assertIn(status_on_ui, icon_on_ui)
 
     @add_case_id("RHEVM-23309")
     def test_node_health(self):
