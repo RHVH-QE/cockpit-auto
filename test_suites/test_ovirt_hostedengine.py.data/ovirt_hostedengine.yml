@@ -6,8 +6,12 @@ rhvm_appliance_path: 'http://10.66.10.22:8090/rhevm-appliance/'
 
 # NFS
 nfs_ip: '10.66.8.174'
-nfs_pass: ''
+nfs_pass: 'Redhat,123456'
 nfs_dir: '/home/wangwei/nfs'
+
+#Subscription
+subscription_username: 'QualityAssurance'
+subscription_password: ''
 
 # ISCSI
 iscsi_initiator_name: 'iqn.1994-05.com.redhat:6acc055d3232'

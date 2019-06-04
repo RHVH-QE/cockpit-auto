@@ -495,6 +495,31 @@ class OvirtHostedEnginePage(SeleniumTest):
         if int(size2) - int(size1) > 800:
             self.fail()
 
+    def deploy_on_registering_insights_server(self):
+        self.refresh()
+        username = self.config_dict['subscription_username']
+        password = self.config_dict['subscription_password']
+        try:
+            sub_reg_ret = self.host.execute(
+                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password))
+            ins_reg_ret = self.host.execute("insights-client --register")
+
+            time.sleep(20)
+            if ("Status:       Subscribed" in sub_reg_ret) and ("Successfully registered" in ins_reg_ret):
+                self.node_zero_default_deploy_process()
+                he_ret = self.host.execute("hosted-engine --vm-status")
+
+                if ('{"health": "good", "vm": "up", "detail": "Up"}' in he_ret):
+                    ins_unreg_ret = self.host.execute("insights-client --unregister")
+                    sub_unreg_ret = self.host.execute("subscription-manager unregister")
+                    if ("Successfully unregistered" not in ins_unreg_ret) and (
+                        "System has been unregistered." not in sub_unreg_ret):
+                        raise RuntimeError("Unregister failed!")
+        except:
+            import traceback
+            traceback.print_exc()
+            self.fail()
+        
     # tier1_4
     def add_additional_host_to_cluster_process(self):
         self.add_additional_host_to_cluster(

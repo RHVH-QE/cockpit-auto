@@ -73,6 +73,14 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         self.check_no_large_messages()
 
+    @add_case_id("RHEVM-26034")
+    def test_base_on_registering_insights_server(self):
+        """
+        :avocado: tags=he
+        """
+        self.clean_hostengine_env()
+        self.deploy_on_registering_insights_server()
+
     @add_case_id("RHEVM-25065")
     def test_clean_environment(self):
         """
