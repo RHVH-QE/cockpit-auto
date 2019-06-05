@@ -25,7 +25,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     ## Guide Links
     GETTING_START_LINK = "//a[contains(text(), 'Installation Guide')]"
-    MORE_INFORMATION_LINK = "//a[contains(text(), 'RHEV Documentation')]"
+    MORE_INFORMATION_LINK = "//a[contains(text(), 'RHV Documentation')]"
 
     # VM STAGE
     _TITLE = "//input[@title='%s']"
