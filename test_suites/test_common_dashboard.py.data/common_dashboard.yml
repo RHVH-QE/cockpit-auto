@@ -1,0 +1,5 @@
+%YAML 1.2
+---
+
+remote_host: '10.66.9.57'
+password_root: 'redhat'
