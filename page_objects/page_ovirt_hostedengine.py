@@ -4,6 +4,7 @@ import time
 import datetime
 import simplejson
 import urllib2
+import stat
 from seleniumlib import SeleniumTest
 from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
@@ -148,6 +149,8 @@ class OvirtHostedEnginePage(SeleniumTest):
        
         if 'fc' in case_name.split('_'):
             os.environ['HOST_STRING'] = self.config_dict['host_fc_string']
+        if 'port' in case_name.split('_'):
+            os.environ['HOST_PORT'] = '9898'
         super(OvirtHostedEnginePage,self).setUp()
 
     def open_page(self):
@@ -314,13 +317,14 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def default_vm_engine_stage_config(self):
         # VM STAGE
+        time.sleep(10)
         self.click(self.HE_START)
-        time.sleep(100)
+        time.sleep(60)
         self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
         self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
         self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
         self.assert_text_in_element(self.VM_FQDN_VALIDATING_MSG, "Validating FQDN...")
-        time.sleep(80)
+        time.sleep(60)
         self.click(self.NEXT_BUTTON)
 
         # ENGINE STAGE
@@ -406,7 +410,21 @@ class OvirtHostedEnginePage(SeleniumTest):
         clean_he_file = project_path + \
             '/test_suites/test_ovirt_hostedengine.py.data/clean_he_env.py'
         self.host.put_file(clean_he_file, '/root/clean_he_env.py')
-        self.host.execute("python /root/clean_he_env.py", timeout=120)
+        self.host.execute("python /root/clean_he_env.py", timeout=160)
+
+    def setting_to_non_default_port(self):
+        project_path = os.path.dirname(os.path.dirname(__file__))
+        non_default_port_file = project_path + \
+            '/test_suites/test_ovirt_hostedengine.py.data/non_default_port.py'
+        self.host.put_file(non_default_port_file, '/root/non_default_port.py')
+        self.host.execute("python /root/non_default_port.py", timeout=60)
+
+    def setting_to_default_port(self):
+        project_path = os.path.dirname(os.path.dirname(__file__))
+        default_port_file = project_path + \
+            '/test_suites/test_ovirt_hostedengine.py.data/default_port.py'
+        self.host.put_file(default_port_file, '/root/default_port.py')
+        self.host.execute("python /root/default_port.py", timeout=60)
 
     ## Cases
     # tier1_0
@@ -506,6 +524,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
             time.sleep(20)
             if ("Status:       Subscribed" in sub_reg_ret) and ("Successfully registered" in ins_reg_ret):
+                time.sleep(5)
                 self.node_zero_default_deploy_process()
                 he_ret = self.host.execute("hosted-engine --vm-status")
 
@@ -526,7 +545,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.config_dict['second_host'], self.config_dict['second_vm_fqdn'],
             self.config_dict['second_pass'], self.config_dict['he_vm_fqdn'],
             self.config_dict['admin_pass'])
-        time.sleep(50)
+        time.sleep(70)
         self.check_additional_host_socre(self.config_dict['second_host'],
                                          self.config_dict['second_pass'])
 
@@ -546,6 +565,10 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier1_8
     def check_global_maintenance(self):
         self.put_cluster_to_global_maintenance()
+
+    # tier2_
+    def deploy_on_non_default_cockpit_port(self):
+        self.node_zero_default_deploy_process()
 
     # tier2_1
     def node_zero_iscsi_deploy_process(self):

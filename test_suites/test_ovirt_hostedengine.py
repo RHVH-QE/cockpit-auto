@@ -76,7 +76,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-26034")
     def test_base_on_registering_insights_server(self):
         """
-        :avocado: tags=he
+        :avocado: tags=he_tier1
         """
         self.clean_hostengine_env()
         self.deploy_on_registering_insights_server()
@@ -129,11 +129,21 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-26155")
     def test_global_maintenance(self):
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he
         """
         self.check_global_maintenance()
         self.assert_element_visible(self.GLOBAL_HINT)
         self.check_remove_maintenance()
+        self.setting_to_non_default_port()
+
+    @add_case_id("RHEVM-23824")
+    def test_non_default_cockpit_port(self):
+        # Must run after case "RHEVM-26155 - test_global_maintenance"
+        """
+        :avocado: tags=he
+        """
+        self.deploy_on_non_default_cockpit_port()
+        self.setting_to_default_port()
 
     @add_case_id("RHEVM-25122")
     def test_node_zero_iscsi_deployment(self):
