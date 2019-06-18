@@ -211,10 +211,14 @@ class OvirtHostedEnginePage(SeleniumTest):
     def prepare_env(self, storage_type='nfs'):
         additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root', host_passwd=self.config_dict['second_pass'])
         if 'not' in additional_host.execute('hosted-engine --check-deployed',raise_exception=False) == False:
+            print("additional host")
             additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
+
         if len(self.host.execute('rpm -qa|grep appliance',raise_exception=False)) == 0:
+            print("appliance")
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
-        else:
+
+        if not self.host.execute('hosted-engine --check-deployed'):
             self.backup_remove_logs()
             self.clean_hostengine_env()
             self.refresh()
@@ -317,7 +321,6 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def default_vm_engine_stage_config(self):
         # VM STAGE
-        time.sleep(10)
         self.click(self.HE_START)
         time.sleep(60)
         self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
@@ -494,6 +497,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.CLOSE_BUTTON, 2000)
 
         self.prepare_env('nfs')
+        time.sleep(10)
         check_deploy()
 
     # tier1_2
@@ -566,7 +570,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     def check_global_maintenance(self):
         self.put_cluster_to_global_maintenance()
 
-    # tier2_
+    # tier2_0
     def deploy_on_non_default_cockpit_port(self):
         self.node_zero_default_deploy_process()
 

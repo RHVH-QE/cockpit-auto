@@ -1,6 +1,5 @@
 import os
 import inspect
-import time
 import re
 from functools import wraps
 from avocado import Test
@@ -125,6 +124,7 @@ class SeleniumTest(Test):
 
         # get params from os.environ
         host_string = os.environ.get('HOST_STRING')
+        host_port = os.environ.get('HOST_PORT')
         username = os.environ.get('USERNAME')
         passwd = os.environ.get('PASSWD')
         self.browser = os.environ.get('BROWSER')
@@ -151,7 +151,7 @@ class SeleniumTest(Test):
         self.screenshot_path = self.logdir
 
         # open target page
-        self.open_cockpit(host_string)
+        self.open_cockpit(host_string, host_port)
         self.login(username, passwd)
         self.open_page()
 
@@ -173,8 +173,8 @@ class SeleniumTest(Test):
 
         return capabilities
 
-    def open_cockpit(self, host_string):
-        self.driver.get('http://{}:9090'.format(host_string))
+    def open_cockpit(self, host_string, host_port='9090'):
+        self.driver.get('http://{0}:{1}'.format(host_string, host_port))
         if self.browser == 'edge':
             self.click("#moreInformationDropdownSpan")
             self.click("#invalidcert_continue")

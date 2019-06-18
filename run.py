@@ -40,6 +40,7 @@ def run_tests(tags):
     config_dict = yaml.load(open('./config.yml'))
 
     os.environ['HOST_STRING'] = config_dict['host_string']
+    os.environ['HOST_PORT'] = config_dict['host_port']
     os.environ['USERNAME'] = config_dict['host_user']
     os.environ['PASSWD'] = config_dict['host_pass']
 
