@@ -218,7 +218,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             print("appliance")
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
 
-        if not self.host.execute('hosted-engine --check-deployed'):
+        if "not" in self.host.execute('hosted-engine --check-deployed',raise_exception=False) == False:
             self.backup_remove_logs()
             self.clean_hostengine_env()
             self.refresh()
