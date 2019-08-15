@@ -127,6 +127,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     # DEPLOYED PAGE
     ## HINT&ICON
+    MIGRATION_HINT = "//div[contains(text(), 'please migrate it')]"
     MAINTENANCE_HINT = "//div[contains(text(), 'Local maintenance')]"
     GLOBAL_HINT = "//div[contains(text(), 'global maintenance')]"
     ENGINE_UP_ICON = "//span[contains(@class, 'pficon-ok')]"
@@ -359,6 +360,11 @@ class OvirtHostedEnginePage(SeleniumTest):
         rhvm.add_host(host_ip, host_name, host_pass, "Default", True)
         self.wait_host_up(rhvm, host_name, 'up')
 
+    def migrate_vms(self, vm_name, rhvm_fqdn, engine_pass):
+        rhvm = RhevmAction(rhvm_fqdn, 'admin', engine_pass)
+        rhvm.migrate_vm(vm_name)
+        self.wait_migrated(rhvm, vm_name)
+
     def wait_host_up(self, rhvm_ins, host_name, expect_status='up'):
         i = 0
         host_status = "unknown"
@@ -378,7 +384,23 @@ class OvirtHostedEnginePage(SeleniumTest):
                                    (expect_status, host_status))
             time.sleep(15)
             i += 1
-    
+
+    def wait_migrated(self, rhvm_ins, vm_name, expect_status='up'):
+        i = 0
+        vm_status = "unknown"
+        while True:
+            if i > 50:
+                raise RuntimeError(
+                    "Timeout waitting for vm migration %s as current vm status is: %s"
+                    %(expect_status, vm_status)
+                )
+            time.sleep(20)
+            vm_status = rhvm_ins.list_vm(vm_name)['status']
+            if vm_status == 'migrating':
+                i = i + 1
+            elif vm_status == 'up':
+                break
+
     def check_additional_host_socre(self, ip, passwd):
         true, false = True, False
         cmd = "hosted-engine --vm-status --json"
@@ -557,9 +579,16 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.put_host_to_local_maintenance()
 
     # tier1_6
+    def check_hint_button_before_migration(self):
+        self.assert_text_in_element(self.MIGRATION_HINT, 'Local maintenance cannot be set when running the engine VM, please migrate it from the engine first if needed.')
+
     def check_migrated_he(self):
-        time.sleep(30)
+        self.migrate_vms('HostedEngine', self.config_dict['he_vm_fqdn'], self.config_dict['admin_pass'])
+        time.sleep(20)
         self.assert_text_in_element(self.VM_STATUS, 'down')
+    
+    def check_hint_button_after_migration(self):
+        self.assert_element_invisible(self.MIGRATION_HINT)
     
     # tier1_7
     def check_remove_maintenance(self):
