@@ -115,7 +115,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-26153")
     def test_local_maintenance(self):
         """
-        :avocado: tags=he_1
+        :avocado: tags=he_tier1
         """
         self.check_local_maintenance()
         self.assert_text_in_element(self.LOCAL_MAINTEN_STAT, 'true')
@@ -123,7 +123,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-26154")
     def test_remove_maintenance(self):
         """
-        :avocado: tags=he_1
+        :avocado: tags=he_tier1
         """
         self.check_remove_maintenance()
         self.assert_text_not_in_element(self.LOCAL_MAINTEN_STAT, 'true')
