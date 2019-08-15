@@ -420,7 +420,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     
     def put_host_to_local_maintenance(self):
         self.click(self.LOCAL_MAINTENANCE)
-        time.sleep(500)
+        time.sleep(30)
 
     def remove_host_from_maintenance(self):
         self.click(self.REMOVE_MAINTENANCE)

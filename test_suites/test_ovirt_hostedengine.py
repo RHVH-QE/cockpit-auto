@@ -24,7 +24,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_errors_warnings_vm_setting(self):
         # Check the error message and warning message display when setting vm with illegal value.
         """
-        :avocado: tags=he_11
+        :avocado: tags=he_tier1
         """
         self.errors_warnings_vm_setting()
 
@@ -106,7 +106,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-26156")
     def test_migrated_he(self):
         """
-        :avocado: tags=he_1
+        :avocado: tags=he_tier1
         """
         self.check_hint_button_before_migration()
         self.check_migrated_he()
@@ -115,22 +115,15 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-26153")
     def test_local_maintenance(self):
         """
-        :avocado: tags=he_
+        :avocado: tags=he_1
         """
         self.check_local_maintenance()
         self.assert_text_in_element(self.LOCAL_MAINTEN_STAT, 'true')
 
-    # @add_case_id("RHEVM-26156")
-    # def test_migrated_he(self):
-    #     """
-    #     :avocado: tags=he_
-    #     """
-    #     self.check_migrated_he()
-
     @add_case_id("RHEVM-26154")
     def test_remove_maintenance(self):
         """
-        :avocado: tags=he_
+        :avocado: tags=he_1
         """
         self.check_remove_maintenance()
         self.assert_text_not_in_element(self.LOCAL_MAINTEN_STAT, 'true')
