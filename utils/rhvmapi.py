@@ -743,11 +743,12 @@ class RhevmAction:
         vm_id = self.list_vm(vm_name)['id']
         api_url = api_url_base + '/%s/migrate' % vm_id
         
-        vm_action = '''
+        vm_action = ('''
         <action>
-            <host id='51da65e2-6175-4401-bd2a-82f513c90fde'/>    
+            <host id="%s"/>    
         </action>
-        '''
+        ''' %vm_id)
+        
         r = self.req.post(
             api_url,
             data=vm_action,
@@ -755,8 +756,7 @@ class RhevmAction:
             verify=self.rhevm_cert)
 
         if r.status_code != 200:
-            raise RuntimeError("Failed to migrate vm "
-                               "%s as\n%s" % (vm_name, r.text))
+            raise RuntimeError("Failed to migrate vm %s as\n%s" % (vm_name, r.text))
 
     def remove_vm(self, vm_name):
         api_url_base = self.api_url.format(
