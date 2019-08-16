@@ -103,6 +103,15 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         self.add_additional_host_to_cluster_process()
 
+    @add_case_id("RHEVM-26156")
+    def test_migrated_he(self):
+        """
+        :avocado: tags=he_tier1
+        """
+        self.check_hint_button_before_migration()
+        self.check_migrated_he()
+        self.check_hint_button_after_migration()
+
     @add_case_id("RHEVM-26153")
     def test_local_maintenance(self):
         """
@@ -110,13 +119,6 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         self.check_local_maintenance()
         self.assert_text_in_element(self.LOCAL_MAINTEN_STAT, 'true')
-
-    @add_case_id("RHEVM-26156")
-    def test_migrated_he(self):
-        """
-        :avocado: tags=he_tier1
-        """
-        self.check_migrated_he()
 
     @add_case_id("RHEVM-26154")
     def test_remove_maintenance(self):
@@ -134,7 +136,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         self.check_global_maintenance()
         self.assert_element_visible(self.GLOBAL_HINT)
         self.check_remove_maintenance()
-        self.setting_to_non_default_port()
+        # self.setting_to_non_default_port()
 
     @add_case_id("RHEVM-23824")
     def test_non_default_cockpit_port(self):
