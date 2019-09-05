@@ -76,9 +76,9 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-26034")
     def test_base_on_registering_insights_server(self):
         """
-        :avocado: tags=he_
+        :avocado: tags=he_tier1
         """
-        self.clean_hostengine_env()
+        # self.clean_hostengine_env()
         self.deploy_on_registering_insights_server()
 
     @add_case_id("RHEVM-25065")
