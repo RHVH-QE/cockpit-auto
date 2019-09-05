@@ -314,6 +314,13 @@ class RhevmAction:
         if host:
             return host.get('status')
 
+    def get_host_id(self, host_name):
+        api_url_base = self.api_url.format(
+            rhevm_fqdn=self.rhevm_fqdn, item="hosts")
+        host = self.list_host(key="name", value=host_name)
+        if host:
+            return host.get('id')
+
     def update_available_check(self, host_id):
         rhvm_version = self.rhevm_fqdn.split('-')[0]
 
@@ -742,12 +749,13 @@ class RhevmAction:
 
         vm_id = self.list_vm(vm_name)['id']
         api_url = api_url_base + '/%s/migrate' % vm_id
+        host_id = self.get_host_id('cockpit-vm')
         
         vm_action = ('''
         <action>
             <host id="%s"/>    
         </action>
-        ''' %vm_id)
+        ''' %host_id)
         
         r = self.req.post(
             api_url,
