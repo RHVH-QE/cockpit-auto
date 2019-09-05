@@ -214,7 +214,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         if additional_host.execute('hosted-engine --check-deployed',raise_exception=False).stdout == "":
             additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
 
-        if len(self.host.execute('rpm -qa|grep appliance',raise_exception=False)) == 0:
+        if self.host.execute('rpm -qa|grep appliance',raise_exception=False).stdout == "":
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
 
         if self.host.execute('hosted-engine --check-deployed', raise_exception=False).stdout == "":
@@ -504,6 +504,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier1_1
     def node_zero_default_deploy_process(self):
         def check_deploy():
+            self.refresh
             self.default_vm_engine_stage_config()
 
             # STORAGE STAGE
@@ -538,25 +539,25 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.fail()
 
     def deploy_on_registering_insights_server(self):
-        self.refresh()
         username = self.config_dict['subscription_username']
         password = self.config_dict['subscription_password']
         try:
             sub_reg_ret = self.host.execute(
                 "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password))
+            # time.sleep(30)
             ins_reg_ret = self.host.execute("insights-client --register")
 
             time.sleep(20)
-            if ("Status:       Subscribed" in sub_reg_ret) and ("Successfully registered" in ins_reg_ret):
+            if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
                 time.sleep(5)
                 self.node_zero_default_deploy_process()
                 he_ret = self.host.execute("hosted-engine --vm-status")
 
-                if ('{"health": "good", "vm": "up", "detail": "Up"}' in he_ret):
+                if ('{"health": "good", "vm": "up", "detail": "Up"}' in he_ret.stdout):
                     ins_unreg_ret = self.host.execute("insights-client --unregister")
                     sub_unreg_ret = self.host.execute("subscription-manager unregister")
-                    if ("Successfully unregistered" not in ins_unreg_ret) and (
-                        "System has been unregistered." not in sub_unreg_ret):
+                    if ("Successfully unregistered" not in ins_unreg_ret.stdout) and (
+                        "System has been unregistered." not in sub_unreg_ret.stdout):
                         raise RuntimeError("Unregister failed!")
         except:
             import traceback
