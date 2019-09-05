@@ -211,14 +211,13 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def prepare_env(self, storage_type='nfs'):
         additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root', host_passwd=self.config_dict['second_pass'])
-        if 'not' in additional_host.execute('hosted-engine --check-deployed',raise_exception=False) == False:
+        if additional_host.execute('hosted-engine --check-deployed',raise_exception=False).stdout == "":
             additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
 
         if len(self.host.execute('rpm -qa|grep appliance',raise_exception=False)) == 0:
-            print("appliance")
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
 
-        if "not" in self.host.execute('hosted-engine --check-deployed', raise_exception=False) == False:
+        if self.host.execute('hosted-engine --check-deployed', raise_exception=False).stdout == "":
             self.backup_remove_logs()
             self.clean_hostengine_env()
             self.refresh()
@@ -247,8 +246,8 @@ class OvirtHostedEnginePage(SeleniumTest):
         elif storage_type == 'fc':
             luns_fc_storage = self.config_dict['luns_fc_storage']
             for lun_id in luns_fc_storage:
-                self.clean_fc_storage(lun_id)  
-                pass        
+                # self.clean_fc_storage(lun_id)
+                pass      
         elif storage_type == 'gluster':
             glusterfs_servers = list(self.config_dict['gluster_ips'].values())
             for ip in glusterfs_servers:
@@ -322,12 +321,12 @@ class OvirtHostedEnginePage(SeleniumTest):
     def default_vm_engine_stage_config(self):
         # VM STAGE
         self.click(self.HE_START)
-        time.sleep(60)
+        time.sleep(100)
         self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
         self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
         self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
         self.assert_text_in_element(self.VM_FQDN_VALIDATING_MSG, "Validating FQDN...")
-        time.sleep(60)
+        time.sleep(120)
         self.click(self.NEXT_BUTTON)
 
         # ENGINE STAGE
@@ -336,7 +335,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
         # PREPARE VM
         self.click(self.PREPARE_VM_BUTTON)
-        self.click(self.NEXT_BUTTON, 2000)
+        self.click(self.NEXT_BUTTON, 2200)
 
     def check_no_password_saved(self, root_pass, admin_pass):
         ret_log = self.host.execute(
