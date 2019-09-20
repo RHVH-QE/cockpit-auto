@@ -136,13 +136,13 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         self.check_global_maintenance()
         self.assert_element_visible(self.GLOBAL_HINT)
         self.check_remove_maintenance()
-        # self.setting_to_non_default_port()
+        self.setting_to_non_default_port()
 
     @add_case_id("RHEVM-23824")
     def test_non_default_cockpit_port(self):
         # Must run after case "RHEVM-26155 - test_global_maintenance"
         """
-        :avocado: tags=he_
+        :avocado: tags=he_tier1
         """
         self.deploy_on_non_default_cockpit_port()
         self.setting_to_default_port()
