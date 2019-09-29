@@ -518,7 +518,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.CLOSE_BUTTON, 2000)
 
         self.prepare_env('nfs')
-        time.sleep(10)
+        time.sleep(15)
         check_deploy()
 
     # tier1_2
