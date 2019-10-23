@@ -183,21 +183,23 @@ class OvirtHostedEnginePage(SeleniumTest):
         mp.close()
         mp.a_texts.sort()
 
-        rhvm_appliance_dict = {'v4.2':[], 'v4.3':[]}
+        rhvm_appliance_dict = {'v4.2':[], 'v4.3':[], 'v4.4':[]}
         all_appliance = mp.a_texts
         for appliance in all_appliance:
             if "4.2" in appliance:
                 rhvm_appliance_dict.get('v4.2').append(appliance)
             elif "4.3" in appliance:
                 rhvm_appliance_dict.get('v4.3').append(appliance)
+            elif "4.4" in appliance:
+                rhvm_appliance_dict.get('v4.4').append(appliance)
         
         img_ver = self.host.execute("imgbase w", raise_exception=False).split(' ')[-1]
         if '4.2' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.2')[-1]
         elif '4.3' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.3')[-1]
-        else:
-            rhvm_appliance = rhvm_appliance_dict.get('v4.2')[-1]
+        elif '4.4' in img_ver:
+            rhvm_appliance = rhvm_appliance_dict.get('v4.4')[-1]
         rhvm_appliance_link = appliance_path + rhvm_appliance
         return rhvm_appliance_link
 
