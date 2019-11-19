@@ -547,7 +547,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             time.sleep(30)
             ins_reg_ret = self.host.execute("insights-client --register")
 
-            time.sleep(30)
+            time.sleep(50)
             if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
                 time.sleep(5)
                 self.node_zero_default_deploy_process()
