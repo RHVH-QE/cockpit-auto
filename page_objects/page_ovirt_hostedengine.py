@@ -492,11 +492,11 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def errors_warnings_engine_setting(self):
         self.click(self.HE_START)
-        time.sleep(40)
+        time.sleep(60)
         self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
         self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
         self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
-        time.sleep(40)
+        time.sleep(60)
         self.click(self.NEXT_BUTTON)
         time.sleep(5)
         self.click(self.NEXT_BUTTON)
@@ -546,10 +546,10 @@ class OvirtHostedEnginePage(SeleniumTest):
         try:
             sub_reg_ret = self.host.execute(
                 "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password))
-            # time.sleep(30)
+            time.sleep(30)
             ins_reg_ret = self.host.execute("insights-client --register")
 
-            time.sleep(20)
+            time.sleep(50)
             if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
                 time.sleep(5)
                 self.node_zero_default_deploy_process()
