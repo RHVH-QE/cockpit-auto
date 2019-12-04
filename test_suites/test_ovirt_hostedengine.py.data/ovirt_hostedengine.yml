@@ -5,17 +5,17 @@
 rhvm_appliance_path: 'http://10.66.10.22:8090/rhevm-appliance/'
 
 # NFS
-nfs_ip: '10.66.8.174'
-nfs_pass: 'Redhat,123456'
-nfs_dir: '/home/wangwei/nfs'
+nfs_ip: ''
+nfs_pass: ''
+nfs_dir: ''
 
 #Subscription
-subscription_username: 'weiwang@redhat.com'
-subscription_password: 'rh,800224'
+subscription_username: ''
+subscription_password: ''
 
 # ISCSI
-iscsi_initiator_name: 'iqn.1994-05.com.redhat:6acc055d3232'
-iscsi_portal_ip: '10.73.64.13'
+iscsi_initiator_name: 'iqn.1994-05.com.redhat:shleiiscsi'
+iscsi_portal_ip: '10.73.5.1'
 iscsi_portal_user: ''
 iscsi_portal_pass: ''
 iscsi_discovery_user: ''
