@@ -186,11 +186,10 @@ class OvirtHostedEnginePage(SeleniumTest):
         rhvm_appliance_dict = {'v4.2':[], 'v4.3':[]}
         all_appliance = mp.a_texts
         for appliance in all_appliance:
-            if "4.2" in appliance:
+            if "-4.2-" in appliance:
                 rhvm_appliance_dict.get('v4.2').append(appliance)
-            elif "4.3" in appliance:
+            elif "-4.3-" in appliance:
                 rhvm_appliance_dict.get('v4.3').append(appliance)
-        
         img_ver = self.host.execute("imgbase w", raise_exception=False).split(' ')[-1]
         if '4.2' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.2')[-1]
