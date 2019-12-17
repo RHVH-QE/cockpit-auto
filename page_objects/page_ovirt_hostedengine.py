@@ -517,7 +517,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.click(self.CLOSE_BUTTON, 2000)
 
         self.prepare_env('nfs')
-        time.sleep(15)
+        time.sleep(20)
         check_deploy()
 
     # tier1_2
@@ -544,9 +544,8 @@ class OvirtHostedEnginePage(SeleniumTest):
             sub_reg_ret = self.host.execute(
                 "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password))
             time.sleep(30)
-            ins_reg_ret = self.host.execute("insights-client --register")
+            ins_reg_ret = self.host.execute("insights-client --register", timeout=100)
 
-            time.sleep(50)
             if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
                 time.sleep(5)
                 self.node_zero_default_deploy_process()
