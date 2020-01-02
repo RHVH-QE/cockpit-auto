@@ -545,11 +545,10 @@ class OvirtHostedEnginePage(SeleniumTest):
         password = self.config_dict['subscription_password']
         try:
             sub_reg_ret = self.host.execute(
-                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password))
-            time.sleep(30)
-            ins_reg_ret = self.host.execute("insights-client --register")
+                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=50)
 
-            time.sleep(50)
+            ins_reg_ret = self.host.execute("insights-client --register", timeout=100)
+            
             if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
                 time.sleep(5)
                 self.node_zero_default_deploy_process()
