@@ -509,6 +509,18 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.refresh
             self.default_vm_engine_stage_config()
 
+            #Check roll back history text.
+            self.click(self.BACK_BUTTON)
+            self.assert_text_visible("Execution completed successfully. Please proceed to the next step.", try_times=5)
+            self.click(self.BACK_BUTTON)
+            self.assertEqual(self.get_attribute(self.ADMIN_PASS, 'value'), self.config_dict['admin_pass'], 'Roll back history text wrong!')
+            self.click(self.BACK_BUTTON)
+            self.assertEqual(self.get_attribute(self.VM_FQDN, 'value'), self.config_dict['he_vm_fqdn'], 'Roll back history text wrong!')
+            self.assertEqual(self.get_attribute(self.MAC_ADDRESS, 'value'), self.config_dict['he_vm_mac'], 'Roll back history text wrong!')
+            self.assertEqual(self.get_attribute(self.ROOT_PASS,'value'), self.config_dict['he_vm_pass'], 'Roll back history text wrong!')
+            for btn in range(3):
+                self.click(self.NEXT_BUTTON)
+
             # STORAGE STAGE
             self.input_text(
                 self.STORAGE_CONN,
@@ -548,7 +560,7 @@ class OvirtHostedEnginePage(SeleniumTest):
                 "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=50)
 
             ins_reg_ret = self.host.execute("insights-client --register", timeout=100)
-            
+
             if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
                 time.sleep(5)
                 self.node_zero_default_deploy_process()
