@@ -141,6 +141,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     VM_STATUS = "//div[contains(text(), 'State')]"
     HE_RUNNING = "//p[contains(text(),'Hosted Engine is running on')]"
     FAILED_TEXT = "//div[text()='Deployment failed']"
+    RECONNECT_BUTTON = "//button[text()='Reconnect']"
 
     # override functions
     def setUp(self):
@@ -610,6 +611,21 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier1_8
     def check_global_maintenance(self):
         self.put_cluster_to_global_maintenance()
+
+    # tier1_9
+    def reboot_hosted_engine_env(self):
+        self.host.execute('reboot', raise_exception=False)
+        time.sleep(1300)
+        self.refresh()
+        self.login(os.environ.get('HOST_STRING'), os.environ.get('HOST_PORT'))
+        self.open_page()
+        self.check_hosted_engine_status()
+      
+
+    # tier1_10
+    def check_hosted_engine_status(self):
+        self.assert_element_visible(self.ENGINE_UP_ICON)
+        self.assert_element_visible(self.HE_RUNNING)
 
     # tier2_0
     def deploy_on_non_default_cockpit_port(self):
