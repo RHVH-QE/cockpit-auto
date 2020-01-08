@@ -56,8 +56,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier1
         """
-        self.assert_element_visible(self.ENGINE_UP_ICON)
-        self.assert_element_visible(self.HE_RUNNING)
+        self.check_hosted_engine_status()
 
     @add_case_id("RHEVM-23833")
     def test_no_password_saved(self):
