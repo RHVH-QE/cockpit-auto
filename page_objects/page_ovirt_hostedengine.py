@@ -213,9 +213,9 @@ class OvirtHostedEnginePage(SeleniumTest):
             pass
 
     def prepare_env(self, storage_type='nfs'):
-        additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root', host_passwd=self.config_dict['second_pass'])
-        if additional_host.execute('hosted-engine --check-deployed',raise_exception=False).stdout == "":
-            additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
+        # additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root', host_passwd=self.config_dict['second_pass'])
+        # if additional_host.execute('hosted-engine --check-deployed',raise_exception=False).stdout == "":
+        #     additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
 
         if self.host.execute('rpm -qa|grep appliance',raise_exception=False).stdout == "":
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
@@ -617,7 +617,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.host.execute('reboot', raise_exception=False)
         time.sleep(1300)
         self.refresh()
-        self.login(os.environ.get('HOST_STRING'), os.environ.get('HOST_PORT'))
+        self.login(os.environ.get('USERNAME'), os.environ.get('PASSWD'))
         self.open_page()
         self.check_hosted_engine_status()
       
