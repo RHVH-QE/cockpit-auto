@@ -141,6 +141,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     VM_STATUS = "//div[contains(text(), 'State')]"
     HE_RUNNING = "//p[contains(text(),'Hosted Engine is running on')]"
     FAILED_TEXT = "//div[text()='Deployment failed']"
+    RECONNECT_BUTTON = "//button[text()='Reconnect']"
 
     # override functions
     def setUp(self):
@@ -183,21 +184,23 @@ class OvirtHostedEnginePage(SeleniumTest):
         mp.close()
         mp.a_texts.sort()
 
-        rhvm_appliance_dict = {'v4.2':[], 'v4.3':[]}
+        rhvm_appliance_dict = {'v4.2':[], 'v4.3':[], 'v4.4':[]}
         all_appliance = mp.a_texts
         for appliance in all_appliance:
-            if "4.2" in appliance:
+            if "-4.2-" in appliance:
                 rhvm_appliance_dict.get('v4.2').append(appliance)
-            elif "4.3" in appliance:
+            elif "-4.3-" in appliance:
                 rhvm_appliance_dict.get('v4.3').append(appliance)
+            elif "-4.4-" in appliance:
+                rhvm_appliance_dict.get('v4.4').append(appliance)
         
         img_ver = self.host.execute("imgbase w", raise_exception=False).split(' ')[-1]
         if '4.2' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.2')[-1]
         elif '4.3' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.3')[-1]
-        else:
-            rhvm_appliance = rhvm_appliance_dict.get('v4.2')[-1]
+        elif '4.4' in img_ver:
+            rhvm_appliance = rhvm_appliance_dict.get('v4.4')[-1]
         rhvm_appliance_link = appliance_path + rhvm_appliance
         return rhvm_appliance_link
 
@@ -490,11 +493,11 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def errors_warnings_engine_setting(self):
         self.click(self.HE_START)
-        time.sleep(40)
+        time.sleep(60)
         self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
         self.input_text(self.MAC_ADDRESS, self.config_dict['he_vm_mac'])
         self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
-        time.sleep(40)
+        time.sleep(60)
         self.click(self.NEXT_BUTTON)
         time.sleep(5)
         self.click(self.NEXT_BUTTON)
@@ -543,11 +546,10 @@ class OvirtHostedEnginePage(SeleniumTest):
         password = self.config_dict['subscription_password']
         try:
             sub_reg_ret = self.host.execute(
-                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password))
-            # time.sleep(30)
-            ins_reg_ret = self.host.execute("insights-client --register")
+                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=50)
 
-            time.sleep(20)
+            ins_reg_ret = self.host.execute("insights-client --register", timeout=100)
+
             if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
                 time.sleep(5)
                 self.node_zero_default_deploy_process()
@@ -597,6 +599,53 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier1_8
     def check_global_maintenance(self):
         self.put_cluster_to_global_maintenance()
+
+    # tier1_9
+    def reboot_hosted_engine_env(self):
+        self.host.execute('reboot', raise_exception=False)
+        time.sleep(1300)
+        self.refresh()
+        self.login(os.environ.get('USERNAME'), os.environ.get('PASSWD'))
+        self.open_page()
+        self.check_hosted_engine_status()
+      
+
+    # tier1_10
+    def check_hosted_engine_status(self):
+        self.assert_element_visible(self.ENGINE_UP_ICON)
+        self.assert_element_visible(self.HE_RUNNING)
+
+    # tier1_11
+    def node_zero_rollback_deploy_process(self):
+        def check_deploy():
+            self.refresh
+            self.default_vm_engine_stage_config()
+
+            #Check roll back history text.
+            self.click(self.BACK_BUTTON)
+            self.assert_text_visible("Execution completed successfully. Please proceed to the next step.", try_times=5)
+            self.click(self.BACK_BUTTON)
+            self.assertEqual(self.get_attribute(self.ADMIN_PASS, 'value'), self.config_dict['admin_pass'], 'Roll back history text wrong!')
+            self.click(self.BACK_BUTTON)
+            self.assertEqual(self.get_attribute(self.VM_FQDN, 'value'), self.config_dict['he_vm_fqdn'], 'Roll back history text wrong!')
+            self.assertEqual(self.get_attribute(self.MAC_ADDRESS, 'value'), self.config_dict['he_vm_mac'], 'Roll back history text wrong!')
+            self.assertEqual(self.get_attribute(self.ROOT_PASS,'value'), self.config_dict['he_vm_pass'], 'Roll back history text wrong!')
+            for btn in range(3):
+                self.click(self.NEXT_BUTTON)
+
+            # STORAGE STAGE
+            self.input_text(
+                self.STORAGE_CONN,
+                self.config_dict['nfs_ip'] + ':' + self.config_dict['nfs_dir'])
+            self.click(self.NEXT_BUTTON)
+
+            # FINISH STAGE
+            self.click(self.FINISH_DEPLOYMENT)
+            self.click(self.CLOSE_BUTTON, 2000)
+
+        self.prepare_env('nfs')
+        time.sleep(15)
+        check_deploy()
 
     # tier2_0
     def deploy_on_non_default_cockpit_port(self):

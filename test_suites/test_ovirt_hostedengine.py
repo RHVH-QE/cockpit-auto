@@ -56,8 +56,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier1
         """
-        self.assert_element_visible(self.ENGINE_UP_ICON)
-        self.assert_element_visible(self.HE_RUNNING)
+        self.check_hosted_engine_status()
 
     @add_case_id("RHEVM-23833")
     def test_no_password_saved(self):
@@ -146,6 +145,24 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         self.deploy_on_non_default_cockpit_port()
         self.setting_to_default_port()
+
+    @add_case_id("RHEVM-26152")
+    def test_reboot_hosted_engine_env(self):
+        """
+        :avocado: tags=he_tier1
+        """
+        self.clean_hostengine_env()
+        self.node_zero_default_deploy_process()
+        self.reboot_hosted_engine_env()
+        self.check_hosted_engine_status()
+
+    @add_case_id("RHEVM-26160")
+    def test_roll_back_history_text(self):
+        """
+        :avocado: tags=he_tier1
+        """
+        self.clean_hostengine_env()
+        self.node_zero_rollback_deploy_process()
 
     @add_case_id("RHEVM-25122")
     def test_node_zero_iscsi_deployment(self):
