@@ -157,6 +157,14 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         self.reboot_hosted_engine_env()
         self.check_hosted_engine_status()
 
+    @add_case_id("RHEVM-26160")
+    def test_roll_back_history_text(self):
+        """
+        :avocado: tags=he_tier1
+        """
+        self.clean_hostengine_env()
+        self.node_zero_rollback_deploy_process()
+
     @add_case_id("RHEVM-25122")
     def test_node_zero_iscsi_deployment(self):
         # Need to deploy HE on iscsi storage
