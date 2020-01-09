@@ -743,13 +743,14 @@ class RhevmAction:
             raise RuntimeError("Failed to %s vm "
                                "%s as\n%s" % (operation, vm_name, r.text))
 
-    def migrate_vm(self, vm_name):
+    def migrate_vm(self, vm_name, dest_host_fqdn):
         api_url_base = self.api_url.format(
             rhevm_fqdn=self.rhevm_fqdn, item="vms")
 
         vm_id = self.list_vm(vm_name)['id']
         api_url = api_url_base + '/%s/migrate' % vm_id
-        host_id = self.get_host_id('cockpit-vm')
+        # host_id = self.get_host_id('cockpit-vm')
+        host_id = self.get_host_id(dest_host_fqdn)
         
         vm_action = ('''
         <action>

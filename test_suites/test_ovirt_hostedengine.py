@@ -195,3 +195,10 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         :avocado: tags=he_tier2
         """
         self.node_zero_static_v4_deploy_process()
+
+    @add_case_id("RHEVM-26334")
+    def test_migrate_normal_host(self):
+        """
+        :avocado: tags=he_tier2
+        """
+        self.check_migrated_normal_host()
