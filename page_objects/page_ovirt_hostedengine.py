@@ -507,7 +507,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier1_1
     def node_zero_default_deploy_process(self):
         def check_deploy():
-            self.refresh
+            self.refresh()
             self.default_vm_engine_stage_config()
 
             # STORAGE STAGE
@@ -546,7 +546,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         password = self.config_dict['subscription_password']
         try:
             sub_reg_ret = self.host.execute(
-                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=50)
+                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=100)
 
             ins_reg_ret = self.host.execute("insights-client --register", timeout=100)
 
@@ -618,7 +618,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier1_11
     def node_zero_rollback_deploy_process(self):
         def check_deploy():
-            self.refresh
+            self.refresh()
             self.default_vm_engine_stage_config()
 
             #Check roll back history text.
