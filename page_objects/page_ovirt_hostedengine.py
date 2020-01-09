@@ -362,10 +362,16 @@ class OvirtHostedEnginePage(SeleniumTest):
         rhvm.add_host(host_ip, host_name, host_pass, "Default", True)
         self.wait_host_up(rhvm, host_name, 'up')
 
-    def migrate_vms(self, vm_name, rhvm_fqdn, engine_pass):
+    def add_normal_host_to_cluster(self, host_ip, host_name, host_pass,
+                                       rhvm_fqdn, engine_pass):
+        rhvm = RhevmAction(rhvm_fqdn, "admin", engine_pass)
+        rhvm.add_host(host_ip, host_name, host_pass, "Default")
+        self.wait_host_up(rhvm, host_name, 'up')
+
+    def migrate_vms(self, vm_name, dest_host_fqdn, rhvm_fqdn, engine_pass):
         rhvm = RhevmAction(rhvm_fqdn, 'admin', engine_pass)
-        rhvm.migrate_vm(vm_name)
-        self.wait_migrated(rhvm, vm_name)
+        rhvm.migrate_vm(vm_name, dest_host_fqdn)
+        # self.wait_migrated(rhvm, vm_name)
 
     def wait_host_up(self, rhvm_ins, host_name, expect_status='up'):
         i = 0
@@ -575,6 +581,16 @@ class OvirtHostedEnginePage(SeleniumTest):
         time.sleep(70)
         self.check_additional_host_socre(self.config_dict['second_host'],
                                          self.config_dict['second_pass'])
+    
+    # tier2_6
+    def add_normal_host_to_cluster_process(self):
+        self.add_normal_host_to_cluster(
+            self.config_dict['normal_host'], self.config_dict['normal_host_fqdn'],
+            self.config_dict['normal_pass'], self.config_dict['he_vm_fqdn'],
+            self.config_dict['admin_pass'])
+        time.sleep(70)
+        # self.check_additional_host_socre(self.config_dict['normal_host'],
+        #                                  self.config_dict['normal_pass'])
 
     # tier1_5
     def check_local_maintenance(self):
@@ -585,7 +601,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.assert_text_in_element(self.MIGRATION_HINT, 'Local maintenance cannot be set when running the engine VM, please migrate it from the engine first if needed.')
 
     def check_migrated_he(self):
-        self.migrate_vms('HostedEngine', self.config_dict['he_vm_fqdn'], self.config_dict['admin_pass'])
+        self.migrate_vms('HostedEngine', self.config_dict['second_vm_fqdn'], self.config_dict['he_vm_fqdn'], self.config_dict['admin_pass'])
         time.sleep(20)
         self.assert_text_in_element(self.VM_STATUS, 'down')
     
@@ -769,3 +785,15 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier2_5
     def hostedengine_redeploy_process(self):
         self.node_zero_default_deploy_process()
+
+    # tier2_6
+    def check_migrated_normal_host(self):
+        try:
+            self.migrate_vms('HostedEngine', self.config_dict['normal_host_fqdn'], 
+                    self.config_dict['he_vm_fqdn'], self.config_dict['admin_pass'])
+        except RuntimeError as e:
+            print(e.__str__())
+            if "Cannot migrate VM" in e.__str__():
+                return True
+            else:
+                return False
