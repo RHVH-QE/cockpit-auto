@@ -152,6 +152,8 @@ class OvirtHostedEnginePage(SeleniumTest):
        
         if 'fc' in case_name.split('_'):
             os.environ['HOST_STRING'] = self.config_dict['host_fc_string']
+        if 'vlan' in case_name.split('_'):
+            os.environ['HOST_STRING'] = self.config_dict['vlan_he_public_ip']
         if 'port' in case_name.split('_'):
             os.environ['HOST_PORT'] = '9898'
         super(OvirtHostedEnginePage,self).setUp()
@@ -458,6 +460,21 @@ class OvirtHostedEnginePage(SeleniumTest):
             '/test_suites/test_ovirt_hostedengine.py.data/default_port.py'
         self.host.put_file(default_port_file, '/root/default_port.py')
         self.host.execute("python /root/default_port.py", timeout=60)
+    
+    def set_vlan_network(self):
+        pub_dev, pri_dev = (self.config_dict['vlan_he_public_device'], self.config_dict['vlan_he_private_device'])
+        self.host.execute(" nmcli con mod {} +connection.autoconnect yes".format(pub_dev))
+        time.sleep(1)
+        if self.host.execute("ip -f inet a s {}|grep inet".format(pri_dev), raise_exception=False).stdout == '':
+            self.host.execute("ifup {}".format(pri_dev))
+            time.sleep(3)
+        if self.host.execute("ip -f inet a s {}|grep inet".format(pri_dev), raise_exception=False).stdout != '':
+            self.host.execute("nmcli con add type vlan ifname {0} dev {1} id 50".format(pri_dev+self.config_dict['vlan_id'], pri_dev))
+            time.sleep(5)
+        self.host.execute(" ip route add 10.0.0.0/8 via 10.73.131.254")
+    
+    def set_hosted_engine_setup_environment(self):
+        pass
 
     ## Cases
     # tier1_0
@@ -798,3 +815,7 @@ class OvirtHostedEnginePage(SeleniumTest):
                 return True
             else:
                 return False
+
+    # tier2_7
+    def node_zero_vlan_deploy_process(self):
+        pass

@@ -5,13 +5,17 @@
 rhvm_appliance_path: 'http://10.66.10.22:8090/rhevm-appliance/'
 
 # NFS
-nfs_ip: ''
-nfs_pass: ''
-nfs_dir: ''
+nfs_ip: '10.66.9.57'
+nfs_pass: 'Redhat,123456'
+nfs_dir: '/home/wangwei/nfs'
+
+private_nfs_ip: '192.168.50.176'
+private_nfs_pass: 'redhat'
+prvate_nfs_dir: '/root/linda/nfs'
 
 #Subscription
 subscription_username: 'weiwang@redhat.com'
-subscription_password: ''
+subscription_password: 'rhvh,test'
 
 # ISCSI
 iscsi_initiator_name: 'iqn.1994-05.com.redhat:shleiiscsi'
@@ -31,6 +35,19 @@ gluster_ips: {'bootp-73-131-196.rhts.eng.pek2.redhat.com':'10.73.131.196','bootp
 gluster_volume: 'gv1'
 gluster_volume_mount: '/data/gluster'
 root_passwd: 'redhat'
+
+# VLAN -- Machine: dell730-34
+vlan_he_fqdn: 'dell-per730-34.lab.eng.pek2.redhat.com'
+vlan_he_public_device: 'em1'
+vlan_he_private_device: 'em3'
+vlan_id: '50'
+vlan_he_public_ip: '10.73.131.63'
+#vlan_he_static_ip: '192.168.50.171'
+#vlan_he_static_netmask: '255.255.255.0'
+#vlan_he_static_gw: '192.168.50.1'
+vlan_he_private_dns: '192.168.50.104'
+vlan_he_engine_vm_fqdn: 'engine.redhat.com'
+#vlan_he_engine_private_ip: '192.168.50.172'
 
 # ENGINE VM
 he_vm_fqdn: 'rhevh-hostedengine-vm-05.lab.eng.pek2.redhat.com'
