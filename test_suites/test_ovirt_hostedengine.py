@@ -201,5 +201,5 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier
         """
-        # self.add_normal_host_to_cluster_process()
+        self.add_normal_host_to_cluster_process()
         self.assertEqual(self.check_migrated_normal_host(), True)
