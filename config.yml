@@ -15,4 +15,4 @@ avocado_results_dir: '/home/weiwang/work/autowork/avocado-results'
 
 # versions of pkg/sys under test
 test_pkg_ver: 'cockpit-ovirt-dashboard-0.13.8-1'
-test_sys_ver: 'rhvh-4.3.6.2-0.20190904.0'
+test_sys_ver: 'rhvh-4.4.0.3-0.20190926.0'
