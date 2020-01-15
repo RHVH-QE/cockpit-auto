@@ -124,6 +124,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     # FINISH STAGE
     FINISH_DEPLOYMENT = "//button[text()='Finish Deployment']"
     CLOSE_BUTTON = "//button[text()='Close']"
+    YES_BUTTON = "/html/body/div[1]/div/div[2]/div/div/span/span/div/div/div/div[2]/div/div[2]/div[1]/button"
 
     # DEPLOYED PAGE
     ## HINT&ICON
