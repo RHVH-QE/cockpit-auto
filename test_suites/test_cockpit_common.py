@@ -12,14 +12,14 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23250")
     def test_firefox_login(self):
         """
-        :avocado: tags=common_Login_tier1
+        :avocado: tags=common_tier1
         """
         self.check_firefox_login()
     
     @add_case_id("RHEVM-23251")
     def test_chrome_login(self):
         """
-        :avocado: tags=common_Login_tier1
+        :avocado: tags=common_tier1
         """
         self.check_chrome_login()
     
@@ -40,14 +40,34 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHVEM-23253")
     def test_login_remote_machine(self):
         """
-        :avocado: tags=lsy
+        :avocado: tags=common_tier1
         """
         self.login_remote_machine()
     
     @add_case_id("RHEVM-23290")
     def test_suscription(self):
         """
-        :avocado: tags=abc
+        :avocado: tags=unfinished
         """
         self.subscription_to_rhsm()
     
+    @add_case_id("RHEVM-24922")
+    def test_add_nfs_storage(self):
+        """
+        :avocado: tags=common_tier1
+        """
+        self.add_nfs_storage()
+    
+    @add_case_id("RHEVM-23243")
+    def test_add_remote_host_chrome(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.add_remote_host()
+    
+    @add_case_id("RHEVM-23246")
+    def test_delete_remote_host_chrome(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.delete_remote_host()
