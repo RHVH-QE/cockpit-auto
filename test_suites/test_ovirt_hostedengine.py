@@ -151,7 +151,6 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier1
         """
-        self.clean_hostengine_env()
         self.node_zero_default_deploy_process()
         self.reboot_hosted_engine_env()
         self.check_hosted_engine_status()
@@ -161,7 +160,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier1
         """
-        self.clean_hostengine_env()
+        # self.clean_hostengine_env()
         self.node_zero_rollback_deploy_process()
 
     @add_case_id("RHEVM-25122")
