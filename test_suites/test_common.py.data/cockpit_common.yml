@@ -1,0 +1,25 @@
+%YAML 1.2
+---
+
+#remote host
+host_ip: '10.66.8.157'
+host_user: 'root'
+host_pwd:'redhat'
+
+# NFS
+nfs_ip: '10.66.10.132'
+nfs_pass: ''
+nfs_dir: '/home/shiyilei/nfs'
+
+#Subscription
+custom_URL: 'subscription.rhsm.stage.redhat.com'
+subscription_username: 'shlei2'
+subscription_password: 'lsystc571998'
+
+# ISCSI
+iscsi_initiator_name: 'iqn.1994-05.com.redhat:6acc055d3232'
+iscsi_portal_ip: '10.73.64.13'
+iscsi_portal_user: ''
+iscsi_portal_pass: ''
+iscsi_discovery_user: ''
+iscsi_discovery_pass: ''
