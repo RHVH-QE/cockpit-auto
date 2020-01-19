@@ -374,7 +374,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     def migrate_vms(self, vm_name, dest_host_fqdn, rhvm_fqdn, engine_pass):
         rhvm = RhevmAction(rhvm_fqdn, 'admin', engine_pass)
         rhvm.migrate_vm(vm_name, dest_host_fqdn)
-        # self.wait_migrated(rhvm, vm_name)
+        self.wait_migrated(rhvm, vm_name)
 
     def wait_host_up(self, rhvm_ins, host_name, expect_status='up'):
         i = 0
@@ -531,7 +531,6 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier1_1
     def node_zero_default_deploy_process(self):
         def check_deploy():
-            self.refresh()
             self.default_vm_engine_stage_config()
 
             # STORAGE STAGE
@@ -570,9 +569,9 @@ class OvirtHostedEnginePage(SeleniumTest):
         password = self.config_dict['subscription_password']
         try:
             sub_reg_ret = self.host.execute(
-                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=100)
+                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=130)
 
-            ins_reg_ret = self.host.execute("insights-client --register", timeout=100)
+            ins_reg_ret = self.host.execute("insights-client --register", timeout=120)
 
             if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
                 time.sleep(5)
@@ -620,7 +619,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def check_migrated_he(self):
         self.migrate_vms('HostedEngine', self.config_dict['second_vm_fqdn'], self.config_dict['he_vm_fqdn'], self.config_dict['admin_pass'])
-        time.sleep(20)
+        time.sleep(30)
         self.assert_text_in_element(self.VM_STATUS, 'down')
     
     def check_hint_button_after_migration(self):
@@ -637,7 +636,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier1_9
     def reboot_hosted_engine_env(self):
         self.host.execute('reboot', raise_exception=False)
-        time.sleep(1300)
+        time.sleep(1500)
         self.refresh()
         self.login(os.environ.get('USERNAME'), os.environ.get('PASSWD'))
         self.open_page()
@@ -652,7 +651,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier1_11
     def node_zero_rollback_deploy_process(self):
         def check_deploy():
-            self.refresh()
+            # self.refresh()
             self.default_vm_engine_stage_config()
 
             #Check roll back history text.
