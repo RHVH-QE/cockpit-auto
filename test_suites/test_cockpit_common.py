@@ -58,6 +58,14 @@ class TestCockpitCommon(CommonPages):
         """
         self.add_nfs_storage()
     
+    @add_case_id("RHEVM-23247")
+    def test_system_dynamic_status(self):
+        """
+        :avocado: tags=common_tier1
+        """
+        self.system__dynamic_status()
+
+
     @add_case_id("RHEVM-23243")
     def test_add_remote_host_chrome(self):
         """
@@ -71,3 +79,59 @@ class TestCockpitCommon(CommonPages):
         :avocado: tags=common_tier2
         """
         self.delete_remote_host()
+    
+    @add_case_id("RHEVM-23248")
+    def test_system_dynamic_status_chrome(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.system__dynamic_status()
+    
+    @add_case_id("RHVEM-23256")
+    def test_login_wrong_remote_machine(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.login_wrong_remote_machine()
+    
+    @add_case_id("RHVEM-23259")
+    def test_config_hostname(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.config_hostname()
+    
+    @add_case_id("RHVEM-23260")
+    def test_config_timezone(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.config_timezone()
+
+    @add_case_id("RHVEM-23261")
+    def test_config_timezone_manually(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.config_time_manually()
+    
+    @add_case_id("RHVEM-23262")
+    def test_restart_node(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.restart_node()
+    
+    @add_case_id("RHVEM-23264")
+    def test_change_performance_profile(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.change_performance_profile()
+    
+    # @add_case_id("RHVEM-23266")
+    # def test_check_service_status(self):
+    #     """
+    #     :avocado: tags=common_tier2a
+    #     """
+    #     self.check_service_status()
