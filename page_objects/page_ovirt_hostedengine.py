@@ -522,9 +522,8 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.host.execute("sed '/BOOTPROTO=/d' {} > {}".format(ifg_bak_path, ifg_path))
         cmd = '\n'.join("{}={}".format(k,v) for k, v in vlan_dict.items())
         self.host.execute("echo '{}' >> {}".format(cmd, ifg_path))
+        self.host.execute("echo '10.0.0.0/8 via 10.73.131.254 dev em1' >> /etc/sysconfig/network-scripts/route-em1")
         self.host.execute("systemctl restart network")
-        time.sleep(70)
-        self.host.execute(" ip route add 10.0.0.0/8 via 10.73.131.254")
 
 
     ## Cases
