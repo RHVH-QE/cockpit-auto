@@ -78,6 +78,9 @@ class CommonPages(SeleniumTest):
 
     NFS_SERVER_DETAIL_BUTTON="//*[@id='nfs-mounts']/table/tbody/tr/td[1]"
     DELETE_NFS_SERVER_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[3]"
+    NFS_UNMOUNT_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[1]"
+    NFS_SIZE_FIELD="//*[@id='detail-header']/div/div[2]/div/div[3]"
+    NFS_SIZE_PROGRESS="//*[@id='detail-header']/div/div[2]/div/div[3]/div"
 
     #system status
     CPU_STATUS="//*[@id='dashboard-plot-0']"
@@ -116,7 +119,7 @@ class CommonPages(SeleniumTest):
     PROFILE_APPLY_BUTTON="//*[@id='cockpit_modal_dialog']/div/div[2]/div/div/div[3]/button[2]"
 
     #kernel dump
-    KD_LINK="//*[@id='sidebar-tools']/li[3]/a"
+    KD_LINK="//*[@id='sidebar-tools']/li[2]/a"
     #//*[@id="sidebar-tools"]/li[3]/a //*[@id="sidebar-tools"]/li[2]/a //*[@id="sidebar-tools"]/li[3]
 
     KD_FRAME_NAME="/kdump"
@@ -255,10 +258,12 @@ class CommonPages(SeleniumTest):
         self.input_text(self.SERVER_PATH_TEXT,self.SERVER_PATH)
         self.input_text(self.MOUNT_POINT_TEXT,self.MOUNT_POINT)
         self.click(self.NFS_ADD_BUTTON)
-        time.sleep(5)
+        time.sleep(3)
         #self.assert_element_visible("//*[@id='nfs-mounts']/table/tbody/tr/td[1]")
         self.click(self.NFS_SERVER_DETAIL_BUTTON)
         time.sleep(3)
+        self.click(self.DELETE_NFS_SERVER_BUTTON)
+        time.sleep(2)
         self.assert_element_invisible(self.NFS_SERVER_DETAIL_BUTTON)
     
     def system__dynamic_status(self):
@@ -390,19 +395,65 @@ class CommonPages(SeleniumTest):
         self.switch_to_default_content()
         self.switch_to_frame(self.SERVICE_FRAME_NAME)
         self.click(self.STOP_START_BUTTON)
-        time.sleep(3)
+        time.sleep(8)
         self.assert_text_in_element(self.KD_STATUS_INFO,"inactive")
         self.click(self.STOP_START_BUTTON)
         self.assert_text_in_element(self.KD_STATUS_INFO,"activating")
         self.click(self.KD_RESTART_BUTTON)
-        time.sleep(5)
+        time.sleep(8)
         self.assert_text_in_element(self.KD_STATUS_INFO,"active")
         self.click(self.KD_DISABLE_BUTTON)
-        time.sleep(5)
+        time.sleep(8)
         self.assert_text_in_element(self.KD_ENABLE_TEXT,"disabled")
         self.click(self.KD_DISABLE_BUTTON)
-        time.sleep(5)
+        time.sleep(8)
         self.assert_text_in_element(self.KD_ENABLE_TEXT,"enabled")
+    
+    def check_file_system_list(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.STORAGE_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.switch_to_frame(self.STORAGE_FRAME_NAME)
+
+        self.assert_text_in_element("//*[@id='storage_mounts']/tr[8]/td[2]/div","/boot")
+        self.click("//*[@id='storage_mounts']/tr[1]/td[2]/div")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[5]/tr[1]/th","root")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[6]/tr[1]/td[2]/span","1 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[6]/tr[1]/th","/tmp")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[7]/tr[1]/td[2]/span","15 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[7]/tr[1]/th","/var")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[8]/tr[1]/td[2]/span","10 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[8]/tr[1]/th","/var_crash")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[9]/tr[1]/td[2]/span","8 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[9]/tr[1]/th","/var_log")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[10]/tr[1]/td[2]/span","2 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[10]/tr[1]/th","/var_log_audit")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[11]/tr[1]/th","swap")
+    
+    def modify_nfs_storage(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.STORAGE_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.switch_to_frame(self.STORAGE_FRAME_NAME)
+        self.click(self.ADD_NFS_BUTTON)
+
+        self.input_text(self.NFS_SERVER_ADDR_TEXT,self.NFS_SERVER_ADDR)
+        self.input_text(self.SERVER_PATH_TEXT,self.SERVER_PATH)
+        self.input_text(self.MOUNT_POINT_TEXT,self.MOUNT_POINT)
+        self.click(self.NFS_ADD_BUTTON)
+        time.sleep(3)
+        self.click(self.NFS_SERVER_DETAIL_BUTTON)
+        time.sleep(2)
+        self.click(self.NFS_UNMOUNT_BUTTON)
+        time.sleep(1)
+        self.assert_text_in_element(self.NFS_SIZE_FIELD,"--")
+        self.click(self.NFS_UNMOUNT_BUTTON)
+        time.sleep(2)
+        self.assert_element_visible(self.NFS_SIZE_PROGRESS)
+        self.click(self.DELETE_NFS_SERVER_BUTTON)
+
 
 
 

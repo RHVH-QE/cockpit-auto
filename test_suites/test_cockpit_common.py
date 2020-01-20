@@ -129,9 +129,25 @@ class TestCockpitCommon(CommonPages):
         """
         self.change_performance_profile()
     
-    # @add_case_id("RHVEM-23266")
-    # def test_check_service_status(self):
-    #     """
-    #     :avocado: tags=common_tier2a
-    #     """
-    #     self.check_service_status()
+    @add_case_id("RHVEM-23266")
+    def test_check_service_status(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.check_service_status()
+    
+    @add_case_id("RHVEM-23270")
+    def test_check_file_system_list(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.check_file_system_list()
+    
+    @add_case_id("RHVEM-24923")
+    def test_modify_nfs_storage(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.modify_nfs_storage()
+    
+
