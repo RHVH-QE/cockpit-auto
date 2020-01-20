@@ -11,7 +11,7 @@ from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
 from utils.rhvmapi import RhevmAction
 from selenium import webdriver
-
+from selenium.webdriver.common.keys import Keys
 
 
 class CommonPages(SeleniumTest):
@@ -20,6 +20,7 @@ class CommonPages(SeleniumTest):
     """
 
     R_MACHINE_ADDR="10.66.9.205"
+    WRONG_ADDR="1.2.3.4"
     R_MACHINE_USER="root"
     R_MACHINE_PWD="redhat"
 
@@ -40,8 +41,6 @@ class CommonPages(SeleniumTest):
     OVIRT_DASHBOARD_FRAME_NAME = "/dashboard"
     DASHBOARD_LINK = "//*[@id='main-navbar']/li[3]/a/span[1]"
     OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
-    # DASHBOARD_FRAME_NAME="cockpit1:localhost/dashboard"
-    # SYSTEM_FRAME_NAME="cockpit1:localhost/system"
 
     #add and delete remote host
     INPUT_REMOTE_USER="//*[@id='login-custom-user']"
@@ -79,7 +78,58 @@ class CommonPages(SeleniumTest):
 
     NFS_SERVER_DETAIL_BUTTON="//*[@id='nfs-mounts']/table/tbody/tr/td[1]"
     DELETE_NFS_SERVER_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[3]"
+    NFS_UNMOUNT_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[1]"
+    NFS_SIZE_FIELD="//*[@id='detail-header']/div/div[2]/div/div[3]"
+    NFS_SIZE_PROGRESS="//*[@id='detail-header']/div/div[2]/div/div[3]/div"
 
+    #system status
+    CPU_STATUS="//*[@id='dashboard-plot-0']"
+    MEMORY_LINK="//*[@id='dashboard']/div[1]/div/ul/li[2]/a"
+    MEMORY_STATUS="//*[@id='dashboard-plot-1']"
+    NETWORK_LINK="//*[@id='dashboard']/div[1]/div/ul/li[3]/a"
+    NETWORK_STATUS="//*[@id='dashboard-plot-2']"
+    DISK_LINK="//*[@id='dashboard']/div[1]/div/ul/li[4]/a"
+    DISK_STATUS="//*[@id='dashboard-plot-3']"
+
+    #config hostname
+    SYSTEM_FRAME_LINK="//*[@id='sidebar-menu']/li[1]/a"
+    SYSTEM_FRAME_NAME="/system"
+    HOSTNAME_BUTTON="//*[@id='system_information_hostname_button']"
+    PRETTY_HOSTNAME_TEXT="//*[@id='sich-pretty-hostname']"
+    REAL_HOSTNAME_TEXT="//*[@id='sich-hostname']"
+    HOSTNAME_APPLY_BUTTON="//*[@id='sich-apply-button']"
+
+    #config timezone
+    TIME_LINK="//*[@id='system_information_systime_button']"
+    TIMEZONE_TEXT="//*[@id='systime-timezonesundefined']"
+    TIMEZONE_APPLY_BUTTON="//*[@id='systime-apply-button']"
+    TIME_SET_DROPDOWN="//*[@id='change_systime']/button"
+    TIME_SET_MANUALLY="//*[@id='change_systime']/ul/li[1]/a"
+    TIME_MIN_TEXT="//*[@id='systime-time-minutes']"
+
+    #restart node
+    RESTART_BUTTON="//*[@id='shutdown-group']/button[1]"
+    LEAVE_MESSAGE_TEXT="//*[@id='shutdown-dialog']/div/div/div[2]/textarea"
+    RESTART_APPLY_BUTTON="//*[@id='shutdown-dialog']/div/div/div[3]/button[2]"
+    RECONNECT_BUTTON="//*[@id='machine-reconnect']"
+
+    #change the performance profile
+    PROFILE_LINK="//*[@id='tuned-status-tooltip']/a"
+    DESKTOP_OPTION="//*[@id='cockpit_modal_dialog']/div/div[2]/div/div/div[2]/div/div[3]"
+    PROFILE_APPLY_BUTTON="//*[@id='cockpit_modal_dialog']/div/div[2]/div/div/div[3]/button[2]"
+
+    #kernel dump
+    KD_LINK="//*[@id='sidebar-tools']/li[2]/a"
+    #//*[@id="sidebar-tools"]/li[3]/a //*[@id="sidebar-tools"]/li[2]/a //*[@id="sidebar-tools"]/li[3]
+
+    KD_FRAME_NAME="/kdump"
+    KD_SERVICE_LINK="//*[@id='app']/div/form/div[1]/a/span"
+    SERVICE_FRAME_NAME="/system/services"
+    STOP_START_BUTTON="//*[@id='service-unit-primary-action']/button"
+    KD_STATUS_INFO="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[1]/td[2]/span"
+    KD_RESTART_BUTTON="//*[@id='service-unit-action']/button[1]"
+    KD_DISABLE_BUTTON="//*[@id='service-file-action']/button[1]"
+    KD_ENABLE_TEXT="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[3]/td[2]"
 
     def setUp(self):
         case_name = self._testMethodName
@@ -122,7 +172,7 @@ class CommonPages(SeleniumTest):
         cmd = 'systemctl status cockpit'
         output = host.execute(cmd).stdout
         result = re.search('active (running)', output)
-        self.assertNotEqual(result, 'None')
+        self.assertNotEqual(result, None)
         
     def check_chrome_login(self):
         self.check_firefox_login()
@@ -134,6 +184,15 @@ class CommonPages(SeleniumTest):
         self.login(self.R_MACHINE_USER,self.R_MACHINE_PWD)
         time.sleep(2)
         self.assert_frame_available("/ovirt-dashboard")
+    
+    def login_wrong_remote_machine(self):
+        time.sleep(2)
+        self.click(self.OTHER_OPTION)
+        self.input_text(self.SERVER_FIELD,self.WRONG_ADDR)
+        self.login(self.R_MACHINE_USER,self.R_MACHINE_PWD)
+        time.sleep(5)
+        self.assertEqual(self.get_text(self.LOGIN_ERROR_MESSAGE),"Unable to connect to that address")
+
         
     def add_remote_host(self):
 
@@ -199,9 +258,202 @@ class CommonPages(SeleniumTest):
         self.input_text(self.SERVER_PATH_TEXT,self.SERVER_PATH)
         self.input_text(self.MOUNT_POINT_TEXT,self.MOUNT_POINT)
         self.click(self.NFS_ADD_BUTTON)
-        time.sleep(5)
+        time.sleep(3)
         #self.assert_element_visible("//*[@id='nfs-mounts']/table/tbody/tr/td[1]")
         self.click(self.NFS_SERVER_DETAIL_BUTTON)
         time.sleep(3)
+        self.click(self.DELETE_NFS_SERVER_BUTTON)
+        time.sleep(2)
         self.assert_element_invisible(self.NFS_SERVER_DETAIL_BUTTON)
+    
+    def system__dynamic_status(self):
+        self.click(self.DASHBOARD_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
+        time.sleep(3)
+        self.assert_element_visible(self.CPU_STATUS)
+
+        self.click(self.MEMORY_LINK)
+        time.sleep(3)
+        self.assert_element_visible(self.MEMORY_STATUS)
         
+        self.click(self.NETWORK_LINK)
+        time.sleep(3)
+        self.assert_element_visible(self.NETWORK_STATUS)
+
+        self.click(self.DISK_LINK)
+        time.sleep(3)
+        self.assert_element_visible(self.DISK_STATUS)
+    
+    def config_hostname(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.SYSTEM_FRAME_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.SYSTEM_FRAME_NAME)
+        self.click(self.HOSTNAME_BUTTON)
+
+        self.input_text(self.PRETTY_HOSTNAME_TEXT,"test")
+        self.input_text(self.REAL_HOSTNAME_TEXT,"test.redhat.com")
+        self.click(self.HOSTNAME_APPLY_BUTTON)
+        time.sleep(2)
+
+        self.assert_text_in_element(self.HOSTNAME_BUTTON,"test (test.redhat.com)")
+
+        cmd = 'hostname'
+        output = self.host.execute(cmd).stdout
+        result = re.match("test.redhat.com",output)
+        self.assertNotEqual(result, None)
+
+    def config_timezone(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.SYSTEM_FRAME_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.SYSTEM_FRAME_NAME)
+
+        self.click(self.TIME_LINK)
+        self.input_text(self.TIMEZONE_TEXT,"Asia/Singapore\n")
+        #self.driver.send_keys(Keys.ENTER)
+        self.click(self.TIMEZONE_APPLY_BUTTON)
+        time.sleep(5)
+
+    def config_time_manually(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.SYSTEM_FRAME_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.SYSTEM_FRAME_NAME)
+
+        self.click(self.TIME_LINK)
+        self.click(self.TIME_SET_DROPDOWN)
+        self.click(self.TIME_SET_MANUALLY)
+        self.input_text(self.TIME_MIN_TEXT,"00")
+        self.click(self.TIMEZONE_APPLY_BUTTON)
+        time.sleep(3)
+
+        self.assert_text_in_element(self.TIME_LINK,"00")
+    
+    def restart_node(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.SYSTEM_FRAME_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.SYSTEM_FRAME_NAME)
+        #time.sleep(10)
+        self.click(self.RESTART_BUTTON)
+        self.input_text(self.LEAVE_MESSAGE_TEXT,"GOODBYE!!!")
+        self.click(self.RESTART_APPLY_BUTTON)
+        time.sleep(65)
+        self.switch_to_default_content()
+        self.assert_element_visible("//*[@id='content']/div")
+
+        time.sleep(180)
+        self.click(self.RECONNECT_BUTTON)
+        username = os.environ.get('USERNAME')
+        passwd = os.environ.get('PASSWD')
+        self.login(username, passwd)
+        time.sleep(2)
+        self.assert_frame_available("/system")
+
+    def change_performance_profile(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.SYSTEM_FRAME_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.SYSTEM_FRAME_NAME)
+
+        self.click(self.PROFILE_LINK)
+        time.sleep(2)
+        self.click(self.DESKTOP_OPTION)
+        self.click(self.PROFILE_APPLY_BUTTON)
+
+        cmd = 'tuned-adm active'
+        output = self.host.execute(cmd).stdout
+        result = re.search("desktop",output)
+        self.assertNotEqual(result, None)
+    
+    def check_service_status(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+
+        self.click(self.KD_LINK)
+        self.switch_to_frame(self.KD_FRAME_NAME)
+        self.click(self.KD_SERVICE_LINK)
+        self.switch_to_default_content()
+        self.switch_to_frame(self.SERVICE_FRAME_NAME)
+        self.click(self.STOP_START_BUTTON)
+        time.sleep(8)
+        self.assert_text_in_element(self.KD_STATUS_INFO,"inactive")
+        self.click(self.STOP_START_BUTTON)
+        self.assert_text_in_element(self.KD_STATUS_INFO,"activating")
+        self.click(self.KD_RESTART_BUTTON)
+        time.sleep(8)
+        self.assert_text_in_element(self.KD_STATUS_INFO,"active")
+        self.click(self.KD_DISABLE_BUTTON)
+        time.sleep(8)
+        self.assert_text_in_element(self.KD_ENABLE_TEXT,"disabled")
+        self.click(self.KD_DISABLE_BUTTON)
+        time.sleep(8)
+        self.assert_text_in_element(self.KD_ENABLE_TEXT,"enabled")
+    
+    def check_file_system_list(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.STORAGE_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.switch_to_frame(self.STORAGE_FRAME_NAME)
+
+        self.assert_text_in_element("//*[@id='storage_mounts']/tr[8]/td[2]/div","/boot")
+        self.click("//*[@id='storage_mounts']/tr[1]/td[2]/div")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[5]/tr[1]/th","root")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[6]/tr[1]/td[2]/span","1 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[6]/tr[1]/th","/tmp")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[7]/tr[1]/td[2]/span","15 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[7]/tr[1]/th","/var")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[8]/tr[1]/td[2]/span","10 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[8]/tr[1]/th","/var_crash")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[9]/tr[1]/td[2]/span","8 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[9]/tr[1]/th","/var_log")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[10]/tr[1]/td[2]/span","2 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[10]/tr[1]/th","/var_log_audit")
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[11]/tr[1]/th","swap")
+    
+    def modify_nfs_storage(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.STORAGE_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.switch_to_frame(self.STORAGE_FRAME_NAME)
+        self.click(self.ADD_NFS_BUTTON)
+
+        self.input_text(self.NFS_SERVER_ADDR_TEXT,self.NFS_SERVER_ADDR)
+        self.input_text(self.SERVER_PATH_TEXT,self.SERVER_PATH)
+        self.input_text(self.MOUNT_POINT_TEXT,self.MOUNT_POINT)
+        self.click(self.NFS_ADD_BUTTON)
+        time.sleep(3)
+        self.click(self.NFS_SERVER_DETAIL_BUTTON)
+        time.sleep(2)
+        self.click(self.NFS_UNMOUNT_BUTTON)
+        time.sleep(1)
+        self.assert_text_in_element(self.NFS_SIZE_FIELD,"--")
+        self.click(self.NFS_UNMOUNT_BUTTON)
+        time.sleep(2)
+        self.assert_element_visible(self.NFS_SIZE_PROGRESS)
+        self.click(self.DELETE_NFS_SERVER_BUTTON)
+
+
+
+
