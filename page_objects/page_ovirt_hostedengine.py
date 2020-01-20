@@ -44,6 +44,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     ROOT_PASS = "//label[text()='Root Password']//parent::*//input[@type='password']"
     
     VM_ADVANCED = "//a[@id='he-advanced-menu']"
+    _DROPDOWN_MENU = "//label[text()='%s']//parent::*//button[contains(@class, 'dropdown-toggle')]"
     # VM_SSH_PUB_KEY_TETAREA = "//textarea[@id='he-ssh-pubkey-input']"
     # VM_ETC_HOSTS_CHKBOX = "//input[@id='he-edit-etc-hosts-chkbox']"
     # VM_BRIDGE_NAME_INPUT = "//input[@id='he-bridge-name-input']"
@@ -53,9 +54,10 @@ class OvirtHostedEnginePage(SeleniumTest):
     # VM_MEM_SIZE_INPUT = "//input[@id='he-memory-size-input']"
     HOST_FQDN_INPUT = "//input[@id='he-host-fqdn-input']"
     HOST_FQDN_VALIDATING_MSG = "//span[@id='he-validating-host-fqdn-msg']"
+    NETWORK_TEST_BTN = _DROPDOWN_MENU % 'Network Test'
+    NETWORK_TEST_NONE = '//*[@id="none"]'
 
     ## VM NETWORK
-    _DROPDOWN_MENU = "//label[text()='%s']//parent::*//button[contains(@class, 'dropdown-toggle')]"
     NETWORK_DROPDOWN = _DROPDOWN_MENU % 'Network Configuration'
 
     ### BRIDGE_DROPDOWN
@@ -66,7 +68,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     NETWORK_STATIC = _DROPDOWN_VALUE % 'static'
     VM_IP = "//input[@id='he-static-ip-address-input']"
     IP_PREFIX = "//input[@placeholder='%s']" % '24'
-    GATEWAY_INPUT = "//input[@id='he-static-ip-gateway-input']"
+    GATEWAY_INPUT = "//input[@id='he-static-ip-gateway-input']"  #//*[@id="he-static-ip-gateway-input"]
     DNS_SERVER = "//div[contains(@class, 'multi-row-text-box-input')]" \
         "/input[@type='text']"
 
@@ -215,10 +217,11 @@ class OvirtHostedEnginePage(SeleniumTest):
         except Exception as e:
             pass
 
-    def prepare_env(self, storage_type='nfs'):
-        additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root', host_passwd=self.config_dict['second_pass'])
-        if additional_host.execute('hosted-engine --check-deployed',raise_exception=False).stdout == "":
-            additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
+    def prepare_env(self, storage_type='nfs', is_vlan=False):
+        if not is_vlan:
+            additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root', host_passwd=self.config_dict['second_pass'])
+            if additional_host.execute('hosted-engine --check-deployed',raise_exception=False).stdout == "":
+                additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
 
         if self.host.execute('rpm -qa|grep appliance',raise_exception=False).stdout == "":
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
@@ -230,9 +233,14 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
 
         if storage_type == 'nfs':
-            self.clean_nfs_storage(self.config_dict['nfs_ip'],
-                                   self.config_dict['nfs_pass'],
-                                   self.config_dict['nfs_dir'])
+            if is_vlan:
+                self.clean_nfs_storage(self.config_dict['public_nfs_ip'],
+                                      self.config_dict['private_nfs_pass'],
+                                      self.config_dict['private_nfs_dir'])
+            else:
+                self.clean_nfs_storage(self.config_dict['nfs_ip'],
+                                     self.config_dict['nfs_pass'],
+                                     self.config_dict['nfs_dir'])
         elif storage_type == 'iscsi':
             try:
                 self.host.get_file('/etc/iscsi/initiatorname.iscsi','./initiatorname.iscsi')
@@ -469,12 +477,55 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.host.execute("ifup {}".format(pri_dev))
             time.sleep(3)
         if self.host.execute("ip -f inet a s {}|grep inet".format(pri_dev), raise_exception=False).stdout != '':
-            self.host.execute("nmcli con add type vlan ifname {0} dev {1} id 50".format(pri_dev+self.config_dict['vlan_id'], pri_dev))
+            vlan_name = ".".join([pri_dev,self.config_dict['vlan_id']])
+            self.host.execute("nmcli con add type vlan con-name {0} ifname {1} dev {2} id 50".format(vlan_name, vlan_name
+                , pri_dev))
             time.sleep(5)
-        self.host.execute(" ip route add 10.0.0.0/8 via 10.73.131.254")
+        # self.host.execute(" ip route add 10.0.0.0/8 via 10.73.131.254")
     
+    def get_vlan_ips(self):
+        vlan_nic_name = self.host.execute("ip -f link a s|grep '@'", raise_exception=False).stdout.split(':')[1].split('@')[0]
+        if self.host.execute("ip -f inet a s|grep 'ovirtmgmt'", raise_exception=False).stdout == '':
+            vlan_ip = self.host.execute("ip -f inet a s {}|grep inet".format(vlan_nic_name),raise_exception=False).stdout.split(' ')[1].split('/')[0]
+            vlan_gw = self.host.execute("ip route|grep default|grep %s" %vlan_nic_name).stdout.split(' ')[2]
+        else:
+            vlan_ip = self.host.execute("ip -f inet a s ovirtmgmt|grep 'inet'",raise_exception=False).stdout.split(' ')[1].split('/')[0]
+            vlan_gw = self.host.execute("ip route|grep default|grep ovirtmgmt").stdout.split(' ')[2]
+
+        vlan_vm_ip_l = vlan_ip.split('.')[:-1]
+        vlan_vm_ip_l.append(str(int(vlan_ip.split('.')[-1]) + 1))
+        vlan_vm_ip = '.'.join(vlan_vm_ip_l)
+
+        return [vlan_ip, vlan_vm_ip, vlan_gw]
+
     def set_hosted_engine_setup_environment(self):
-        pass
+        # set hostname
+        self.host.execute("hostnamectl set-hostname %s" %self.config_dict['vlan_he_fqdn'])
+
+        # set /etc/hosts
+        vlan_ips = self.get_vlan_ips()
+        vlan_list = [vlan_ips[0], self.config_dict['vlan_he_fqdn'], vlan_ips[1], self.config_dict['vlan_he_engine_vm_fqdn']]
+        self.host.execute("echo '{0}  {1}\n{2}  {3}' >> /etc/hosts".format(*(vlan_list)))
+
+        # set static network
+        vlan_dict = {'NM_CONTROLLED':'yes', 
+                     'BOOTPROTO'    :'static', 
+                     'IPADDR'       :vlan_ips[0], 
+                     'NETMASK'      :'255.255.255.0', 
+                     'GATEWAY'      :vlan_ips[2], 
+                     'DNS1'         :self.config_dict['vlan_he_private_dns']}
+        vlan_nic_name = self.host.execute("ip -f inet a s|grep '@'", raise_exception=False).stdout.split(':')[1].split('@')[0]
+        ifg = '/etc/sysconfig/network-scripts/ifcfg-'
+        ifg_bak_path = ifg + vlan_nic_name.strip() + '_bak'
+        ifg_path = ifg + vlan_nic_name.strip()
+        self.host.execute("mv %s %s" %(ifg_path, ifg_bak_path))
+        self.host.execute("sed '/BOOTPROTO=/d' {} > {}".format(ifg_bak_path, ifg_path))
+        cmd = '\n'.join("{}={}".format(k,v) for k, v in vlan_dict.items())
+        self.host.execute("echo '{}' >> {}".format(cmd, ifg_path))
+        self.host.execute("systemctl restart network")
+        time.sleep(70)
+        self.host.execute(" ip route add 10.0.0.0/8 via 10.73.131.254")
+
 
     ## Cases
     # tier1_0
@@ -774,7 +825,6 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.assert_text_in_element(self.VM_FQDN_VALIDATING_MSG, "Validating FQDN...")
             time.sleep(70)
             self.click(self.NEXT_BUTTON)
-
             # ENGINE STAGE
             self.input_text(self.ADMIN_PASS, self.config_dict['admin_pass'])
             self.click(self.NEXT_BUTTON)
@@ -817,4 +867,46 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     # tier2_7
     def node_zero_vlan_deploy_process(self):
-        pass
+        vlan_ips = self.get_vlan_ips()
+        def check_deploy():
+            # VM STAGE
+            self.click(self.HE_START)
+            time.sleep(60)
+            self.input_text(self.VM_FQDN, self.config_dict['vlan_he_engine_vm_fqdn'], 60)
+            self.click(self.NETWORK_DROPDOWN)
+            self.click(self.NETWORK_STATIC)
+            self.input_text(self.VM_IP, vlan_ips[1])
+            self.input_text(self.IP_PREFIX, '24')
+            self.input_text(self.GATEWAY_INPUT, vlan_ips[2])
+            self.input_text(self.DNS_SERVER, self.config_dict['vlan_he_private_dns'])
+            self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
+            self.assert_text_in_element(self.VM_FQDN_VALIDATING_MSG, "Validating FQDN...")
+            time.sleep(30)
+            self.click(self.VM_ADVANCED)
+            self.click(self.NETWORK_TEST_BTN)
+            self.click(self.NETWORK_TEST_NONE)
+            time.sleep(30)
+            self.click(self.NEXT_BUTTON)
+
+            # ENGINE STAGE
+            self.input_text(self.ADMIN_PASS, self.config_dict['admin_pass'])
+            self.click(self.NEXT_BUTTON)
+
+            # PREPARE VM
+            self.click(self.PREPARE_VM_BUTTON)
+            self.click(self.NEXT_BUTTON, 2200)
+
+            # STORAGE STAGE
+            self.input_text(
+                self.STORAGE_CONN,
+                self.config_dict['private_nfs_ip'] + ':' + self.config_dict['private_nfs_dir'])
+            self.click(self.NEXT_BUTTON)
+
+            # FINISH STAGE
+            self.click(self.FINISH_DEPLOYMENT)
+            self.click(self.CLOSE_BUTTON, 2000)
+            self.click(self.YES_BUTTON,60)
+
+        self.prepare_env('nfs', True)
+        time.sleep(15)
+        check_deploy()

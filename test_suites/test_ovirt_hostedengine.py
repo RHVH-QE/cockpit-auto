@@ -209,6 +209,6 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         :avocado: tags=he_tier
         """
         self.set_vlan_network()
-        # # 1. hostname  2. /etc/hosts  3. install appliance  4. add public route  5. clean private nfs storage
+        # # 1. hostname  2. /etc/hosts  3. install appliance 4. clean private nfs storage 5.set static nw
         self.set_hosted_engine_setup_environment()
         self.node_zero_vlan_deploy_process()
