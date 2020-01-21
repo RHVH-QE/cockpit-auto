@@ -481,7 +481,6 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.host.execute("nmcli con add type vlan con-name {0} ifname {1} dev {2} id 50".format(vlan_name, vlan_name
                 , pri_dev))
             time.sleep(5)
-        # self.host.execute(" ip route add 10.0.0.0/8 via 10.73.131.254")
     
     def get_vlan_ips(self):
         vlan_nic_name = self.host.execute("ip -f link a s|grep '@'", raise_exception=False).stdout.split(':')[1].split('@')[0]
@@ -524,7 +523,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.host.execute("echo '{}' >> {}".format(cmd, ifg_path))
         self.host.execute("echo '10.0.0.0/8 via 10.73.131.254 dev em1' >> /etc/sysconfig/network-scripts/route-em1")
         self.host.execute("systemctl restart network")
-
+        self.host.execute("echo 'nameserver {}' >> /etc/resolv.conf".format(vlan_dict['DNS1']))
 
     ## Cases
     # tier1_0
@@ -880,11 +879,14 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.input_text(self.DNS_SERVER, self.config_dict['vlan_he_private_dns'])
             self.input_text(self.ROOT_PASS, self.config_dict['he_vm_pass'])
             self.assert_text_in_element(self.VM_FQDN_VALIDATING_MSG, "Validating FQDN...")
-            time.sleep(30)
-            self.click(self.VM_ADVANCED)
-            self.click(self.NETWORK_TEST_BTN)
-            self.click(self.NETWORK_TEST_NONE)
-            time.sleep(30)
+            time.sleep(50)
+            try:
+                self.assert_element_invisible(self.VM_PAGE_ERR)
+            except Exception as e:
+                self.click(self.VM_ADVANCED)
+                self.click(self.NETWORK_TEST_BTN)
+                self.click(self.NETWORK_TEST_NONE)
+                time.sleep(15)
             self.click(self.NEXT_BUTTON)
 
             # ENGINE STAGE
@@ -904,7 +906,6 @@ class OvirtHostedEnginePage(SeleniumTest):
             # FINISH STAGE
             self.click(self.FINISH_DEPLOYMENT)
             self.click(self.CLOSE_BUTTON, 2000)
-            self.click(self.YES_BUTTON,60)
 
         self.prepare_env('nfs', True)
         time.sleep(15)

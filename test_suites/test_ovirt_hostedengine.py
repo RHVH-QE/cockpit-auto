@@ -206,9 +206,8 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-23823")
     def test_node_zero_vlan_deployment(self):
         """
-        :avocado: tags=he_tier
+        :avocado: tags=he_tier2
         """
         self.set_vlan_network()
-        # # 1. hostname  2. /etc/hosts  3. install appliance 4. clean private nfs storage 5.set static nw
         self.set_hosted_engine_setup_environment()
         self.node_zero_vlan_deploy_process()

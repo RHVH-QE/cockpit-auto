@@ -5,13 +5,14 @@
 rhvm_appliance_path: 'http://10.66.10.22:8090/rhevm-appliance/'
 
 # NFS
-nfs_ip: '10.66.9.57'
+nfs_ip: ''
 nfs_pass: ''
-nfs_dir: '/home/wangwei/nfs'
+nfs_dir: ''
 
+public_nfs_ip: '10.73.131.168'
 private_nfs_ip: '192.168.50.176'
 private_nfs_pass: 'redhat'
-prvate_nfs_dir: '/root/linda/nfs'
+private_nfs_dir: '/root/linda/nfs'
 
 #Subscription
 subscription_username: 'weiwang@redhat.com'
@@ -42,12 +43,8 @@ vlan_he_public_device: 'em1'
 vlan_he_private_device: 'em3'
 vlan_id: '50'
 vlan_he_public_ip: '10.73.131.63'
-#vlan_he_static_ip: '192.168.50.171'
-#vlan_he_static_netmask: '255.255.255.0'
-#vlan_he_static_gw: '192.168.50.1'
 vlan_he_private_dns: '192.168.50.104'
 vlan_he_engine_vm_fqdn: 'engine.redhat.com'
-#vlan_he_engine_private_ip: '192.168.50.172'
 
 # ENGINE VM
 he_vm_fqdn: 'rhevh-hostedengine-vm-05.lab.eng.pek2.redhat.com'
