@@ -5,16 +5,15 @@
 rhvm_appliance_path: 'http://10.66.10.22:8090/rhevm-appliance/'
 
 # NFS
-nfs_ip: ''
-nfs_pass: ''
-nfs_dir: ''
+nfs_ip: '10.73.131.168'
+nfs_pass: 'redaht'
+nfs_dir: '/root/linda/nfs'
 
-public_nfs_ip: '10.73.131.168'
 private_nfs_ip: '192.168.50.176'
 private_nfs_pass: 'redhat'
 private_nfs_dir: '/root/linda/nfs'
 
-#Subscription
+# Subscription
 subscription_username: 'weiwang@redhat.com'
 subscription_password: ''
 
@@ -40,11 +39,16 @@ root_passwd: 'redhat'
 # VLAN -- Machine: dell730-34
 vlan_he_fqdn: 'dell-per730-34.lab.eng.pek2.redhat.com'
 vlan_he_public_device: 'em1'
-vlan_he_private_device: 'em3'
+bv_he_private_device1: 'em3'
 vlan_id: '50'
 vlan_he_public_ip: '10.73.131.63'
 vlan_he_private_dns: '192.168.50.104'
 vlan_he_engine_vm_fqdn: 'engine.redhat.com'
+
+# VLAN_BOND -- Machine: dell740-16
+bv_he_fqdn: 'dell-per740-16.lab.eng.pek2.redhat.com'
+bv_he_private_device2: 'em4'
+bv_he_public_ip: '10.73.131.89'
 
 # ENGINE VM
 he_vm_fqdn: 'rhevh-hostedengine-vm-05.lab.eng.pek2.redhat.com'

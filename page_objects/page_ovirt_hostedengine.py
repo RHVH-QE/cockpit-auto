@@ -156,6 +156,8 @@ class OvirtHostedEnginePage(SeleniumTest):
             os.environ['HOST_STRING'] = self.config_dict['host_fc_string']
         if 'vlan' in case_name.split('_'):
             os.environ['HOST_STRING'] = self.config_dict['vlan_he_public_ip']
+        if 'bondvlan' in case_name.split('_'):
+            os.environ['HOST_STRING'] = self.config_dict['bv_he_public_ip']
         if 'port' in case_name.split('_'):
             os.environ['HOST_PORT'] = '9898'
         super(OvirtHostedEnginePage,self).setUp()
@@ -234,7 +236,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
         if storage_type == 'nfs':
             if is_vlan:
-                self.clean_nfs_storage(self.config_dict['public_nfs_ip'],
+                self.clean_nfs_storage(self.config_dict['nfs_ip'],
                                       self.config_dict['private_nfs_pass'],
                                       self.config_dict['private_nfs_dir'])
             else:
@@ -470,7 +472,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.host.execute("python /root/default_port.py", timeout=60)
     
     def set_vlan_network(self):
-        pub_dev, pri_dev = (self.config_dict['vlan_he_public_device'], self.config_dict['vlan_he_private_device'])
+        pub_dev, pri_dev = (self.config_dict['vlan_he_public_device'], self.config_dict['bv_he_private_device1'])
         self.host.execute(" nmcli con mod {} +connection.autoconnect yes".format(pub_dev))
         time.sleep(1)
         if self.host.execute("ip -f inet a s {}|grep inet".format(pri_dev), raise_exception=False).stdout == '':
@@ -480,6 +482,36 @@ class OvirtHostedEnginePage(SeleniumTest):
             vlan_name = ".".join([pri_dev,self.config_dict['vlan_id']])
             self.host.execute("nmcli con add type vlan con-name {0} ifname {1} dev {2} id 50".format(vlan_name, vlan_name
                 , pri_dev))
+            time.sleep(5)
+
+    def set_bv_network(self):
+        pub_dev, pri_dev1, pri_dev2 = (
+            self.config_dict['vlan_he_public_device'], 
+            self.config_dict['bv_he_private_device1'], 
+            self.config_dict['bv_he_private_device2'])
+
+        self.host.execute(" nmcli con mod {} +connection.autoconnect yes".format(pub_dev))
+        time.sleep(1)
+
+        if self.host.execute("ip -f inet a s|egrep '({0}|{1})'".format(pri_dev1, pri_dev2), raise_exception=False).stdout == '':
+            self.host.execute("ifup %s" % pri_dev1)
+            time.sleep(5)
+            self.host.execute("ifup %s" % pri_dev2)
+            time.sleep(5)
+
+        cmd = "ip -f inet a s {}|grep inet"
+        if self.host.execute(cmd.format(pri_dev1), raise_exception=False).stdout != '' and self.host.execute(cmd.format(pri_dev2), raise_exception=False).stdout != '':
+            self.host.execute("nmcli con add type bond con-name bond2 ifname bond2 mode active-backup")
+            self.host.execute("nmcli con add type bond-slave ifname {} master bond2".format(pri_dev1))
+            self.host.execute("nmcli con add type bond-slave ifname {} master bond2".format(pri_dev2))
+            self.host.execute("nmcli con up bond-slave-{}".format(pri_dev1))
+            self.host.execute("nmcli con up bond-slave-{}".format(pri_dev2))
+            self.host.execute("nmcli con up bond2")
+            time.sleep(50)
+
+        if self.host.execute("ip -f inet a s bond2|grep inet", raise_exception=False).stdout != '':
+            bv_name = ".".join(["bond2",self.config_dict['vlan_id']])
+            self.host.execute("nmcli con add type vlan con-name {0} ifname {1} dev bond2 id 50".format(bv_name, bv_name))
             time.sleep(5)
     
     def get_vlan_ips(self):
@@ -497,13 +529,13 @@ class OvirtHostedEnginePage(SeleniumTest):
 
         return [vlan_ip, vlan_vm_ip, vlan_gw]
 
-    def set_hosted_engine_setup_environment(self):
+    def set_hosted_engine_setup_environment(self, host_fqdn):
         # set hostname
-        self.host.execute("hostnamectl set-hostname %s" %self.config_dict['vlan_he_fqdn'])
+        self.host.execute("hostnamectl set-hostname %s" %host_fqdn)
 
         # set /etc/hosts
         vlan_ips = self.get_vlan_ips()
-        vlan_list = [vlan_ips[0], self.config_dict['vlan_he_fqdn'], vlan_ips[1], self.config_dict['vlan_he_engine_vm_fqdn']]
+        vlan_list = [vlan_ips[0], host_fqdn, vlan_ips[1], self.config_dict['vlan_he_engine_vm_fqdn']]
         self.host.execute("echo '{0}  {1}\n{2}  {3}' >> /etc/hosts".format(*(vlan_list)))
 
         # set static network
@@ -522,7 +554,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         cmd = '\n'.join("{}={}".format(k,v) for k, v in vlan_dict.items())
         self.host.execute("echo '{}' >> {}".format(cmd, ifg_path))
         self.host.execute("echo '10.0.0.0/8 via 10.73.131.254 dev em1' >> /etc/sysconfig/network-scripts/route-em1")
-        self.host.execute("systemctl restart network")
+        self.host.execute("systemctl restart network", timeout=100)
         self.host.execute("echo 'nameserver {}' >> /etc/resolv.conf".format(vlan_dict['DNS1']))
 
     ## Cases
@@ -863,7 +895,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             else:
                 return False
 
-    # tier2_7
+    # tier2_7|8
     def node_zero_vlan_deploy_process(self):
         vlan_ips = self.get_vlan_ips()
         def check_deploy():

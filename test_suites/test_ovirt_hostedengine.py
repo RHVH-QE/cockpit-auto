@@ -209,5 +209,14 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         :avocado: tags=he_tier2
         """
         self.set_vlan_network()
-        self.set_hosted_engine_setup_environment()
+        self.set_hosted_engine_setup_environment(self.config_dict['vlan_he_fqdn'])
+        self.node_zero_vlan_deploy_process()
+
+    @add_case_id("RHEVM-23825")
+    def test_node_zero_bondvlan_deployment(self):
+        """
+        :avocado: tags=he_tier2
+        """
+        # self.set_bv_network()
+        # self.set_hosted_engine_setup_environment(self.config_dict['bv_he_fqdn'])
         self.node_zero_vlan_deploy_process()
