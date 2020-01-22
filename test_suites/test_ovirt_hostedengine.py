@@ -217,6 +217,6 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier2
         """
-        # self.set_bv_network()
-        # self.set_hosted_engine_setup_environment(self.config_dict['bv_he_fqdn'])
+        self.set_bv_network()
+        self.set_hosted_engine_setup_environment(self.config_dict['bv_he_fqdn'])
         self.node_zero_vlan_deploy_process()
