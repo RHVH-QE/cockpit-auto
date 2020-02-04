@@ -118,7 +118,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHVEM-23262")
     def test_restart_node(self):
         """
-        :avocado: tags=common_tier2
+        :avocado: tags=unfinished
         """
         self.restart_node()
     
@@ -150,4 +150,44 @@ class TestCockpitCommon(CommonPages):
         """
         self.modify_nfs_storage()
     
+    @add_case_id("RHVEM-23268")
+    def test_check_system_logs(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.check_the_logs()
+    
+    @add_case_id("RHVEM-23286")
+    def test_create_new_account(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.create_new_account()
+    
+    @add_case_id("RHVEM-23289")
+    def test_check_terminal(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.check_terminal()
 
+    # @add_case_id("RHVEM-23317")
+    # def test_go_to_network_page(self):
+    #     """
+    #     :avocado: tags=common_tier2a
+    #     """
+    #     self.go_to_network_page()
+    
+    # @add_case_id("RHVEM-23318")
+    # def test_go_to_logs_page(self):
+    #     """
+    #     :avocado: tags=common_tier2a
+    #     """
+    #     self.go_to_logs_page()
+    
+    # @add_case_id("RHVEM-23319")
+    # def test_go_to_storage_page(self):
+    #     """
+    #     :avocado: tags=common_tier2a
+    #     """
+    #     self.go_to_storage_page()

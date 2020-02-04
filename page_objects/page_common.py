@@ -131,6 +131,40 @@ class CommonPages(SeleniumTest):
     KD_DISABLE_BUTTON="//*[@id='service-file-action']/button[1]"
     KD_ENABLE_TEXT="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[3]/td[2]"
 
+    #check system logs
+    LOGS_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[2]/td[2]/a"
+    LOGS_FRAME_NAME="/system/logs"
+    LOGS_DURATION_BUTTON="//*[@id='journal-current-day-menu']/button"
+    RECENT_LOGS="//*[@id='journal-current-day-menu']/ul/li[1]/a"
+    CURRENT_BOOT="//*[@id='journal-current-day-menu']/ul/li[2]/a"
+    LAST_ONE_DAY="//*[@id='journal-current-day-menu']/ul/li[4]/a"
+    LAST_SEVEN_DAYS="//*[@id='journal-current-day-menu']/ul/li[5]/a"
+
+    #create new account
+    ACCOUNT_LINK="//*[@id='sidebar-menu']/li[6]/a"
+    ACCOUNT_FRAME_NAME="/users"
+    CREATE_NEW_ACCOUNT_BUTTON="//*[@id='accounts-create']"
+    FULL_NAME_TEXT="//*[@id='accounts-create-real-name']"
+    PASSWORD_TEXT="//*[@id='accounts-create-pw1']"
+    CONFIRM_TEXT="//*[@id='accounts-create-pw2']"
+    CREATE_BUTTON="//*[@id='accounts-create-create']"
+    ACCOUNT_INFO="//*[@id='accounts-list']/div/div[3]"
+
+    ROOT_BUTTON="//*[@id='navbar-dropdown']"
+    LOGOUT_BUTTON="//*[@id='go-logout']"
+    LOGIN_USERNAME_TEXT="//*[@id='login-user-input']"
+    LOGIN_PWD_TEXT="//*[@id='login-password-input']"
+    LOGIN_BUTTON="//*[@id='login-button']"
+
+    #terminal function
+    TERMINAL_LINK="//*[@id='sidebar-tools']/li[5]/a"
+    TERMINAL_FRAME_NAME="/system/terminal"
+    CONMMAND_LINE="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[7]"
+
+    SSH_HOST_KEY_LINK="//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/a"
+    SSH_HOST_KEY_COTENT="//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/div/div/div/div/div[2]/div"
+
+
     def setUp(self):
         case_name = self._testMethodName
         # config = self.get_data('cockpit_common.yml')
@@ -453,7 +487,94 @@ class CommonPages(SeleniumTest):
         time.sleep(2)
         self.assert_element_visible(self.NFS_SIZE_PROGRESS)
         self.click(self.DELETE_NFS_SERVER_BUTTON)
+    
+    def check_the_logs(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.LOGS_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.switch_to_frame(self.LOGS_FRAME_NAME)
 
+        self.click(self.LOGS_DURATION_BUTTON)
+        time.sleep(1)
+        self.click(self.RECENT_LOGS)
+        time.sleep(3)
+        self.click(self.LOGS_DURATION_BUTTON)
+        time.sleep(1)
+        self.click(self.CURRENT_BOOT)
+        time.sleep(3)
+        self.click(self.LOGS_DURATION_BUTTON)
+        time.sleep(1)
+        self.click(self.LAST_ONE_DAY)
+        time.sleep(3)
+        self.click(self.LOGS_DURATION_BUTTON)
+        time.sleep(1)
+        self.click(self.LAST_SEVEN_DAYS)
+        time.sleep(3)
+
+    def create_new_account(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.ACCOUNT_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.ACCOUNT_FRAME_NAME)
+
+        self.click(self.CREATE_NEW_ACCOUNT_BUTTON)
+        time.sleep(5)
+        self.input_text(self.FULL_NAME_TEXT,"user_a")
+        self.input_text(self.PASSWORD_TEXT,"shleishlei123")
+        self.input_text(self.CONFIRM_TEXT,"shleishlei123")
+        self.click(self.CREATE_BUTTON)
+        time.sleep(2)
+        self.assert_element_visible(self.ACCOUNT_INFO)
+
+        self.switch_to_default_content()
+        self.click(self.ROOT_BUTTON)
+        self.click(self.LOGOUT_BUTTON)
+        time.sleep(1)
+        self.input_text(self.LOGIN_USERNAME_TEXT,"user_a")
+        self.input_text(self.LOGIN_PWD_TEXT,"shleishlei123")
+        self.click(self.LOGIN_BUTTON)
+        time.sleep(3)
+        self.assert_frame_available("/users")
+    
+
+    def check_terminal(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.TERMINAL_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(3)
+        self.click(self.CONMMAND_LINE)
+        self.input_text(self.CONMMAND_LINE," nodectl check\r\n",False)
+        time.sleep(5)
+        self.assert_text_in_element("//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[8]","Status")
+
+    def go_to_network_page(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(3)
+        self.assert_frame_available("/network")
+    
+    def go_to_logs_page(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.LOGS_LINK)
+        self.switch_to_default_content()
+        time.sleep(3)
+        self.assert_frame_available(self.LOGS_FRAME_NAME)
+    
+    def go_to_storage_page(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.STORAGE_LINK)
+        self.switch_to_default_content()
+        time.sleep(3)
+        self.assert_frame_available(self.STORAGE_FRAME_NAME)
 
 
 
