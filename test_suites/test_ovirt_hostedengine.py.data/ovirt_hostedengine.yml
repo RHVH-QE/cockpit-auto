@@ -50,6 +50,9 @@ bv_he_fqdn: 'dell-per740-16.lab.eng.pek2.redhat.com'
 bv_he_private_device2: 'em4'
 bv_he_public_ip: '10.73.131.89'
 
+# PURE IPV6 -- Machine: dell730-34
+#ipv6_he_ip: ''
+
 # ENGINE VM
 he_vm_fqdn: 'rhevh-hostedengine-vm-05.lab.eng.pek2.redhat.com'
 he_vm_mac: '52:54:00:5d:21:64'

@@ -220,3 +220,11 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         self.set_bv_network()
         self.set_hosted_engine_setup_environment(self.config_dict['bv_he_fqdn'])
         self.node_zero_vlan_deploy_process()
+
+    # @add_case_id("RHEVM-26043")
+    # def test_node_zero_ipv6_deployment(self):
+    #     """
+    #     :avocado: tags=he_tier
+    #     """
+    #     self.set_hosted_engine_ipv6_environment()
+        # self.node_zero_ipv6_deploy_process()

@@ -158,6 +158,8 @@ class OvirtHostedEnginePage(SeleniumTest):
             os.environ['HOST_STRING'] = self.config_dict['vlan_he_public_ip']
         if 'bondvlan' in case_name.split('_'):
             os.environ['HOST_STRING'] = self.config_dict['bv_he_public_ip']
+        if 'ipv6' in case_name.split('_'):
+            os.environ['HOST_STRING'] = self.config_dict['ipv6_he_ip']
         if 'port' in case_name.split('_'):
             os.environ['HOST_PORT'] = '9898'
         super(OvirtHostedEnginePage,self).setUp()
@@ -557,6 +559,11 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.host.execute("systemctl restart network", timeout=100)
         self.host.execute("echo 'nameserver {}' >> /etc/resolv.conf".format(vlan_dict['DNS1']))
 
+    def set_hosted_engine_ipv6_environment(self):
+        pass
+
+    
+
     ## Cases
     # tier1_0
     def errors_warnings_vm_setting(self):           
@@ -942,3 +949,6 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.prepare_env('nfs', True)
         time.sleep(15)
         check_deploy()
+
+    def node_zero_ipv6_deploy_process(self):
+        pass
