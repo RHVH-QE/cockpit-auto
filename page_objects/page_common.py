@@ -19,7 +19,8 @@ class CommonPages(SeleniumTest):
     :avocado: disable
     """
 
-    R_MACHINE_ADDR="10.66.9.205"
+    #R_MACHINE_ADDR="10.66.9.205"
+    R_MACHINE_ADDR="10.73.73.91"
     WRONG_ADDR="1.2.3.4"
     R_MACHINE_USER="root"
     R_MACHINE_PWD="redhat"
