@@ -99,20 +99,6 @@ class OvirtDashboardPage(SeleniumTest):
     def get_layer_on_node_info(self, layer_name):
         return self.get_text(self.NODE_INFO_LAYER % layer_name)
 
-    def open_rollback_window(self):
-        self.click(self.ROLLBACK_BUTTON_ON_HOME)
-
-    def get_rollback_attr_on_layer(self, layer_name):
-        return self.get_attribute(self.ROLLBACK_BUTTON_ON_LAYERS % layer_name, 'class')
-
-    def open_network_info_link(self):
-        self.click(self.NETWORK_INFO_LINK)
-        time.sleep(self.SLEEP_TIME)
-
-    def open_system_logs_link(self):
-        self.click(self.SYSTEM_LOGS_LINK)
-        time.sleep(self.SLEEP_TIME)
-
     def open_storage_link(self):
         self.click(self.STORAGE_LINK)
         time.sleep(self.SLEEP_TIME)
@@ -158,3 +144,17 @@ class OvirtDashboardPage(SeleniumTest):
         else:
             status = nodectl_check_value["status"]
         return self.gen_icon_from_status(status)
+
+    def open_rollback_window(self):
+        self.click(self.ROLLBACK_BUTTON_ON_HOME)
+
+    def get_rollback_attr_on_layer(self, layer_name):
+        return self.get_attribute(self.ROLLBACK_BUTTON_ON_LAYERS % layer_name, 'class')
+
+    def open_network_info_link(self):
+        self.click(self.NETWORK_INFO_LINK)
+        time.sleep(self.SLEEP_TIME)
+
+    def open_system_logs_link(self):
+        self.click(self.SYSTEM_LOGS_LINK)
+        time.sleep(self.SLEEP_TIME)
