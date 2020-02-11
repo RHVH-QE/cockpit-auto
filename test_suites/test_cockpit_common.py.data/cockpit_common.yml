@@ -4,7 +4,7 @@
 #remote host
 host_ip: '10.66.8.157'
 host_user: 'root'
-host_pwd:'redhat'
+host_pwd: 'redhat'
 
 # NFS
 nfs_ip: '10.66.10.132'

@@ -10,8 +10,8 @@ from seleniumlib import SeleniumTest
 from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
 from utils.rhvmapi import RhevmAction
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+# from selenium import webdriver
+# from selenium.webdriver.common.keys import Keys
 
 
 class CommonPages(SeleniumTest):
@@ -20,18 +20,18 @@ class CommonPages(SeleniumTest):
     """
 
     #R_MACHINE_ADDR="10.66.9.205"
-    R_MACHINE_ADDR="10.73.73.91"
-    WRONG_ADDR="1.2.3.4"
-    R_MACHINE_USER="root"
-    R_MACHINE_PWD="redhat"
+    # R_MACHINE_ADDR="10.73.73.91"
+    # WRONG_ADDR="1.2.3.4"
+    # R_MACHINE_USER="root"
+    # R_MACHINE_PWD="redhat"
 
-    RHSM_CUSTOM_URL="subscription.rhsm.stage.redhat.com"
-    RHSM_USER="shlei2"
-    RHSM_PWD="lsystc571998"
+    # RHSM_CUSTOM_URL="subscription.rhsm.stage.redhat.com"
+    # RHSM_USER="shlei2"
+    # RHSM_PWD="lsystc571998"
 
-    NFS_SERVER_ADDR="10.66.10.132"
-    SERVER_PATH="/home/shiyilei/nfs"
-    MOUNT_POINT="/root/mnt"
+    # NFS_SERVER_ADDR="10.66.10.132"
+    # SERVER_PATH="/home/shiyilei/nfs"
+    # MOUNT_POINT="/root/mnt"
 
     LOGIN_ERROR_MESSAGE="//*[@id='login-error-message']"
 
@@ -186,8 +186,8 @@ class CommonPages(SeleniumTest):
 
     def setUp(self):
         case_name = self._testMethodName
-        # config = self.get_data('cockpit_common.yml')
-        # self.config_dict = yaml.load(open(config))
+        config = self.get_data('cockpit_common.yml')
+        self.config_dict = yaml.load(open(config))
         
         if 'firefox' in case_name.split('_'):
             os.environ['BROWSER']='firefox'
@@ -196,7 +196,7 @@ class CommonPages(SeleniumTest):
         if 'login' in case_name.split('_'):
             os.environ['USERNAME']='invalid_user'
             os.environ['PASSWD']='invalid_pwd'
-        super(CommonPages, self).setUp()
+        super(CommonPages,self).setUp()
 
     def open_page(self):
 
@@ -208,7 +208,7 @@ class CommonPages(SeleniumTest):
     
     def check_firefox_login(self):
         self.assertEqual(self.get_text(self.LOGIN_ERROR_MESSAGE),"Wrong user name or password")
-
+        time.sleep(3)
         config_dict = yaml.load(open('./config.yml'))
         os.environ['USERNAME'] = config_dict['host_user']
         os.environ['PASSWD'] = config_dict['host_pass']
@@ -220,11 +220,9 @@ class CommonPages(SeleniumTest):
         host = Machine(host_string, username, passwd)
 
         self.login(username, passwd)
-        # self.open_page()
-
         cmd = 'systemctl status cockpit'
         output = host.execute(cmd).stdout
-        result = re.search('active (running)', output)
+        result = re.search('active', output)
         self.assertNotEqual(result, None)
         
     def check_chrome_login(self):
