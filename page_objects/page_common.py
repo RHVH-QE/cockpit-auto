@@ -177,6 +177,11 @@ class CommonPages(SeleniumTest):
     SELINUX_FRAME="/selinux/setroubleshoot"
     SWITCH_BUTTON="//*[@id='app']/div/div/label/label/span"
 
+    #check udisks
+    SERVICE_LINK="//*[@id='sidebar-menu']/li[7]/a"
+    FILTER_INPUT_TEXT="//*[@id='services-text-filter']"
+    UDISKS_STATUS_TEXT="//*[@id='services-list']/div/table/tbody/tr/td[2]"
+
 
 
     def setUp(self):
@@ -635,6 +640,74 @@ class CommonPages(SeleniumTest):
         cmd3="setenforce 0"
         output3 = self.host.execute(cmd3).stdout
         time.sleep(5)
+
+    def check_udisks_service(self):
+        cmd = 'rpm -qa|grep udisks2'
+        output = self.host.execute(cmd).stdout
+        result = re.search("udisks2",output)
+        self.assertNotEqual(result, None)
+
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.SERVICE_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.SERVICE_FRAME_NAME)
+        self.input_text(self.FILTER_INPUT_TEXT,"udisks")
+        time.sleep(3)
+        self.assert_text_in_element(self.UDISKS_STATUS_TEXT,"active (running)")
+
+    def show_information_in_terminal(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.TERMINAL_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(3)
+        self.click(self.CONMMAND_LINE)
+        self.input_text(self.CONMMAND_LINE," nodectl info\r\n",False)
+        time.sleep(5)
+
+        cmd = 'nodectl info'
+        output = self.host.execute(cmd).stdout
+        result = re.search("layers",output)
+        self.assertNotEqual(result, None)
+        result = re.search("bootloader",output)
+        self.assertNotEqual(result, None)
+        result = re.search("current_layer",output)
+
+    
+    def show_system_status_in_terminal(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.TERMINAL_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(3)
+        self.click(self.CONMMAND_LINE)
+        self.input_text(self.CONMMAND_LINE," nodectl check\r\n",False)
+        time.sleep(5)
+
+    def check_debug_command_in_terminal(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.TERMINAL_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(3)
+        self.click(self.CONMMAND_LINE)
+        self.input_text(self.CONMMAND_LINE," nodectl check --debug\r\n",False)
+        time.sleep(5)
+
+    
+
 
 
 

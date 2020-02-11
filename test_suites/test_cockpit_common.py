@@ -65,6 +65,14 @@ class TestCockpitCommon(CommonPages):
         """
         self.system__dynamic_status()
 
+    @add_case_id("RHEVM-25363")
+    def test_udisks_service(self):
+        """
+        :avocado: tags=common_tier1
+        """
+        self.check_udisks_service()
+    
+
 
     @add_case_id("RHEVM-23243")
     def test_add_remote_host_chrome(self):
@@ -205,5 +213,27 @@ class TestCockpitCommon(CommonPages):
         :avocado: tags=common_tier2
         """
         self.check_selinux_policy()
+    
+    @add_case_id("RHVEM-23324")
+    def test_show_image_information_in_terminal(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.show_information_in_terminal()
+    
+    @add_case_id("RHVEM-23327")
+    def test_show_system_status_in_terminal(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.show_system_status_in_terminal()
+    
+    @add_case_id("RHVEM-23328")
+    def test_check_debug_command_in_terminal(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.check_debug_command_in_terminal()
+
     
     
