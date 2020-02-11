@@ -165,6 +165,19 @@ class CommonPages(SeleniumTest):
     SSH_HOST_KEY_LINK="//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/a"
     SSH_HOST_KEY_COTENT="//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/div/div/div/div/div[2]/div"
 
+    #check diagnostic report
+    DIAGNOSTIC_REPORT_LINK="//*[@id='sidebar-tools']/li[1]/a"
+    DIAGNOSTIC_REPORT_FRAME="/sosreport"
+    CREATE_REPORT_BUTTON="/html/body/div[1]/button"
+    REPORT_DIALOG="//*[@id='sos']/div"
+    REPORT_DOWNLOAD_BUTTON="//*[@id='sos-download']/center/button"
+    
+    #check_selinux_policy
+    SELINUX_LINK="//*[@id='sidebar-tools']/li[3]/a"
+    SELINUX_FRAME="/selinux/setroubleshoot"
+    SWITCH_BUTTON="//*[@id='app']/div/div/label/label/span"
+
+
 
     def setUp(self):
         case_name = self._testMethodName
@@ -577,5 +590,54 @@ class CommonPages(SeleniumTest):
         time.sleep(3)
         self.assert_frame_available(self.STORAGE_FRAME_NAME)
 
+    def create_dignostic_report(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.DIAGNOSTIC_REPORT_LINK)
+        time.sleep(1)
+
+        self.switch_to_frame(self.DIAGNOSTIC_REPORT_FRAME)
+        time.sleep(3)
+        self.click(self.CREATE_REPORT_BUTTON)
+        self.assert_element_visible(self.REPORT_DIALOG)
+        time.sleep(300)
+        self.assert_element_visible(self.REPORT_DOWNLOAD_BUTTON)
+    
+    def check_selinux_policy(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.SELINUX_LINK)
+        time.sleep(1)
+
+        self.switch_to_frame(self.SELINUX_FRAME)
+
+        cmd = 'getenforce'
+        output = self.host.execute(cmd).stdout
+        result = re.match("Enforcing",output)
+        self.assertNotEqual(result, None)
+
+        time.sleep(3)
+        self.click(self.SWITCH_BUTTON)
+        time.sleep(5)
+
+        output = self.host.execute(cmd).stdout
+        result = re.match("Permissive",output)
+        self.assertNotEqual(result, None)
+
+        cmd2="setenforce 1"
+        output2 = self.host.execute(cmd2).stdout
+        time.sleep(5)
+
+        cmd3="setenforce 0"
+        output3 = self.host.execute(cmd3).stdout
+        time.sleep(5)
+
+
+
+        
 
 

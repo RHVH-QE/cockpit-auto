@@ -191,3 +191,19 @@ class TestCockpitCommon(CommonPages):
     #     :avocado: tags=common_tier2a
     #     """
     #     self.go_to_storage_page()
+
+    @add_case_id("RHVEM-23297")
+    def test_create_diagnostic_report(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.create_dignostic_report()
+    
+    @add_case_id("RHVEM-23300")
+    def test_check_selinux_policy(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.check_selinux_policy()
+    
+    
