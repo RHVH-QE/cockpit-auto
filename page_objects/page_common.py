@@ -227,15 +227,17 @@ class CommonPages(SeleniumTest):
         
     def check_chrome_login(self):
         self.check_firefox_login()
-
+        
     def login_remote_machine(self):
-        time.sleep(2)
+        time.sleep(5)
         self.click(self.OTHER_OPTION)
         self.input_text(self.SERVER_FIELD,self.R_MACHINE_ADDR)
         self.login(self.R_MACHINE_USER,self.R_MACHINE_PWD)
         time.sleep(2)
-        self.assert_frame_available("/ovirt-dashboard")
-    
+        actual_s = self.get_current_url().split('=')[-1]
+        expect_s = self.R_MACHINE_ADDR + '/ovirt-dashboard'
+        self.assertEqual(actual_s,expect_s)
+
     def login_wrong_remote_machine(self):
         time.sleep(2)
         self.click(self.OTHER_OPTION)
