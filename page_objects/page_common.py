@@ -20,18 +20,18 @@ class CommonPages(SeleniumTest):
     """
 
     #R_MACHINE_ADDR="10.66.9.205"
-    # R_MACHINE_ADDR="10.73.73.91"
-    # WRONG_ADDR="1.2.3.4"
-    # R_MACHINE_USER="root"
-    # R_MACHINE_PWD="redhat"
+    R_MACHINE_ADDR="10.73.73.91"
+    WRONG_ADDR="1.2.3.4"
+    R_MACHINE_USER="root"
+    R_MACHINE_PWD="redhat"
 
-    # RHSM_CUSTOM_URL="subscription.rhsm.stage.redhat.com"
-    # RHSM_USER="shlei2"
-    # RHSM_PWD="lsystc571998"
+    RHSM_CUSTOM_URL="subscription.rhsm.stage.redhat.com"
+    RHSM_USER="shlei2"
+    RHSM_PWD="lsystc571998"
 
-    # NFS_SERVER_ADDR="10.66.10.132"
-    # SERVER_PATH="/home/shiyilei/nfs"
-    # MOUNT_POINT="/root/mnt"
+    NFS_SERVER_ADDR="10.66.10.132"
+    SERVER_PATH="/home/shiyilei/nfs"
+    MOUNT_POINT="/root/mnt"
 
     LOGIN_ERROR_MESSAGE="//*[@id='login-error-message']"
 
