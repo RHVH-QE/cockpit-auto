@@ -25,9 +25,9 @@ class CommonPages(SeleniumTest):
     R_MACHINE_USER="root"
     R_MACHINE_PWD="redhat"
 
-    RHSM_CUSTOM_URL="subscription.rhsm.stage.redhat.com"
-    RHSM_USER="shlei2"
-    RHSM_PWD="lsystc571998"
+    # RHSM_CUSTOM_URL="subscription.rhsm.stage.redhat.com"
+    # RHSM_USER="shlei2"
+    # RHSM_PWD="lsystc571998"
 
     NFS_SERVER_ADDR="10.66.10.132"
     SERVER_PATH="/home/shiyilei/nfs"
@@ -40,6 +40,7 @@ class CommonPages(SeleniumTest):
 
     SLEEP_TIME = 5
     OVIRT_DASHBOARD_FRAME_NAME = "/dashboard"
+    LOCALHOST_LINK = "//*[@id='host-nav-link']/span[1]"
     DASHBOARD_LINK = "//*[@id='main-navbar']/li[3]/a/span[1]"
     OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
 
@@ -57,7 +58,7 @@ class CommonPages(SeleniumTest):
     DELETE_SERVER="//*[@id='dashboard-hosts']/div[2]/a[1]/button[1]"
 
     #subscription
-    NETWORK_INFO_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
+    #NETWORK_INFO_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
     SUBSCRIPTION_LINK="//*[@id='sidebar-tools']/li[4]/a"
     SUBSCRIPTION_FRAME_NAME="/subscriptions"
     REGIST_BUTTON="//*[@id='app']/div/div/button"
@@ -67,6 +68,11 @@ class CommonPages(SeleniumTest):
     SUBSCRIPTION_USER_TEXT="//*[@id='subscription-register-username']"
     SUBSCRIPTION_PWD_TEXT="//*[@id='subscription-register-password']"
     REGIST_COMMIT_BUTTON="//*[@id='cockpit_modal_dialog']/div/div[2]/div/div/div[3]/button[2]"
+    DETAIL_BUTTON = "//*[@id='app']/div/table/tbody/tr[1]/td/i"
+    DETALI_PRODUCT_NAME = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[1]/td[2]/span"
+    DETAIL_PRODUCT_ID = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[2]/td[2]/span"
+    DETAIL_PRODUCT_VERSION = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[3]/td[2]/span"
+    DETAIL_PRODUCT_STATUS = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[5]/td[2]/span"
 
     #add nfs
     STORAGE_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[3]/td[2]/a"
@@ -248,7 +254,6 @@ class CommonPages(SeleniumTest):
 
         
     def add_remote_host(self):
-
         self.click(self.DASHBOARD_LINK)
         time.sleep(1)
         self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
@@ -281,31 +286,37 @@ class CommonPages(SeleniumTest):
         self.assert_element_invisible("//*[@id='dashboard-hosts']/div[2]/a[2]")
     
     def subscription_to_rhsm(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.NETWORK_INFO_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.SUBSCRIPTION_LINK)
-        time.sleep(1)
+        time.sleep(10)
         self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
+        time.sleep(2)
         self.click(self.REGIST_BUTTON)
-
-        self.click(self.CHOOSE_URL_BUTTON)
-        self.click(self.CUSTOM_URL_BUTTON)
-        time.sleep(1)
-        self.input_text(self.CUSTOM_URL_TEXT,self.RHSM_CUSTOM_URL)
-        self.input_text(self.SUBSCRIPTION_USER_TEXT,self.RHSM_USER)
-        self.input_text(self.SUBSCRIPTION_PWD_TEXT,self.RHSM_PWD)
+        self.input_text(self.SUBSCRIPTION_USER_TEXT, self.config_dict['subscription_username'])
+        self.input_text(self.SUBSCRIPTION_PWD_TEXT, self.config_dict['subscription_password'])
         time.sleep(1)
         self.click(self.REGIST_COMMIT_BUTTON)
-        time.sleep(20)
+        time.sleep(60)
         self.refresh()
         time.sleep(10)
         self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
-        self.click("//*[@id='app']/div/table/tbody/tr[1]/th")
-        self.assert_text_in_element("//*[@id='app']/div/div/label","Status: Current")
+        self.assert_text_in_element("//*[@id='app']/div/div/label", "Status: Current")
+        self.click(self.DETAIL_BUTTON)
+        time.sleep(2)
+        self.assert_text_in_element(self.DETALI_PRODUCT_NAME, "Red Hat Virtualization Host")
+        self.assert_text_in_element(self.DETAIL_PRODUCT_ID,"328")
+        self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4.3")
+        self.assert_text_in_element(self.DETAIL_PRODUCT_STATUS, "Subscribed")
 
-        time.sleep(5)
+    def check_packages_installation(self):
+        self.host.execute("subscription-manager repos --enable=%s" %self.config_dict['subscription_repos'])
+        sub_pkgs = self.config_dict['subscription_packages']
+        for pkg in sub_pkgs[:-1]:
+            ret = self.host.execute("yum install -y %s" % pkg, timeout=200)
+            self.assertTrue('Complete!' in ret.stdout)
+        self.assertTrue('rhvm-appliance' in self.host.execute("yum search %s" %sub_pkgs[-1]))
+
 
     def add_nfs_storage(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)

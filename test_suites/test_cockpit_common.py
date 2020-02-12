@@ -47,9 +47,10 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23290")
     def test_suscription(self):
         """
-        :avocado: tags=unfinished
+        :avocado: tags=common_tier1
         """
         self.subscription_to_rhsm()
+        self.check_packages_installation()
     
     @add_case_id("RHEVM-24922")
     def test_add_nfs_storage(self):
