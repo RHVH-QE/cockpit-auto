@@ -47,10 +47,10 @@ class CommonPages(SeleniumTest):
     INPUT_REMOTE_USER="//*[@id='login-custom-user']"
     INPUT_REMOTE_PASSWORD="//*[@id='login-custom-password']"
     SET_UP_SERVER="//*[@id='dashboard_setup_server_dialog']/div/div/div[3]/button[2]"
-
     ADD_SERVER_BUTTON="//*[@id='dashboard-add']"
     INPUT_MACHINE_ADDRESS="//*[@id='add-machine-address']"
     ADD_BUTTON="//*[@id='dashboard_setup_server_dialog']/div/div/div[3]/button[2]"
+    ADD_UNKNOWN_HOST="//*[@id='add-unknown-host']"
     CONNECT_BUTTON="//*[@id='dashboard_setup_server_dialog']/div/div/div[3]/button[2]"
 
     EDITE_SERVER="//*[@id='dashboard-enable-edit']"
@@ -254,13 +254,18 @@ class CommonPages(SeleniumTest):
         self.click(self.ADD_SERVER_BUTTON)
         self.input_text(self.INPUT_MACHINE_ADDRESS,self.R_MACHINE_ADDR)
         self.click(self.ADD_BUTTON)
-        self.click(self.CONNECT_BUTTON)
-        self.input_text(self.INPUT_REMOTE_USER,self.R_MACHINE_USER)
-        self.input_text(self.INPUT_REMOTE_PASSWORD,self.R_MACHINE_PWD)
-        self.click(self.SET_UP_SERVER)
-        self.assert_element_visible("//*[@id='dashboard-hosts']/div[2]/a[2]")
 
-    
+        try:
+            self.wait_visible(self.ADD_UNKNOWN_HOST)
+            self.click(self.CONNECT_BUTTON)
+            self.input_text(self.INPUT_REMOTE_USER,self.R_MACHINE_USER)
+            self.input_text(self.INPUT_REMOTE_PASSWORD,self.R_MACHINE_PWD)
+            self.click(self.SET_UP_SERVER)
+            self.assert_element_visible("//*[@id='dashboard-hosts']/div[2]/a[2]")
+        except:
+            self.input_text(self.INPUT_REMOTE_PASSWORD,self.R_MACHINE_PWD)
+            self.click(self.SET_UP_SERVER)
+            self.assert_element_visible("//*[@id='dashboard-hosts']/div[2]/a[2]")
 
     def delete_remote_host(self):
         self.click(self.DASHBOARD_LINK)
