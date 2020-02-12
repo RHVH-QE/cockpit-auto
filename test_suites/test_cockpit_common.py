@@ -19,7 +19,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23251")
     def test_chrome_login(self):
         """
-        :avocado: tags=common_tier1
+        :avocado: tags=common_tier2
         """
         self.check_chrome_login()
     
