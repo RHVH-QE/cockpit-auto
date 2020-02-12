@@ -273,7 +273,10 @@ class CommonPages(SeleniumTest):
         self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
 
         self.click(self.EDITE_SERVER)
+        time.sleep(2)
         self.click(self.DELETE_SERVER)
+        time.sleep(2)
+        self.assert_element_invisible("//*[@id='dashboard-hosts']/div[2]/a[2]")
     
     def subscription_to_rhsm(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
