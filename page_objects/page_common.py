@@ -29,9 +29,9 @@ class CommonPages(SeleniumTest):
     # RHSM_USER="shlei2"
     # RHSM_PWD="lsystc571998"
 
-    NFS_SERVER_ADDR="10.66.10.132"
-    SERVER_PATH="/home/shiyilei/nfs"
-    MOUNT_POINT="/root/mnt"
+    # NFS_SERVER_ADDR="10.66.10.132"
+    # SERVER_PATH="/home/shiyilei/nfs"
+    # MOUNT_POINT="/root/mnt"
 
     LOGIN_ERROR_MESSAGE="//*[@id='login-error-message']"
 
@@ -75,7 +75,7 @@ class CommonPages(SeleniumTest):
     DETAIL_PRODUCT_STATUS = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[5]/td[2]/span"
 
     #add nfs
-    STORAGE_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[3]/td[2]/a"
+    STORAGE_LINK="//*[@id='sidebar-menu']/li[3]/a"
     STORAGE_FRAME_NAME="/storage"
     ADD_NFS_BUTTON="//*[@id='nfs-mounts']/div[1]/div/button"
     NFS_SERVER_ADDR_TEXT="//*[@id='dialog']/div/div[2]/form/div[1]/input"
@@ -320,24 +320,28 @@ class CommonPages(SeleniumTest):
 
 
     def add_nfs_storage(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.STORAGE_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
+        self.click(self.STORAGE_LINK)
         self.switch_to_frame(self.STORAGE_FRAME_NAME)
+        time.sleep(2)
         self.click(self.ADD_NFS_BUTTON)
-
-        self.input_text(self.NFS_SERVER_ADDR_TEXT,self.NFS_SERVER_ADDR)
-        self.input_text(self.SERVER_PATH_TEXT,self.SERVER_PATH)
-        self.input_text(self.MOUNT_POINT_TEXT,self.MOUNT_POINT)
+        time.sleep(2)
+        self.input_text(self.NFS_SERVER_ADDR_TEXT, self.config_dict['nfs_ip'])
+        time.sleep(1)
+        self.input_text(self.SERVER_PATH_TEXT, self.config_dict['nfs_dir'])
+        time.sleep(1)
+        self.input_text(self.MOUNT_POINT_TEXT, self.config_dict['nfs_mount_point'])
+        time.sleep(1)
         self.click(self.NFS_ADD_BUTTON)
         time.sleep(3)
-        #self.assert_element_visible("//*[@id='nfs-mounts']/table/tbody/tr/td[1]")
+        self.assert_element_visible("//*[@id='nfs-mounts']/table/tbody/tr")
         self.click(self.NFS_SERVER_DETAIL_BUTTON)
         time.sleep(3)
         self.click(self.DELETE_NFS_SERVER_BUTTON)
         time.sleep(2)
         self.assert_element_invisible(self.NFS_SERVER_DETAIL_BUTTON)
+        self.assert_element_invisible("//*[@id='nfs-mounts']/table/tbody/tr")
     
     def system__dynamic_status(self):
         self.click(self.DASHBOARD_LINK)
