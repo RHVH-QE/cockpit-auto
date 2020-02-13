@@ -72,7 +72,13 @@ class TestCockpitCommon(CommonPages):
         """
         self.check_udisks_service()
     
-
+    @add_case_id("RHVEM-24229")
+    def test_check_kernel_dump_service(self):
+        """
+        :avocado: tags=common_tier1
+        """
+        self.check_kernel_dump_service()
+    
 
     @add_case_id("RHEVM-23243")
     def test_add_remote_host_chrome(self):
@@ -235,5 +241,20 @@ class TestCockpitCommon(CommonPages):
         """
         self.check_debug_command_in_terminal()
 
+    @add_case_id("RHVEM-23330")
+    def test_check_motd_command_in_terminal(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.check_motd_command_in_terminal()
+    
+    @add_case_id("RHVEM-23331")
+    def test_check_generate_banner_command_in_terminal(self):
+        """
+        :avocado: tags=common_tier2a
+        """
+        self.check_generate_banner_command_in_terminal()
+    
+    
     
     

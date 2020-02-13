@@ -122,6 +122,7 @@ class CommonPages(SeleniumTest):
     #kernel dump
     KD_LINK="//*[@id='sidebar-tools']/li[2]/a"
     #//*[@id="sidebar-tools"]/li[3]/a //*[@id="sidebar-tools"]/li[2]/a //*[@id="sidebar-tools"]/li[3]
+    HINT="//*[@id='app']/div/form/div[2]/a/span"
 
     KD_FRAME_NAME="/kdump"
     KD_SERVICE_LINK="//*[@id='app']/div/form/div[1]/a/span"
@@ -656,6 +657,22 @@ class CommonPages(SeleniumTest):
         time.sleep(3)
         self.assert_text_in_element(self.UDISKS_STATUS_TEXT,"active (running)")
 
+        cmd = 'systemctl status udisks2'
+        output = self.host.execute(cmd).stdout
+        start_point=re.search("PID:",output).end()+1
+        end_point=re.search("(udisksd)",output).start()-2
+        #print(output[start_point:end_point])
+        process_id=output[start_point:end_point]
+        cmd='for i in {1..100}; do lsof -p'+' {} | wc -l 1>> /tmp/files; sleep 5; done'.format(process_id)
+        output = self.host.execute(cmd).stdout
+        self.assertEqual(output,None)
+
+        # print(re.search("PID:",output).end())
+        # print(re.search("(udisksd)",output).start())
+        #result = re.search("udisks2",output)
+
+
+
     def show_information_in_terminal(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         self.click(self.NETWORK_INFO_LINK)
@@ -676,6 +693,7 @@ class CommonPages(SeleniumTest):
         result = re.search("bootloader",output)
         self.assertNotEqual(result, None)
         result = re.search("current_layer",output)
+        self.assertNotEqual(result, None)
 
     
     def show_system_status_in_terminal(self):
@@ -703,12 +721,88 @@ class CommonPages(SeleniumTest):
         self.click(self.CONMMAND_LINE)
         self.input_text(self.CONMMAND_LINE," nodectl check --debug\r\n",False)
         time.sleep(5)
-
     
+    def check_motd_command_in_terminal(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.TERMINAL_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(3)
+        self.click(self.CONMMAND_LINE)
+        self.input_text(self.CONMMAND_LINE," nodectl motd\r\n",False)
+        time.sleep(5)
+    
+    def check_generate_banner_command_in_terminal(self):
+        flag=1
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.TERMINAL_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(3)
+        self.click(self.CONMMAND_LINE)
+        self.input_text(self.CONMMAND_LINE," nodectl generate-banner\r\n",False)
+        time.sleep(5)
 
+        try:
+            self.host.get_file('/etc/issue','./issue')
+            new_line = 'XXXXXXXXXX'
+            with open('./issue', 'w') as config_file:
+                config_file.write(new_line)
+            self.host.put_file('./issue','/etc/issue')
+            os.remove('./issue')
+            #self.host.execute('systemctl restart iscsid iscsi')
+        except Exception as e:
+            pass
+        
+        cmd = 'nodectl generate-banner --update-issue'
+        output = self.host.execute(cmd).stdout
+        print(output)
 
+        try:
+            self.host.get_file('/etc/issue','./issue')
+            new_line = ''
+            with open('./issue') as config_file:
+                for line in config_file:
+                    if line.startswith('XXXXXX'):
+                        flag=0
+        except Exception as e:    
+            pass
+        self.assertNotEqual(flag,0)
+    
+    def check_kernel_dump_service(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
 
+        self.click(self.KD_LINK)
+        self.switch_to_frame(self.KD_FRAME_NAME)
+
+        self.hover_and_click(self.HINT)
+        self.assert_element_visible("//*[@id='tip-test-info']")
+
+        # self.click(self.KD_SERVICE_LINK)
+        # self.switch_to_default_content()
+        # self.switch_to_frame(self.SERVICE_FRAME_NAME)
+        # self.click(self.STOP_START_BUTTON)
+        # time.sleep(8)
+        # self.assert_text_in_element(self.KD_STATUS_INFO,"inactive")
+        # self.click(self.STOP_START_BUTTON)
+        # self.assert_text_in_element(self.KD_STATUS_INFO,"activating")
+        # self.click(self.KD_RESTART_BUTTON)
+        # time.sleep(8)
+        # self.assert_text_in_element(self.KD_STATUS_INFO,"active")
+        # self.click(self.KD_DISABLE_BUTTON)
+        # time.sleep(8)
+        # self.assert_text_in_element(self.KD_ENABLE_TEXT,"disabled")
+        # self.click(self.KD_DISABLE_BUTTON)
+        # time.sleep(8)
+        # self.assert_text_in_element(self.KD_ENABLE_TEXT,"enabled")
 
         
-
-
