@@ -671,9 +671,7 @@ class CommonPages(SeleniumTest):
         result = re.search("udisks2",output)
         self.assertNotEqual(result, None)
 
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.NETWORK_INFO_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.SERVICE_LINK)
         time.sleep(1)
@@ -686,17 +684,11 @@ class CommonPages(SeleniumTest):
         output = self.host.execute(cmd).stdout
         start_point=re.search("PID:",output).end()+1
         end_point=re.search("(udisksd)",output).start()-2
-        #print(output[start_point:end_point])
+        print(output[start_point:end_point])
         process_id=output[start_point:end_point]
         cmd='for i in {1..100}; do lsof -p'+' {} | wc -l 1>> /tmp/files; sleep 5; done'.format(process_id)
-        output = self.host.execute(cmd).stdout
-        self.assertEqual(output,None)
-
-        # print(re.search("PID:",output).end())
-        # print(re.search("(udisksd)",output).start())
-        #result = re.search("udisks2",output)
-
-
+        output = self.host.execute(cmd,timeout=510).stdout
+        self.assertEqual(output,'')
 
     def show_information_in_terminal(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
