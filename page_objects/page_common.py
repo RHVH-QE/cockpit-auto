@@ -130,6 +130,7 @@ class CommonPages(SeleniumTest):
     #//*[@id="sidebar-tools"]/li[3]/a //*[@id="sidebar-tools"]/li[2]/a //*[@id="sidebar-tools"]/li[3]
     HINT="//*[@id='app']/div/form/div[2]/a/span"
     KDUMP_SERVICE_STATUS="//*[@id='app']/div/form/div[1]/a/span"
+    BTN_TEST_CONFIGURATION="//*[@id='app']/div/form/div[2]/button"
 
     KD_FRAME_NAME="/kdump"
     KD_SERVICE_LINK="//*[@id='app']/div/form/div[1]/a/span"
@@ -799,26 +800,19 @@ class CommonPages(SeleniumTest):
         self.click(self.KD_LINK)
         self.switch_to_frame(self.KD_FRAME_NAME)
 
+        time.sleep(3)
         self.assert_text_in_element(self.KDUMP_SERVICE_STATUS, 'Service is running')
+        
+        kdump_service_status = self.host.execute("systemctl stop kdump").stdout
+        time.sleep(3)
+        self.assert_text_in_element(self.KDUMP_SERVICE_STATUS, 'Service is stopped')
+        self.assertTrue('disabled' in self.get_attribute(self.BTN_TEST_CONFIGURATION, 'class'))
+        kdump_service_status = self.host.execute("systemctl start kdump").stdout
+        time.sleep(5)
+        self.assert_text_in_element(self.KDUMP_SERVICE_STATUS, 'Service is running')
+        self.assertFalse('disabled' in self.get_attribute(self.BTN_TEST_CONFIGURATION, 'class'))
+        
         self.hover_and_click(self.HINT)
         self.assert_element_visible("//*[@id='tip-test-info']")
-
-        # self.click(self.KD_SERVICE_LINK)
-        # self.switch_to_default_content()
-        # self.switch_to_frame(self.SERVICE_FRAME_NAME)
-        # self.click(self.STOP_START_BUTTON)
-        # time.sleep(8)
-        # self.assert_text_in_element(self.KD_STATUS_INFO,"inactive")
-        # self.click(self.STOP_START_BUTTON)
-        # self.assert_text_in_element(self.KD_STATUS_INFO,"activating")
-        # self.click(self.KD_RESTART_BUTTON)
-        # time.sleep(8)
-        # self.assert_text_in_element(self.KD_STATUS_INFO,"active")
-        # self.click(self.KD_DISABLE_BUTTON)
-        # time.sleep(8)
-        # self.assert_text_in_element(self.KD_ENABLE_TEXT,"disabled")
-        # self.click(self.KD_DISABLE_BUTTON)
-        # time.sleep(8)
-        # self.assert_text_in_element(self.KD_ENABLE_TEXT,"enabled")
 
         
