@@ -775,7 +775,6 @@ class CommonPages(SeleniumTest):
                 config_file.write(new_line)
             self.host.put_file('./issue','/etc/issue')
             os.remove('./issue')
-            #self.host.execute('systemctl restart iscsid iscsi')
         except Exception as e:
             pass
         
@@ -881,3 +880,19 @@ class CommonPages(SeleniumTest):
         self.login(username, passwd)
         time.sleep(2)
         goto_terminal_check_appliance()
+    
+    def check_password_is_encrypted_in_log(self):
+        try:
+            self.host.get_file('/var/log/rhsm/rhsm.log','./rhsm.log')
+            pwd=self.config_dict['subscription_password']
+            with open('./rhsm.log') as config_file:
+                while True:
+                    content=config_file.readline()
+                    if content:
+                        outcome=re.search(pwd,content)
+                        self.assertEqual(outcome,None)
+                    else:
+                        break
+            os.remove('./rhsm.log')
+        except Exception as e:
+            pass

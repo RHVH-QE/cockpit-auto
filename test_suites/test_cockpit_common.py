@@ -86,6 +86,13 @@ class TestCockpitCommon(CommonPages):
         :avocado: tags=common_tier1
         """
         self.check_kernel_dump_service()
+    
+    add_case_id("RHVEM-23295")
+    def test_check_password_is_encrypted(self):
+        """
+        :avocado: tags=common_tier1
+        """
+        self.check_password_is_encrypted_in_log()
 
     @add_case_id("RHEVM-23243")
     def test_add_remote_host_chrome(self):
