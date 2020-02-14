@@ -19,6 +19,11 @@ subscription_password: ''
 subscription_repos: 'rhel-7-server-rhvh-4-*'
 subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis', 'rhvm-appliance']
 
+#RHVM
+rhvm_fqdn: 'bootp-73-199-39.lab.eng.pek2.redhat.com'
+rhvm_admin: 'admin'
+rhvm_pw: 'password'
+
 # ISCSI
 iscsi_initiator_name: 'iqn.1994-05.com.redhat:6acc055d3232'
 iscsi_portal_ip: '10.73.64.13'

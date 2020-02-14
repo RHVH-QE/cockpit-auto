@@ -169,6 +169,7 @@ class CommonPages(SeleniumTest):
     #terminal function
     TERMINAL_LINK="//*[@id='sidebar-tools']/li[5]/a"
     TERMINAL_FRAME_NAME="/system/terminal"
+    TERMINAL_ADMIN="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[5]"
     CONMMAND_LINE="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[7]"
 
     SSH_HOST_KEY_LINK="//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/a"
@@ -814,8 +815,69 @@ class CommonPages(SeleniumTest):
         self.hover_and_click(self.HINT)
         self.assert_element_visible("//*[@id='tip-test-info']")
 
+    def check_appliance_like(self, s_app_like):
+        appliance_like_list = s_app_like.split(': ')
+        self.assertEqual(appliance_like_list[0], "Admin Console")
+        addr_l = appliance_like_list[-1].split(' ')
+        address_list = []
+        for i in range(len(addr_l)):
+            if addr_l[i] != 'or':
+                address_list.append(addr_l[i])
+        
+        re_ipv4 = "^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"
+        re_ipv6 = "^(?:[a-f0-9]{1,4}:){7}[a-f0-9]{1,4}$"
+        for addr in address_list:
+            if len(addr) <= len('http://255.255.255.255:9090'):
+                self.assertNotEqual(re.match(re_ipv4, addr[8:-6]), None)
+            else:
+                self.assertNotEqual(re.match(re_ipv6, addr[8:-6]), None)
+
+    def wait_host_up(self, rhvm_ins, host_name, expect_status='up'):
+        i = 0
+        host_status = "unknown"
+        while True:
+            if i > 50:
+                raise RuntimeError(
+                    "Timeout waitting for host %s as current host status is: %s"
+                    % (expect_status, host_status))
+            host_status = rhvm_ins.list_host("name", host_name)['status']
+            if host_status == expect_status:
+                break
+            elif host_status == 'install_failed':
+                raise RuntimeError("Host is not %s as current status is: %s" %
+                                   (expect_status, host_status))
+            elif host_status == 'non_operational':
+                raise RuntimeError("Host is not %s as current status is: %s" %
+                                   (expect_status, host_status))
+            time.sleep(15)
+            i += 1
+
+    def goto_terminal_check_appliance(self):
+        self.click(self.LOCALHOST_LINK)
+        time.sleep(1)
+        self.click(self.TERMINAL_LINK)
+        time.sleep(2)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        appliance_like = self.get_text(self.TERMINAL_ADMIN)
+        self.check_appliance_like(appliance_like)  
+
+    def add_host_rhvm(self, host_ip,host_name,host_pass,rhvm_fqdn):
+        rhvm = RhevmAction(rhvm_fqdn)
+        rhvm.add_host(host_ip, host_name, host_pass, "Default")
+        self.wait_host_up(rhvm, host_name, 'up')
+
     def check_appliance_like_text(self):
-        cmd = 'nodectl generate-banner'
-        output = self.host.execute(cmd).stdout
-        result = re.search("Admin Console: https://",output)
-        self.assertNotEqual(result, None)
+        host_ip = os.environ.get('HOST_STRING')
+        host_name = self.host.execute("hostname").stdout
+        username = os.environ.get('USERNAME')
+        passwd = os.environ.get('PASSWD')
+        rhvm_fqdn = self.config_dict['rhvm_fqdn']
+
+        self.goto_terminal_check_appliance()
+        self.add_host_rhvm(host_ip,host_name,passwd,rhvm_fqdn)
+        time.sleep(150)
+        self.host.execute("reboot", timeout=400,raise_exception=False)
+        self.click(self.RECONNECT_BUTTON)
+        self.login(username, passwd)
+        time.sleep(2)
+        goto_terminal_check_appliance()
