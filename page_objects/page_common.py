@@ -129,6 +129,7 @@ class CommonPages(SeleniumTest):
     KD_LINK="//*[@id='sidebar-tools']/li[2]/a"
     #//*[@id="sidebar-tools"]/li[3]/a //*[@id="sidebar-tools"]/li[2]/a //*[@id="sidebar-tools"]/li[3]
     HINT="//*[@id='app']/div/form/div[2]/a/span"
+    KDUMP_SERVICE_STATUS="//*[@id='app']/div/form/div[1]/a/span"
 
     KD_FRAME_NAME="/kdump"
     KD_SERVICE_LINK="//*[@id='app']/div/form/div[1]/a/span"
@@ -793,14 +794,12 @@ class CommonPages(SeleniumTest):
         self.assertNotEqual(flag,0)
     
     def check_kernel_dump_service(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.NETWORK_INFO_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
-
         self.click(self.KD_LINK)
         self.switch_to_frame(self.KD_FRAME_NAME)
 
+        self.assert_text_in_element(self.KDUMP_SERVICE_STATUS, 'Service is running')
         self.hover_and_click(self.HINT)
         self.assert_element_visible("//*[@id='tip-test-info']")
 
