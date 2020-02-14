@@ -148,7 +148,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHVEM-23262")
     def test_restart_node(self):
         """
-        :avocado: tags=unfinished
+        :avocado: tags=common_tier1
         """
         self.restart_node()
     
