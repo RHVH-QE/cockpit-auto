@@ -58,7 +58,7 @@ class CommonPages(SeleniumTest):
     DELETE_SERVER="//*[@id='dashboard-hosts']/div[2]/a[1]/button[1]"
 
     #subscription
-    #NETWORK_INFO_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
+    NETWORK_INFO_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
     SUBSCRIPTION_LINK="//*[@id='sidebar-tools']/li[4]/a"
     SUBSCRIPTION_FRAME_NAME="/subscriptions"
     REGIST_BUTTON="//*[@id='app']/div/div/button"
@@ -808,22 +808,31 @@ class CommonPages(SeleniumTest):
         self.hover_and_click(self.HINT)
         self.assert_element_visible("//*[@id='tip-test-info']")
 
-        # self.click(self.KD_SERVICE_LINK)
-        # self.switch_to_default_content()
-        # self.switch_to_frame(self.SERVICE_FRAME_NAME)
-        # self.click(self.STOP_START_BUTTON)
-        # time.sleep(8)
-        # self.assert_text_in_element(self.KD_STATUS_INFO,"inactive")
-        # self.click(self.STOP_START_BUTTON)
-        # self.assert_text_in_element(self.KD_STATUS_INFO,"activating")
-        # self.click(self.KD_RESTART_BUTTON)
-        # time.sleep(8)
-        # self.assert_text_in_element(self.KD_STATUS_INFO,"active")
-        # self.click(self.KD_DISABLE_BUTTON)
-        # time.sleep(8)
-        # self.assert_text_in_element(self.KD_ENABLE_TEXT,"disabled")
-        # self.click(self.KD_DISABLE_BUTTON)
-        # time.sleep(8)
-        # self.assert_text_in_element(self.KD_ENABLE_TEXT,"enabled")
+        self.click(self.KD_SERVICE_LINK)
+        self.switch_to_default_content()
+        self.switch_to_frame(self.SERVICE_FRAME_NAME)
+        self.click(self.STOP_START_BUTTON)
+        time.sleep(8)
+        self.assert_text_in_element(self.KD_STATUS_INFO,"inactive")
+        self.click(self.STOP_START_BUTTON)
+        self.assert_text_in_element(self.KD_STATUS_INFO,"activating")
+        self.click(self.KD_RESTART_BUTTON)
+        time.sleep(8)
+        self.assert_text_in_element(self.KD_STATUS_INFO,"active")
+        self.click(self.KD_DISABLE_BUTTON)
+        time.sleep(8)
+        self.assert_text_in_element(self.KD_ENABLE_TEXT,"disabled")
+        self.click(self.KD_DISABLE_BUTTON)
+        time.sleep(8)
+        self.assert_text_in_element(self.KD_ENABLE_TEXT,"enabled")
+
+    def check_appliance_like_text(self):
+        cmd = 'nodectl generate-banner'
+        output = self.host.execute(cmd).stdout
+        result = re.search("Admin Console: https://",output)
+        self.assertNotEqual(result, None)
+
+    
+
 
         
