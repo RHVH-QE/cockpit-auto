@@ -58,7 +58,7 @@ class CommonPages(SeleniumTest):
     DELETE_SERVER="//*[@id='dashboard-hosts']/div[2]/a[1]/button[1]"
 
     #subscription
-    #NETWORK_INFO_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
+    NETWORK_INFO_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
     SUBSCRIPTION_LINK="//*[@id='sidebar-tools']/li[4]/a"
     SUBSCRIPTION_FRAME_NAME="/subscriptions"
     REGIST_BUTTON="//*[@id='app']/div/div/button"
@@ -814,4 +814,8 @@ class CommonPages(SeleniumTest):
         self.hover_and_click(self.HINT)
         self.assert_element_visible("//*[@id='tip-test-info']")
 
-        
+    def check_appliance_like_text(self):
+        cmd = 'nodectl generate-banner'
+        output = self.host.execute(cmd).stdout
+        result = re.search("Admin Console: https://",output)
+        self.assertNotEqual(result, None)

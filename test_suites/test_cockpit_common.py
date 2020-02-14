@@ -74,11 +74,19 @@ class TestCockpitCommon(CommonPages):
         self.check_udisks_service()
     
     @add_case_id("RHVEM-24229")
+    def test_check_appliance_like_text(self):
+        """
+        :avocado: tags=common_tier1a
+        """
+        self.check_appliance_like_text()
+    
+    @add_case_id("RHVEM-23298")
     def test_check_kernel_dump_service(self):
         """
         :avocado: tags=common_tier1
         """
         self.check_kernel_dump_service()
+
     
 
     @add_case_id("RHEVM-23243")
