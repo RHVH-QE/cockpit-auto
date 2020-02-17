@@ -1,6 +1,7 @@
 import simplejson
 import time
 import yaml
+import re
 from seleniumlib import SeleniumTest
 
 
@@ -158,3 +159,10 @@ class OvirtDashboardPage(SeleniumTest):
     def open_system_logs_link(self):
         self.click(self.SYSTEM_LOGS_LINK)
         time.sleep(self.SLEEP_TIME)
+    
+    def check_json_output(self):
+        cmd = 'nodectl info --machine-readable'
+        output = self.host.execute(cmd)
+        result = re.match('{"',output)
+        self.assertNotEqual(result, None)
+

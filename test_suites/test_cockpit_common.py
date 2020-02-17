@@ -87,13 +87,19 @@ class TestCockpitCommon(CommonPages):
         """
         self.check_kernel_dump_service()
     
-    add_case_id("RHVEM-23295")
+    @add_case_id("RHVEM-23295")
     def test_check_password_is_encrypted(self):
         """
         :avocado: tags=common_tier1
         """
         self.check_password_is_encrypted_in_log()
-
+    
+    @add_case_id("RHVEM-24230")
+    def test_capture_vmcore_at_local(self):
+        """
+        :avocado: tags=common_tier1a
+        """
+        self.capture_vmcore_at_local()
     
 
     @add_case_id("RHEVM-23243")
@@ -270,6 +276,13 @@ class TestCockpitCommon(CommonPages):
         :avocado: tags=common_tier2
         """
         self.check_generate_banner_command_in_terminal()
+    
+    @add_case_id("RHVEM-23294")
+    def test_subscription_with_key_and_organization(self):
+        """
+        :avocado: tags=common_tier2
+        """
+        self.Subscription_with_key_and_organization()
     
     
     

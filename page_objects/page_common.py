@@ -73,6 +73,8 @@ class CommonPages(SeleniumTest):
     DETAIL_PRODUCT_ID = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[2]/td[2]/span"
     DETAIL_PRODUCT_VERSION = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[3]/td[2]/span"
     DETAIL_PRODUCT_STATUS = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[5]/td[2]/span"
+    ORGANIZATION_TEXT= "//*[@id='subscription-register-org']"
+    KEY_TEXT="//*[@id='subscription-register-key']"
 
     #add nfs
     STORAGE_LINK="//*[@id='sidebar-menu']/li[3]/a"
@@ -131,6 +133,7 @@ class CommonPages(SeleniumTest):
     HINT="//*[@id='app']/div/form/div[2]/a/span"
     KDUMP_SERVICE_STATUS="//*[@id='app']/div/form/div[1]/a/span"
     BTN_TEST_CONFIGURATION="//*[@id='app']/div/form/div[2]/button"
+    CRASH_SYSTEM_BUTTON="//*[@id='cockpit_modal_dialog']/div/div[2]/div/div/div[3]/button[2]"
 
     KD_FRAME_NAME="/kdump"
     KD_SERVICE_LINK="//*[@id='app']/div/form/div[1]/a/span"
@@ -834,4 +837,53 @@ class CommonPages(SeleniumTest):
             os.remove('./rhsm.log')
         except Exception as e:
             pass
-        
+    
+    def capture_vmcore_at_local(self):
+        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+
+        self.click(self.KD_LINK)
+        self.switch_to_frame(self.KD_FRAME_NAME)
+        self.click(self.BTN_TEST_CONFIGURATION)
+        self.click(self.CRASH_SYSTEM_BUTTON)
+        time.sleep(20)
+        time.sleep(300)
+
+        cmd = 'ls /var/crash'
+        output = self.host.execute(cmd).stdout
+        result = re.search("-",output)
+        self.assertNotEqual(result, None)
+    
+    def Subscription_with_key_and_organization(self):
+        self.click(self.LOCALHOST_LINK)
+        time.sleep(1)
+        self.click(self.SUBSCRIPTION_LINK)
+        time.sleep(10)
+        self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
+        time.sleep(2)
+        self.click(self.REGIST_BUTTON)
+        self.input_text(self.ORGANIZATION_TEXT, self.config_dict['subscription_organization'])
+        self.input_text(self.KEY_TEXT, self.config_dict['subscription_key'])
+        time.sleep(1)
+        self.click(self.REGIST_COMMIT_BUTTON)
+        time.sleep(60)
+        self.refresh()
+        time.sleep(10)
+        self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
+        self.assert_text_in_element("//*[@id='app']/div/div/label", "Status: Current")
+        self.click(self.DETAIL_BUTTON)
+        time.sleep(2)
+        self.assert_text_in_element(self.DETALI_PRODUCT_NAME, "Red Hat Virtualization Host")
+        self.assert_text_in_element(self.DETAIL_PRODUCT_ID,"328")
+        self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4.3")
+        self.assert_text_in_element(self.DETAIL_PRODUCT_STATUS, "Subscribed")
+
+
+
+
+
+
+
+

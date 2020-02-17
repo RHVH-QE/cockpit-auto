@@ -48,6 +48,14 @@ class TestOvirtDashboard(OvirtDashboardPage):
         nodectl_check = self.nodectl_check_on_host()
         self.open_node_health_window()
         check_icons(nodectl_check)
+    
+    @add_case_id("RHEVM-23329")
+    def test_check_json_output(self):
+        """
+        :avocado: tags=dashboard_tier1
+        """
+        self.check_json_output()
+    
 
 
     @add_case_id("RHEVM-23317")
