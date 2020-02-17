@@ -6,6 +6,7 @@ import simplejson
 import urllib2
 import stat
 import re
+from datetime import date
 from seleniumlib import SeleniumTest
 from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
@@ -908,22 +909,23 @@ class CommonPages(SeleniumTest):
             pass
     
     def capture_vmcore_at_local(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.NETWORK_INFO_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
 
         self.click(self.KD_LINK)
+        time.sleep(2)
         self.switch_to_frame(self.KD_FRAME_NAME)
+        time.sleep(1)
         self.click(self.BTN_TEST_CONFIGURATION)
         self.click(self.CRASH_SYSTEM_BUTTON)
-        time.sleep(20)
-        time.sleep(300)
+        time.sleep(330)
 
         cmd = 'ls /var/crash'
         output = self.host.execute(cmd).stdout
-        result = re.search("-",output)
-        self.assertNotEqual(result, None)
+        self.assertNotEqual(output.split(' ')[0], None)
+        res_date = '-'.join(output.split(' ')[0].split(':')[0].split('-')[-4:-1])
+        des_date = date.today().__str__()
+        self.assertEqual(res_date, des_date)
     
     def Subscription_with_key_and_organization(self):
         self.click(self.LOCALHOST_LINK)
