@@ -816,6 +816,7 @@ class CommonPages(SeleniumTest):
 
     def check_appliance_like(self, s_app_like):
         appliance_like_list = s_app_like.split(': ')
+        print(appliance_like_list)
         self.assertEqual(appliance_like_list[0], "Admin Console")
         addr_l = appliance_like_list[-1].split(' ')
         address_list = []
@@ -875,11 +876,17 @@ class CommonPages(SeleniumTest):
         self.goto_terminal_check_appliance()
         self.add_host_rhvm(host_ip,host_name,passwd,rhvm_fqdn)
         time.sleep(150)
-        self.host.execute("reboot", timeout=400,raise_exception=False)
-        self.click(self.RECONNECT_BUTTON)
+        self.host.execute("reboot",raise_exception=False)
+        time.sleep(400)
+        self.refresh()
         self.login(username, passwd)
         time.sleep(2)
-        goto_terminal_check_appliance()
+        self.click(self.TERMINAL_LINK)
+        time.sleep(2)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        appliance_like = self.get_text(self.TERMINAL_ADMIN)
+        print(appliance_like)
+        self.check_appliance_like(appliance_like) 
     
     def check_password_is_encrypted_in_log(self):
         try:
