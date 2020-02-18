@@ -2,6 +2,7 @@ import simplejson
 import time
 import yaml
 import re
+import os
 from seleniumlib import SeleniumTest
 
 
@@ -50,6 +51,13 @@ class OvirtDashboardPage(SeleniumTest):
     STORAGE_LINK = "tbody:nth-child(4) tr:nth-child(3) a"
     SSH_HOST_KEY_LINK = "tbody:nth-child(5) a"
     SSH_HOST_KEY_CONTENT = "tbody:nth-child(5) .modal-body div"
+
+    #terminal
+    OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
+    TERMINAL_LINK="//*[@id='sidebar-tools']/li[5]/a"
+    TERMINAL_FRAME_NAME="/system/terminal"
+    TERMINAL_ADMIN="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[5]"
+    CONMMAND_LINE="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[7]"
 
     def open_page(self):
         self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
@@ -165,4 +173,100 @@ class OvirtDashboardPage(SeleniumTest):
         output = self.host.execute(cmd)
         result = re.match('{"',output)
         self.assertNotEqual(result, None)
+    
+    def show_information_in_terminal(self):
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.TERMINAL_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(3)
+        self.click(self.CONMMAND_LINE)
+        self.input_text(self.CONMMAND_LINE," nodectl info\r\n",False)
+        time.sleep(5)
+
+        cmd = 'nodectl info'
+        output = self.host.execute(cmd).stdout
+        result = re.search("layers",output)
+        self.assertNotEqual(result, None)
+        result = re.search("bootloader",output)
+        self.assertNotEqual(result, None)
+        result = re.search("current_layer",output)
+        self.assertNotEqual(result, None)
+
+    
+    def show_system_status_in_terminal(self):
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.TERMINAL_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(3)
+        self.click(self.CONMMAND_LINE)
+        self.input_text(self.CONMMAND_LINE," nodectl check\r\n",False)
+        time.sleep(5)
+
+    def check_debug_command_in_terminal(self):
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.TERMINAL_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(3)
+        self.click(self.CONMMAND_LINE)
+        self.input_text(self.CONMMAND_LINE," nodectl check --debug\r\n",False)
+        time.sleep(5)
+    
+    def check_motd_command_in_terminal(self):
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.TERMINAL_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(3)
+        self.click(self.CONMMAND_LINE)
+        self.input_text(self.CONMMAND_LINE," nodectl motd\r\n",False)
+        time.sleep(5)
+    
+    def check_generate_banner_command_in_terminal(self):
+        flag=1
+        self.click(self.NETWORK_INFO_LINK)
+        self.switch_to_default_content()
+        time.sleep(1)
+        self.click(self.TERMINAL_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(3)
+        self.click(self.CONMMAND_LINE)
+        self.input_text(self.CONMMAND_LINE," nodectl generate-banner\r\n",False)
+        time.sleep(5)
+
+        try:
+            self.host.get_file('/etc/issue','./issue')
+            new_line = 'XXXXXXXXXX'
+            with open('./issue', 'w') as config_file:
+                config_file.write(new_line)
+            self.host.put_file('./issue','/etc/issue')
+            os.remove('./issue')
+        except Exception as e:
+            pass
+        
+        cmd = 'nodectl generate-banner --update-issue'
+        output = self.host.execute(cmd).stdout
+        print(output)
+
+        try:
+            self.host.get_file('/etc/issue','./issue')
+            new_line = ''
+            with open('./issue') as config_file:
+                for line in config_file:
+                    if line.startswith('XXXXXX'):
+                        flag=0
+        except Exception as e:    
+            pass
+        self.assertNotEqual(flag,0)
 

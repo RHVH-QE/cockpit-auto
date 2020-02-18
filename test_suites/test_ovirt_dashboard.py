@@ -142,3 +142,38 @@ class TestOvirtDashboard(OvirtDashboardPage):
         if available_layer:
             self.execute_rollback_on_layer(available_layer)
             self.assert_element_visible(self.ROLLBACK_ALERT % available_layer)
+    
+    @add_case_id("RHVEM-23324")
+    def test_show_image_information_in_terminal(self):
+        """
+        :avocado: tags=dashboard_tier2
+        """
+        self.show_information_in_terminal()
+    
+    @add_case_id("RHVEM-23327")
+    def test_show_system_status_in_terminal(self):
+        """
+        :avocado: tags=dashboard_tier2
+        """
+        self.show_system_status_in_terminal()
+    
+    @add_case_id("RHVEM-23328")
+    def test_check_debug_command_in_terminal(self):
+        """
+        :avocado: tags=dashboard_tier2
+        """
+        self.check_debug_command_in_terminal()
+
+    @add_case_id("RHVEM-23330")
+    def test_check_motd_command_in_terminal(self):
+        """
+        :avocado: tags=dashboard_tier2
+        """
+        self.check_motd_command_in_terminal()
+    
+    @add_case_id("RHVEM-23331")
+    def test_check_generate_banner_command_in_terminal(self):
+        """
+        :avocado: tags=dashboard_tier2
+        """
+        self.check_generate_banner_command_in_terminal()
