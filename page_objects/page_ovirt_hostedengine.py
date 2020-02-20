@@ -611,7 +611,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
             # FINISH STAGE
             self.click(self.FINISH_DEPLOYMENT)
-            self.click(self.CLOSE_BUTTON, 1500)
+            self.click(self.CLOSE_BUTTON, 1600)
 
         self.prepare_env('nfs')
         check_deploy()
