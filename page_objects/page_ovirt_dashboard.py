@@ -3,6 +3,7 @@ import time
 import yaml
 import re
 import os
+import json
 from seleniumlib import SeleniumTest
 
 
@@ -167,12 +168,19 @@ class OvirtDashboardPage(SeleniumTest):
     def open_system_logs_link(self):
         self.click(self.SYSTEM_LOGS_LINK)
         time.sleep(self.SLEEP_TIME)
+
+    def is_json_file(self, json_file):
+        try:
+            json_object = json.loads(json_file)
+        except ValueError as e:
+            return False
+        return True
     
     def check_json_output(self):
         cmd = 'nodectl info --machine-readable'
         output = self.host.execute(cmd)
-        result = re.match('{"',output)
-        self.assertNotEqual(result, None)
+        result = self.is_json_file(output)
+        self.assertTrue(result)
     
     def show_information_in_terminal(self):
         self.click(self.NETWORK_INFO_LINK)
