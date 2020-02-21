@@ -207,27 +207,6 @@ class TestCockpitCommon(CommonPages):
         """
         self.check_terminal()
 
-    # @add_case_id("RHVEM-23317")
-    # def test_go_to_network_page(self):
-    #     """
-    #     :avocado: tags=common_tier2a
-    #     """
-    #     self.go_to_network_page()
-    
-    # @add_case_id("RHVEM-23318")
-    # def test_go_to_logs_page(self):
-    #     """
-    #     :avocado: tags=common_tier2a
-    #     """
-    #     self.go_to_logs_page()
-    
-    # @add_case_id("RHVEM-23319")
-    # def test_go_to_storage_page(self):
-    #     """
-    #     :avocado: tags=common_tier2a
-    #     """
-    #     self.go_to_storage_page()
-
     @add_case_id("RHVEM-23297")
     def test_create_diagnostic_report(self):
         """
@@ -242,40 +221,6 @@ class TestCockpitCommon(CommonPages):
         """
         self.check_selinux_policy()
     
-    @add_case_id("RHVEM-23324")
-    def test_show_image_information_in_terminal(self):
-        """
-        :avocado: tags=common_tier2
-        """
-        self.show_information_in_terminal()
-    
-    @add_case_id("RHVEM-23327")
-    def test_show_system_status_in_terminal(self):
-        """
-        :avocado: tags=common_tier2
-        """
-        self.show_system_status_in_terminal()
-    
-    @add_case_id("RHVEM-23328")
-    def test_check_debug_command_in_terminal(self):
-        """
-        :avocado: tags=common_tier2
-        """
-        self.check_debug_command_in_terminal()
-
-    @add_case_id("RHVEM-23330")
-    def test_check_motd_command_in_terminal(self):
-        """
-        :avocado: tags=common_tier2
-        """
-        self.check_motd_command_in_terminal()
-    
-    @add_case_id("RHVEM-23331")
-    def test_check_generate_banner_command_in_terminal(self):
-        """
-        :avocado: tags=common_tier2
-        """
-        self.check_generate_banner_command_in_terminal()
     
     @add_case_id("RHVEM-23294")
     def test_subscription_with_key_and_organization(self):
