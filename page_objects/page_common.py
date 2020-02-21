@@ -439,7 +439,7 @@ class CommonPages(SeleniumTest):
         self.switch_to_default_content()
         self.assert_element_visible("//*[@id='content']/div")
 
-        time.sleep(250)
+        time.sleep(300)
         self.click(self.RECONNECT_BUTTON)
         username = os.environ.get('USERNAME')
         passwd = os.environ.get('PASSWD')
