@@ -97,7 +97,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHVEM-24230")
     def test_capture_vmcore_at_local(self):
         """
-        :avocado: tags=common_tier1a
+        :avocado: tags=common_tier1
         """
         self.capture_vmcore_at_local()
     
