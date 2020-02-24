@@ -6,7 +6,7 @@ import simplejson
 import urllib2
 import stat
 import re
-from datetime import date
+import pytz
 from seleniumlib import SeleniumTest
 from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
@@ -111,7 +111,10 @@ class CommonPages(SeleniumTest):
 
     #config timezone
     TIME_LINK="//*[@id='system_information_systime_button']"
-    TIMEZONE_TEXT="//*[@id='systime-timezonesundefined']"
+    # TIMEZONE_TEXT="//*[@id='systime-timezonesundefined']"
+    TIMEZONE_REMOVER="//*[@id='systime-timezonesundefined']//parent::*/span"
+    TIMEZONE_DROPDOWN="//*[@id='systime-timezonesundefined']//parent::*/span"
+    TIMEZONE_ITEM="//*[@id='systime-timezonesundefined']//parent::*/ul/li[1]"
     TIMEZONE_APPLY_BUTTON="//*[@id='systime-apply-button']"
     TIME_SET_DROPDOWN="//*[@id='change_systime']/button"
     TIME_SET_MANUALLY="//*[@id='change_systime']/ul/li[1]/a"
@@ -234,6 +237,7 @@ class CommonPages(SeleniumTest):
         host = Machine(host_string, username, passwd)
 
         self.login(username, passwd)
+        time.sleep(5)
         cmd = 'systemctl status cockpit'
         output = host.execute(cmd).stdout
         result = re.search('active', output)
@@ -257,7 +261,7 @@ class CommonPages(SeleniumTest):
         self.click(self.OTHER_OPTION)
         self.input_text(self.SERVER_FIELD,self.WRONG_ADDR)
         self.login(self.R_MACHINE_USER,self.R_MACHINE_PWD)
-        time.sleep(5)
+        time.sleep(15)
         self.assertEqual(self.get_text(self.LOGIN_ERROR_MESSAGE),"Unable to connect to that address")
 
         
@@ -370,9 +374,7 @@ class CommonPages(SeleniumTest):
         self.assert_element_visible(self.DISK_STATUS)
     
     def config_hostname(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.NETWORK_INFO_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.SYSTEM_FRAME_LINK)
         time.sleep(1)
@@ -380,7 +382,9 @@ class CommonPages(SeleniumTest):
         self.click(self.HOSTNAME_BUTTON)
 
         self.input_text(self.PRETTY_HOSTNAME_TEXT,"test")
+        time.sleep(1)
         self.input_text(self.REAL_HOSTNAME_TEXT,"test.redhat.com")
+        time.sleep(1)
         self.click(self.HOSTNAME_APPLY_BUTTON)
         time.sleep(2)
 
@@ -392,19 +396,27 @@ class CommonPages(SeleniumTest):
         self.assertNotEqual(result, None)
 
     def config_timezone(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.NETWORK_INFO_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.SYSTEM_FRAME_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
 
         self.click(self.TIME_LINK)
-        self.input_text(self.TIMEZONE_TEXT,"Asia/Singapore\n")
-        #self.driver.send_keys(Keys.ENTER)
+        self.click(self.TIMEZONE_REMOVER)
+        self.click(self.TIMEZONE_DROPDOWN)
+        time.sleep(1)
+        self.click(self.TIMEZONE_ITEM)
+        time.sleep(1)
         self.click(self.TIMEZONE_APPLY_BUTTON)
+        time.sleep(1)
+        self.refresh()
         time.sleep(5)
+        self.switch_to_frame(self.SYSTEM_FRAME_NAME)
+        actual_now = self.get_text(self.TIME_LINK)
+        utc_now = pytz.utc.localize(datetime.datetime.utcnow())
+        respect_now = utc_now.astimezone(pytz.timezone("Africa/Abidjan")).strftime("%Y-%m-%d %H:%M")
+        self.assertEqual(actual_now,respect_now)
 
     def config_time_manually(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
@@ -823,7 +835,7 @@ class CommonPages(SeleniumTest):
         output = self.host.execute(cmd).stdout
         self.assertNotEqual(output.split(' ')[0], None)
         res_date = '-'.join(output.split(' ')[0].split(':')[0].split('-')[-4:-1])
-        des_date = date.today().__str__()
+        des_date = datetime.date.today().__str__()
         self.assertEqual(res_date, des_date)
     
     def Subscription_with_key_and_organization(self):
