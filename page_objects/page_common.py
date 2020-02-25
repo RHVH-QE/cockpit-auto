@@ -143,6 +143,8 @@ class CommonPages(SeleniumTest):
     KD_SERVICE_LINK="//*[@id='app']/div/form/div[1]/a/span"
     SERVICES_LINK="//*[@id='sidebar-menu']/li[7]/a/span"
     SERVICE_FRAME_NAME="/system/services"
+    SERVICE_SEARCHER="//*[@id='services-text-filter']"
+    KD_SERVICE_LINK="//*[@id='services-list']/div/table/tbody/tr/td[1]"
     STOP_START_BUTTON="//*[@id='service-unit-primary-action']/button"
     KD_STATUS_INFO="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[1]/td[2]/span"
     KD_RESTART_BUTTON="//*[@id='service-unit-action']/button[1]"
@@ -482,24 +484,25 @@ class CommonPages(SeleniumTest):
         self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.SERVICES_LINK)
-        # self.switch_to_frame(self.KD_FRAME_NAME)
-        # self.click(self.KD_SERVICE_LINK)
-        # self.switch_to_default_content()
         self.switch_to_frame(self.SERVICE_FRAME_NAME)
-        # self.click(self.STOP_START_BUTTON)
-        # time.sleep(8)
-        # self.assert_text_in_element(self.KD_STATUS_INFO,"inactive")
-        # self.click(self.STOP_START_BUTTON)
-        # self.assert_text_in_element(self.KD_STATUS_INFO,"activating")
-        # self.click(self.KD_RESTART_BUTTON)
-        # time.sleep(8)
-        # self.assert_text_in_element(self.KD_STATUS_INFO,"active")
-        # self.click(self.KD_DISABLE_BUTTON)
-        # time.sleep(8)
-        # self.assert_text_in_element(self.KD_ENABLE_TEXT,"disabled")
-        # self.click(self.KD_DISABLE_BUTTON)
-        # time.sleep(8)
-        # self.assert_text_in_element(self.KD_ENABLE_TEXT,"enabled")
+        self.input_text(self.SERVICE_SEARCHER, 'kdump')
+        time.sleep(2)
+        self.click(self.KD_SERVICE_LINK)
+        time.sleep(2)
+        self.click(self.STOP_START_BUTTON)
+        time.sleep(8)
+        self.assert_text_in_element(self.KD_STATUS_INFO,"inactive")
+        self.click(self.STOP_START_BUTTON)
+        self.assert_text_in_element(self.KD_STATUS_INFO,"activating")
+        self.click(self.KD_RESTART_BUTTON)
+        time.sleep(8)
+        self.assert_text_in_element(self.KD_STATUS_INFO,"active")
+        self.click(self.KD_DISABLE_BUTTON)
+        time.sleep(8)
+        self.assert_text_in_element(self.KD_ENABLE_TEXT,"disabled")
+        self.click(self.KD_DISABLE_BUTTON)
+        time.sleep(8)
+        self.assert_text_in_element(self.KD_ENABLE_TEXT,"enabled")
     
     def check_file_system_list(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
