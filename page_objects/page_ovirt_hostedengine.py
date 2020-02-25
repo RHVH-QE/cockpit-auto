@@ -459,7 +459,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier1_9
     def reboot_hosted_engine_env(self):
         self.host.execute('reboot', raise_exception=False)
-        time.sleep(1300)
+        time.sleep(1500)
         self.refresh()
         self.login(os.environ.get('USERNAME'), os.environ.get('PASSWD'))
         self.open_page()
