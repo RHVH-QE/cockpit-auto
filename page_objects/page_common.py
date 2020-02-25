@@ -430,7 +430,10 @@ class CommonPages(SeleniumTest):
         self.click(self.TIME_SET_MANUALLY)
         self.input_text(self.TIME_MIN_TEXT,"00")
         self.click(self.TIMEZONE_APPLY_BUTTON)
-        time.sleep(3)
+        time.sleep(2)
+        self.refresh()
+        time.sleep(5)
+        self.switch_to_frame(self.SYSTEM_FRAME_NAME)
         actual_now = self.get_text(self.TIME_LINK).split(':')[-1]
         self.assertEqual(actual_now,"00")
     
@@ -458,9 +461,7 @@ class CommonPages(SeleniumTest):
         self.assert_frame_available("/system")
 
     def change_performance_profile(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.NETWORK_INFO_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.SYSTEM_FRAME_LINK)
         time.sleep(1)
