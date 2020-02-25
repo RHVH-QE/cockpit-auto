@@ -152,13 +152,18 @@ class CommonPages(SeleniumTest):
     KD_ENABLE_TEXT="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[3]/td[2]"
 
     #check system logs
-    LOGS_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[2]/td[2]/a"
+    # LOGS_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[2]/td[2]/a"
+    LOGS_LINK="//*[@id='sidebar-menu']/li[2]/a/span"
     LOGS_FRAME_NAME="/system/logs"
     LOGS_DURATION_BUTTON="//*[@id='journal-current-day-menu']/button"
     RECENT_LOGS="//*[@id='journal-current-day-menu']/ul/li[1]/a"
-    CURRENT_BOOT="//*[@id='journal-current-day-menu']/ul/li[2]/a"
-    LAST_ONE_DAY="//*[@id='journal-current-day-menu']/ul/li[4]/a"
+    # CURRENT_BOOT="//*[@id='journal-current-day-menu']/ul/li[2]/a"
+    # LAST_ONE_DAY="//*[@id='journal-current-day-menu']/ul/li[4]/a"
     LAST_SEVEN_DAYS="//*[@id='journal-current-day-menu']/ul/li[5]/a"
+    LOGS_LOAD_EARLIER="//*[@id='journal-load-earlier']"
+    LOGS_FILTER="//*[@id='journal-prio-menu']/button"
+    LOGS_EVERYTHING="//*[@id='prio-lists']/li[1]/a"
+    LOGS_WARNING_ICON="//*[@id='journal-box']/div[1]/div[2]/div[1]"
 
     #create new account
     ACCOUNT_LINK="//*[@id='sidebar-menu']/li[6]/a"
@@ -550,28 +555,30 @@ class CommonPages(SeleniumTest):
         self.click(self.DELETE_NFS_SERVER_BUTTON)
     
     def check_the_logs(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.LOGS_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
+        self.click(self.LOGS_LINK)
         self.switch_to_frame(self.LOGS_FRAME_NAME)
 
         self.click(self.LOGS_DURATION_BUTTON)
         time.sleep(1)
         self.click(self.RECENT_LOGS)
         time.sleep(3)
-        self.click(self.LOGS_DURATION_BUTTON)
-        time.sleep(1)
-        self.click(self.CURRENT_BOOT)
-        time.sleep(3)
-        self.click(self.LOGS_DURATION_BUTTON)
-        time.sleep(1)
-        self.click(self.LAST_ONE_DAY)
-        time.sleep(3)
+        self.assert_element_invisible(self.LOGS_LOAD_EARLIER)
+        self.assert_element_visible(self.LOGS_WARNING_ICON)
         self.click(self.LOGS_DURATION_BUTTON)
         time.sleep(1)
         self.click(self.LAST_SEVEN_DAYS)
         time.sleep(3)
+        self.assert_element_visible(self.LOGS_LOAD_EARLIER)
+        self.click(self.LOGS_FILTER)
+        time.sleep(2)
+        self.click(self.LOGS_EVERYTHING)
+        time.sleep(3)
+        try:
+            self.assert_element_visible(self.LOGS_WARNING_ICON)
+        except:
+            pass
 
     def create_new_account(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
