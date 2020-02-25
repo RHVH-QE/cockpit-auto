@@ -419,9 +419,7 @@ class CommonPages(SeleniumTest):
         self.assertEqual(actual_now,respect_now)
 
     def config_time_manually(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.NETWORK_INFO_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.SYSTEM_FRAME_LINK)
         time.sleep(1)
@@ -433,8 +431,8 @@ class CommonPages(SeleniumTest):
         self.input_text(self.TIME_MIN_TEXT,"00")
         self.click(self.TIMEZONE_APPLY_BUTTON)
         time.sleep(3)
-
-        self.assert_text_in_element(self.TIME_LINK,"00")
+        actual_now = self.get_text(self.TIME_LINK).split(':')[-1]
+        self.assertEqual(actual_now,"00")
     
     def restart_node(self):
         self.click(self.LOCALHOST_LINK)
