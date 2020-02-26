@@ -18,8 +18,8 @@ subscription_username: 'weiwang@redhat.com'
 subscription_password: 'rhvh,test'
 subscription_repos: 'rhel-7-server-rhvh-4-*'
 subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis', 'rhvm-appliance']
-subscription_organization: ''
-subscription_key: ''
+subscription_organization: '6340056'
+subscription_key: '6340056'
 
 #RHVM
 rhvm_fqdn: 'bootp-73-199-39.lab.eng.pek2.redhat.com'

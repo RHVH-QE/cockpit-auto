@@ -610,9 +610,7 @@ class CommonPages(SeleniumTest):
     
 
     def check_terminal(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.NETWORK_INFO_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.TERMINAL_LINK)
         time.sleep(1)
