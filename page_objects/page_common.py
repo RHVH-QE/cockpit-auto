@@ -193,7 +193,7 @@ class CommonPages(SeleniumTest):
     #check diagnostic report
     DIAGNOSTIC_REPORT_LINK="//*[@id='sidebar-tools']/li[1]/a"
     DIAGNOSTIC_REPORT_FRAME="/sosreport"
-    CREATE_REPORT_BUTTON="/html/body/div[1]/button"
+    CREATE_REPORT_BUTTON="//button[text()='Create Report']"
     REPORT_DIALOG="//*[@id='sos']/div"
     REPORT_DOWNLOAD_BUTTON="//*[@id='sos-download']/center/button"
     
@@ -643,19 +643,18 @@ class CommonPages(SeleniumTest):
         self.assert_frame_available(self.STORAGE_FRAME_NAME)
 
     def create_dignostic_report(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.NETWORK_INFO_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.DIAGNOSTIC_REPORT_LINK)
         time.sleep(1)
-
         self.switch_to_frame(self.DIAGNOSTIC_REPORT_FRAME)
         time.sleep(3)
         self.click(self.CREATE_REPORT_BUTTON)
         self.assert_element_visible(self.REPORT_DIALOG)
-        time.sleep(300)
+        time.sleep(100)
         self.assert_element_visible(self.REPORT_DOWNLOAD_BUTTON)
+        self.click(self.REPORT_DOWNLOAD_BUTTON)
+        time.sleep(3)
     
     def check_selinux_policy(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
