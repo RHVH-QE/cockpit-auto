@@ -190,7 +190,6 @@ class OvirtDashboardPage(SeleniumTest):
         time.sleep(1)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
         time.sleep(3)
-        self.click(self.CONMMAND_LINE)
         self.input_text(self.CONMMAND_LINE," nodectl info\r\n",False)
         time.sleep(5)
 
@@ -212,9 +211,9 @@ class OvirtDashboardPage(SeleniumTest):
         time.sleep(1)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
         time.sleep(3)
-        self.click(self.CONMMAND_LINE)
         self.input_text(self.CONMMAND_LINE," nodectl check\r\n",False)
         time.sleep(5)
+        self.assert_text_in_element(self._TERMINAL % '8', 'Status: OK')
 
     def check_debug_command_in_terminal(self):
         self.click(self.NETWORK_INFO_LINK)
@@ -224,9 +223,13 @@ class OvirtDashboardPage(SeleniumTest):
         time.sleep(1)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
         time.sleep(3)
-        self.click(self.CONMMAND_LINE)
         self.input_text(self.CONMMAND_LINE," nodectl check --debug\r\n",False)
         time.sleep(5)
+
+        cmd = 'nodectl check --debug'
+        output = self.host.execute(cmd).stdout
+        result = re.search("[DEBUG]",output)
+        self.assertNotEqual(result, None)
     
     def check_motd_command_in_terminal(self):
         self.click(self.NETWORK_INFO_LINK)
