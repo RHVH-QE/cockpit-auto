@@ -78,7 +78,7 @@ class CommonPages(SeleniumTest):
     KEY_TEXT="//*[@id='subscription-register-key']"
 
     #add nfs
-    STORAGE_LINK="//*[@id='sidebar-menu']/li[3]/a"
+    STORAGE_LINK="//*[@id='sidebar-menu']/li[3]/a/span"
     STORAGE_FRAME_NAME="/storage"
     ADD_NFS_BUTTON="//*[@id='nfs-mounts']/div[1]/div/button"
     NFS_SERVER_ADDR_TEXT="//*[@id='dialog']/div/div[2]/form/div[1]/input"
@@ -510,14 +510,16 @@ class CommonPages(SeleniumTest):
         self.assert_text_in_element(self.KD_ENABLE_TEXT,"enabled")
     
     def check_file_system_list(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.STORAGE_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
+        self.click(self.STORAGE_LINK)
+        time.sleep(5)
         self.switch_to_frame(self.STORAGE_FRAME_NAME)
-
+        
         self.assert_text_in_element("//*[@id='storage_mounts']/tr[8]/td[2]/div","/boot")
         self.click("//*[@id='storage_mounts']/tr[1]/td[2]/div")
+        time.sleep(1)
+        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[2]/tr[1]/td[2]/span","1 GiB")
         self.assert_text_in_element("//*[@id='detail-content']/table/tbody[5]/tr[1]/th","root")
         self.assert_text_in_element("//*[@id='detail-content']/table/tbody[6]/tr[1]/td[2]/span","1 GiB")
         self.assert_text_in_element("//*[@id='detail-content']/table/tbody[6]/tr[1]/th","/tmp")
