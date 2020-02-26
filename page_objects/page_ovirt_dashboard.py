@@ -59,6 +59,7 @@ class OvirtDashboardPage(SeleniumTest):
     TERMINAL_FRAME_NAME="/system/terminal"
     TERMINAL_ADMIN="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[5]"
     CONMMAND_LINE="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[7]"
+    COMMAND_RESULT="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[8]"
 
     def open_page(self):
         self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
@@ -252,6 +253,7 @@ class OvirtDashboardPage(SeleniumTest):
         self.click(self.CONMMAND_LINE)
         self.input_text(self.CONMMAND_LINE," nodectl generate-banner\r\n",False)
         time.sleep(5)
+        self.assert_text_in_element(self.COMMAND_RESULT,"Admin Console:")
 
         try:
             self.host.get_file('/etc/issue','./issue')
@@ -261,11 +263,10 @@ class OvirtDashboardPage(SeleniumTest):
             self.host.put_file('./issue','/etc/issue')
             os.remove('./issue')
         except Exception as e:
-            pass
+            print(e)
         
         cmd = 'nodectl generate-banner --update-issue'
-        output = self.host.execute(cmd).stdout
-        print(output)
+        self.host.execute(cmd).stdout
 
         try:
             self.host.get_file('/etc/issue','./issue')
@@ -275,6 +276,6 @@ class OvirtDashboardPage(SeleniumTest):
                     if line.startswith('XXXXXX'):
                         flag=0
         except Exception as e:    
-            pass
+            print(e)
         self.assertNotEqual(flag,0)
 

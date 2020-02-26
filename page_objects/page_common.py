@@ -534,16 +534,18 @@ class CommonPages(SeleniumTest):
         self.assert_text_in_element("//*[@id='detail-content']/table/tbody[11]/tr[1]/th","swap")
     
     def modify_nfs_storage(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.STORAGE_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
+        self.click(self.STORAGE_LINK)
         self.switch_to_frame(self.STORAGE_FRAME_NAME)
         self.click(self.ADD_NFS_BUTTON)
-
-        self.input_text(self.NFS_SERVER_ADDR_TEXT,self.NFS_SERVER_ADDR)
-        self.input_text(self.SERVER_PATH_TEXT,self.SERVER_PATH)
-        self.input_text(self.MOUNT_POINT_TEXT,self.MOUNT_POINT)
+        time.sleep(2)
+        self.input_text(self.NFS_SERVER_ADDR_TEXT, self.config_dict['nfs_ip'])
+        time.sleep(1)
+        self.input_text(self.SERVER_PATH_TEXT, self.config_dict['nfs_dir'])
+        time.sleep(1)
+        self.input_text(self.MOUNT_POINT_TEXT, self.config_dict['nfs_mount_point'])
+        time.sleep(1)
         self.click(self.NFS_ADD_BUTTON)
         time.sleep(3)
         self.click(self.NFS_SERVER_DETAIL_BUTTON)
@@ -555,6 +557,8 @@ class CommonPages(SeleniumTest):
         time.sleep(2)
         self.assert_element_visible(self.NFS_SIZE_PROGRESS)
         self.click(self.DELETE_NFS_SERVER_BUTTON)
+        time.sleep(2)
+        self.assert_element_invisible("//*[@id='nfs-mounts']/table/tbody/tr")
     
     def check_the_logs(self):
         self.click(self.LOCALHOST_LINK)
@@ -657,13 +661,10 @@ class CommonPages(SeleniumTest):
         time.sleep(3)
     
     def check_selinux_policy(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.NETWORK_INFO_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.SELINUX_LINK)
         time.sleep(1)
-
         self.switch_to_frame(self.SELINUX_FRAME)
 
         cmd = 'getenforce'
@@ -679,12 +680,14 @@ class CommonPages(SeleniumTest):
         result = re.match("Permissive",output)
         self.assertNotEqual(result, None)
 
-        cmd2="setenforce 1"
+        cmd2="setenforce 0"
         output2 = self.host.execute(cmd2).stdout
+        self.refresh()
         time.sleep(5)
 
-        cmd3="setenforce 0"
+        cmd3="setenforce 1"
         output3 = self.host.execute(cmd3).stdout
+        self.refresh()
         time.sleep(5)
 
     def check_udisks_service(self):
