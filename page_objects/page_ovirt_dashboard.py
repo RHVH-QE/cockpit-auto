@@ -57,9 +57,8 @@ class OvirtDashboardPage(SeleniumTest):
     OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
     TERMINAL_LINK="//*[@id='sidebar-tools']/li[5]/a"
     TERMINAL_FRAME_NAME="/system/terminal"
-    TERMINAL_ADMIN="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[5]"
-    CONMMAND_LINE="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[7]"
-    COMMAND_RESULT="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[8]"
+    _TERMINAL="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[%s]"
+    CONMMAND_LINE=_TERMINAL % '7'
 
     def open_page(self):
         self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
@@ -237,9 +236,10 @@ class OvirtDashboardPage(SeleniumTest):
         time.sleep(1)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
         time.sleep(3)
-        self.click(self.CONMMAND_LINE)
         self.input_text(self.CONMMAND_LINE," nodectl motd\r\n",False)
         time.sleep(5)
+        self.assert_text_in_element(self._TERMINAL % '9', 'node status:')
+        self.assert_text_in_element(self._TERMINAL % '10', "See `nodectl check` for more information")
     
     def check_generate_banner_command_in_terminal(self):
         flag=1
@@ -250,10 +250,9 @@ class OvirtDashboardPage(SeleniumTest):
         time.sleep(1)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
         time.sleep(3)
-        self.click(self.CONMMAND_LINE)
         self.input_text(self.CONMMAND_LINE," nodectl generate-banner\r\n",False)
         time.sleep(5)
-        self.assert_text_in_element(self.COMMAND_RESULT,"Admin Console:")
+        self.assert_text_in_element(self._TERMINAL % '8',"Admin Console:")
 
         try:
             self.host.get_file('/etc/issue','./issue')
