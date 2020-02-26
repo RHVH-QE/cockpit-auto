@@ -583,16 +583,14 @@ class CommonPages(SeleniumTest):
             pass
 
     def create_new_account(self):
-        self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
-        self.click(self.NETWORK_INFO_LINK)
-        self.switch_to_default_content()
+        self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.ACCOUNT_LINK)
         time.sleep(1)
         self.switch_to_frame(self.ACCOUNT_FRAME_NAME)
 
         self.click(self.CREATE_NEW_ACCOUNT_BUTTON)
-        time.sleep(5)
+        time.sleep(3)
         self.input_text(self.FULL_NAME_TEXT,"user_a")
         self.input_text(self.PASSWORD_TEXT,"shleishlei123")
         self.input_text(self.CONFIRM_TEXT,"shleishlei123")
