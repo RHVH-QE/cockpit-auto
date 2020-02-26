@@ -55,7 +55,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-24922")
     def test_add_nfs_storage(self):
         """
-        :avocado: tags=common_tier1
+        :avocado: tags=common_tier1a
         """
         self.add_nfs_storage()
     

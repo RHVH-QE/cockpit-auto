@@ -80,11 +80,11 @@ class CommonPages(SeleniumTest):
     #add nfs
     STORAGE_LINK="//*[@id='sidebar-menu']/li[3]/a"
     STORAGE_FRAME_NAME="/storage"
-    ADD_NFS_BUTTON="//*[@id='nfs-mounts']/div[1]/div/button"
-    NFS_SERVER_ADDR_TEXT="//*[@id='dialog']/div/div[2]/form/div[1]/input"
-    SERVER_PATH_TEXT="//*[@id='dialog']/div/div[2]/form/div[2]/div/div/div/input"
-    MOUNT_POINT_TEXT="//*[@id='dialog']/div/div[2]/form/div[3]/input"
-    NFS_ADD_BUTTON="//*[@id='dialog']/div/div[3]/button[2]"
+    ADD_NFS_BUTTON="//*[@id='nfs-mounts']/div[1]/span[1]/span/button"
+    NFS_SERVER_ADDR_TEXT="//*[@id='dialog']/div/div/div[2]/table/tbody/tr[1]/td[2]/input"
+    SERVER_PATH_TEXT="//*[@id='dialog']/div/div/div[2]/table/tbody/tr[2]/td[2]/div/div/input"
+    MOUNT_POINT_TEXT="//*[@id='dialog']/div/div/div[2]/table/tbody/tr[3]/td[2]/input"
+    NFS_ADD_BUTTON="//*[@id='dialog']/div/div/div[3]/button[2]"
 
     NFS_SERVER_DETAIL_BUTTON="//*[@id='nfs-mounts']/table/tbody/tr/td[1]"
     DELETE_NFS_SERVER_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[3]"
