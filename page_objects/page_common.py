@@ -845,7 +845,7 @@ class CommonPages(SeleniumTest):
         des_date = datetime.date.today().__str__()
         self.assertEqual(res_date, des_date)
     
-    def Subscription_with_key_and_organization(self):
+    def subscription_with_key_and_organization(self):
         self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.SUBSCRIPTION_LINK)
@@ -868,3 +868,39 @@ class CommonPages(SeleniumTest):
         self.assert_text_in_element(self.DETAIL_PRODUCT_ID,"328")
         self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4.3")
         self.assert_text_in_element(self.DETAIL_PRODUCT_STATUS, "Subscribed")
+
+    def create_sos_report(self):
+        self.host.execute("yes|sosreport", timeout=2000)
+        ret = self.host.execute('ls /var/tmp/')
+        for f in ret.split('\n'):
+            file = f.rstrip()
+            if file.startswith("sosreport-") and file.endswith(".tar.xz"):
+                tar_file_path = os.path.join('/var/tmp', file)
+                self.host.execute('tar -xvJf %s' % tar_file_path)
+    
+    def find_nodectl_info_file(self):
+        ret = self.host.execute('ls')
+        for file in ret.split(' '):
+            if file.startswith("sosreport-"):
+                nodectl_info_file = os.path.join('/root', file, 'sos_commands/ovirt_node/nodectl_info')
+                return nodectl_info_file
+
+    def check_nodectl_info_file(self, info_file):
+        ret = self.host.execute("nodectl info")
+        self.host.get_file(info_file, './nodectl_info')
+        with open('./nodectl_info') as file:
+            for line in file.readlines():
+                result = re.search('fail', line)
+                self.assertEqual(result, None)
+
+        for line in ret.split('\n'):
+            des_line = line.replace('\n','').replace('\r','')
+            with open('./nodectl_info') as file:
+                for line in file.readlines():
+                    res_line = line.replace('\n','').replace('\r','')
+                    if res_line == des_line:
+                        break
+                    else:
+                        continue
+            continue
+        os.remove('./nodectl_info')

@@ -227,7 +227,16 @@ class TestCockpitCommon(CommonPages):
         """
         :avocado: tags=common_tier2
         """
-        self.Subscription_with_key_and_organization()
+        self.subscription_with_key_and_organization()
+
+    @add_case_id("RHVEM-26891")
+    def test_vdsm_sos_nodectl_info_collect(self):
+        """
+        :avocado: tags=common_tier
+        """
+        self.create_sos_report()
+        nodectl_info = self.find_nodectl_info_file()
+        self.check_nodectl_info_file(nodectl_info)
     
     
     
