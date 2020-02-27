@@ -132,6 +132,7 @@ class TestOvirtDashboard(OvirtDashboardPage):
         layers = nodectl_info['layers'].values()
         available_layer = None
         self.open_rollback_window()
+
         for layer in layers:
             rollback_attr = self.get_rollback_attr_on_layer(layer[0])
             if layer[0] != current_layer:
@@ -141,7 +142,8 @@ class TestOvirtDashboard(OvirtDashboardPage):
                 self.assertIn('disabled', rollback_attr)
         if available_layer:
             self.execute_rollback_on_layer(available_layer)
-            self.assert_element_visible(self.ROLLBACK_ALERT % available_layer)
+            nodectl_info = self.nodectl_info_on_host()
+            self.assertEqual(available_layer, nodectl_info['current_layer'])
     
     @add_case_id("RHVEM-23324")
     def test_show_image_information_in_terminal(self):

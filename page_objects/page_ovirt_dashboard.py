@@ -120,6 +120,9 @@ class OvirtDashboardPage(SeleniumTest):
 
     def execute_rollback_on_layer(self, layer_name):
         self.click(self.ROLLBACK_BUTTON_ON_LAYERS % layer_name)
+        # self.assert_text_in_element()
+        self.assert_element_visible(self.ROLLBACK_ALERT % available_layer)
+        self.host.execute("reboot", timeout=1500)
 
     def nodectl_check_on_host(self):
         cmd = 'nodectl check --machine-readable'
@@ -157,6 +160,7 @@ class OvirtDashboardPage(SeleniumTest):
 
     def open_rollback_window(self):
         self.click(self.ROLLBACK_BUTTON_ON_HOME)
+        time.sleep(5)
 
     def get_rollback_attr_on_layer(self, layer_name):
         return self.get_attribute(self.ROLLBACK_BUTTON_ON_LAYERS % layer_name, 'class')
