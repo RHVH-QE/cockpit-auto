@@ -5,12 +5,12 @@
 rhvm_appliance_path: 'http://10.66.10.22:8090/rhevm-appliance/'
 
 # NFS
-nfs_ip: ''
-nfs_pass: ''
-nfs_dir: ''
+nfs_ip: '10.73.131.168'
+nfs_pass: 'redhat'
+nfs_dir: '/root/linda/nfs'
 
 #Subscription
-subscription_username: ''
+subscription_username: 'weiwang@redhat.com'
 subscription_password: ''
 
 # ISCSI
