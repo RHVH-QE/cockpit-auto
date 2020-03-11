@@ -21,7 +21,7 @@ class CommonPages(SeleniumTest):
     """
 
     #R_MACHINE_ADDR="10.66.9.205"
-    R_MACHINE_ADDR="10.73.73.91"
+    R_MACHINE_ADDR="10.73.130.125"
     WRONG_ADDR="1.2.3.4"
     R_MACHINE_USER="root"
     R_MACHINE_PWD="redhat"
@@ -173,7 +173,8 @@ class CommonPages(SeleniumTest):
     #terminal function
     TERMINAL_LINK="//*[@id='sidebar-tools']/li[5]/a"
     TERMINAL_FRAME_NAME="/system/terminal"
-    TERMINAL_ADMIN="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[5]"
+    TERMINAL_ADMIN="//*[@id='terminal']/div/div[2]/div/div/div[5]"
+    
     CONMMAND_LINE="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[7]"
 
     SSH_HOST_KEY_LINK="//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/a"
@@ -246,8 +247,9 @@ class CommonPages(SeleniumTest):
         time.sleep(5)
         self.click(self.OTHER_OPTION)
         self.input_text(self.SERVER_FIELD,self.R_MACHINE_ADDR)
-        self.login(self.R_MACHINE_USER,self.R_MACHINE_PWD)
         time.sleep(2)
+        self.login(self.R_MACHINE_USER,self.R_MACHINE_PWD)
+        time.sleep(5)
         actual_s = self.get_current_url().split('=')[-1]
         expect_s = self.R_MACHINE_ADDR + '/ovirt-dashboard'
         self.assertEqual(actual_s,expect_s)
@@ -310,14 +312,9 @@ class CommonPages(SeleniumTest):
         time.sleep(10)
         self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
         self.assert_text_in_element("//*[@id='app']/div/div/label", "Status: Current")
-        self.click(self.DETAIL_BUTTON)
-        time.sleep(2)
-        self.assert_text_in_element(self.DETALI_PRODUCT_NAME, "Red Hat Virtualization Host")
-        self.assert_text_in_element(self.DETAIL_PRODUCT_ID,"328")
-        self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4.3")
-        self.assert_text_in_element(self.DETAIL_PRODUCT_STATUS, "Subscribed")
 
     def check_packages_installation(self):
+        self.host.execute("subscription-manager repos --disable=*")
         self.host.execute("subscription-manager repos --enable=%s" %self.config_dict['subscription_repos'])
         sub_pkgs = self.config_dict['subscription_packages']
         for pkg in sub_pkgs[:-1]:
