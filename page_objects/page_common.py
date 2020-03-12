@@ -78,7 +78,7 @@ class CommonPages(SeleniumTest):
     KEY_TEXT="//*[@id='subscription-register-key']"
 
     #add nfs
-    STORAGE_LINK="//*[@id='sidebar-menu']/li[3]/a"
+    STORAGE_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[3]/td[2]/a"
     STORAGE_FRAME_NAME="/storage"
     ADD_NFS_BUTTON="//*[@id='nfs-mounts']/div[1]/span[1]/span/button"
     NFS_SERVER_ADDR_TEXT="//*[@id='dialog']/div/div/div[2]/table/tbody/tr[1]/td[2]/input"
@@ -89,8 +89,8 @@ class CommonPages(SeleniumTest):
     NFS_SERVER_DETAIL_BUTTON="//*[@id='nfs-mounts']/table/tbody/tr/td[1]"
     DELETE_NFS_SERVER_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[3]"
     NFS_UNMOUNT_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[1]"
-    NFS_SIZE_FIELD="//*[@id='detail-header']/div/div[2]/div/div[3]"
-    NFS_SIZE_PROGRESS="//*[@id='detail-header']/div/div[2]/div/div[3]/div"
+    NFS_SIZE_FIELD="//*[@id='detail-header']/div/div[2]/table/tr[3]/td[2]"
+    NFS_SIZE_PROGRESS="//*[@id='detail-header']/div/div[2]/table/tr[3]/td[2]/div"
 
     #system status
     CPU_STATUS="//*[@id='dashboard-plot-0']"
@@ -137,13 +137,13 @@ class CommonPages(SeleniumTest):
     CRASH_SYSTEM_BUTTON="//*[@id='cockpit_modal_dialog']/div/div[2]/div/div/div[3]/button[2]"
 
     KD_FRAME_NAME="/kdump"
-    KD_SERVICE_LINK="//*[@id='app']/div/form/div[1]/a/span"
+    KD_SERVICE_LINK="//*[@id='app']/div/table/tbody/tr[1]/td[2]/div/a"
     SERVICE_FRAME_NAME="/system/services"
     STOP_START_BUTTON="//*[@id='service-unit-primary-action']/button"
-    KD_STATUS_INFO="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[1]/td[2]/span"
+    KD_STATUS_INFO="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr/td[1]/span"
     KD_RESTART_BUTTON="//*[@id='service-unit-action']/button[1]"
     KD_DISABLE_BUTTON="//*[@id='service-file-action']/button[1]"
-    KD_ENABLE_TEXT="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[3]/td[2]"
+    KD_ENABLE_TEXT="//*[@id='service-unit']/div/div[2]/div[2]/table/tbody/tr/td[1]"
 
     #check system logs
     LOGS_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[2]/td[2]/a"
@@ -152,7 +152,7 @@ class CommonPages(SeleniumTest):
     RECENT_LOGS="//*[@id='journal-current-day-menu']/ul/li[1]/a"
     CURRENT_BOOT="//*[@id='journal-current-day-menu']/ul/li[2]/a"
     LAST_ONE_DAY="//*[@id='journal-current-day-menu']/ul/li[4]/a"
-    LAST_SEVEN_DAYS="//*[@id='journal-current-day-menu']/ul/li[5]/a"
+    LAST_SEVEN_DAYS="//*[@id='journal-current-day-menu']/ul/li[4]/a"
 
     #create new account
     ACCOUNT_LINK="//*[@id='sidebar-menu']/li[6]/a"
@@ -175,14 +175,14 @@ class CommonPages(SeleniumTest):
     TERMINAL_FRAME_NAME="/system/terminal"
     TERMINAL_ADMIN="//*[@id='terminal']/div/div[2]/div/div/div[5]"
     
-    CONMMAND_LINE="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[7]"
+    CONMMAND_LINE="//*[@id='terminal']/div/div[2]/div/div/div[7]/span"
 
     SSH_HOST_KEY_LINK="//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/a"
     SSH_HOST_KEY_COTENT="//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/div/div/div/div/div[2]/div"
 
     #check diagnostic report
     DIAGNOSTIC_REPORT_LINK="//*[@id='sidebar-tools']/li[1]/a"
-    DIAGNOSTIC_REPORT_FRAME="/sosreport"
+    DIAGNOSTIC_REPORT_FRAME="cockpit1:localhost/sosreport"
     CREATE_REPORT_BUTTON="/html/body/div[1]/button"
     REPORT_DIALOG="//*[@id='sos']/div"
     REPORT_DOWNLOAD_BUTTON="//*[@id='sos-download']/center/button"
@@ -190,7 +190,7 @@ class CommonPages(SeleniumTest):
     #check_selinux_policy
     SELINUX_LINK="//*[@id='sidebar-tools']/li[3]/a"
     SELINUX_FRAME="/selinux/setroubleshoot"
-    SWITCH_BUTTON="//*[@id='app']/div/div/label/label/span"
+    SWITCH_BUTTON="//*[@id='app']/div/div/label/div"
 
     #check udisks
     SERVICE_LINK="//*[@id='sidebar-menu']/li[7]/a"
@@ -260,7 +260,7 @@ class CommonPages(SeleniumTest):
         self.input_text(self.SERVER_FIELD,self.WRONG_ADDR)
         self.login(self.R_MACHINE_USER,self.R_MACHINE_PWD)
         time.sleep(5)
-        self.assertEqual(self.get_text(self.LOGIN_ERROR_MESSAGE),"Unable to connect to that address")
+        self.assertEqual(self.get_text(self.LOGIN_ERROR_MESSAGE),"Refusing to connect. Host is unknown")
 
         
     def add_remote_host(self):
@@ -472,6 +472,7 @@ class CommonPages(SeleniumTest):
         self.click(self.KD_LINK)
         self.switch_to_frame(self.KD_FRAME_NAME)
         self.click(self.KD_SERVICE_LINK)
+        time.sleep(5)
         self.switch_to_default_content()
         self.switch_to_frame(self.SERVICE_FRAME_NAME)
         self.click(self.STOP_START_BUTTON)
@@ -496,8 +497,8 @@ class CommonPages(SeleniumTest):
         time.sleep(1)
         self.switch_to_frame(self.STORAGE_FRAME_NAME)
 
-        self.assert_text_in_element("//*[@id='storage_mounts']/tr[8]/td[2]/div","/boot")
-        self.click("//*[@id='storage_mounts']/tr[1]/td[2]/div")
+        # self.assert_text_in_element("//*[@id='storage_mounts']/tr[8]/td[2]/div","/boot")
+        self.click("//*[@id='storage_mounts']/tr[1]/td[1]")
         self.assert_text_in_element("//*[@id='detail-content']/table/tbody[5]/tr[1]/th","root")
         self.assert_text_in_element("//*[@id='detail-content']/table/tbody[6]/tr[1]/td[2]/span","1 GiB")
         self.assert_text_in_element("//*[@id='detail-content']/table/tbody[6]/tr[1]/th","/tmp")
@@ -519,9 +520,9 @@ class CommonPages(SeleniumTest):
         self.switch_to_frame(self.STORAGE_FRAME_NAME)
         self.click(self.ADD_NFS_BUTTON)
 
-        self.input_text(self.NFS_SERVER_ADDR_TEXT,self.NFS_SERVER_ADDR)
-        self.input_text(self.SERVER_PATH_TEXT,self.SERVER_PATH)
-        self.input_text(self.MOUNT_POINT_TEXT,self.MOUNT_POINT)
+        self.input_text(self.NFS_SERVER_ADDR_TEXT,self.config_dict['nfs_ip'])
+        self.input_text(self.SERVER_PATH_TEXT,self.config_dict['nfs_dir'])
+        self.input_text(self.MOUNT_POINT_TEXT,self.config_dict['nfs_mount_point'])
         self.click(self.NFS_ADD_BUTTON)
         time.sleep(3)
         self.click(self.NFS_SERVER_DETAIL_BUTTON)
@@ -728,6 +729,7 @@ class CommonPages(SeleniumTest):
         re_ipv6 = "^(?:[a-f0-9]{1,4}:){7}[a-f0-9]{1,4}$"
         for addr in address_list:
             if len(addr) <= len('http://255.255.255.255:9090'):
+                print(addr[8:-6])
                 self.assertNotEqual(re.match(re_ipv4, addr[8:-6]), None)
             else:
                 self.assertNotEqual(re.match(re_ipv6, addr[8:-6]), None)
@@ -844,5 +846,5 @@ class CommonPages(SeleniumTest):
         time.sleep(2)
         self.assert_text_in_element(self.DETALI_PRODUCT_NAME, "Red Hat Virtualization Host")
         self.assert_text_in_element(self.DETAIL_PRODUCT_ID,"328")
-        self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4.3")
+        self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4.2")
         self.assert_text_in_element(self.DETAIL_PRODUCT_STATUS, "Subscribed")

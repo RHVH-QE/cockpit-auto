@@ -76,7 +76,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHVEM-23298")
     def test_check_appliance_like_text(self):
         """
-        :avocado: tags=common_tier1
+        :avocado: tags=common_tier1a
         """
         self.check_appliance_like_text()
     
@@ -200,19 +200,19 @@ class TestCockpitCommon(CommonPages):
         """
         self.create_new_account()
     
-    @add_case_id("RHVEM-23289")
-    def test_check_terminal(self):
-        """
-        :avocado: tags=common_tier2
-        """
-        self.check_terminal()
+    # @add_case_id("RHVEM-23289")
+    # def test_check_terminal(self):
+    #     """
+    #     :avocado: tags=common_tier2
+    #     """
+    #     self.check_terminal()
 
-    @add_case_id("RHVEM-23297")
-    def test_create_diagnostic_report(self):
-        """
-        :avocado: tags=common_tier2
-        """
-        self.create_dignostic_report()
+    # @add_case_id("RHVEM-23297")
+    # def test_create_diagnostic_report(self):
+    #     """
+    #     :avocado: tags=common_tier2
+    #     """
+    #     self.create_dignostic_report()
     
     @add_case_id("RHVEM-23300")
     def test_check_selinux_policy(self):
@@ -225,7 +225,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHVEM-23294")
     def test_subscription_with_key_and_organization(self):
         """
-        :avocado: tags=common_tier2
+        :avocado: tags=common_tier2a
         """
         self.Subscription_with_key_and_organization()
     
