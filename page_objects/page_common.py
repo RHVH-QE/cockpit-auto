@@ -6,7 +6,7 @@ import simplejson
 import urllib2
 import stat
 import re
-import pytz
+#import pytz
 from seleniumlib import SeleniumTest
 from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
@@ -21,7 +21,7 @@ class CommonPages(SeleniumTest):
     """
 
     #R_MACHINE_ADDR="10.66.9.205"
-    R_MACHINE_ADDR="10.73.73.91"
+    R_MACHINE_ADDR="10.73.130.127"
     WRONG_ADDR="1.2.3.4"
     R_MACHINE_USER="root"
     R_MACHINE_PWD="redhat"
@@ -279,20 +279,17 @@ class CommonPages(SeleniumTest):
         self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
 
         self.click(self.ADD_SERVER_BUTTON)
+        time.sleep(5)
         self.input_text(self.INPUT_MACHINE_ADDRESS,self.R_MACHINE_ADDR)
+        time.sleep(5)
         self.click(self.ADD_BUTTON)
-
-        try:
-            self.wait_visible(self.ADD_UNKNOWN_HOST)
-            self.click(self.CONNECT_BUTTON)
-            self.input_text(self.INPUT_REMOTE_USER,self.R_MACHINE_USER)
-            self.input_text(self.INPUT_REMOTE_PASSWORD,self.R_MACHINE_PWD)
-            self.click(self.SET_UP_SERVER)
-            self.assert_element_visible("//*[@id='dashboard-hosts']/div[2]/a[2]")
-        except:
-            self.input_text(self.INPUT_REMOTE_PASSWORD,self.R_MACHINE_PWD)
-            self.click(self.SET_UP_SERVER)
-            self.assert_element_visible("//*[@id='dashboard-hosts']/div[2]/a[2]")
+        time.sleep(5)
+        self.click(self.CONNECT_BUTTON)
+        time.sleep(5)
+        self.input_text(self.INPUT_REMOTE_USER,self.R_MACHINE_USER)
+        self.input_text(self.INPUT_REMOTE_PASSWORD,self.R_MACHINE_PWD)
+        self.click(self.SET_UP_SERVER)
+        self.assert_element_visible("//*[@id='dashboard-hosts']/div[2]/a[2]")
 
     def delete_remote_host(self):
         self.click(self.DASHBOARD_LINK)

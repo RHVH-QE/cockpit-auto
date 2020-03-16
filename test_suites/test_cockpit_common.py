@@ -140,7 +140,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHVEM-23260")
     def test_config_timezone(self):
         """
-        :avocado: tags=common_tier2
+        :avocado: tags=common_tier2a
         """
         self.config_timezone()
 
