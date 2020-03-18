@@ -81,10 +81,10 @@ class CommonPages(SeleniumTest):
     STORAGE_LINK="//*[@id='sidebar-menu']/li[3]/a/span"
     STORAGE_FRAME_NAME="/storage"
     ADD_NFS_BUTTON="//*[@id='nfs-mounts']/div[1]/div/button"
-    NFS_SERVER_ADDR_TEXT="//*[@id='dialog']/div/div[2]/form/div[1]/input"
-    SERVER_PATH_TEXT="//*[@id='dialog']/div/div[2]/form/div[2]/div/div/div/input"
-    MOUNT_POINT_TEXT="//*[@id='dialog']/div/div[2]/form/div[3]/input"
-    NFS_ADD_BUTTON="//*[@id='dialog']/div/div[3]/button[2]"
+    NFS_SERVER_ADDR_TEXT="//*[@id='dialog']/div/div/div[2]/form/div[1]/input"
+    SERVER_PATH_TEXT="//*[@id='dialog']/div/div/div[2]/form/div[2]/div/div/div[1]/input"
+    MOUNT_POINT_TEXT="//*[@id='dialog']/div/div/div[2]/form/div[3]/input"
+    NFS_ADD_BUTTON="//*[@id='dialog']/div/div/div[3]/button[2]"
 
     NFS_SERVER_DETAIL_BUTTON="//*[@id='nfs-mounts']/table/tbody/tr/td[1]"
     DELETE_NFS_SERVER_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[3]"
@@ -203,11 +203,9 @@ class CommonPages(SeleniumTest):
     SWITCH_BUTTON="//*[@id='app']/div/div/label/label/span"
 
     #check udisks
-    SERVICE_LINK="//*[@id='sidebar-menu']/li[7]/a"
+    SERVICE_LINK="//*[@id='sidebar-menu']/li[6]/a"
     FILTER_INPUT_TEXT="//*[@id='services-text-filter']"
     UDISKS_STATUS_TEXT="//*[@id='services-list']/div/table/tbody/tr/td[2]"
-
-
 
     def setUp(self):
         case_name = self._testMethodName

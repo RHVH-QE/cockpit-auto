@@ -186,6 +186,9 @@ class SeleniumTest(Test):
         login_user_text_input = "#login-user-input"
         login_pass_text_input = "#login-password-input"
         login_button = "#login-button"
+        REUSE_PASSWORD_BUTTON="//*[@id='authorized-input']"
+
+        self.click(REUSE_PASSWORD_BUTTON)
 
         self.input_text(login_user_text_input, username)
         self.input_text(login_pass_text_input, passwd)

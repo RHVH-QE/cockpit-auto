@@ -12,7 +12,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23250")
     def test_firefox_login(self):
         """
-        :avocado: tags=common_tier1a
+        :avocado: tags=common_tier1b
         """
         self.check_firefox_login()
     
@@ -26,7 +26,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23242")
     def test_add_remote_host(self):
         """
-        :avocado: tags=common_tier1a
+        :avocado: tags=common_tier1
         """
         self.add_remote_host()
     
@@ -69,7 +69,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-25363")
     def test_udisks_service(self):
         """
-        :avocado: tags=common_tier1
+        :avocado: tags=common_tier1b
         """
         self.check_udisks_service()
     
