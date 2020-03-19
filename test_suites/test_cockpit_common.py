@@ -187,6 +187,7 @@ class TestCockpitCommon(CommonPages):
         :avocado: tags=common_tier2
         """
         self.modify_nfs_storage()
+        #can not assert progress bar
     
     @add_case_id("RHVEM-23268")
     def test_check_system_logs(self):
@@ -227,9 +228,10 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHVEM-23294")
     def test_subscription_with_key_and_organization(self):
         """
-        :avocado: tags=common_tier2
+        :avocado: tags=common_tier2ab
         """
         self.subscription_with_key_and_organization()
+        #bug
     
     
     

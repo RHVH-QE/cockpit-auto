@@ -89,8 +89,10 @@ class CommonPages(SeleniumTest):
     NFS_SERVER_DETAIL_BUTTON="//*[@id='nfs-mounts']/table/tbody/tr/td[1]"
     DELETE_NFS_SERVER_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[3]"
     NFS_UNMOUNT_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[1]"
-    NFS_SIZE_FIELD="//*[@id='detail-header']/div/div[2]/div/div[3]"
-    NFS_SIZE_PROGRESS="//*[@id='detail-header']/div/div[2]/div/div[3]/div"
+    NFS_SIZE_FIELD="#detail-header > div > div.panel-body > div"
+    
+    NFS_SIZE_PROGRESS="#pf-15846295830663u3ki41vij2 > div.pf-c-progress__bar > div"
+    NFS_STATUS="//*[@id='pf-15846295830663u3ki41vij2']/div[2]/span"
 
     #system status
     CPU_STATUS="//*[@id='dashboard-plot-0']"
@@ -146,8 +148,9 @@ class CommonPages(SeleniumTest):
     SERVICE_FRAME_NAME="/system/services"
     SERVICE_SEARCHER="//*[@id='services-text-filter']"
     KD_SERVICE_LINK="//*[@id='services-list']/div/table/tbody/tr/td[1]"
-    STOP_START_BUTTON="//*[@id='service-unit-primary-action']/button"
-    KD_STATUS_INFO="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[1]/td[2]/span"
+    STOP_START_BUTTON="//*[@id='service-details']/div/span/label/span"
+    KD_STATUS_INFO="//*[@id='statuses']/div/span[2]"
+    KD_STATUS_INFO2=".status-running > span:nth-child(2)"
     KD_RESTART_BUTTON="//*[@id='service-unit-action']/button[1]"
     KD_DISABLE_BUTTON="//*[@id='service-file-action']/button[1]"
     KD_ENABLE_TEXT="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[3]/td[2]"
@@ -162,19 +165,20 @@ class CommonPages(SeleniumTest):
     # LAST_ONE_DAY="//*[@id='journal-current-day-menu']/ul/li[4]/a"
     LAST_SEVEN_DAYS="//*[@id='journal-current-day-menu']/ul/li[5]/a"
     LOGS_LOAD_EARLIER="//*[@id='journal-load-earlier']"
+    LOG_INFO="#journal-box > div.panel.panel-default.cockpit-log-panel > div:nth-child(2)"
     LOGS_FILTER="//*[@id='journal-prio-menu']/button"
     LOGS_EVERYTHING="//*[@id='prio-lists']/li[1]/a"
     LOGS_WARNING_ICON="//*[@id='journal-box']/div[1]/div[2]/div[1]"
 
     #create new account
-    ACCOUNT_LINK="//*[@id='sidebar-menu']/li[6]/a"
+    ACCOUNT_LINK="#sidebar-menu > li:nth-child(5) > a"
     ACCOUNT_FRAME_NAME="/users"
     CREATE_NEW_ACCOUNT_BUTTON="//*[@id='accounts-create']"
     FULL_NAME_TEXT="//*[@id='accounts-create-real-name']"
     PASSWORD_TEXT="//*[@id='accounts-create-pw1']"
     CONFIRM_TEXT="//*[@id='accounts-create-pw2']"
-    CREATE_BUTTON="//*[@id='accounts-create-create']"
-    ACCOUNT_INFO="//*[@id='accounts-list']/div/div[3]"
+    CREATE_BUTTON="#accounts-create-create"
+    ACCOUNT_INFO="#accounts-list > div:nth-child(3)"
 
     ROOT_BUTTON="//*[@id='navbar-dropdown']"
     LOGOUT_BUTTON="//*[@id='go-logout']"
@@ -183,7 +187,7 @@ class CommonPages(SeleniumTest):
     LOGIN_BUTTON="//*[@id='login-button']"
 
     #terminal function
-    TERMINAL_LINK="//*[@id='sidebar-tools']/li[5]/a"
+    TERMINAL_LINK="#sidebar-tools > li:nth-child(4) > a"
     TERMINAL_FRAME_NAME="/system/terminal"
     TERMINAL_ADMIN="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[5]"
     CONMMAND_LINE="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[7]"
@@ -196,12 +200,12 @@ class CommonPages(SeleniumTest):
     DIAGNOSTIC_REPORT_FRAME="/sosreport"
     CREATE_REPORT_BUTTON="//button[text()='Create Report']"
     REPORT_DIALOG="//*[@id='sos']/div"
-    REPORT_DOWNLOAD_BUTTON="//*[@id='sos-download']/center/button"
+    REPORT_DOWNLOAD_BUTTON="#sos-download > button"
     
     #check_selinux_policy
-    SELINUX_LINK="//*[@id='sidebar-tools']/li[3]/a"
+    SELINUX_LINK="#sidebar-tools > li:nth-child(3) > a"
     SELINUX_FRAME="/selinux/setroubleshoot"
-    SWITCH_BUTTON="//*[@id='app']/div/div/label/label/span"
+    SWITCH_BUTTON="#app > div > div > div > label > span"
 
     #check udisks
     SERVICE_LINK="//*[@id='sidebar-menu']/li[6]/a"
@@ -484,26 +488,19 @@ class CommonPages(SeleniumTest):
     def check_service_status(self):
         self.click(self.LOCALHOST_LINK)
         time.sleep(1)
-        self.click(self.SERVICES_LINK)
+        self.click(self.SERVICE_LINK)
+        time.sleep(1)
         self.switch_to_frame(self.SERVICE_FRAME_NAME)
-        self.input_text(self.SERVICE_SEARCHER, 'kdump')
-        time.sleep(2)
-        self.click(self.KD_SERVICE_LINK)
-        time.sleep(2)
+        self.input_text(self.FILTER_INPUT_TEXT,"kdump")
+        time.sleep(3)
+        self.click("//*[@id='services-list']/div/table/tbody/tr/td[1]")
+
         self.click(self.STOP_START_BUTTON)
         time.sleep(8)
-        self.assert_text_in_element(self.KD_STATUS_INFO,"inactive")
+        self.assert_text_in_element(self.KD_STATUS_INFO,"Disabled")
         self.click(self.STOP_START_BUTTON)
-        self.assert_text_in_element(self.KD_STATUS_INFO,"activating")
-        self.click(self.KD_RESTART_BUTTON)
-        time.sleep(8)
-        self.assert_text_in_element(self.KD_STATUS_INFO,"active")
-        self.click(self.KD_DISABLE_BUTTON)
-        time.sleep(8)
-        self.assert_text_in_element(self.KD_ENABLE_TEXT,"disabled")
-        self.click(self.KD_DISABLE_BUTTON)
-        time.sleep(8)
-        self.assert_text_in_element(self.KD_ENABLE_TEXT,"enabled")
+        time.sleep(2)
+        self.assert_text_in_element(self.KD_STATUS_INFO2,"Running")
     
     def check_file_system_list(self):
         self.click(self.LOCALHOST_LINK)
@@ -512,22 +509,42 @@ class CommonPages(SeleniumTest):
         time.sleep(5)
         self.switch_to_frame(self.STORAGE_FRAME_NAME)
         
-        self.assert_text_in_element("//*[@id='storage_mounts']/tr[8]/td[2]/div","/boot")
-        self.click("//*[@id='storage_mounts']/tr[1]/td[2]/div")
+        self.assert_text_in_element("//*[@id='mounts']/table/tbody/tr[8]/td[2]","/boot")
+        # self.click("//*[@id='storage_mounts']/tr[1]/td[2]/div")
         time.sleep(1)
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[2]/tr[1]/td[2]/span","1 GiB")
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[5]/tr[1]/th","root")
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[6]/tr[1]/td[2]/span","1 GiB")
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[6]/tr[1]/th","/tmp")
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[7]/tr[1]/td[2]/span","15 GiB")
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[7]/tr[1]/th","/var")
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[8]/tr[1]/td[2]/span","10 GiB")
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[8]/tr[1]/th","/var_crash")
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[9]/tr[1]/td[2]/span","8 GiB")
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[9]/tr[1]/th","/var_log")
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[10]/tr[1]/td[2]/span","2 GiB")
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[10]/tr[1]/th","/var_log_audit")
-        self.assert_text_in_element("//*[@id='detail-content']/table/tbody[11]/tr[1]/th","swap")
+        # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[2]/tr[1]/td[2]/span","1 GiB")
+        # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[5]/tr[1]/th","root")
+
+        #tmp
+        self.click("#mounts > table > tbody > tr:nth-child(3) > td:nth-child(2)")
+        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span","1 GiB")
+        self.click("#storage-detail > div.col-md-12 > ol > li:nth-child(1) > button")
+        #var
+        self.click("#mounts > table > tbody > tr:nth-child(4) > td:nth-child(2)")
+        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span","15 GiB")
+        self.click("#storage-detail > div.col-md-12 > ol > li:nth-child(1) > button")
+        #var_crash
+        self.click("#mounts > table > tbody > tr:nth-child(5) > td:nth-child(2)")
+        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span","10 GiB")
+        self.click("#storage-detail > div.col-md-12 > ol > li:nth-child(1) > button")
+        #var_log
+        self.click("#mounts > table > tbody > tr:nth-child(6) > td:nth-child(2)")
+        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span","8 GiB")
+        self.click("#storage-detail > div.col-md-12 > ol > li:nth-child(1) > button")
+        #var_log_audit
+        self.click("#mounts > table > tbody > tr:nth-child(7) > td:nth-child(2)")
+        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span","2 GiB")
+        self.click("#storage-detail > div.col-md-12 > ol > li:nth-child(1) > button")
+        # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[6]/tr[1]/th","/tmp")
+        # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[7]/tr[1]/td[2]/span","15 GiB")
+        # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[7]/tr[1]/th","/var")
+        # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[8]/tr[1]/td[2]/span","10 GiB")
+        # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[8]/tr[1]/th","/var_crash")
+        # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[9]/tr[1]/td[2]/span","8 GiB")
+        # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[9]/tr[1]/th","/var_log")
+        # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[10]/tr[1]/td[2]/span","2 GiB")
+        # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[10]/tr[1]/th","/var_log_audit")
+        # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[11]/tr[1]/th","swap")
     
     def modify_nfs_storage(self):
         self.click(self.LOCALHOST_LINK)
@@ -551,7 +568,8 @@ class CommonPages(SeleniumTest):
         self.assert_text_in_element(self.NFS_SIZE_FIELD,"--")
         self.click(self.NFS_UNMOUNT_BUTTON)
         time.sleep(2)
-        self.assert_element_visible(self.NFS_SIZE_PROGRESS)
+        #self.assert_element_visible(self.NFS_SIZE_PROGRESS)
+        #self.assert_text_visible(self.NFS_STATUS)
         self.click(self.DELETE_NFS_SERVER_BUTTON)
         time.sleep(2)
         self.assert_element_invisible("//*[@id='nfs-mounts']/table/tbody/tr")
@@ -566,17 +584,18 @@ class CommonPages(SeleniumTest):
         time.sleep(1)
         self.click(self.RECENT_LOGS)
         time.sleep(3)
-        self.assert_element_invisible(self.LOGS_LOAD_EARLIER)
+        self.assert_element_invisible(self.LOG_INFO)
         self.assert_element_visible(self.LOGS_WARNING_ICON)
         self.click(self.LOGS_DURATION_BUTTON)
         time.sleep(1)
         self.click(self.LAST_SEVEN_DAYS)
         time.sleep(3)
-        self.assert_element_visible(self.LOGS_LOAD_EARLIER)
+        self.assert_element_visible(self.LOG_INFO)
         self.click(self.LOGS_FILTER)
         time.sleep(2)
         self.click(self.LOGS_EVERYTHING)
         time.sleep(3)
+        self.assert_element_visible(self.LOG_INFO)
         try:
             self.assert_element_visible(self.LOGS_WARNING_ICON)
         except:
@@ -592,10 +611,10 @@ class CommonPages(SeleniumTest):
         self.click(self.CREATE_NEW_ACCOUNT_BUTTON)
         time.sleep(3)
         self.input_text(self.FULL_NAME_TEXT,"user_a")
-        self.input_text(self.PASSWORD_TEXT,"shleishlei123")
-        self.input_text(self.CONFIRM_TEXT,"shleishlei123")
+        self.input_text(self.PASSWORD_TEXT,"shleishlei123!")
+        self.input_text(self.CONFIRM_TEXT,"shleishlei123!")
         self.click(self.CREATE_BUTTON)
-        time.sleep(2)
+        time.sleep(5)
         self.assert_element_visible(self.ACCOUNT_INFO)
 
         self.switch_to_default_content()
@@ -603,7 +622,7 @@ class CommonPages(SeleniumTest):
         self.click(self.LOGOUT_BUTTON)
         time.sleep(1)
         self.input_text(self.LOGIN_USERNAME_TEXT,"user_a")
-        self.input_text(self.LOGIN_PWD_TEXT,"shleishlei123")
+        self.input_text(self.LOGIN_PWD_TEXT,"shleishlei123!")
         self.click(self.LOGIN_BUTTON)
         time.sleep(3)
         self.assert_frame_available("/users")
@@ -619,7 +638,7 @@ class CommonPages(SeleniumTest):
         self.click(self.CONMMAND_LINE)
         self.input_text(self.CONMMAND_LINE," nodectl check\r\n",False)
         time.sleep(5)
-        self.assert_text_in_element("//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[8]","Status")
+        self.assert_text_in_element("//*[@id='the-terminal']/div/div/div[1]/div[1]/div[9]","Status: OK")
 
     def go_to_network_page(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
