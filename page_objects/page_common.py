@@ -6,7 +6,7 @@ import simplejson
 import urllib2
 import stat
 import re
-#import pytz
+# import pytz
 from seleniumlib import SeleniumTest
 from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
@@ -105,6 +105,7 @@ class CommonPages(SeleniumTest):
     SYSTEM_FRAME_LINK="//*[@id='sidebar-menu']/li[1]/a"
     SYSTEM_FRAME_NAME="/system"
     HOSTNAME_BUTTON="//*[@id='system_information_hostname_button']"
+    HOST_INFO_TEXT="//*[@id='system_information_hostname_text']"
     PRETTY_HOSTNAME_TEXT="//*[@id='sich-pretty-hostname']"
     REAL_HOSTNAME_TEXT="//*[@id='sich-hostname']"
     HOSTNAME_APPLY_BUTTON="//*[@id='sich-apply-button']"
@@ -121,15 +122,15 @@ class CommonPages(SeleniumTest):
     TIME_MIN_TEXT="//*[@id='systime-time-minutes']"
 
     #restart node
-    RESTART_BUTTON="//*[@id='shutdown-group']/button[1]"
+    RESTART_BUTTON="//*[@id='restart-button']"
     LEAVE_MESSAGE_TEXT="//*[@id='shutdown-dialog']/div/div/div[2]/textarea"
     RESTART_APPLY_BUTTON="//*[@id='shutdown-dialog']/div/div/div[3]/button[2]"
     RECONNECT_BUTTON="//*[@id='machine-reconnect']"
 
     #change the performance profile
-    PROFILE_LINK="//*[@id='tuned-status-tooltip']/a"
-    DESKTOP_OPTION="//*[@id='cockpit_modal_dialog']/div/div[2]/div/div/div[2]/div/div[3]"
-    PROFILE_APPLY_BUTTON="//*[@id='cockpit_modal_dialog']/div/div[2]/div/div/div[3]/button[2]"
+    PROFILE_LINK="//*[@id='tuned-status-button']"
+    DESKTOP_OPTION="button.list-group-item:nth-child(4)"
+    PROFILE_APPLY_BUTTON=".apply"
 
     #kernel dump
     KD_LINK="//*[@id='sidebar-tools']/li[2]/a"
@@ -137,8 +138,8 @@ class CommonPages(SeleniumTest):
     HINT="//*[@id='app']/div/form/div[2]/a/span"
     KDUMP_SERVICE_STATUS="//*[@id='app']/div/form/div[1]/a/span"
     BTN_TEST_CONFIGURATION="//*[@id='app']/div/form/div[2]/button"
-    CRASH_SYSTEM_BUTTON="//*[@id='cockpit_modal_dialog']/div/div[2]/div/div/div[3]/button[2]"
-
+    CRASH_SYSTEM_BUTTON="body > div:nth-child(3) > div.in.modal > div > div > div.modal-footer > button.btn.btn-danger.apply" 
+    
     KD_FRAME_NAME="/kdump"
     KD_SERVICE_LINK="//*[@id='app']/div/form/div[1]/a/span"
     SERVICES_LINK="//*[@id='sidebar-menu']/li[7]/a/span"
@@ -244,10 +245,10 @@ class CommonPages(SeleniumTest):
 
         self.login(username, passwd)
         time.sleep(5)
-        cmd = 'systemctl status cockpit'
-        output = host.execute(cmd).stdout
-        result = re.search('active', output)
-        self.assertNotEqual(result, None)
+        # cmd = 'systemctl status cockpit'
+        # output = host.execute(cmd).stdout
+        # result = re.search('active', output)
+        # self.assertNotEqual(result, None)
         
     def check_chrome_login(self):
         self.check_firefox_login()
@@ -321,7 +322,7 @@ class CommonPages(SeleniumTest):
         time.sleep(2)
         self.assert_text_in_element(self.DETALI_PRODUCT_NAME, "Red Hat Virtualization Host")
         self.assert_text_in_element(self.DETAIL_PRODUCT_ID,"328")
-        self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4.3")
+        self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4.4")
         self.assert_text_in_element(self.DETAIL_PRODUCT_STATUS, "Subscribed")
 
     def check_packages_installation(self):
@@ -391,7 +392,7 @@ class CommonPages(SeleniumTest):
         self.click(self.HOSTNAME_APPLY_BUTTON)
         time.sleep(2)
 
-        self.assert_text_in_element(self.HOSTNAME_BUTTON,"test (test.redhat.com)")
+        self.assert_text_in_element(self.HOST_INFO_TEXT,"test (test.redhat.com)")
 
         cmd = 'hostname'
         output = self.host.execute(cmd).stdout
@@ -700,15 +701,15 @@ class CommonPages(SeleniumTest):
         time.sleep(3)
         self.assert_text_in_element(self.UDISKS_STATUS_TEXT,"active (running)")
 
-        cmd = 'systemctl status udisks2'
-        output = self.host.execute(cmd).stdout
-        start_point=re.search("PID:",output).end()+1
-        end_point=re.search("(udisksd)",output).start()-2
-        print(output[start_point:end_point])
-        process_id=output[start_point:end_point]
-        cmd='for i in {1..100}; do lsof -p'+' {} | wc -l 1>> /tmp/files; sleep 5; done'.format(process_id)
-        output = self.host.execute(cmd,timeout=510).stdout
-        self.assertEqual(output,'')
+        # cmd = 'systemctl status udisks2'
+        # output = self.host.execute(cmd).stdout
+        # start_point=re.search("PID:",output).end()+1
+        # end_point=re.search("(udisksd)",output).start()-2
+        # print(output[start_point:end_point])
+        # process_id=output[start_point:end_point]
+        # cmd='for i in {1..100}; do lsof -p'+' {} | wc -l 1>> /tmp/files; sleep 5; done'.format(process_id)
+        # output = self.host.execute(cmd,timeout=510).stdout
+        # self.assertEqual(output,'')
     
     def check_kernel_dump_service(self):
         self.click(self.LOCALHOST_LINK)

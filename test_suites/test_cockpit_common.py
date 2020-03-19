@@ -12,7 +12,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23250")
     def test_firefox_login(self):
         """
-        :avocado: tags=common_tier1b
+        :avocado: tags=common_tier1ab
         """
         self.check_firefox_login()
     
@@ -47,10 +47,11 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23290")
     def test_suscription(self):
         """
-        :avocado: tags=common_tier1
+        :avocado: tags=common_tier1ab
         """
         self.subscription_to_rhsm()
         self.check_packages_installation()
+        #bug
     
     @add_case_id("RHEVM-24922")
     def test_add_nfs_storage(self):
@@ -69,7 +70,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-25363")
     def test_udisks_service(self):
         """
-        :avocado: tags=common_tier1b
+        :avocado: tags=common_tier1ab
         """
         self.check_udisks_service()
     
@@ -140,9 +141,10 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHVEM-23260")
     def test_config_timezone(self):
         """
-        :avocado: tags=common_tier2
+        :avocado: tags=common_tier2ab
         """
         self.config_timezone()
+        #bug
 
     @add_case_id("RHVEM-23261")
     def test_config_timezone_manually(self):
