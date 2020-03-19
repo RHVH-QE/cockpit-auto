@@ -117,7 +117,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     ## FC
     STORAGE_FC = _STORAGE_TYPE % 'fc'
-    SELECTED_FC_LUN = "//input[@type='radio'][@value='36005076300810b3e0000000000000027']"
+    SELECTED_FC_LUN = "//input[@type='radio'][@value='36005076300810b3e00000000000002b0']"
     FC_DISCOVER = "//button[@text()='Discover']"
 
     ## GLUSTERFS
@@ -232,7 +232,8 @@ class OvirtHostedEnginePage(SeleniumTest):
 
         if self.host.execute('hosted-engine --check-deployed', raise_exception=False).stdout == "":
             self.backup_remove_logs()
-            self.clean_hostengine_env()
+            # self.clean_hostengine_env()
+            self.host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
             self.refresh()
             self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
 
@@ -276,6 +277,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         try:
             host_ins = Machine(
                 host_string=nfs_ip, host_user='root', host_passwd=nfs_pass)
+            time.sleep(5)
             host_ins.execute("rm -rf %s/*" % nfs_path)
         except:
             import traceback
@@ -452,12 +454,13 @@ class OvirtHostedEnginePage(SeleniumTest):
     def put_cluster_to_global_maintenance(self):
         self.click(self.GLOBAL_MAINTENANCE)
 
-    def clean_hostengine_env(self):
-        project_path = os.path.dirname(os.path.dirname(__file__))
-        clean_he_file = project_path + \
-            '/test_suites/test_ovirt_hostedengine.py.data/clean_he_env.py'
-        self.host.put_file(clean_he_file, '/root/clean_he_env.py')
-        self.host.execute("python /root/clean_he_env.py", timeout=160)
+    # def clean_hostengine_env(self):
+    #     project_path = os.path.dirname(os.path.dirname(__file__))
+    #     clean_he_file = project_path + \
+    #         '/test_suites/test_ovirt_hostedengine.py.data/clean_he_env.py'
+    #     self.host.put_file(clean_he_file, '/root/clean_he_env.py')
+    #     self.host.execute("python /root/clean_he_env.py", timeout=160)
+        
 
     def setting_to_non_default_port(self):
         project_path = os.path.dirname(os.path.dirname(__file__))
@@ -659,7 +662,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             sub_reg_ret = self.host.execute(
                 "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=130)
 
-            ins_reg_ret = self.host.execute("insights-client --register", timeout=120)
+            ins_reg_ret = self.host.execute("insights-client --register", timeout=200)
 
             if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
                 time.sleep(5)

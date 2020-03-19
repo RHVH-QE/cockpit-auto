@@ -77,7 +77,6 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier1
         """
-        # self.clean_hostengine_env()
         self.deploy_on_registering_insights_server()
 
     @add_case_id("RHEVM-25065")
@@ -160,7 +159,6 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier1
         """
-        # self.clean_hostengine_env()
         self.node_zero_rollback_deploy_process()
 
     @add_case_id("RHEVM-25122")

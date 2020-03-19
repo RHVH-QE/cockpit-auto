@@ -28,7 +28,7 @@ iscsi_discovery_pass: ''
 # FC -- Machine:hp-dl385pg8-11
 host_fc_string: '10.73.73.15'
 host_fc_hostname: 'hp-dl385pg8-11.lab.eng.pek2.redhat.com'
-luns_fc_storage: ['36005076300810b3e0000000000000026','36005076300810b3e0000000000000027']
+luns_fc_storage: ['36005076300810b3e00000000000002af','36005076300810b3e00000000000002b0']
 
 # GLUSTERFS
 gluster_ips: {'bootp-73-131-196.rhts.eng.pek2.redhat.com':'10.73.131.196','bootp-73-131-216.rhts.eng.pek2.redhat.com':'10.73.131.216','bootp-73-131-180.rhts.eng.pek2.redhat.com':'10.73.131.180'}
@@ -65,8 +65,10 @@ admin_pass: 'password'
 
 first_host: '10.73.73.105'
 second_host: '10.73.73.106'
-normal_host: '10.66.9.205'
+# normal_host: '10.66.9.205'
+normal_host: '10.73.131.63'
 second_pass: 'redhat'
 second_vm_fqdn: 'cockpit-vm'
 normal_pass: 'redhat'
-normal_host_fqdn: 'dhcp-9-205.nay.redhat.com'
+# normal_host_fqdn: 'dhcp-9-205.nay.redhat.com'
+normal_host_fqdn: 'dell-per730-34.lab.eng.pek2.redhat.com'
