@@ -639,7 +639,7 @@ class CommonPages(SeleniumTest):
         self.click(self.CONMMAND_LINE)
         self.input_text(self.CONMMAND_LINE," nodectl check\r\n",False)
         time.sleep(5)
-        self.assert_text_in_element("//*[@id='the-terminal']/div/div/div[1]/div[1]/div[9]","Status: OK")
+        self.assert_text_in_element("//*[@id='the-terminal']/div/div/div[1]/div[1]/div[8]","Status: OK")
 
     def go_to_network_page(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
