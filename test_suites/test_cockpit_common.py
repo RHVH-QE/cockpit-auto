@@ -77,7 +77,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23298")
     def test_check_appliance_like_text(self):
         """
-        :avocado: tags=common_tier
+        :avocado: tags=common_tier1
         """
         self.check_appliance_like_text()
     
