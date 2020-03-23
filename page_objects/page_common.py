@@ -249,10 +249,11 @@ class CommonPages(SeleniumTest):
 
         self.login(username, passwd)
         time.sleep(5)
-        # cmd = 'systemctl status cockpit'
-        # output = host.execute(cmd).stdout
-        # result = re.search('active', output)
-        # self.assertNotEqual(result, None)
+        cmd = 'systemctl status cockpit |grep running'
+        output = host.execute(cmd).stdout
+        print(output)
+        result = re.search("running",output)
+        self.assertNotEqual(result, None)
         
     def check_chrome_login(self):
         self.check_firefox_login()
@@ -706,29 +707,29 @@ class CommonPages(SeleniumTest):
         time.sleep(5)
 
     def check_udisks_service(self):
-        cmd = 'rpm -qa|grep udisks2'
-        output = self.host.execute(cmd).stdout
-        result = re.search("udisks2",output)
-        self.assertNotEqual(result, None)
-
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
-        self.click(self.SERVICE_LINK)
-        time.sleep(1)
-        self.switch_to_frame(self.SERVICE_FRAME_NAME)
-        self.input_text(self.FILTER_INPUT_TEXT,"udisks")
-        time.sleep(3)
-        self.assert_text_in_element(self.UDISKS_STATUS_TEXT,"active (running)")
-
-        # cmd = 'systemctl status udisks2'
+        # cmd = 'rpm -qa|grep udisks2'
         # output = self.host.execute(cmd).stdout
-        # start_point=re.search("PID:",output).end()+1
-        # end_point=re.search("(udisksd)",output).start()-2
-        # print(output[start_point:end_point])
-        # process_id=output[start_point:end_point]
-        # cmd='for i in {1..100}; do lsof -p'+' {} | wc -l 1>> /tmp/files; sleep 5; done'.format(process_id)
-        # output = self.host.execute(cmd,timeout=510).stdout
-        # self.assertEqual(output,'')
+        # result = re.search("udisks2",output)
+        # self.assertNotEqual(result, None)
+
+        # self.click(self.LOCALHOST_LINK)
+        # time.sleep(1)
+        # self.click(self.SERVICE_LINK)
+        # time.sleep(1)
+        # self.switch_to_frame(self.SERVICE_FRAME_NAME)
+        # self.input_text(self.FILTER_INPUT_TEXT,"udisks")
+        # time.sleep(3)
+        # self.assert_text_in_element(self.UDISKS_STATUS_TEXT,"active (running)")
+
+        cmd = "systemctl status udisks2 |grep 'running' && systemctl status udisks2 |grep PID"
+        output = self.host.execute(cmd).stdout
+        start_point=re.search("PID:",output).end()+1
+        end_point=re.search("(udisksd)",output).start()-2
+        print(output[start_point:end_point])
+        process_id=output[start_point:end_point]
+        cmd='for i in {1..100}; do lsof -p'+' {} | wc -l 1>> /tmp/files; sleep 5; done'.format(process_id)
+        output = self.host.execute(cmd,timeout=510).stdout
+        self.assertEqual(output,'')
     
     def check_kernel_dump_service(self):
         self.click(self.LOCALHOST_LINK)
