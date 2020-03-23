@@ -146,7 +146,7 @@ class SeleniumTest(Test):
                 command_executor=hub_url, desired_capabilities=capabilities)
 
         # initialize webdriver
-        self.driver.set_window_size(1200, 1200)
+        self.driver.set_window_size(1400, 1200)
         self.driver.set_page_load_timeout(90)
         self.screenshot_path = self.logdir
 
