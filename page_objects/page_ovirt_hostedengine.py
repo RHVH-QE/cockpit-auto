@@ -221,7 +221,8 @@ class OvirtHostedEnginePage(SeleniumTest):
 
         if self.host.execute('hosted-engine --check-deployed', raise_exception=False).stdout == "":
             self.backup_remove_logs()
-            self.clean_hostengine_env()
+            # self.clean_hostengine_env()
+            self.host.execute("sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
             self.refresh()
             self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
 
