@@ -37,7 +37,7 @@ class TestCockpitCommon(CommonPages):
         """
         self.delete_remote_host()
     
-    @add_case_id("RHVEM-23253")
+    @add_case_id("RHEVM-23253")
     def test_login_remote_machine(self):
         """
         :avocado: tags=common_tier1
@@ -73,28 +73,28 @@ class TestCockpitCommon(CommonPages):
         """
         self.check_udisks_service()
     
-    @add_case_id("RHVEM-23298")
+    @add_case_id("RHEVM-23298")
     def test_check_appliance_like_text(self):
         """
         :avocado: tags=common_tier1
         """
         self.check_appliance_like_text()
     
-    @add_case_id("RHVEM-24229")
+    @add_case_id("RHEVM-24229")
     def test_check_kernel_dump_service(self):
         """
         :avocado: tags=common_tier1
         """
         self.check_kernel_dump_service()
     
-    @add_case_id("RHVEM-23295")
+    @add_case_id("RHEVM-23295")
     def test_check_password_is_encrypted(self):
         """
         :avocado: tags=common_tier1
         """
         self.check_password_is_encrypted_in_log()
     
-    @add_case_id("RHVEM-24230")
+    @add_case_id("RHEVM-24230")
     def test_capture_vmcore_at_local(self):
         """
         :avocado: tags=common_tier1
@@ -123,98 +123,98 @@ class TestCockpitCommon(CommonPages):
         """
         self.system__dynamic_status()
     
-    @add_case_id("RHVEM-23256")
+    @add_case_id("RHEVM-23256")
     def test_login_wrong_remote_machine(self):
         """
         :avocado: tags=common_tier2
         """
         self.login_wrong_remote_machine()
     
-    @add_case_id("RHVEM-23259")
+    @add_case_id("RHEVM-23259")
     def test_config_hostname(self):
         """
         :avocado: tags=common_tier2
         """
         self.config_hostname()
     
-    @add_case_id("RHVEM-23260")
+    @add_case_id("RHEVM-23260")
     def test_config_timezone(self):
         """
         :avocado: tags=common_tier2a
         """
         self.config_timezone()
 
-    @add_case_id("RHVEM-23261")
+    @add_case_id("RHEVM-23261")
     def test_config_timezone_manually(self):
         """
         :avocado: tags=common_tier2
         """
         self.config_time_manually()
     
-    @add_case_id("RHVEM-23262")
+    @add_case_id("RHEVM-23262")
     def test_restart_node(self):
         """
         :avocado: tags=common_tier1
         """
         self.restart_node()
     
-    @add_case_id("RHVEM-23264")
+    @add_case_id("RHEVM-23264")
     def test_change_performance_profile(self):
         """
         :avocado: tags=common_tier2
         """
         self.change_performance_profile()
     
-    @add_case_id("RHVEM-23266")
+    @add_case_id("RHEVM-23266")
     def test_check_service_status(self):
         """
         :avocado: tags=common_tier2
         """
         self.check_service_status()
     
-    @add_case_id("RHVEM-23270")
+    @add_case_id("RHEVM-23270")
     def test_check_file_system_list(self):
         """
         :avocado: tags=common_tier2
         """
         self.check_file_system_list()
     
-    @add_case_id("RHVEM-24923")
+    @add_case_id("RHEVM-24923")
     def test_modify_nfs_storage(self):
         """
         :avocado: tags=common_tier2
         """
         self.modify_nfs_storage()
     
-    @add_case_id("RHVEM-23268")
+    @add_case_id("RHEVM-23268")
     def test_check_system_logs(self):
         """
         :avocado: tags=common_tier2
         """
         self.check_the_logs()
     
-    @add_case_id("RHVEM-23286")
+    @add_case_id("RHEVM-23286")
     def test_create_new_account(self):
         """
         :avocado: tags=common_tier2
         """
         self.create_new_account()
     
-    @add_case_id("RHVEM-23289")
+    @add_case_id("RHEVM-23289")
     def test_check_terminal(self):
         """
         :avocado: tags=common_tier2
         """
         self.check_terminal()
 
-    @add_case_id("RHVEM-23297")
+    @add_case_id("RHEVM-23297")
     def test_create_diagnostic_report(self):
         """
         :avocado: tags=common_tier2
         """
         self.create_dignostic_report()
     
-    @add_case_id("RHVEM-23300")
+    @add_case_id("RHEVM-23300")
     def test_check_selinux_policy(self):
         """
         :avocado: tags=common_tier2
@@ -222,14 +222,14 @@ class TestCockpitCommon(CommonPages):
         self.check_selinux_policy()
     
     
-    @add_case_id("RHVEM-23294")
+    @add_case_id("RHEVM-23294")
     def test_subscription_with_key_and_organization(self):
         """
         :avocado: tags=common_tier2
         """
         self.subscription_with_key_and_organization()
 
-    @add_case_id("RHVEM-26891")
+    @add_case_id("RHEVM-26891")
     def test_vdsm_sos_nodectl_info_collect(self):
         """
         :avocado: tags=common_tier
