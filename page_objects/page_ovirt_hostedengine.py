@@ -432,11 +432,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.click(self.GLOBAL_MAINTENANCE)
 
     def clean_hostengine_env(self):
-        project_path = os.path.dirname(os.path.dirname(__file__))
-        clean_he_file = project_path + \
-            '/test_suites/test_ovirt_hostedengine.py.data/clean_he_env.py'
-        self.host.put_file(clean_he_file, '/root/clean_he_env.py')
-        self.host.execute("python /root/clean_he_env.py", timeout=160)
+        self.host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
 
     def setting_to_non_default_port(self):
         project_path = os.path.dirname(os.path.dirname(__file__))
