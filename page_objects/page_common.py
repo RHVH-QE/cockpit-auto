@@ -707,19 +707,19 @@ class CommonPages(SeleniumTest):
         time.sleep(5)
 
     def check_udisks_service(self):
-        # cmd = 'rpm -qa|grep udisks2'
-        # output = self.host.execute(cmd).stdout
-        # result = re.search("udisks2",output)
-        # self.assertNotEqual(result, None)
+        cmd = 'rpm -qa|grep udisks2'
+        output = self.host.execute(cmd).stdout
+        result = re.search("udisks2",output)
+        self.assertNotEqual(result, None)
 
-        # self.click(self.LOCALHOST_LINK)
-        # time.sleep(1)
-        # self.click(self.SERVICE_LINK)
-        # time.sleep(1)
-        # self.switch_to_frame(self.SERVICE_FRAME_NAME)
-        # self.input_text(self.FILTER_INPUT_TEXT,"udisks")
-        # time.sleep(3)
-        # self.assert_text_in_element(self.UDISKS_STATUS_TEXT,"active (running)")
+        self.click(self.LOCALHOST_LINK)
+        time.sleep(1)
+        self.click(self.SERVICE_LINK)
+        time.sleep(1)
+        self.switch_to_frame(self.SERVICE_FRAME_NAME)
+        self.input_text(self.FILTER_INPUT_TEXT,"udisks")
+        time.sleep(3)
+        self.assert_text_in_element(self.UDISKS_STATUS_TEXT,"active (running)")
 
         cmd = "systemctl status udisks2 |grep 'running' && systemctl status udisks2 |grep PID"
         output = self.host.execute(cmd).stdout
