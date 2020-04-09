@@ -216,13 +216,13 @@ class OvirtHostedEnginePage(SeleniumTest):
         if additional_host.execute('hosted-engine --check-deployed',raise_exception=False).stdout == "":
             additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
 
-        if self.host.execute('rpm -qa|grep appliance',raise_exception=False).stdout == "":
+        if self.host.execute('rpm -qa|grep appliance', raise_exception=False).stdout == "":
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
 
-        if self.host.execute('hosted-engine --check-deployed', raise_exception=False).stdout == "":
+        if self.host.execute('hosted-engine --check-deployed',raise_exception=False).stdout == "":
             self.backup_remove_logs()
             # self.clean_hostengine_env()
-            self.host.execute("sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
+            self.host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", raise_exception=False, timeout=250)
             self.refresh()
             self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
 
@@ -439,14 +439,14 @@ class OvirtHostedEnginePage(SeleniumTest):
         non_default_port_file = project_path + \
             '/test_suites/test_ovirt_hostedengine.py.data/non_default_port.py'
         self.host.put_file(non_default_port_file, '/root/non_default_port.py')
-        self.host.execute("python /root/non_default_port.py", timeout=60)
+        self.host.execute("python3 /root/non_default_port.py", timeout=60)
 
     def setting_to_default_port(self):
         project_path = os.path.dirname(os.path.dirname(__file__))
         default_port_file = project_path + \
             '/test_suites/test_ovirt_hostedengine.py.data/default_port.py'
         self.host.put_file(default_port_file, '/root/default_port.py')
-        self.host.execute("python /root/default_port.py", timeout=60)
+        self.host.execute("python3 /root/default_port.py", timeout=60)
 
     ## Cases
     # tier1_0
@@ -542,8 +542,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         password = self.config_dict['subscription_password']
         try:
             sub_reg_ret = self.host.execute(
-                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password))
-            # time.sleep(30)
+                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), raise_exception=False, timeout=100)
             ins_reg_ret = self.host.execute("insights-client --register")
 
             time.sleep(20)
@@ -558,6 +557,8 @@ class OvirtHostedEnginePage(SeleniumTest):
                     if ("Successfully unregistered" not in ins_unreg_ret.stdout) and (
                         "System has been unregistered." not in sub_unreg_ret.stdout):
                         raise RuntimeError("Unregister failed!")
+            else:
+                self.fail()
         except:
             import traceback
             traceback.print_exc()
@@ -569,7 +570,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.config_dict['second_host'], self.config_dict['second_vm_fqdn'],
             self.config_dict['second_pass'], self.config_dict['he_vm_fqdn'],
             self.config_dict['admin_pass'])
-        time.sleep(70)
+        time.sleep(250)
         self.check_additional_host_socre(self.config_dict['second_host'],
                                          self.config_dict['second_pass'])
 
