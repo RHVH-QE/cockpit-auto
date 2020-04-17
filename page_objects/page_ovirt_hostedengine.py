@@ -146,7 +146,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     def setUp(self):
         case_name = self._testMethodName
         config = self.get_data('ovirt_hostedengine.yml')
-        self.config_dict = yaml.load(open(config))
+        self.config_dict = yaml.load(open(config),Loader=yaml.FullLoader)
        
         if 'fc' in case_name.split('_'):
             os.environ['HOST_STRING'] = self.config_dict['host_fc_string']
@@ -222,7 +222,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         if self.host.execute('hosted-engine --check-deployed',raise_exception=False).stdout == "":
             self.backup_remove_logs()
             # self.clean_hostengine_env()
-            self.host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", raise_exception=False, timeout=250)
+            self.host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", raise_exception=False, timeout=300)
             self.refresh()
             self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
 
@@ -384,7 +384,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             elif host_status == 'non_operational':
                 raise RuntimeError("Host is not %s as current status is: %s" %
                                    (expect_status, host_status))
-            time.sleep(15)
+            time.sleep(25)
             i += 1
 
     def wait_migrated(self, rhvm_ins, vm_name, expect_status='up'):
@@ -570,7 +570,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.config_dict['second_host'], self.config_dict['second_vm_fqdn'],
             self.config_dict['second_pass'], self.config_dict['he_vm_fqdn'],
             self.config_dict['admin_pass'])
-        time.sleep(250)
+        time.sleep(10)
         self.check_additional_host_socre(self.config_dict['second_host'],
                                          self.config_dict['second_pass'])
 
