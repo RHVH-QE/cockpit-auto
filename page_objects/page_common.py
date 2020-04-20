@@ -78,7 +78,7 @@ class CommonPages(SeleniumTest):
     KEY_TEXT="//*[@id='subscription-register-key']"
 
     #add nfs
-    STORAGE_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[3]/td[2]/a"
+    STORAGE_LINK="#sidebar-menu > li:nth-child(3) > a"
     STORAGE_FRAME_NAME="/storage"
     ADD_NFS_BUTTON="//*[@id='nfs-mounts']/div[1]/span[1]/span/button"
     NFS_SERVER_ADDR_TEXT="//*[@id='dialog']/div/div/div[2]/table/tbody/tr[1]/td[2]/input"
@@ -118,7 +118,7 @@ class CommonPages(SeleniumTest):
     TIME_MIN_TEXT="//*[@id='systime-time-minutes']"
 
     #restart node
-    RESTART_BUTTON="//*[@id='shutdown-group']/button[1]"
+    RESTART_BUTTON="#shutdown-group > div > button.btn.btn-default.btn-danger.shutdown-privileged"
     LEAVE_MESSAGE_TEXT="//*[@id='shutdown-dialog']/div/div/div[2]/textarea"
     RESTART_APPLY_BUTTON="//*[@id='shutdown-dialog']/div/div/div[3]/button[2]"
     RECONNECT_BUTTON="//*[@id='machine-reconnect']"
@@ -131,10 +131,10 @@ class CommonPages(SeleniumTest):
     #kernel dump
     KD_LINK="//*[@id='sidebar-tools']/li[2]/a"
     #//*[@id="sidebar-tools"]/li[3]/a //*[@id="sidebar-tools"]/li[2]/a //*[@id="sidebar-tools"]/li[3]
-    HINT="//*[@id='app']/div/form/div[2]/a/span"
-    KDUMP_SERVICE_STATUS="//*[@id='app']/div/form/div[1]/a/span"
-    BTN_TEST_CONFIGURATION="//*[@id='app']/div/form/div[2]/button"
-    CRASH_SYSTEM_BUTTON="//*[@id='cockpit_modal_dialog']/div/div[2]/div/div/div[3]/button[2]"
+    HINT="#app > div > table > tbody > tr:nth-child(4) > td:nth-child(2) > a > div > div.tooltip-ct-inner > span"
+    KDUMP_SERVICE_STATUS="#app > div > table > tbody > tr:nth-child(1) > td:nth-child(2) > div > a > span"
+    BTN_TEST_CONFIGURATION="#app > div > table > tbody > tr:nth-child(4) > td:nth-child(2) > button"
+    CRASH_SYSTEM_BUTTON="#cockpit_modal_dialog > div > div.modal.fade.in.dialog-ct-visible > div > div > div.modal-footer > button.btn.btn-danger.apply"
 
     KD_FRAME_NAME="/kdump"
     KD_SERVICE_LINK="//*[@id='app']/div/table/tbody/tr[1]/td[2]/div/a"
@@ -675,15 +675,6 @@ class CommonPages(SeleniumTest):
         result = re.search("udisks2",output)
         self.assertNotEqual(result, None)
 
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
-        self.click(self.SERVICE_LINK)
-        time.sleep(1)
-        self.switch_to_frame(self.SERVICE_FRAME_NAME)
-        self.input_text(self.FILTER_INPUT_TEXT,"udisks")
-        time.sleep(3)
-        self.assert_text_in_element(self.UDISKS_STATUS_TEXT,"active (running)")
-
         cmd = 'systemctl status udisks2'
         output = self.host.execute(cmd).stdout
         start_point=re.search("PID:",output).end()+1
@@ -706,14 +697,11 @@ class CommonPages(SeleniumTest):
         kdump_service_status = self.host.execute("systemctl stop kdump").stdout
         time.sleep(3)
         self.assert_text_in_element(self.KDUMP_SERVICE_STATUS, 'Service is stopped')
-        self.assertTrue('disabled' in self.get_attribute(self.BTN_TEST_CONFIGURATION, 'class'))
+        #self.assertTrue('disabled' in self.get_attribute(self.BTN_TEST_CONFIGURATION, 'class'))
         kdump_service_status = self.host.execute("systemctl start kdump").stdout
         time.sleep(5)
         self.assert_text_in_element(self.KDUMP_SERVICE_STATUS, 'Service is running')
-        self.assertFalse('disabled' in self.get_attribute(self.BTN_TEST_CONFIGURATION, 'class'))
-        
-        self.hover_and_click(self.HINT)
-        self.assert_element_visible("//*[@id='tip-test-info']")
+        #self.assertFalse('disabled' in self.get_attribute(self.BTN_TEST_CONFIGURATION, 'class'))
 
     def check_appliance_like(self, s_app_like):
         appliance_like_list = s_app_like.split(': ')
