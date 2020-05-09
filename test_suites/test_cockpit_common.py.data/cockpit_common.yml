@@ -7,10 +7,10 @@ host_user: 'root'
 host_pwd: 'redhat'
 
 # NFS
-nfs_ip: '10.73.131.168'
+nfs_ip: '10.72.12.78'
 nfs_pass: ''
-nfs_dir: '/root/linda/nfs'
-nfs_mount_point: '/mnt'
+nfs_dir: '/home/shiyilei/nfs'
+nfs_mount_point: '/root/mnt'
 
 #Subscription
 custom_URL: 'subscription.rhsm.stage.redhat.com'
