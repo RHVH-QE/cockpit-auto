@@ -384,7 +384,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             elif host_status == 'non_operational':
                 raise RuntimeError("Host is not %s as current status is: %s" %
                                    (expect_status, host_status))
-            time.sleep(25)
+            time.sleep(30)
             i += 1
 
     def wait_migrated(self, rhvm_ins, vm_name, expect_status='up'):
