@@ -543,7 +543,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         try:
             sub_reg_ret = self.host.execute(
                 "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), raise_exception=False, timeout=100)
-            ins_reg_ret = self.host.execute("insights-client --register")
+            ins_reg_ret = self.host.execute("insights-client --register", timeout=100)
 
             time.sleep(20)
             if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
@@ -746,7 +746,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
             # PREPARE VM
             self.click(self.PREPARE_VM_BUTTON)
-            self.click(self.NEXT_BUTTON, 1500)
+            self.click(self.NEXT_BUTTON, 2000)
 
             # STORAGE STAGE
             self.input_text(
