@@ -9,6 +9,10 @@ nfs_ip: '10.73.131.180'
 nfs_pass: 'redhat'
 nfs_dir: '/root/linda/nfs'
 
+private_nfs_ip: '192.168.50.176'
+private_nfs_pass: 'redhat'
+private_nfs_dir: '/root/linda/nfs'
+
 #Subscription
 subscription_username: 'weiwang@redhat.com'
 subscription_password: ''
@@ -27,15 +31,38 @@ host_fc_hostname: 'hp-dl385pg8-11.lab.eng.pek2.redhat.com'
 luns_fc_storage: ['36005076300810b3e00000000000002b1','36005076300810b3e00000000000002b2']
 
 # GLUSTERFS
-gluster_ips: {'bootp-73-131-196.rhts.eng.pek2.redhat.com':'10.73.131.196','bootp-73-131-216.rhts.eng.pek2.redhat.com':'10.73.131.216','bootp-73-131-180.rhts.eng.pek2.redhat.com':'10.73.131.180'}
+gluster_ips: {'bootp-73-131-195.rhts.eng.pek2.redhat.com':'10.73.131.195','bootp-73-131-216.rhts.eng.pek2.redhat.com':'10.73.131.216','bootp-73-131-202.rhts.eng.pek2.redhat.com':'10.73.131.202'}
 gluster_volume: 'gv1'
 gluster_volume_mount: '/data/gluster'
 root_passwd: 'redhat'
+
+# VLAN -- Machine: dell730-34
+vlan_he_fqdn: 'dell-per730-34.lab.eng.pek2.redhat.com'
+vlan_he_public_device: 'eno1'
+bv_he_private_device1: 'eno3'
+vlan_id: '50'
+vlan_he_public_ip: '10.73.131.63'
+vlan_he_private_dns: '192.168.50.106'
+vlan_he_engine_vm_fqdn: 'engine.redhat.com'
+
+# VLAN_BOND -- Machine: dell740-16
+#bv_he_fqdn: 'dell-per740-16.lab.eng.pek2.redhat.com'
+#bv_he_private_device2: 'em4'
+#bv_he_public_ip: '10.73.131.89'
+bv_he_fqdn: 'dell-per730-34.lab.eng.pek2.redhat.com'
+bv_he_private_device2: 'eno4'
+bv_he_public_ip: '10.73.131.63'
+
+# PURE IPV6 -- Machine: dell730-34
+#ipv6_he_ip: ''
 
 # ENGINE VM
 he_vm_fqdn: 'rhevh-hostedengine-vm-05.lab.eng.pek2.redhat.com'
 he_vm_mac: '52:54:00:5d:21:64'
 he_vm_ip: '10.73.73.101'
+#he_vm_fqdn: 'rhevh-hostedengine-vm-06.lab.eng.pek2.redhat.com'
+#he_vm_mac: '52:54:00:34:04:b0'
+#he_vm_ip: '10.73.73.102'
 he_vm_ip_prefix: '22'
 he_vm_pass: 'redhat'
 dns_server: '10.73.2.107'
@@ -44,5 +71,10 @@ admin_pass: 'password'
 
 first_host: '10.73.73.105'
 second_host: '10.73.73.106'
+# normal_host: '10.66.9.205'
+normal_host: '10.73.131.63'
 second_pass: 'redhat'
 second_vm_fqdn: 'cockpit-vm'
+normal_pass: 'redhat'
+# normal_host_fqdn: 'dhcp-9-205.nay.redhat.com'
+normal_host_fqdn: 'dell-per730-34.lab.eng.pek2.redhat.com'
