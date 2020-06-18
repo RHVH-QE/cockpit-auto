@@ -154,7 +154,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         self.clean_hostengine_env()
         self.node_zero_default_deploy_process()
         self.reboot_hosted_engine_env()
-        self.check_hosted_engine_status()
+        # self.check_hosted_engine_status()
 
     @add_case_id("RHEVM-26160")
     def test_roll_back_history_text(self):
