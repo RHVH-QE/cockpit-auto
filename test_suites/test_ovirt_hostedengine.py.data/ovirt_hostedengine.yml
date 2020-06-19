@@ -5,7 +5,7 @@
 rhvm_appliance_path: 'http://10.66.10.22:8090/rhevm-appliance/'
 
 # NFS
-nfs_ip: '10.73.131.168'
+nfs_ip: '10.73.131.180'
 nfs_pass: 'redhat'
 nfs_dir: '/root/linda/nfs'
 
@@ -28,7 +28,7 @@ iscsi_discovery_pass: ''
 # FC -- Machine:hp-dl385pg8-11
 host_fc_string: '10.73.73.15'
 host_fc_hostname: 'hp-dl385pg8-11.lab.eng.pek2.redhat.com'
-luns_fc_storage: ['36005076300810b3e00000000000002af','36005076300810b3e00000000000002b0']
+luns_fc_storage: ['36005076300810b3e00000000000002b1','36005076300810b3e00000000000002b2']
 
 # GLUSTERFS
 gluster_ips: {'bootp-73-131-196.rhts.eng.pek2.redhat.com':'10.73.131.196','bootp-73-131-216.rhts.eng.pek2.redhat.com':'10.73.131.216','bootp-73-131-180.rhts.eng.pek2.redhat.com':'10.73.131.180'}
@@ -49,6 +49,9 @@ vlan_he_engine_vm_fqdn: 'engine.redhat.com'
 bv_he_fqdn: 'dell-per740-16.lab.eng.pek2.redhat.com'
 bv_he_private_device2: 'em4'
 bv_he_public_ip: '10.73.131.89'
+# bv_he_fqdn: 'dell-per730-34.lab.eng.pek2.redhat.com'
+# bv_he_private_device2: 'em4'
+# bv_he_public_ip: '10.73.131.63'
 
 # PURE IPV6 -- Machine: dell730-34
 #ipv6_he_ip: ''

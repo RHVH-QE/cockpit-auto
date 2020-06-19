@@ -655,7 +655,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         password = self.config_dict['subscription_password']
         try:
             sub_reg_ret = self.host.execute(
-                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=150)
+                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=200)
 
             ins_reg_ret = self.host.execute("insights-client --register", timeout=200)
 
@@ -907,7 +907,8 @@ class OvirtHostedEnginePage(SeleniumTest):
             # VM STAGE
             self.click(self.HE_START)
             time.sleep(60)
-            self.input_text(self.VM_FQDN, self.config_dict['vlan_he_engine_vm_fqdn'], 60)
+            self.input_text(self.VM_FQDN, self.config_dict['vlan_he_engine_vm_fqdn'])
+            self.click(self.NETWORK_DROPDOWN)
             self.click(self.NETWORK_DROPDOWN)
             self.click(self.NETWORK_STATIC)
             self.input_text(self.VM_IP, vlan_ips[1])
