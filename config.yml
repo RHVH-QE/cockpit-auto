@@ -2,7 +2,7 @@
 ---
 
 # host infos
-host_string: '10.73.73.105'
+host_string: '10.73.130.125'
 host_port: '9090'
 host_user: 'root'
 host_pass: 'redhat'
@@ -11,8 +11,8 @@ host_pass: 'redhat'
 selenium_hub: ''
 
 # avocado config
-avocado_results_dir: '/home/weiwang/work_autocode/cockpit_proj/avocado-results'
+avocado_results_dir: '/home/shiyilei/Documents/test-result'
 
 # versions of pkg/sys under test
-test_pkg_ver: 'ccockpit-ovirt-dashboard-0.14.2-1'
-test_sys_ver: 'rhvh-4.4.0.14-0.20200318.0'
+test_pkg_ver: 'cockpit-ovirt-dashboard-0.14.8-1'
+test_sys_ver: 'rhvh-4.4.1.1-0.20200611.0'

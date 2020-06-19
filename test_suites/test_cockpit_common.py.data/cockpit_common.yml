@@ -7,15 +7,15 @@ host_user: 'root'
 host_pwd: 'redhat'
 
 # NFS
-nfs_ip: '10.73.131.168'
+nfs_ip: '10.72.13.162'
 nfs_pass: ''
-nfs_dir: '/root/linda/nfs'
+nfs_dir: '/home/shiyilei/nfs'
 nfs_mount_point: '/mnt'
 
 #Subscription
 custom_URL: 'subscription.rhsm.stage.redhat.com'
 subscription_username: 'weiwang@redhat.com'
-subscription_password: 'rhvh,test'
+subscription_password: 'test,rhvh'
 subscription_repos: 'rhel-7-server-rhvh-4-*'
 subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis', 'rhvm-appliance']
 subscription_organization: ''
