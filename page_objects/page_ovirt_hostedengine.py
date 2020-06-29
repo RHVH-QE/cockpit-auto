@@ -23,6 +23,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     # LANDING PAGE
     ## Start button
     HE_START = "//span[@class='deployment-option-panel-container']/button[@id='he-wizard-btn']"
+    # HE_START = "//button[@id='he-wizard-btn]"
 
     ## Guide Links
     GETTING_START_LINK = "//a[contains(text(), 'Installation Guide')]"
@@ -228,7 +229,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             if additional_host.execute('hosted-engine --check-deployed', raise_exception=False).stdout == "":
                 additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
 
-        if self.host.execute('rpm -qa|grep appliance', raise_exception=False).stdout == "":
+        if self.host.execute('rpm -qa|grep appliance', raise_exception=False).stdout == "" and "insights" not in self._testMethodName:
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
 
         if self.host.execute('hosted-engine --check-deployed', raise_exception=False).stdout == "":
@@ -340,6 +341,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def default_vm_engine_stage_config(self):
         # VM STAGE
+        time.sleep(3)
         self.click(self.HE_START)
         time.sleep(100)
         self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
@@ -617,9 +619,9 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.assert_text_in_element(self.ADMIN_PASS_ERR, "Required field")
 
     # tier1_1
-    def node_zero_default_deploy_process(self):
+    def node_zero_default_deploy_process(self, try_times=2000):
         def check_deploy():
-            self.refresh()
+            # self.refresh()
             self.default_vm_engine_stage_config()
 
             # STORAGE STAGE
@@ -630,7 +632,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
             # FINISH STAGE
             self.click(self.FINISH_DEPLOYMENT)
-            self.click(self.CLOSE_BUTTON, 2000)
+            self.click(self.CLOSE_BUTTON, try_times)
 
         self.prepare_env('nfs')
         time.sleep(15)
@@ -659,12 +661,16 @@ class OvirtHostedEnginePage(SeleniumTest):
         try:
             sub_reg_ret = self.host.execute(
                 "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), raise_exception=False, timeout=100)
+            
             ins_reg_ret = self.host.execute("insights-client --register", timeout=100)
 
             time.sleep(20)
             if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
                 time.sleep(5)
-                self.node_zero_default_deploy_process()
+                self.host.execute(
+                    'subscription-manager repos --disable=* --enable={}'.format(self.config_dict['subscription_repo_name']),
+                    timeout=150)
+                self.node_zero_default_deploy_process(4000)
                 he_ret = self.host.execute("hosted-engine --vm-status")
 
                 if ('{"health": "good", "vm": "up", "detail": "Up"}' in he_ret.stdout):
