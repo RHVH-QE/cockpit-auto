@@ -415,7 +415,7 @@ class OvirtHostedEnginePage(SeleniumTest):
                     "Timeout waitting for vm migration %s as current vm status is: %s"
                     %(expect_status, vm_status)
                 )
-            time.sleep(20)
+            time.sleep(30)
             vm_status = rhvm_ins.list_vm(vm_name)['status']
             if vm_status == 'migrating':
                 i = i + 1
@@ -621,7 +621,6 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier1_1
     def node_zero_default_deploy_process(self, try_times=2000):
         def check_deploy():
-            # self.refresh()
             self.default_vm_engine_stage_config()
 
             # STORAGE STAGE
@@ -692,7 +691,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.config_dict['second_host'], self.config_dict['second_vm_fqdn'],
             self.config_dict['second_pass'], self.config_dict['he_vm_fqdn'],
             self.config_dict['admin_pass'])
-        time.sleep(30)
+        time.sleep(50)
         self.check_additional_host_socre(self.config_dict['second_host'],
                                          self.config_dict['second_pass'])
 
@@ -748,7 +747,6 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier1_11
     def node_zero_rollback_deploy_process(self):
         def check_deploy():
-            self.refresh()
             self.default_vm_engine_stage_config()
 
             #Check roll back history text.
