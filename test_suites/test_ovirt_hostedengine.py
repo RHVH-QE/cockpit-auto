@@ -151,17 +151,14 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         :avocado: tags=he_tier1
         """
-        self.clean_hostengine_env()
         self.node_zero_default_deploy_process()
         self.reboot_hosted_engine_env()
-        self.check_hosted_engine_status()
 
     @add_case_id("RHEVM-26160")
     def test_roll_back_history_text(self):
         """
         :avocado: tags=he_tier1
         """
-        self.clean_hostengine_env()
         self.node_zero_rollback_deploy_process()
 
     @add_case_id("RHEVM-25122")
@@ -195,3 +192,37 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         :avocado: tags=he_tier2
         """
         self.node_zero_static_v4_deploy_process()
+
+    @add_case_id("RHEVM-26334")
+    def test_migrate_normal_host(self):
+        """
+        :avocado: tags=he_tier2
+        """
+        self.add_normal_host_to_cluster_process()
+        self.assertEqual(self.check_migrated_normal_host(), True)
+
+    @add_case_id("RHEVM-23823")
+    def test_node_zero_vlan_deployment(self):
+        """
+        :avocado: tags=he_tier2
+        """
+        self.set_vlan_network()
+        self.set_hosted_engine_setup_environment(self.config_dict['vlan_he_fqdn'])
+        self.node_zero_vlan_deploy_process()
+
+    @add_case_id("RHEVM-23825")
+    def test_node_zero_bondvlan_deployment(self):
+        """
+        :avocado: tags=he_tier2
+        """
+        self.set_bv_network()
+        self.set_hosted_engine_setup_environment(self.config_dict['bv_he_fqdn'])
+        self.node_zero_vlan_deploy_process()
+
+    # @add_case_id("RHEVM-26043")
+    # def test_node_zero_ipv6_deployment(self):
+    #     """
+    #     :avocado: tags=he_tier
+    #     """
+    #     self.set_hosted_engine_ipv6_environment()
+    # self.node_zero_ipv6_deploy_process()
