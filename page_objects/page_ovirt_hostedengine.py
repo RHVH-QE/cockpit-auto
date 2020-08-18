@@ -205,11 +205,11 @@ class OvirtHostedEnginePage(SeleniumTest):
                 rhvm_appliance_dict.get('v4.4').append(appliance)
         
         img_ver = self.host.execute("imgbase w", raise_exception=False).split(' ')[-1]
-        if '4.2' in img_ver:
+        if '-4.2' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.2')[-1]
-        elif '4.3' in img_ver:
+        elif '-4.3' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.3')[-1]
-        elif '4.4' in img_ver:
+        elif '-4.4' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.4')[-1]
         rhvm_appliance_link = appliance_path + rhvm_appliance
         return rhvm_appliance_link
