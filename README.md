@@ -3,8 +3,6 @@
 This project uses selenium and avocado to automate tests for:
 
     cockpit-ovirt-dashboard
-    cockpit-machines
-    cockpit-machines-ovirt
 
 ## Usage
 
