@@ -381,6 +381,12 @@ class OvirtHostedEnginePage(SeleniumTest):
         rhvm.add_host(host_ip, host_name, host_pass, "Default", True)
         self.wait_host_up(rhvm, host_name, 'up')
 
+    def add_normal_host_to_cluster(self, host_ip, host_name, host_pass,
+                                   rhvm_fqdn, engine_pass):
+        rhvm = RhevmAction(rhvm_fqdn, "admin", engine_pass)
+        rhvm.add_host(host_ip, host_name, host_pass, "Default")
+        self.wait_host_up(rhvm, host_name, 'up')
+
     def migrate_vms(self, vm_name, rhvm_fqdn, engine_pass):
         rhvm = RhevmAction(rhvm_fqdn, 'admin', engine_pass)
         rhvm.migrate_vm(vm_name)
