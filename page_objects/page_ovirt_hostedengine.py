@@ -17,6 +17,7 @@ class OvirtHostedEnginePage(SeleniumTest):
     """
 
     # GENERAL
+    VIRTUALIZATION_LINK = "//div[@id='nav-system']/nav[@id='host-apps']/nav/section/ul/li/span/a"
     OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
     HOSTEDENGINE_LINK = "//a[@href='#/he']"
 
@@ -166,8 +167,17 @@ class OvirtHostedEnginePage(SeleniumTest):
         super(OvirtHostedEnginePage, self).setUp()
 
     def open_page(self):
+        # self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
+        # self.click(self.HOSTEDENGINE_LINK)
+        self.go_to_he()
+        pass
+        
+    def go_to_he(self):
+        self.click(self.VIRTUALIZATION_LINK)
+        time.sleep(1)
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         self.click(self.HOSTEDENGINE_LINK)
+        # pass
     
     # internal functions
     def backup_remove_logs(self):
@@ -573,8 +583,15 @@ class OvirtHostedEnginePage(SeleniumTest):
         pass
 
     ## Cases
+    # tier1_00
+    def check_guide_link(self):
+        self.prepare_env()
+        self.assert_element_visible(self.GETTING_START_LINK)
+        self.assert_element_visible(self.MORE_INFORMATION_LINK)
+        
     # tier1_0
-    def errors_warnings_vm_setting(self):           
+    def errors_warnings_vm_setting(self):
+        self.go_to_he()
         self.click(self.HE_START)
         time.sleep(40)
         self.click(self.NEXT_BUTTON)
@@ -612,6 +629,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.assert_text_in_element(self.GATEWAY_INVALID_ERR, "Invalid format for IP address")
 
     def errors_warnings_engine_setting(self):
+        self.go_to_he()
         self.click(self.HE_START)
         time.sleep(40)
         self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
@@ -907,8 +925,9 @@ class OvirtHostedEnginePage(SeleniumTest):
     # tier2_6
     def check_migrated_normal_host(self):
         try:
-            self.migrate_vms('HostedEngine', self.config_dict['normal_host_fqdn'],
-                             self.config_dict['he_vm_fqdn'], self.config_dict['admin_pass'])
+            # self.migrate_vms('HostedEngine', self.config_dict['normal_host_fqdn'],
+            #                  self.config_dict['he_vm_fqdn'], self.config_dict['admin_pass'])
+            self.migrate_vms('HostedEngine', self.config_dict['he_vm_fqdn'], self.config_dict['admin_pass'])
         except RuntimeError as e:
             print(e.__str__())
             if "Cannot migrate VM" in e.__str__():

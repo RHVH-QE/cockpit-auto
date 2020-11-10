@@ -9,14 +9,14 @@ nfs_ip: '10.73.131.180'
 nfs_pass: 'redhat'
 nfs_dir: '/root/linda/nfs'
 
-private_nfs_ip: '192.168.50.176'
+private_nfs_ip: '192.168.50.4'
 private_nfs_pass: 'redhat'
 private_nfs_dir: '/root/linda/nfs'
 
 #Subscription
 subscription_username: 'weiwang@redhat.com'
 subscription_password: ''
-subscription_repo_name: 'rhvh-4-beta-for-rhel-8-x86_64-rpms'
+subscription_repo_name: 'rhvh-4-for-rhel-8-x86_64-rpms'
 
 # ISCSI
 iscsi_initiator_name: 'iqn.1994-05.com.redhat:shleiiscsi'
@@ -72,10 +72,10 @@ admin_pass: 'password'
 
 first_host: '10.73.73.105'
 second_host: '10.73.73.106'
-# normal_host: '10.66.9.205'
+#normal_host: '10.73.73.106'
 normal_host: '10.73.131.63'
 second_pass: 'redhat'
 second_vm_fqdn: 'cockpit-vm'
 normal_pass: 'redhat'
-# normal_host_fqdn: 'dhcp-9-205.nay.redhat.com'
+#normal_host_fqdn: 'hp-dl388g9-05.lab.eng.pek2.redhat.com'
 normal_host_fqdn: 'dell-per730-34.lab.eng.pek2.redhat.com'
