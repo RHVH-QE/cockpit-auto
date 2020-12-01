@@ -591,7 +591,6 @@ class OvirtHostedEnginePage(SeleniumTest):
         
     # tier1_0
     def errors_warnings_vm_setting(self):
-        self.go_to_he()
         self.click(self.HE_START)
         time.sleep(40)
         self.click(self.NEXT_BUTTON)
@@ -629,7 +628,6 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.assert_text_in_element(self.GATEWAY_INVALID_ERR, "Invalid format for IP address")
 
     def errors_warnings_engine_setting(self):
-        self.go_to_he()
         self.click(self.HE_START)
         time.sleep(40)
         self.input_text(self.VM_FQDN, self.config_dict['he_vm_fqdn'], 60)
