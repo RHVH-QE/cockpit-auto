@@ -205,11 +205,11 @@ class OvirtHostedEnginePage(SeleniumTest):
                 rhvm_appliance_dict.get('v4.4').append(appliance)
         
         img_ver = self.host.execute("imgbase w", raise_exception=False).split(' ')[-1]
-        if '4.2' in img_ver:
+        if '-4.2' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.2')[-1]
-        elif '4.3' in img_ver:
+        elif '-4.3' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.3')[-1]
-        elif '4.4' in img_ver:
+        elif '-4.4' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.4')[-1]
         rhvm_appliance_link = appliance_path + rhvm_appliance
         return rhvm_appliance_link
@@ -379,6 +379,12 @@ class OvirtHostedEnginePage(SeleniumTest):
                                        rhvm_fqdn, engine_pass):
         rhvm = RhevmAction(rhvm_fqdn, "admin", engine_pass)
         rhvm.add_host(host_ip, host_name, host_pass, "Default", True)
+        self.wait_host_up(rhvm, host_name, 'up')
+
+    def add_normal_host_to_cluster(self, host_ip, host_name, host_pass,
+                                   rhvm_fqdn, engine_pass):
+        rhvm = RhevmAction(rhvm_fqdn, "admin", engine_pass)
+        rhvm.add_host(host_ip, host_name, host_pass, "Default")
         self.wait_host_up(rhvm, host_name, 'up')
 
     def migrate_vms(self, vm_name, rhvm_fqdn, engine_pass):
