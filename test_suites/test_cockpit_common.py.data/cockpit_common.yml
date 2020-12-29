@@ -16,8 +16,8 @@ nfs_mount_point: '/mnt'
 custom_URL: 'subscription.rhsm.stage.redhat.com'
 subscription_username: 'weiwang@redhat.com'
 subscription_password: 'rhvh,test'
-subscription_repos: 'rhel-7-server-rhvh-4-*'
-subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis', 'rhvm-appliance']
+subscription_repos: 'rhvh-4-for-rhel-8-x86_64-rpms'
+subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis','sssd-ad', 'rhvm-appliance']
 subscription_organization: ''
 subscription_key: ''
 
