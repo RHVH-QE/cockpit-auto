@@ -144,7 +144,7 @@ class TestCockpitCommon(CommonPages):
         :avocado: tags=common_tier2ab
         """
         self.config_timezone()
-        #bug
+        #bug https://bugzilla.redhat.com/show_bug.cgi?id=1330465
 
     @add_case_id("RHEVM-23261")
     def test_config_timezone_manually(self):
@@ -184,7 +184,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-24923")
     def test_modify_nfs_storage(self):
         """
-        :avocado: tags=common_tier2
+        :avocado: tags=common_tier2aa
         """
         self.modify_nfs_storage()
         #can not assert progress bar
@@ -228,7 +228,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23294")
     def test_subscription_with_key_and_organization(self):
         """
-        :avocado: tags=common_tier2ab
+        :avocado: tags=common_tier2bug
         """
         self.subscription_with_key_and_organization()
         #bug

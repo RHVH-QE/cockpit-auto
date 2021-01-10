@@ -12,7 +12,7 @@ class OvirtDashboardPage(SeleniumTest):
     SLEEP_TIME = 5
 
     OVIRT_DASHBOARD_FRAME_NAME = "/ovirt-dashboard"
-    DASHBOARD_LINK = "a[href='#/dashboard']"
+    DASHBOARD_LINK = "//*[@id='host-apps']/nav/section[1]/ul/li[1]/span/a"
 
     OK_ICON = "pficon-ok"
     WARN_ICON = "pficon-warning-triangle-o"
@@ -51,8 +51,8 @@ class OvirtDashboardPage(SeleniumTest):
     SSH_HOST_KEY_CONTENT = "tbody:nth-child(5) .modal-body div"
 
     def open_page(self):
-        self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
         self.click(self.DASHBOARD_LINK)
+        self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
 
     def check_vm_quantity(self):
         self.assert_element_visible(self.VM_QUANTITY % '1')
