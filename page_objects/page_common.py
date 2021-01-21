@@ -309,16 +309,15 @@ class CommonPages(SeleniumTest):
         self.assert_element_invisible("//*[@id='dashboard-hosts']/div[2]/a[2]")
     
     def subscription_to_rhsm(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.SUBSCRIPTION_LINK)
-        time.sleep(10)
+        time.sleep(5)
         self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
         time.sleep(2)
         self.click(self.REGIST_BUTTON)
         self.input_text(self.SUBSCRIPTION_USER_TEXT, self.config_dict['subscription_username'])
         self.input_text(self.SUBSCRIPTION_PWD_TEXT, self.config_dict['subscription_password'])
-        time.sleep(1)
+        self.input_text(self.SUBSCRIPTION_ORGANIZATION_TEXT, "12801563")
+        time.sleep(2)
         self.click(self.REGIST_COMMIT_BUTTON)
         time.sleep(60)
         self.refresh()
@@ -328,17 +327,29 @@ class CommonPages(SeleniumTest):
         self.click(self.DETAIL_BUTTON)
         time.sleep(2)
         self.assert_text_in_element(self.DETALI_PRODUCT_NAME, "Red Hat Virtualization Host")
-        self.assert_text_in_element(self.DETAIL_PRODUCT_ID,"328")
-        self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4.4")
+        self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4")
         self.assert_text_in_element(self.DETAIL_PRODUCT_STATUS, "Subscribed")
 
     def check_packages_installation(self):
+        self.host.execute("subscription-manager repos --disable=*")
         self.host.execute("subscription-manager repos --enable=%s" %self.config_dict['subscription_repos'])
+        
         sub_pkgs = self.config_dict['subscription_packages']
-        for pkg in sub_pkgs[:-1]:
-            ret = self.host.execute("yum install -y %s" % pkg, timeout=200)
-            self.assertTrue('Complete!' in ret.stdout)
+        # for pkg in sub_pkgs[:-1]:
+        #     ret = self.host.execute("yum install -y %s" % pkg, timeout=200)
+        #     self.assertTrue('Complete!' in ret.stdout)
         self.assertTrue('rhvm-appliance' in self.host.execute("yum search %s" %sub_pkgs[-1]))
+        ret = self.host.execute("yum search vdsm-hook*", timeout=200)
+        self.assertTrue('vdsm-hook-checkips' in ret.stdout)
+        self.assertTrue('vdsm-hook-cpuflags' in ret.stdout)
+        self.assertTrue('vdsm-hook-ethtool-options' in ret.stdout)
+        self.assertTrue('vdsm-hook-extra-ipv4-addrs' in ret.stdout)
+        self.assertTrue('vdsm-hook-fcoe' in ret.stdout)
+        self.assertTrue('vdsm-hook-localdisk' in ret.stdout)
+        self.assertTrue('vdsm-hook-nestedvt' in ret.stdout)
+        self.assertTrue('vdsm-hook-openstacknet' in ret.stdout)
+        self.assertTrue('vdsm-hook-vhostmd' in ret.stdout)
+        self.assertTrue('vdsm-hook-vmfex-dev' in ret.stdout)
 
 
     def add_nfs_storage(self):
