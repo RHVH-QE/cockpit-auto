@@ -60,20 +60,25 @@ class CommonPages(SeleniumTest):
 
     #subscription
     NETWORK_INFO_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
-    SUBSCRIPTION_LINK="//*[@id='sidebar-tools']/li[4]/a"
+    SUBSCRIPTION_LINK="//*[@id='host-apps']/nav/section[3]/ul/li[4]/span/a"
+    
     SUBSCRIPTION_FRAME_NAME="/subscriptions"
     REGIST_BUTTON="//*[@id='app']/div/div/button"
     CHOOSE_URL_BUTTON="//*[@id='subscription-register-url']/button"
     CUSTOM_URL_BUTTON="//*[@id='subscription-register-url']/ul/li[2]/a"
     CUSTOM_URL_TEXT="//*[@id='subscription-register-url-custom']"
     SUBSCRIPTION_USER_TEXT="//*[@id='subscription-register-username']"
+    SUBSCRIPTION_ORGANIZATION_TEXT="//*[@id='subscription-register-org']"
     SUBSCRIPTION_PWD_TEXT="//*[@id='subscription-register-password']"
-    REGIST_COMMIT_BUTTON="//*[@id='cockpit_modal_dialog']/div/div[2]/div/div/div[3]/button[2]"
-    DETAIL_BUTTON = "//*[@id='app']/div/table/tbody/tr[1]/td/i"
-    DETALI_PRODUCT_NAME = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[1]/td[2]/span"
-    DETAIL_PRODUCT_ID = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[2]/td[2]/span"
-    DETAIL_PRODUCT_VERSION = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[3]/td[2]/span"
-    DETAIL_PRODUCT_STATUS = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[5]/td[2]/span"
+    REGIST_COMMIT_BUTTON="//*[@id='register_dialog']/div/div[3]/button[1]"
+    
+    DETAIL_BUTTON = "//*[@id='app']/div/div[2]/div[2]/div[1]/div[1]/div[1]/span"
+    
+    DETALI_PRODUCT_NAME = "//*[@id='app']/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/dl/dd[1]"
+    
+    DETAIL_PRODUCT_ID = "//*[@id=app']/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/dl/dd[2]"
+    DETAIL_PRODUCT_VERSION = "//*[@id='app']/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/dl/dd[3]"
+    DETAIL_PRODUCT_STATUS = "//*[@id='app']/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/dl/dd[5]"
     ORGANIZATION_TEXT= "//*[@id='subscription-register-org']"
     KEY_TEXT="//*[@id='subscription-register-key']"
 
@@ -331,6 +336,8 @@ class CommonPages(SeleniumTest):
         self.assert_text_in_element(self.DETAIL_PRODUCT_STATUS, "Subscribed")
 
     def check_packages_installation(self):
+        self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.stage.redhat.com")
+        self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.stage.redhat.com")
         self.host.execute("subscription-manager repos --disable=*")
         self.host.execute("subscription-manager repos --enable=%s" %self.config_dict['subscription_repos'])
         
