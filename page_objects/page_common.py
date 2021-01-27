@@ -60,29 +60,34 @@ class CommonPages(SeleniumTest):
 
     #subscription
     NETWORK_INFO_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
-    SUBSCRIPTION_LINK="//*[@id='sidebar-tools']/li[4]/a"
+    SUBSCRIPTION_LINK="//*[@id='host-apps']/nav/section[3]/ul/li[4]/span/a"
+    
     SUBSCRIPTION_FRAME_NAME="/subscriptions"
     REGIST_BUTTON="//*[@id='app']/div/div/button"
     CHOOSE_URL_BUTTON="//*[@id='subscription-register-url']/button"
     CUSTOM_URL_BUTTON="//*[@id='subscription-register-url']/ul/li[2]/a"
     CUSTOM_URL_TEXT="//*[@id='subscription-register-url-custom']"
     SUBSCRIPTION_USER_TEXT="//*[@id='subscription-register-username']"
+    SUBSCRIPTION_ORGANIZATION_TEXT="//*[@id='subscription-register-org']"
     SUBSCRIPTION_PWD_TEXT="//*[@id='subscription-register-password']"
-    REGIST_COMMIT_BUTTON="//*[@id='cockpit_modal_dialog']/div/div[2]/div/div/div[3]/button[2]"
-    DETAIL_BUTTON = "//*[@id='app']/div/table/tbody/tr[1]/td/i"
-    DETALI_PRODUCT_NAME = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[1]/td[2]/span"
-    DETAIL_PRODUCT_ID = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[2]/td[2]/span"
-    DETAIL_PRODUCT_VERSION = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[3]/td[2]/span"
-    DETAIL_PRODUCT_STATUS = "//*[@id='app']/div/table/tbody/tr[2]/td/div[2]/table/tbody/tr[5]/td[2]/span"
+    REGIST_COMMIT_BUTTON="//*[@id='register_dialog']/div/div[3]/button[1]"
+    
+    DETAIL_BUTTON = "//*[@id='app']/div/div[2]/div[2]/div[1]/div[1]/div[1]/span"
+    
+    DETALI_PRODUCT_NAME = "//*[@id='app']/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/dl/dd[1]"
+    
+    DETAIL_PRODUCT_ID = "//*[@id=app']/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/dl/dd[2]"
+    DETAIL_PRODUCT_VERSION = "//*[@id='app']/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/dl/dd[3]"
+    DETAIL_PRODUCT_STATUS = "//*[@id='app']/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/dl/dd[5]"
     ORGANIZATION_TEXT= "//*[@id='subscription-register-org']"
     KEY_TEXT="//*[@id='subscription-register-key']"
 
     #add nfs
-    STORAGE_LINK="//*[@id='sidebar-menu']/li[3]/a/span"
+    STORAGE_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[3]/span"
     STORAGE_FRAME_NAME="/storage"
     ADD_NFS_BUTTON="//*[@id='nfs-mounts']/div[1]/div/button"
     NFS_SERVER_ADDR_TEXT="//*[@id='dialog']/div/div/div[2]/form/div[1]/input"
-    SERVER_PATH_TEXT="//*[@id='dialog']/div/div/div[2]/form/div[2]/div/div/div[1]/input"
+    SERVER_PATH_TEXT="//*[@id='pf-select-toggle-id-24-select-typeahead']"
     MOUNT_POINT_TEXT="//*[@id='dialog']/div/div/div[2]/form/div[3]/input"
     NFS_ADD_BUTTON="//*[@id='dialog']/div/div/div[3]/button[2]"
 
@@ -118,7 +123,8 @@ class CommonPages(SeleniumTest):
     TIMEZONE_REMOVER="//*[@id='systime-timezonesundefined']//parent::*/span"
     TIMEZONE_DROPDOWN="//*[@id='systime-timezonesundefined']//parent::*/span"
     TIMEZONE_ITEM="//*[@id='systime-timezonesundefined']//parent::*/ul/li[1]"
-    TIMEZONE_APPLY_BUTTON="//*[@id='systime-apply-button']"
+    TIMEZONE_APPLY_BUTTON="//*[@id='system_information_change_systime']/div/div/div[3]/button[1]"
+    
     TIME_SET_DROPDOWN="//*[@id='change_systime']/button"
     TIME_SET_MANUALLY="//*[@id='change_systime']/ul/li[1]/a"
     TIME_MIN_TEXT="//*[@id='systime-time-minutes']"
@@ -148,7 +154,7 @@ class CommonPages(SeleniumTest):
     SERVICE_FRAME_NAME="/system/services"
     SERVICE_SEARCHER="//*[@id='services-text-filter']"
     KD_SERVICE_LINK="//*[@id='services-list']/div/table/tbody/tr/td[1]"
-    STOP_START_BUTTON="//*[@id='service-details']/div/span/label/span"
+    STOP_START_BUTTON="//*[@id='service-details']/main/section[2]/div/span/label/span"
     KD_STATUS_INFO="//*[@id='statuses']/div/span[2]"
     KD_STATUS_INFO2=".status-running > span:nth-child(2)"
     KD_RESTART_BUTTON="//*[@id='service-unit-action']/button[1]"
@@ -156,29 +162,28 @@ class CommonPages(SeleniumTest):
     KD_ENABLE_TEXT="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[3]/td[2]"
 
     #check system logs
-    # LOGS_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[2]/td[2]/a"
-    LOGS_LINK="//*[@id='sidebar-menu']/li[2]/a/span"
+    LOGS_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[2]/span/a"
     LOGS_FRAME_NAME="/system/logs"
-    LOGS_DURATION_BUTTON="//*[@id='journal-current-day-menu']/button"
-    RECENT_LOGS="//*[@id='journal-current-day-menu']/ul/li[1]/a"
+    LOGS_DURATION_BUTTON="//*[@id='log-filters']"
+    # RECENT_LOGS="//*[@id='journal-current-day-menu']/ul/li[1]/a"
     # CURRENT_BOOT="//*[@id='journal-current-day-menu']/ul/li[2]/a"
-    # LAST_ONE_DAY="//*[@id='journal-current-day-menu']/ul/li[4]/a"
-    LAST_SEVEN_DAYS="//*[@id='journal-current-day-menu']/ul/li[5]/a"
+    LAST_ONE_DAY="//*[@id='logs-predefined-filters']/li[3]/a"
+    LAST_SEVEN_DAYS="//*[@id='logs-predefined-filters']/li[4]/a"
     LOGS_LOAD_EARLIER="//*[@id='journal-load-earlier']"
-    LOG_INFO="#journal-box > div.panel.panel-default.cockpit-log-panel > div:nth-child(2)"
+    LOG_INFO="//*[@id='journal-box']/div[1]/div[2]/span"
     LOGS_FILTER="//*[@id='journal-prio-menu']/button"
     LOGS_EVERYTHING="//*[@id='prio-lists']/li[1]/a"
     LOGS_WARNING_ICON="//*[@id='journal-box']/div[1]/div[2]/div[1]"
 
     #create new account
-    ACCOUNT_LINK="#sidebar-menu > li:nth-child(5) > a"
+    ACCOUNT_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[5]/span/a"
     ACCOUNT_FRAME_NAME="/users"
     CREATE_NEW_ACCOUNT_BUTTON="//*[@id='accounts-create']"
     FULL_NAME_TEXT="//*[@id='accounts-create-real-name']"
     PASSWORD_TEXT="//*[@id='accounts-create-pw1']"
     CONFIRM_TEXT="//*[@id='accounts-create-pw2']"
-    CREATE_BUTTON="#accounts-create-create"
-    ACCOUNT_INFO="#accounts-list > div:nth-child(3)"
+    CREATE_BUTTON="//*[@id='accounts-create-dialog']/div/div/div[3]/button[1]"
+    ACCOUNT_INFO="//*[@id='accounts-list']/li[2]"
 
     ROOT_BUTTON="//*[@id='navbar-dropdown']"
     LOGOUT_BUTTON="//*[@id='go-logout']"
@@ -187,28 +192,30 @@ class CommonPages(SeleniumTest):
     LOGIN_BUTTON="//*[@id='login-button']"
 
     #terminal function
-    TERMINAL_LINK="#sidebar-tools > li:nth-child(4) > a"
+    TERMINAL_LINK="//*[@id='host-apps']/nav/section[3]/ul/li[5]/span/a"
+    
     TERMINAL_FRAME_NAME="/system/terminal"
     TERMINAL_ADMIN="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[5]"
-    CONMMAND_LINE="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[7]"
-
+    CONMMAND_LINE="/html/body/div/div/div[2]/div/div/div[1]/div[1]/div[7]"
+    
     SSH_HOST_KEY_LINK="//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/a"
     SSH_HOST_KEY_COTENT="//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/div/div/div/div/div[2]/div"
 
     #check diagnostic report
-    DIAGNOSTIC_REPORT_LINK="//*[@id='sidebar-tools']/li[1]/a"
+    DIAGNOSTIC_REPORT_LINK="//*[@id='host-apps']/nav/section[3]/ul/li[1]/span/a"
     DIAGNOSTIC_REPORT_FRAME="/sosreport"
     CREATE_REPORT_BUTTON="//button[text()='Create Report']"
     REPORT_DIALOG="//*[@id='sos']/div"
     REPORT_DOWNLOAD_BUTTON="#sos-download > button"
     
     #check_selinux_policy
-    SELINUX_LINK="#sidebar-tools > li:nth-child(3) > a"
+    SELINUX_LINK="//*[@id='host-apps']/nav/section[3]/ul/li[3]/span/a"
     SELINUX_FRAME="/selinux/setroubleshoot"
     SWITCH_BUTTON="#app > div > div > div > label > span"
 
     #check udisks
-    SERVICE_LINK="//*[@id='sidebar-menu']/li[6]/a"
+    SERVICE_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[6]/span/a"
+    
     FILTER_INPUT_TEXT="//*[@id='services-text-filter']"
     UDISKS_STATUS_TEXT="//*[@id='services-list']/div/table/tbody/tr/td[2]"
 
@@ -307,16 +314,15 @@ class CommonPages(SeleniumTest):
         self.assert_element_invisible("//*[@id='dashboard-hosts']/div[2]/a[2]")
     
     def subscription_to_rhsm(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.SUBSCRIPTION_LINK)
-        time.sleep(10)
+        time.sleep(5)
         self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
         time.sleep(2)
         self.click(self.REGIST_BUTTON)
         self.input_text(self.SUBSCRIPTION_USER_TEXT, self.config_dict['subscription_username'])
         self.input_text(self.SUBSCRIPTION_PWD_TEXT, self.config_dict['subscription_password'])
-        time.sleep(1)
+        self.input_text(self.SUBSCRIPTION_ORGANIZATION_TEXT, "12801563")
+        time.sleep(2)
         self.click(self.REGIST_COMMIT_BUTTON)
         time.sleep(60)
         self.refresh()
@@ -326,17 +332,31 @@ class CommonPages(SeleniumTest):
         self.click(self.DETAIL_BUTTON)
         time.sleep(2)
         self.assert_text_in_element(self.DETALI_PRODUCT_NAME, "Red Hat Virtualization Host")
-        self.assert_text_in_element(self.DETAIL_PRODUCT_ID,"328")
-        self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4.4")
+        self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4")
         self.assert_text_in_element(self.DETAIL_PRODUCT_STATUS, "Subscribed")
 
     def check_packages_installation(self):
+        self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.stage.redhat.com")
+        self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.stage.redhat.com")
+        self.host.execute("subscription-manager repos --disable=*")
         self.host.execute("subscription-manager repos --enable=%s" %self.config_dict['subscription_repos'])
+        
         sub_pkgs = self.config_dict['subscription_packages']
-        for pkg in sub_pkgs[:-1]:
-            ret = self.host.execute("yum install -y %s" % pkg, timeout=200)
-            self.assertTrue('Complete!' in ret.stdout)
+        # for pkg in sub_pkgs[:-1]:
+        #     ret = self.host.execute("yum install -y %s" % pkg, timeout=200)
+        #     self.assertTrue('Complete!' in ret.stdout)
         self.assertTrue('rhvm-appliance' in self.host.execute("yum search %s" %sub_pkgs[-1]))
+        ret = self.host.execute("yum search vdsm-hook*", timeout=200)
+        self.assertTrue('vdsm-hook-checkips' in ret.stdout)
+        self.assertTrue('vdsm-hook-cpuflags' in ret.stdout)
+        self.assertTrue('vdsm-hook-ethtool-options' in ret.stdout)
+        self.assertTrue('vdsm-hook-extra-ipv4-addrs' in ret.stdout)
+        self.assertTrue('vdsm-hook-fcoe' in ret.stdout)
+        self.assertTrue('vdsm-hook-localdisk' in ret.stdout)
+        self.assertTrue('vdsm-hook-nestedvt' in ret.stdout)
+        self.assertTrue('vdsm-hook-openstacknet' in ret.stdout)
+        self.assertTrue('vdsm-hook-vhostmd' in ret.stdout)
+        self.assertTrue('vdsm-hook-vmfex-dev' in ret.stdout)
 
 
     def add_nfs_storage(self):
@@ -383,10 +403,6 @@ class CommonPages(SeleniumTest):
         self.assert_element_visible(self.DISK_STATUS)
     
     def config_hostname(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
-        self.click(self.SYSTEM_FRAME_LINK)
-        time.sleep(1)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
         self.click(self.HOSTNAME_BUTTON)
 
@@ -428,15 +444,8 @@ class CommonPages(SeleniumTest):
         self.assertEqual(actual_now,respect_now)
 
     def config_time_manually(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
-        self.click(self.SYSTEM_FRAME_LINK)
-        time.sleep(1)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
-
         self.click(self.TIME_LINK)
-        self.click(self.TIME_SET_DROPDOWN)
-        self.click(self.TIME_SET_MANUALLY)
         self.input_text(self.TIME_MIN_TEXT,"00")
         self.click(self.TIMEZONE_APPLY_BUTTON)
         time.sleep(2)
@@ -444,7 +453,7 @@ class CommonPages(SeleniumTest):
         time.sleep(5)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
         actual_now = self.get_text(self.TIME_LINK).split(':')[-1]
-        self.assertEqual(actual_now,"00")
+        self.assertEqual(actual_now,"00 PM")
     
     def restart_node(self):
         self.click(self.LOCALHOST_LINK)
@@ -470,10 +479,6 @@ class CommonPages(SeleniumTest):
         self.assert_frame_available("/system")
 
     def change_performance_profile(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
-        self.click(self.SYSTEM_FRAME_LINK)
-        time.sleep(1)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
 
         self.click(self.PROFILE_LINK)
@@ -487,25 +492,21 @@ class CommonPages(SeleniumTest):
         self.assertNotEqual(result, None)
     
     def check_service_status(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.SERVICE_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SERVICE_FRAME_NAME)
         self.input_text(self.FILTER_INPUT_TEXT,"kdump")
         time.sleep(3)
-        self.click("//*[@id='services-list']/div/table/tbody/tr/td[1]")
+        self.click("//*[@id='kdump.service']/div/div[1]/div[1]")
 
         self.click(self.STOP_START_BUTTON)
-        time.sleep(8)
+        time.sleep(10)
         self.assert_text_in_element(self.KD_STATUS_INFO,"Disabled")
         self.click(self.STOP_START_BUTTON)
-        time.sleep(2)
+        time.sleep(8)
         self.assert_text_in_element(self.KD_STATUS_INFO2,"Running")
     
     def check_file_system_list(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.STORAGE_LINK)
         time.sleep(5)
         self.switch_to_frame(self.STORAGE_FRAME_NAME)
@@ -548,8 +549,6 @@ class CommonPages(SeleniumTest):
         # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[11]/tr[1]/th","swap")
     
     def modify_nfs_storage(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.STORAGE_LINK)
         self.switch_to_frame(self.STORAGE_FRAME_NAME)
         self.click(self.ADD_NFS_BUTTON)
@@ -576,35 +575,22 @@ class CommonPages(SeleniumTest):
         self.assert_element_invisible("//*[@id='nfs-mounts']/table/tbody/tr")
     
     def check_the_logs(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.LOGS_LINK)
         self.switch_to_frame(self.LOGS_FRAME_NAME)
 
         self.click(self.LOGS_DURATION_BUTTON)
         time.sleep(1)
-        self.click(self.RECENT_LOGS)
+        self.click(self.LAST_ONE_DAY)
         time.sleep(3)
-        self.assert_element_invisible(self.LOG_INFO)
+        self.assert_element_visible(self.LOG_INFO)
         self.assert_element_visible(self.LOGS_WARNING_ICON)
         self.click(self.LOGS_DURATION_BUTTON)
         time.sleep(1)
         self.click(self.LAST_SEVEN_DAYS)
         time.sleep(3)
         self.assert_element_visible(self.LOG_INFO)
-        self.click(self.LOGS_FILTER)
-        time.sleep(2)
-        self.click(self.LOGS_EVERYTHING)
-        time.sleep(3)
-        self.assert_element_visible(self.LOG_INFO)
-        try:
-            self.assert_element_visible(self.LOGS_WARNING_ICON)
-        except:
-            pass
 
     def create_new_account(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.ACCOUNT_LINK)
         time.sleep(1)
         self.switch_to_frame(self.ACCOUNT_FRAME_NAME)
@@ -630,8 +616,6 @@ class CommonPages(SeleniumTest):
     
 
     def check_terminal(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.TERMINAL_LINK)
         time.sleep(1)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
@@ -639,7 +623,7 @@ class CommonPages(SeleniumTest):
         self.click(self.CONMMAND_LINE)
         self.input_text(self.CONMMAND_LINE," nodectl check\r\n",False)
         time.sleep(5)
-        self.assert_text_in_element("//*[@id='the-terminal']/div/div/div[1]/div[1]/div[8]","Status: OK")
+        self.assert_text_in_element("//*[@id='the-terminal']/div/div/div[1]/div[1]/div[9]","Status: OK")
 
     def go_to_network_page(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
@@ -663,8 +647,6 @@ class CommonPages(SeleniumTest):
         self.assert_frame_available(self.STORAGE_FRAME_NAME)
 
     def create_dignostic_report(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.DIAGNOSTIC_REPORT_LINK)
         time.sleep(1)
         self.switch_to_frame(self.DIAGNOSTIC_REPORT_FRAME)
@@ -677,8 +659,6 @@ class CommonPages(SeleniumTest):
         time.sleep(3)
     
     def check_selinux_policy(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.SELINUX_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SELINUX_FRAME)
