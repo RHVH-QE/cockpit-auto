@@ -236,16 +236,15 @@ class OvirtHostedEnginePage(SeleniumTest):
         if not is_vlan:
             additional_host = Machine(host_string=self.config_dict['second_host'], host_user='root',
                                       host_passwd=self.config_dict['second_pass'])
-            if additional_host.execute('hosted-engine --check-deployed', raise_exception=False).stdout == "":
+            if additional_host.execute('hosted-engine --check-deployed', raise_exception=False).stdout.find("not") == -1:
                 additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
 
         if self.host.execute('rpm -qa|grep appliance', raise_exception=False).stdout == "" and "insights" not in self._testMethodName:
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
 
-        if self.host.execute('hosted-engine --check-deployed', raise_exception=False).stdout == "":
+        if self.host.execute('hosted-engine --check-deployed', raise_exception=False).stdout.find("not") == -1:
             self.backup_remove_logs()
             self.clean_hostengine_env()
-            # self.host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
             self.refresh()
             self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
 
@@ -713,7 +712,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.config_dict['second_host'], self.config_dict['second_vm_fqdn'],
             self.config_dict['second_pass'], self.config_dict['he_vm_fqdn'],
             self.config_dict['admin_pass'])
-        time.sleep(50)
+        time.sleep(80)
         self.check_additional_host_socre(self.config_dict['second_host'],
                                          self.config_dict['second_pass'])
 
@@ -737,7 +736,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     def check_migrated_he(self):
         self.migrate_vms('HostedEngine', self.config_dict['he_vm_fqdn'], self.config_dict['admin_pass'])
-        time.sleep(20)
+        time.sleep(40)
         self.assert_text_in_element(self.VM_STATUS, 'down')
     
     def check_hint_button_after_migration(self):
