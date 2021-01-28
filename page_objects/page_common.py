@@ -314,6 +314,7 @@ class CommonPages(SeleniumTest):
         self.assert_element_invisible("//*[@id='dashboard-hosts']/div[2]/a[2]")
     
     def subscription_to_rhsm(self):
+        self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.stage.redhat.com")
         self.click(self.SUBSCRIPTION_LINK)
         time.sleep(5)
         self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
@@ -337,7 +338,6 @@ class CommonPages(SeleniumTest):
 
     def check_packages_installation(self):
         self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.stage.redhat.com")
-        self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.stage.redhat.com")
         self.host.execute("subscription-manager repos --disable=*")
         self.host.execute("subscription-manager repos --enable=%s" %self.config_dict['subscription_repos'])
         
@@ -900,3 +900,17 @@ class CommonPages(SeleniumTest):
                         continue
             continue
         os.remove('./nodectl_info')
+    
+    def config_system_purpose(self):
+        self.host.execute("syspurpose set-role 'Red Hat Enterprise Linux Compute Node'")
+        self.host.execute("syspurpose set-sla 'Self-Support'")
+        self.host.execute("syspurpose set-usage 'Test'")
+        self.click(self.SUBSCRIPTION_LINK)
+        time.sleep(5)
+        self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
+        time.sleep(10)
+
+
+
+
+
