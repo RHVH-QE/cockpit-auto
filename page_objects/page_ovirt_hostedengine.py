@@ -425,7 +425,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         i = 0
         vm_status = "unknown"
         while True:
-            if i > 50:
+            if i > 60:                 ######modify but not push
                 raise RuntimeError(
                     "Timeout waitting for vm migration %s as current vm status is: %s"
                     %(expect_status, vm_status)
@@ -679,21 +679,23 @@ class OvirtHostedEnginePage(SeleniumTest):
         username = self.config_dict['subscription_username']
         password = self.config_dict['subscription_password']
         try:
+            self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.stage.redhat.com")
+            self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.stage.redhat.com")
             sub_reg_ret = self.host.execute(
                 "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), raise_exception=False, timeout=100)
-            
-            ins_reg_ret = self.host.execute("insights-client --register", timeout=100)
-
-            time.sleep(20)
-            if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
+            ins_reg_ret = self.host.execute("insights-client --register", timeout=250)
+            time.sleep(30)
+            if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully" in ins_reg_ret.stdout):
                 time.sleep(5)
                 self.host.execute(
-                    'subscription-manager repos --disable=* --enable={}'.format(self.config_dict['subscription_repo_name']),
-                    timeout=150)
+                    'subscription-manager repos --disable=* --enable={0}'.format(self.config_dict['subscription_repo_name']),
+                    timeout=200)
                 self.node_zero_default_deploy_process(4000)
                 he_ret = self.host.execute("hosted-engine --vm-status")
 
                 if ('{"health": "good", "vm": "up", "detail": "Up"}' in he_ret.stdout):
+                    self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.redhat.com")
+                    self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.redhat.com")
                     ins_unreg_ret = self.host.execute("insights-client --unregister")
                     sub_unreg_ret = self.host.execute("subscription-manager unregister")
                     if ("Successfully unregistered" not in ins_unreg_ret.stdout) and (
