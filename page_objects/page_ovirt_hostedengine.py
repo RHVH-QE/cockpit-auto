@@ -694,13 +694,13 @@ class OvirtHostedEnginePage(SeleniumTest):
                 he_ret = self.host.execute("hosted-engine --vm-status")
 
                 if ('{"health": "good", "vm": "up", "detail": "Up"}' in he_ret.stdout):
-                    self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.redhat.com")
-                    self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.redhat.com")
                     ins_unreg_ret = self.host.execute("insights-client --unregister")
                     sub_unreg_ret = self.host.execute("subscription-manager unregister")
                     if ("Successfully unregistered" not in ins_unreg_ret.stdout) and (
                         "System has been unregistered." not in sub_unreg_ret.stdout):
                         raise RuntimeError("Unregister failed!")
+                    self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.redhat.com")
+                    self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.redhat.com")
             else:
                 self.fail()
         except:
