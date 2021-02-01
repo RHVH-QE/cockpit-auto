@@ -654,13 +654,19 @@ class OvirtHostedEnginePage(SeleniumTest):
         username = self.config_dict['subscription_username']
         password = self.config_dict['subscription_password']
         try:
-            sub_reg_ret = self.host.execute(
-                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=200)
+            # self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.stage.redhat.com")
+            # self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.stage.redhat.com")
+            # sub_reg_ret = self.host.execute(
+            #     "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=200)
 
-            ins_reg_ret = self.host.execute("insights-client --register", timeout=200)
+            # ins_reg_ret = self.host.execute("insights-client --register", timeout=300)
 
-            if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully registered" in ins_reg_ret.stdout):
+            if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully" in ins_reg_ret.stdout):
                 time.sleep(5)
+                self.host.execute(
+                    'subscription-manager repos --disable=* --enable={0}'.format(
+                        self.config_dict['subscription_repo_name']),
+                    timeout=200)
                 self.node_zero_default_deploy_process()
                 he_ret = self.host.execute("hosted-engine --vm-status")
 
@@ -670,6 +676,8 @@ class OvirtHostedEnginePage(SeleniumTest):
                     if ("Successfully unregistered" not in ins_unreg_ret.stdout) and (
                         "System has been unregistered." not in sub_unreg_ret.stdout):
                         raise RuntimeError("Unregister failed!")
+                    self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.redhat.com")
+                    self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.redhat.com")
         except:
             import traceback
             traceback.print_exc()
