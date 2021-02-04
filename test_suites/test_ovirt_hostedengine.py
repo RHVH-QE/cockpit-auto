@@ -165,7 +165,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-27272")
     def test_check_storage_pool_cleanedup(self):
         """
-        :avocado: tags=he_tier11
+        :avocado: tags=he_tier1
         """
         self.check_storage_pool_cleanedup()
 
