@@ -425,7 +425,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         i = 0
         vm_status = "unknown"
         while True:
-            if i > 60:                 ######modify but not push
+            if i > 65:                 ######modify but not push
                 raise RuntimeError(
                     "Timeout waitting for vm migration %s as current vm status is: %s"
                     %(expect_status, vm_status)
