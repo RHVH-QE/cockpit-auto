@@ -797,7 +797,27 @@ class OvirtHostedEnginePage(SeleniumTest):
         self.prepare_env('nfs')
         time.sleep(15)
         check_deploy()
-
+        
+    # tier1_12
+    def check_storage_pool_cleanedup(self):
+        # 1. Must after case "test_roll_back_history_text"
+        # 2. Restart libvirt service.
+        try:
+            self.host.execute("systemctl restart libvirtd")
+        except:
+            import traceback
+            traceback.print_exc()
+            self.fail()
+            
+        # 3. Check is there any error about autostart storage pool in /var/log/messages
+        autostart_output = self.host.execute("grep autostart /var/log/messages")
+        autostart_output_lines = autostart_output.split('\n')
+        for output_line in autostart_output_lines:
+            failed_str = output_line.split(':')[-3]
+            key_str = ' '.join(failed_str.split(' ')[:-1])
+            if "Failed to autostart storage pool" == key_str.lstrip():
+                self.fail()
+        
     # tier2_0
     def deploy_on_non_default_cockpit_port(self):
         self.node_zero_default_deploy_process()
