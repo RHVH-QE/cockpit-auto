@@ -240,6 +240,13 @@ class TestCockpitCommon(CommonPages):
         self.subscription_with_key_and_organization()
         #bug
     
+    @add_case_id("RHEVM-27632")
+    def test_remove_libvirt(self):
+        """
+        :avocado: tags=common_tier2qwe
+        """
+        self.remove_libvirt()
+    
     
     
     

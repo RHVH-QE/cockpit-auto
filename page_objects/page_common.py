@@ -910,7 +910,8 @@ class CommonPages(SeleniumTest):
         self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
         time.sleep(10)
 
-
-
-
-
+    def remove_libvirt(self):
+        cmd = 'yum remove libvirt'
+        output = self.host.execute(cmd).stdout
+        result = re.search("Error",output)
+        self.assertNotEqual(result, None)
