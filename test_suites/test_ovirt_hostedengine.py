@@ -161,6 +161,13 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         :avocado: tags=he_tier1
         """
         self.node_zero_rollback_deploy_process()
+        
+    @add_case_id("RHEVM-27272")
+    def test_check_storage_pool_cleanedup(self):
+        """
+        :avocado: tags=he_tier1
+        """
+        self.check_storage_pool_cleanedup()
 
     @add_case_id("RHEVM-25122")
     def test_node_zero_iscsi_deployment(self):
