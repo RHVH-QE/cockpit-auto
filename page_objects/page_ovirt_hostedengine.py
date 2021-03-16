@@ -308,7 +308,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             str = self.host.execute('iscsiadm --mode discoverydb --type sendtargets --portal {} --discover'.format(iscsi_ip))
             print(str.split(' ')[-1])
             self.host.execute('iscsiadm --mode node --targetname {0} --portal {1}:3260 --login'.format(str.split(' ')[-1], iscsi_ip))
-            self.host.execute('dd if=/dev/zero of=/dev/sdb bs=10M', timeout=2000,raise_exception=False)
+            self.host.execute('dd if=/dev/zero of=/dev/sdb bs=10M', timeout=3000,raise_exception=False)
             self.host.execute('iscsiadm --mode node --targetname {0} --portal {1}:3260 --logout'.format(str.split(' ')[-1], iscsi_ip))
         except:
             import traceback
@@ -575,7 +575,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         cmd = '\n'.join("{}={}".format(k, v) for k, v in vlan_dict.items())
         self.host.execute("echo '{}' >> {}".format(cmd, ifg_path))
         self.host.execute("echo '10.0.0.0/8 via 10.73.131.254 dev em1' >> /etc/sysconfig/network-scripts/route-em1")
-        self.host.execute("systemctl restart network", timeout=100)
+        self.host.execute("systemctl restart NetworkManager", timeout=150)
         self.host.execute("echo 'nameserver {}' >> /etc/resolv.conf".format(vlan_dict['DNS1']))
 
     def set_hosted_engine_ipv6_environment(self):
@@ -683,9 +683,10 @@ class OvirtHostedEnginePage(SeleniumTest):
             self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.stage.redhat.com")
             sub_reg_ret = self.host.execute(
                 "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), raise_exception=False, timeout=100)
-            ins_reg_ret = self.host.execute("insights-client --register", timeout=250)
+            ins_reg_ret = self.host.execute("insights-client --register", timeout=2500)
             time.sleep(30)
             if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully" in ins_reg_ret.stdout):
+            # if True:
                 time.sleep(5)
                 self.host.execute(
                     'subscription-manager repos --disable=* --enable={0}'.format(self.config_dict['subscription_repo_name']),
