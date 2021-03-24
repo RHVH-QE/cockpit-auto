@@ -21,7 +21,7 @@ class CommonPages(SeleniumTest):
     """
 
     #R_MACHINE_ADDR="10.66.9.205"
-    R_MACHINE_ADDR="10.73.130.125"
+    R_MACHINE_ADDR="10.73.73.105"
     WRONG_ADDR="1.2.3.4"
     R_MACHINE_USER="root"
     R_MACHINE_PWD="redhat"
@@ -42,18 +42,16 @@ class CommonPages(SeleniumTest):
     SLEEP_TIME = 5
     OVIRT_DASHBOARD_FRAME_NAME = "/dashboard"
     LOCALHOST_LINK = "//*[@id='host-nav-link']/span[1]"
-    DASHBOARD_LINK = "//*[@id='main-navbar']/li[3]/a/span[1]"
+    DASHBOARD_LINK = "//*[@id='host-apps']/nav/section[1]/ul/li[2]/span/a"
     OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
 
     #add and delete remote host
+    DOMAIN_BUTTON="//*[@id='pf-toggle-id-58']"
+    ADD_SERVER_BUTTON="//*[@id='page-sidebar']/div/div[2]/button"
+    INPUT_MACHINE_ADDRESS="//*[@id='add-machine-address']"
+    CONNECT_BUTTON="//*[@id='hosts_setup_server_dialog']/div/div/div[3]/button[1]"
     INPUT_REMOTE_USER="//*[@id='login-custom-user']"
     INPUT_REMOTE_PASSWORD="//*[@id='login-custom-password']"
-    SET_UP_SERVER="//*[@id='dashboard_setup_server_dialog']/div/div/div[3]/button[2]"
-    ADD_SERVER_BUTTON="//*[@id='dashboard-add']"
-    INPUT_MACHINE_ADDRESS="//*[@id='add-machine-address']"
-    ADD_BUTTON="//*[@id='dashboard_setup_server_dialog']/div/div/div[3]/button[2]"
-    ADD_UNKNOWN_HOST="//*[@id='add-unknown-host']"
-    CONNECT_BUTTON="//*[@id='dashboard_setup_server_dialog']/div/div/div[3]/button[2]"
 
     EDITE_SERVER="//*[@id='dashboard-enable-edit']"
     DELETE_SERVER="//*[@id='dashboard-hosts']/div[2]/a[1]/button[1]"
@@ -83,13 +81,14 @@ class CommonPages(SeleniumTest):
     KEY_TEXT="//*[@id='subscription-register-key']"
 
     #add nfs
-    STORAGE_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[3]/span"
+    STORAGE_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[3]/span/a"
     STORAGE_FRAME_NAME="/storage"
     ADD_NFS_BUTTON="//*[@id='nfs-mounts']/div[1]/div/button"
     NFS_SERVER_ADDR_TEXT="//*[@id='dialog']/div/div/div[2]/form/div[1]/input"
-    SERVER_PATH_TEXT="//*[@id='pf-select-toggle-id-24-select-typeahead']"
+    SERVER_PATH_TEXT="//*[@id='pf-select-toggle-id-0-select-typeahead']"
+    NFS_PATHS=""
     MOUNT_POINT_TEXT="//*[@id='dialog']/div/div/div[2]/form/div[3]/input"
-    NFS_ADD_BUTTON="//*[@id='dialog']/div/div/div[3]/button[2]"
+    NFS_ADD_BUTTON="//*[@id='dialog']/div/div/div[3]/button[1]"
 
     NFS_SERVER_DETAIL_BUTTON="//*[@id='nfs-mounts']/table/tbody/tr/td[1]"
     DELETE_NFS_SERVER_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[3]"
@@ -217,7 +216,7 @@ class CommonPages(SeleniumTest):
     SERVICE_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[6]/span/a"
     
     FILTER_INPUT_TEXT="//*[@id='services-text-filter']"
-    UDISKS_STATUS_TEXT="//*[@id='services-list']/div/table/tbody/tr/td[2]"
+    UDISKS_STATUS_TEXT="//*[@id='udisks2.service']/div/div[2]/span[1]"
 
     def setUp(self):
         case_name = self._testMethodName
@@ -272,7 +271,7 @@ class CommonPages(SeleniumTest):
         self.login(self.R_MACHINE_USER,self.R_MACHINE_PWD)
         time.sleep(2)
         actual_s = self.get_current_url().split('=')[-1]
-        expect_s = self.R_MACHINE_ADDR + '/ovirt-dashboard'
+        expect_s = self.R_MACHINE_ADDR + '/system'
         self.assertEqual(actual_s,expect_s)
 
     def login_wrong_remote_machine(self):
@@ -285,26 +284,24 @@ class CommonPages(SeleniumTest):
 
         
     def add_remote_host(self):
-        self.click(self.DASHBOARD_LINK)
-        time.sleep(1)
-        self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
+        self.click(self.DOMAIN_BUTTON)
 
         self.click(self.ADD_SERVER_BUTTON)
         time.sleep(5)
         self.input_text(self.INPUT_MACHINE_ADDRESS,self.R_MACHINE_ADDR)
         time.sleep(5)
-        self.click(self.ADD_BUTTON)
+        self.click(self.CONNECT_BUTTON)
         time.sleep(5)
         self.click(self.CONNECT_BUTTON)
         time.sleep(5)
         self.input_text(self.INPUT_REMOTE_USER,self.R_MACHINE_USER)
         self.input_text(self.INPUT_REMOTE_PASSWORD,self.R_MACHINE_PWD)
-        self.click(self.SET_UP_SERVER)
-        self.assert_element_visible("//*[@id='dashboard-hosts']/div[2]/a[2]")
+        self.click(self.CONNECT_BUTTON)
+        self.assert_element_visible("//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/a/span")
 
     def delete_remote_host(self):
         self.click(self.DASHBOARD_LINK)
-        time.sleep(1)
+        time.sleep(5)
         self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
 
         self.click(self.EDITE_SERVER)
@@ -360,8 +357,6 @@ class CommonPages(SeleniumTest):
 
 
     def add_nfs_storage(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.STORAGE_LINK)
         self.switch_to_frame(self.STORAGE_FRAME_NAME)
         time.sleep(2)
@@ -692,14 +687,12 @@ class CommonPages(SeleniumTest):
         result = re.search("udisks2",output)
         self.assertNotEqual(result, None)
 
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.SERVICE_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SERVICE_FRAME_NAME)
         self.input_text(self.FILTER_INPUT_TEXT,"udisks")
         time.sleep(3)
-        self.assert_text_in_element(self.UDISKS_STATUS_TEXT,"active (running)")
+        self.assert_text_in_element(self.UDISKS_STATUS_TEXT,"Running")
 
         cmd = "systemctl status udisks2 |grep 'running' && systemctl status udisks2 |grep PID"
         output = self.host.execute(cmd).stdout

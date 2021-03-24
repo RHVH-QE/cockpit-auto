@@ -47,7 +47,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23290")
     def test_suscription(self):
         """
-        :avocado: tags=common_tier1
+        :avocado: tags=common_tier1zxc
         """
         self.subscription_to_rhsm()
         self.check_packages_installation()
@@ -243,7 +243,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-27632")
     def test_remove_libvirt(self):
         """
-        :avocado: tags=common_tier2qwe
+        :avocado: tags=common_tier2
         """
         self.remove_libvirt()
     

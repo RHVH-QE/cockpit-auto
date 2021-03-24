@@ -14,7 +14,7 @@ class TestOvirtDashboard(OvirtDashboardPage):
     @add_case_id("RHEVM-23307")
     def test_node_vm_quantity(self):
         """
-        :avocado: tags=dashboard_tier1ab
+        :avocado: tags=dashboard_tier1
         """
         self.check_vm_quantity()
 
