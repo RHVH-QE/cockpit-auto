@@ -1,4 +1,5 @@
 import os
+import re
 import yaml
 import time
 import datetime
@@ -204,11 +205,11 @@ class OvirtHostedEnginePage(SeleniumTest):
                 rhvm_appliance_dict.get('v4.4').append(appliance)
         
         img_ver = self.host.execute("imgbase w", raise_exception=False).split(' ')[-1]
-        if '4.2' in img_ver:
+        if '-4.2' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.2')[-1]
-        elif '4.3' in img_ver:
+        elif '-4.3' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.3')[-1]
-        elif '4.4' in img_ver:
+        elif '-4.4' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.4')[-1]
         rhvm_appliance_link = appliance_path + rhvm_appliance
         return rhvm_appliance_link
@@ -656,10 +657,10 @@ class OvirtHostedEnginePage(SeleniumTest):
         try:
             # self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.stage.redhat.com")
             # self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.stage.redhat.com")
-            # sub_reg_ret = self.host.execute(
-            #     "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=200)
+            sub_reg_ret = self.host.execute(
+                "subscription-manager register --username={0} --password={1} --auto-attach".format(username, password), timeout=200)
 
-            # ins_reg_ret = self.host.execute("insights-client --register", timeout=300)
+            ins_reg_ret = self.host.execute("insights-client --register", timeout=300)
 
             if ("Status:       Subscribed" in sub_reg_ret.stdout) and ("Successfully" in ins_reg_ret.stdout):
                 time.sleep(5)
