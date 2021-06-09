@@ -47,7 +47,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23290")
     def test_suscription(self):
         """
-        :avocado: tags=common_tier1zxc
+        :avocado: tags=common_tier1lsy
         """
         self.subscription_to_rhsm()
         self.check_packages_installation()

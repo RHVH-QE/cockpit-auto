@@ -21,7 +21,7 @@ class CommonPages(SeleniumTest):
     """
 
     #R_MACHINE_ADDR="10.66.9.205"
-    R_MACHINE_ADDR="10.73.73.105"
+    R_MACHINE_ADDR="10.73.130.125"
     WRONG_ADDR="1.2.3.4"
     R_MACHINE_USER="root"
     R_MACHINE_PWD="redhat"
@@ -49,13 +49,14 @@ class CommonPages(SeleniumTest):
     DOMAIN_BUTTON="//*[@id='pf-toggle-id-58']"
     ADD_SERVER_BUTTON="//*[@id='page-sidebar']/div/div[2]/button"
     INPUT_MACHINE_ADDRESS="//*[@id='add-machine-address']"
+    ADD_HOST_BUTTON="//*[@id='hosts_setup_server_dialog']/div/div/div[2]/div/button[1]"
     CONNECT_BUTTON="//*[@id='hosts_setup_server_dialog']/div/div/div[3]/button[1]"
     INPUT_REMOTE_USER="//*[@id='login-custom-user']"
     INPUT_REMOTE_PASSWORD="//*[@id='login-custom-password']"
 
-    EDITE_SERVER="//*[@id='dashboard-enable-edit']"
-    DELETE_SERVER="//*[@id='dashboard-hosts']/div[2]/a[1]/button[1]"
-
+    EDITE_SERVER="//*[@id='page-sidebar']/div/div[2]/button[1]"
+    DELETE_SERVER="//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/div/button[2]"
+    
     #subscription
     NETWORK_INFO_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
     SUBSCRIPTION_LINK="//*[@id='host-apps']/nav/section[3]/ul/li[4]/span/a"
@@ -84,7 +85,7 @@ class CommonPages(SeleniumTest):
     STORAGE_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[3]/span/a"
     STORAGE_FRAME_NAME="/storage"
     ADD_NFS_BUTTON="//*[@id='nfs-mounts']/div[1]/div/button"
-    NFS_SERVER_ADDR_TEXT="//*[@id='dialog']/div/div/div[2]/form/div[1]/input"
+    NFS_SERVER_ADDR_TEXT="//*[@id='pf-modal-part-2']/form/div[1]/input"
     SERVER_PATH_TEXT="//*[@id='pf-select-toggle-id-0-select-typeahead']"
     NFS_PATHS=""
     MOUNT_POINT_TEXT="//*[@id='dialog']/div/div/div[2]/form/div[3]/input"
@@ -99,16 +100,16 @@ class CommonPages(SeleniumTest):
     NFS_STATUS="//*[@id='pf-15846295830663u3ki41vij2']/div[2]/span"
 
     #system status
-    CPU_STATUS="//*[@id='dashboard-plot-0']"
+    CPU_STATUS="//*[@id='current-metrics-card-cpu']/div[1]"
     MEMORY_LINK="//*[@id='dashboard']/div[1]/div/ul/li[2]/a"
-    MEMORY_STATUS="//*[@id='dashboard-plot-1']"
+    MEMORY_STATUS="//*[@id='app']/div/main/section[1]/div/article[2]/div[1]"
     NETWORK_LINK="//*[@id='dashboard']/div[1]/div/ul/li[3]/a"
-    NETWORK_STATUS="//*[@id='dashboard-plot-2']"
+    NETWORK_STATUS="//*[@id='app']/div/main/section[1]/div/article[4]/div[1]"
     DISK_LINK="//*[@id='dashboard']/div[1]/div/ul/li[4]/a"
-    DISK_STATUS="//*[@id='dashboard-plot-3']"
+    DISK_STATUS="//*[@id='app']/div/main/section[1]/div/article[3]/div[1]"
 
     #config hostname
-    SYSTEM_FRAME_LINK="//*[@id='sidebar-menu']/li[1]/a"
+    SYSTEM_FRAME_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[1]/span/a"
     SYSTEM_FRAME_NAME="/system"
     HOSTNAME_BUTTON="//*[@id='system_information_hostname_button']"
     HOST_INFO_TEXT="//*[@id='system_information_hostname_text']"
@@ -218,6 +219,9 @@ class CommonPages(SeleniumTest):
     FILTER_INPUT_TEXT="//*[@id='services-text-filter']"
     UDISKS_STATUS_TEXT="//*[@id='udisks2.service']/div/div[2]/span[1]"
 
+    #system infomation
+    SYSTEM_USAGE_LINK="//*[@id='overview']/div/main/section[2]/div[2]/article[2]/div[3]/a"
+
     def setUp(self):
         case_name = self._testMethodName
         config = self.get_data('cockpit_common.yml')
@@ -285,30 +289,26 @@ class CommonPages(SeleniumTest):
         
     def add_remote_host(self):
         self.click(self.DOMAIN_BUTTON)
-
         self.click(self.ADD_SERVER_BUTTON)
         time.sleep(5)
         self.input_text(self.INPUT_MACHINE_ADDRESS,self.R_MACHINE_ADDR)
-        time.sleep(5)
+        # self.input_text(self.INPUT_REMOTE_USER,self.R_MACHINE_USER)
+        self.click(self.ADD_HOST_BUTTON)
+        time.sleep(3)
         self.click(self.CONNECT_BUTTON)
-        time.sleep(5)
-        self.click(self.CONNECT_BUTTON)
-        time.sleep(5)
-        self.input_text(self.INPUT_REMOTE_USER,self.R_MACHINE_USER)
+        time.sleep(3)
         self.input_text(self.INPUT_REMOTE_PASSWORD,self.R_MACHINE_PWD)
         self.click(self.CONNECT_BUTTON)
         self.assert_element_visible("//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/a/span")
 
     def delete_remote_host(self):
-        self.click(self.DASHBOARD_LINK)
-        time.sleep(5)
-        self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
+        self.click(self.DOMAIN_BUTTON)
 
         self.click(self.EDITE_SERVER)
         time.sleep(2)
         self.click(self.DELETE_SERVER)
         time.sleep(2)
-        self.assert_element_invisible("//*[@id='dashboard-hosts']/div[2]/a[2]")
+        self.assert_element_invisible(self.EDITE_SERVER)
     
     def subscription_to_rhsm(self):
         self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.stage.redhat.com")
@@ -366,6 +366,7 @@ class CommonPages(SeleniumTest):
         time.sleep(1)
         self.input_text(self.SERVER_PATH_TEXT, self.config_dict['nfs_dir'])
         time.sleep(1)
+        self.click('//*[@id="pf-modal-part-2"]/form/label[3]')
         self.input_text(self.MOUNT_POINT_TEXT, self.config_dict['nfs_mount_point'])
         time.sleep(1)
         self.click(self.NFS_ADD_BUTTON)
@@ -379,24 +380,15 @@ class CommonPages(SeleniumTest):
         self.assert_element_invisible("//*[@id='nfs-mounts']/table/tbody/tr")
     
     def system__dynamic_status(self):
-        self.click(self.DASHBOARD_LINK)
+        self.click(self.SYSTEM_FRAME_LINK)
         time.sleep(1)
-        self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
-        time.sleep(3)
-        self.assert_element_visible(self.CPU_STATUS)
-
-        self.click(self.MEMORY_LINK)
-        time.sleep(3)
-        self.assert_element_visible(self.MEMORY_STATUS)
-        
-        self.click(self.NETWORK_LINK)
-        time.sleep(3)
-        self.assert_element_visible(self.NETWORK_STATUS)
-
-        self.click(self.DISK_LINK)
-        time.sleep(3)
-        self.assert_element_visible(self.DISK_STATUS)
-    
+        self.switch_to_frame(self.SYSTEM_FRAME_NAME)
+        self.click(self.SYSTEM_USAGE_LINK)
+        self.assert_text_in_element(self.CPU_STATUS,"CPU")
+        self.assert_text_in_element(self.MEMORY_STATUS,"Memory")
+        self.assert_text_in_element(self.NETWORK_STATUS,"Network")
+        self.assert_text_in_element(self.DISK_STATUS,"Disks")
+  
     def config_hostname(self):
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
         self.click(self.HOSTNAME_BUTTON)
