@@ -216,8 +216,8 @@ class CommonPages(SeleniumTest):
     #check udisks
     SERVICE_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[6]/span/a"
     
-    FILTER_INPUT_TEXT="//*[@id='services-text-filter']"
-    UDISKS_STATUS_TEXT="//*[@id='udisks2.service']/div/div[2]/span[1]"
+    FILTER_INPUT_TEXT="//*[@id='services-text-filter']/div/div/span/input"
+    UDISKS_STATUS_TEXT="//*[@id='udisks2.service-service-unit-state']/div[1]"
 
     #system infomation
     SYSTEM_USAGE_LINK="//*[@id='overview']/div/main/section[2]/div[2]/article[2]/div[3]/a"
@@ -682,6 +682,8 @@ class CommonPages(SeleniumTest):
         self.click(self.SERVICE_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SERVICE_FRAME_NAME)
+        self.click("//*[@id='services-toolbar']/div[1]/div[1]/div/div/button")
+        
         self.input_text(self.FILTER_INPUT_TEXT,"udisks")
         time.sleep(3)
         self.assert_text_in_element(self.UDISKS_STATUS_TEXT,"Running")
