@@ -47,7 +47,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23290")
     def test_suscription(self):
         """
-        :avocado: tags=common_tier1lsy
+        :avocado: tags=common_tier1sss
         """
         self.subscription_to_rhsm()
         self.check_packages_installation()
@@ -56,14 +56,14 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-24922")
     def test_add_nfs_storage(self):
         """
-        :avocado: tags=common_tier1
+        :avocado: tags=common_tier1sss
         """
         self.add_nfs_storage()
     
     @add_case_id("RHEVM-23247")
     def test_system_dynamic_status(self):
         """
-        :avocado: tags=common_tier1
+        :avocado: tags=common_tier1a
         """
         self.system__dynamic_status()
 

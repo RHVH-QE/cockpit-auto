@@ -21,7 +21,7 @@ class CommonPages(SeleniumTest):
     """
 
     #R_MACHINE_ADDR="10.66.9.205"
-    R_MACHINE_ADDR="10.73.130.125"
+    R_MACHINE_ADDR="10.73.73.106"
     WRONG_ADDR="1.2.3.4"
     R_MACHINE_USER="root"
     R_MACHINE_PWD="redhat"
@@ -220,7 +220,8 @@ class CommonPages(SeleniumTest):
     UDISKS_STATUS_TEXT="//*[@id='udisks2.service-service-unit-state']/div[1]"
 
     #system infomation
-    SYSTEM_USAGE_LINK="//*[@id='overview']/div/main/section[2]/div[2]/article[2]/div[3]/a"
+    SYSTEM_USAGE_LINK="//*[@id='overview']/div/main/section[3]/div/article[2]/div[3]/a"
+    
 
     def setUp(self):
         case_name = self._testMethodName
@@ -273,8 +274,9 @@ class CommonPages(SeleniumTest):
         self.click(self.OTHER_OPTION)
         self.input_text(self.SERVER_FIELD,self.R_MACHINE_ADDR)
         self.login(self.R_MACHINE_USER,self.R_MACHINE_PWD)
-        time.sleep(2)
-        actual_s = self.get_current_url().split('=')[-1]
+        self.click("//*[@id='login-button']")
+        time.sleep(5)
+        actual_s = self.get_current_url().split('=')[1]
         expect_s = self.R_MACHINE_ADDR + '/system'
         self.assertEqual(actual_s,expect_s)
 
@@ -307,8 +309,7 @@ class CommonPages(SeleniumTest):
         self.click(self.EDITE_SERVER)
         time.sleep(2)
         self.click(self.DELETE_SERVER)
-        time.sleep(2)
-        self.assert_element_invisible(self.EDITE_SERVER)
+        time.sleep(5)
     
     def subscription_to_rhsm(self):
         self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.stage.redhat.com")
