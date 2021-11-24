@@ -22,7 +22,7 @@ subscription_organization: ''
 subscription_key: ''
 
 #RHVM
-rhvm_fqdn: 'vm-197-65.lab.eng.pek2.redhat.com'
+rhvm_fqdn: 'vm-198-146.lab.eng.pek2.redhat.com'
 rhvm_admin: 'admin'
 rhvm_pw: 'password'
 

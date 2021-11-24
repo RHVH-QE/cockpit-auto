@@ -41,7 +41,8 @@ class CommonPages(SeleniumTest):
 
     SLEEP_TIME = 5
     OVIRT_DASHBOARD_FRAME_NAME = "/dashboard"
-    LOCALHOST_LINK = "//*[@id='host-nav-link']/span[1]"
+    # LOCALHOST_LINK = "//*[@id='host-nav-link']/span[1]"
+    # HOST_APPS = "//*[@id='host-apps']/nav/section[3]"
     DASHBOARD_LINK = "//*[@id='host-apps']/nav/section[1]/ul/li[2]/span/a"
     OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
 
@@ -154,9 +155,9 @@ class CommonPages(SeleniumTest):
     SERVICE_FRAME_NAME="/system/services"
     SERVICE_SEARCHER="//*[@id='services-text-filter']"
     KD_SERVICE_LINK="//*[@id='services-list']/div/table/tbody/tr/td[1]"
-    STOP_START_BUTTON="//*[@id='service-details']/main/section[2]/div/span/label/span"
-    KD_STATUS_INFO="//*[@id='statuses']/div/span[2]"
-    KD_STATUS_INFO2=".status-running > span:nth-child(2)"
+    STOP_START_BUTTON="//*[@id='service-details']/main/section/div/div[1]/article/div[1]/span/label/span"
+    KD_STATUS_INFO="//*[@id='statuses']/div/div/span[2]"
+    KD_STATUS_INFO2="//*[@id='statuses']/div/div[1]/span[2]"
     KD_RESTART_BUTTON="//*[@id='service-unit-action']/button[1]"
     KD_DISABLE_BUTTON="//*[@id='service-file-action']/button[1]"
     KD_ENABLE_TEXT="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[3]/td[2]"
@@ -216,6 +217,7 @@ class CommonPages(SeleniumTest):
     #check udisks
     SERVICE_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[6]/span/a"
     
+    FILTER_BUTTON = "//*[@id='services-toolbar']/div[1]/div[1]/div/div[1]/button"
     FILTER_INPUT_TEXT="//*[@id='services-text-filter']/div/div/span/input"
     UDISKS_STATUS_TEXT="//*[@id='udisks2.service-service-unit-state']/div[1]"
 
@@ -409,8 +411,8 @@ class CommonPages(SeleniumTest):
         self.assertNotEqual(result, None)
 
     def config_timezone(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
+        # self.click(self.LOCALHOST_LINK)
+        # time.sleep(1)
         self.click(self.SYSTEM_FRAME_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
@@ -444,8 +446,8 @@ class CommonPages(SeleniumTest):
         self.assertEqual(actual_now,"00 PM")
     
     def restart_node(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
+        # self.click(self.LOCALHOST_LINK)
+        # time.sleep(1)
         self.click(self.SYSTEM_FRAME_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
@@ -483,15 +485,18 @@ class CommonPages(SeleniumTest):
         self.click(self.SERVICE_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SERVICE_FRAME_NAME)
-        self.input_text(self.FILTER_INPUT_TEXT,"kdump")
+        time.sleep(5)
+        self.click(self.FILTER_BUTTON)
         time.sleep(3)
-        self.click("//*[@id='kdump.service']/div/div[1]/div[1]")
+        self.input_text(self.FILTER_INPUT_TEXT,"kdump")        
+        time.sleep(3)
+        self.click("//*[@id='kdump.service']/th/div/a")
 
         self.click(self.STOP_START_BUTTON)
-        time.sleep(10)
+        time.sleep(20)
         self.assert_text_in_element(self.KD_STATUS_INFO,"Disabled")
         self.click(self.STOP_START_BUTTON)
-        time.sleep(8)
+        time.sleep(20)
         self.assert_text_in_element(self.KD_STATUS_INFO2,"Running")
     
     def check_file_system_list(self):
@@ -700,8 +705,8 @@ class CommonPages(SeleniumTest):
         self.assertEqual(output,'')
     
     def check_kernel_dump_service(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
+        # self.click(self.LOCALHOST_LINK)
+        # time.sleep(1)
         self.click(self.KD_LINK)
         self.switch_to_frame(self.KD_FRAME_NAME)
 
@@ -755,15 +760,16 @@ class CommonPages(SeleniumTest):
             elif host_status == 'non_operational':
                 raise RuntimeError("Host is not %s as current status is: %s" %
                                    (expect_status, host_status))
-            time.sleep(15)
+            time.sleep(20)
             i += 1
 
     def goto_terminal_check_appliance(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
+        # self.click(self.LOCALHOST_LINK)
+        # time.sleep(1)
         self.click(self.TERMINAL_LINK)
         time.sleep(2)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(2)
         appliance_like = self.get_text(self.TERMINAL_ADMIN)
         self.check_appliance_like(appliance_like)  
 
@@ -780,16 +786,18 @@ class CommonPages(SeleniumTest):
         rhvm_fqdn = self.config_dict['rhvm_fqdn']
 
         self.goto_terminal_check_appliance()
+        print(host_ip,host_name,passwd,rhvm_fqdn)
         self.add_host_rhvm(host_ip,host_name,passwd,rhvm_fqdn)
-        time.sleep(150)
+        time.sleep(200)
         self.host.execute("reboot",raise_exception=False)
-        time.sleep(400)
+        time.sleep(200)
         self.refresh()
         self.login(username, passwd)
         time.sleep(2)
         self.click(self.TERMINAL_LINK)
         time.sleep(2)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(2)
         appliance_like = self.get_text(self.TERMINAL_ADMIN)
         print(appliance_like)
         self.check_appliance_like(appliance_like) 
@@ -811,8 +819,8 @@ class CommonPages(SeleniumTest):
             pass
     
     def capture_vmcore_at_local(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
+        # self.click(self.LOCALHOST_LINK)
+        # time.sleep(1)
 
         self.click(self.KD_LINK)
         time.sleep(2)
@@ -830,8 +838,8 @@ class CommonPages(SeleniumTest):
         self.assertEqual(res_date, des_date)
     
     def subscription_with_key_and_organization(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
+        # self.click(self.LOCALHOST_LINK)
+        # time.sleep(1)
         self.click(self.SUBSCRIPTION_LINK)
         time.sleep(10)
         self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
