@@ -2,7 +2,7 @@
 ---
 
 # host infos
-host_string: ''
+host_string: '10.73.73.105'
 host_port: '9090'
 host_user: 'root'
 host_pass: 'redhat'
