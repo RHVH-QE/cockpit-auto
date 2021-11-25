@@ -142,12 +142,11 @@ class CommonPages(SeleniumTest):
     PROFILE_APPLY_BUTTON=".apply"
 
     #kernel dump
-    KD_LINK="//*[@id='sidebar-tools']/li[2]/a"
-    #//*[@id="sidebar-tools"]/li[3]/a //*[@id="sidebar-tools"]/li[2]/a //*[@id="sidebar-tools"]/li[3]
+    KD_LINK="//*[@id='host-apps']/nav/section[3]/ul/li[2]/span/a"
     HINT="//*[@id='app']/div/form/div[2]/a/span"
     KDUMP_SERVICE_STATUS="//*[@id='app']/div/form/div[1]/a/span"
-    BTN_TEST_CONFIGURATION="//*[@id='app']/div/form/div[2]/button"
-    CRASH_SYSTEM_BUTTON="body > div:nth-child(3) > div.in.modal > div > div > div.modal-footer > button.btn.btn-danger.apply" 
+    BTN_TEST_CONFIGURATION="//*[@id='app']/div/main/section[2]/article/div/dl/div[4]/dd/div/div/button"
+    CRASH_SYSTEM_BUTTON="body > div:nth-child(3) > div > div > div > footer > button:nth-child(1)" #"//*[@id='pf-modal-part-2']/footer/button[1]"
     
     KD_FRAME_NAME="/kdump"
     KD_SERVICE_LINK="//*[@id='app']/div/form/div[1]/a/span"
@@ -825,7 +824,7 @@ class CommonPages(SeleniumTest):
         self.click(self.KD_LINK)
         time.sleep(2)
         self.switch_to_frame(self.KD_FRAME_NAME)
-        time.sleep(1)
+        time.sleep(3)
         self.click(self.BTN_TEST_CONFIGURATION)
         self.click(self.CRASH_SYSTEM_BUTTON)
         time.sleep(330)
