@@ -133,7 +133,7 @@ class CommonPages(SeleniumTest):
     #restart node
     RESTART_BUTTON="//*[@id='reboot-button']"
     LEAVE_MESSAGE_TEXT="//*[@id='message']"
-    RESTART_APPLY_BUTTON="//*[@id='shutdown-dialog']/footer/button[1]"   #/html/body/div[2]/div/div/div/footer/button[1]
+    RESTART_APPLY_BUTTON="//*[@id='shutdown-dialog']/footer/button[1]"
     RECONNECT_BUTTON="//*[@id='machine-reconnect']"
 
     #change the performance profile
@@ -146,7 +146,7 @@ class CommonPages(SeleniumTest):
     HINT="//*[@id='app']/div/form/div[2]/a/span"
     KDUMP_SERVICE_STATUS="//*[@id='app']/div/form/div[1]/a/span"
     BTN_TEST_CONFIGURATION="//*[@id='app']/div/main/section[2]/article/div/dl/div[4]/dd/div/div/button"
-    CRASH_SYSTEM_BUTTON="body > div:nth-child(3) > div > div > div > footer > button:nth-child(1)" #"//*[@id='pf-modal-part-2']/footer/button[1]"
+    CRASH_SYSTEM_BUTTON="body > div:nth-child(3) > div > div > div > footer > button:nth-child(1)"
     
     KD_FRAME_NAME="/kdump"
     KD_SERVICE_LINK="//*[@id='app']/div/form/div[1]/a/span"
@@ -410,8 +410,6 @@ class CommonPages(SeleniumTest):
         self.assertNotEqual(result, None)
 
     def config_timezone(self):
-        # self.click(self.LOCALHOST_LINK)
-        # time.sleep(1)
         self.click(self.SYSTEM_FRAME_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
@@ -704,8 +702,6 @@ class CommonPages(SeleniumTest):
         self.assertEqual(output,'')
     
     def check_kernel_dump_service(self):
-        # self.click(self.LOCALHOST_LINK)
-        # time.sleep(1)
         self.click(self.KD_LINK)
         self.switch_to_frame(self.KD_FRAME_NAME)
 
@@ -763,8 +759,6 @@ class CommonPages(SeleniumTest):
             i += 1
 
     def goto_terminal_check_appliance(self):
-        # self.click(self.LOCALHOST_LINK)
-        # time.sleep(1)
         self.click(self.TERMINAL_LINK)
         time.sleep(2)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
@@ -818,9 +812,6 @@ class CommonPages(SeleniumTest):
             pass
     
     def capture_vmcore_at_local(self):
-        # self.click(self.LOCALHOST_LINK)
-        # time.sleep(1)
-
         self.click(self.KD_LINK)
         time.sleep(2)
         self.switch_to_frame(self.KD_FRAME_NAME)
@@ -831,14 +822,12 @@ class CommonPages(SeleniumTest):
 
         cmd = 'ls /var/crash'
         output = self.host.execute(cmd).stdout
-        self.assertNotEqual(output.split(' ')[0], None)
-        res_date = '-'.join(output.split(' ')[0].split(':')[0].split('-')[-4:-1])
+        self.assertNotEqual(output.split(' ')[-1], None)
+        res_date = '-'.join(output.split(' ')[-1].split(':')[0].split('-')[-4:-1])
         des_date = datetime.date.today().__str__()
         self.assertEqual(res_date, des_date)
     
     def subscription_with_key_and_organization(self):
-        # self.click(self.LOCALHOST_LINK)
-        # time.sleep(1)
         self.click(self.SUBSCRIPTION_LINK)
         time.sleep(10)
         self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
