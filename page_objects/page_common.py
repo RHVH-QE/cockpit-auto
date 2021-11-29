@@ -131,9 +131,9 @@ class CommonPages(SeleniumTest):
     TIME_MIN_TEXT="//*[@id='systime-time-minutes']"
 
     #restart node
-    RESTART_BUTTON="//*[@id='restart-button']"
-    LEAVE_MESSAGE_TEXT="//*[@id='shutdown-dialog']/div/div/div[2]/textarea"
-    RESTART_APPLY_BUTTON="//*[@id='shutdown-dialog']/div/div/div[3]/button[2]"
+    RESTART_BUTTON="//*[@id='reboot-button']"
+    LEAVE_MESSAGE_TEXT="//*[@id='message']"
+    RESTART_APPLY_BUTTON="//*[@id='shutdown-dialog']/footer/button[1]"   #/html/body/div[2]/div/div/div/footer/button[1]
     RECONNECT_BUTTON="//*[@id='machine-reconnect']"
 
     #change the performance profile
