@@ -138,7 +138,10 @@ class SeleniumTest(Test):
             if self.browser == 'firefox':
                 self.driver = webdriver.Firefox()
             else:
-                self.driver = webdriver.Chrome()
+                options = webdriver.ChromeOptions()
+                options.add_argument('--ignore-ssl-errors=yes')
+                options.add_argument('--ignore-certificate-errors')
+                self.driver = webdriver.Chrome(options=options)
         else:
             hub_url = 'http://{}:4444/wd/hub'.format(selenium_hub)
             capabilities = self._get_desired_capabilities()
