@@ -11,8 +11,8 @@ host_pass: 'redhat'
 selenium_hub: ''
 
 # avocado config
-avocado_results_dir: '/home/shiyilei/Documents/test-result'
+avocado_results_dir: '/home/weiwang/work_auto/avocado-results/'
 
 # versions of pkg/sys under test
 test_pkg_ver: 'cockpit-ovirt-dashboard-0.15.1-2'
-test_sys_ver: 'rhvh-4.4.9.2-0.20211104.0'
+test_sys_ver: 'rhvh-4.4.9.3-0.20211202.0'

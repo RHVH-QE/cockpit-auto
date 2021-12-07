@@ -443,8 +443,6 @@ class CommonPages(SeleniumTest):
         self.assertEqual(actual_now,"00 PM")
     
     def restart_node(self):
-        # self.click(self.LOCALHOST_LINK)
-        # time.sleep(1)
         self.click(self.SYSTEM_FRAME_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
@@ -453,11 +451,11 @@ class CommonPages(SeleniumTest):
         self.input_text(self.LEAVE_MESSAGE_TEXT,"GOODBYE!!!")
         time.sleep(2)
         self.click(self.RESTART_APPLY_BUTTON)
-        time.sleep(70)
+        time.sleep(80)
         self.switch_to_default_content()
         self.assert_element_visible("//*[@id='content']/div")
 
-        time.sleep(300)
+        time.sleep(330)
         self.click(self.RECONNECT_BUTTON)
         username = os.environ.get('USERNAME')
         passwd = os.environ.get('PASSWD')
@@ -762,7 +760,7 @@ class CommonPages(SeleniumTest):
         self.click(self.TERMINAL_LINK)
         time.sleep(2)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
-        time.sleep(2)
+        time.sleep(5)
         appliance_like = self.get_text(self.TERMINAL_ADMIN)
         self.check_appliance_like(appliance_like)  
 
@@ -790,7 +788,7 @@ class CommonPages(SeleniumTest):
         self.click(self.TERMINAL_LINK)
         time.sleep(2)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
-        time.sleep(2)
+        time.sleep(8)
         appliance_like = self.get_text(self.TERMINAL_ADMIN)
         print(appliance_like)
         self.check_appliance_like(appliance_like) 

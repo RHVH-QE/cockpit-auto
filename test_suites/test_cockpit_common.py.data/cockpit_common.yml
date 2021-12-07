@@ -2,7 +2,7 @@
 ---
 
 #remote host
-host_ip: '10.66.8.157'
+host_ip: '10.73.131.63'
 host_user: 'root'
 host_pwd: 'redhat'
 
@@ -14,7 +14,7 @@ nfs_mount_point: '/mnt'
 
 #Subscription
 custom_URL: 'subscription.rhsm.stage.redhat.com'
-subscription_username: 'shlei2'
+subscription_username: 'shlei10'
 subscription_password: 'lsystc571998'
 subscription_repos: 'rhvh-4-for-rhel-8-x86_64-rpms'
 subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis','sssd-ad', 'rhvm-appliance']
