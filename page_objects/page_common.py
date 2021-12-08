@@ -894,6 +894,7 @@ class CommonPages(SeleniumTest):
 
     def remove_libvirt(self):
         cmd = 'yum remove libvirt'
-        output = self.host.execute(cmd).stdout
+        output = self.host.execute(cmd,raise_exception=False).stdout
+        print(output)
         result = re.search("Error",output)
         self.assertNotEqual(result, None)
