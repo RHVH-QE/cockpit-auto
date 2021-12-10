@@ -63,7 +63,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23247")
     def test_system_dynamic_status(self):
         """
-        :avocado: tags=common_tier1
+        :avocado: tags=common_
         """
         self.system__dynamic_status()
 
@@ -127,7 +127,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23248")
     def test_system_dynamic_status_chrome(self):
         """
-        :avocado: tags=common_tier2
+        :avocado: tags=common_
         """
         self.system__dynamic_status()
     
@@ -199,7 +199,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23268")
     def test_check_system_logs(self):
         """
-        :avocado: tags=common_tier2
+        :avocado: tags=common_
         """
         self.check_the_logs()
     
@@ -213,7 +213,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23289")
     def test_check_terminal(self):
         """
-        :avocado: tags=common_tier2
+        :avocado: tags=common_
         """
         self.check_terminal()
 
