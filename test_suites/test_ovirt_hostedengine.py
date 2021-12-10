@@ -62,21 +62,21 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-23833")
     def test_no_password_saved(self):
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier
         """
         self.check_no_password_saved_in_setup_log()
 
     @add_case_id("RHEVM-26157")
     def test_no_large_messages(self):
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier
         """
         self.check_no_large_messages()
 
     @add_case_id("RHEVM-26034")
     def test_base_on_registering_insights_server(self):
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier2
         """
         # self.clean_hostengine_env()
         self.deploy_on_registering_insights_server()
@@ -142,7 +142,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_non_default_cockpit_port(self):
         # Must run after case "RHEVM-26155 - test_global_maintenance"
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier2
         """
         self.deploy_on_non_default_cockpit_port()
         self.setting_to_default_port()
@@ -158,7 +158,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-26160")
     def test_roll_back_history_text(self):
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier2
         """
         self.node_zero_rollback_deploy_process()
         
