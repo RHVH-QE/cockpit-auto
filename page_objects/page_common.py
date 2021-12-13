@@ -11,6 +11,8 @@ from seleniumlib import SeleniumTest
 from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
 from utils.rhvmapi import RhevmAction
+
+
 # from selenium import webdriver
 # from selenium.webdriver.common.keys import Keys
 
@@ -20,11 +22,11 @@ class CommonPages(SeleniumTest):
     :avocado: disable
     """
 
-    #R_MACHINE_ADDR="10.66.9.205"
-    R_MACHINE_ADDR="10.73.73.105"
-    WRONG_ADDR="1.2.3.4"
-    R_MACHINE_USER="root"
-    R_MACHINE_PWD="redhat"
+    # R_MACHINE_ADDR="10.66.9.205"
+    R_MACHINE_ADDR = "10.73.73.106"
+    WRONG_ADDR = "1.2.3.4"
+    R_MACHINE_USER = "root"
+    R_MACHINE_PWD = "redhat"
 
     # RHSM_CUSTOM_URL="subscription.rhsm.stage.redhat.com"
     # RHSM_USER="shlei2"
@@ -34,203 +36,208 @@ class CommonPages(SeleniumTest):
     # SERVER_PATH="/home/shiyilei/nfs"
     # MOUNT_POINT="/root/mnt"
 
-    LOGIN_ERROR_MESSAGE="//*[@id='login-error-message']"
+    LOGIN_ERROR_MESSAGE = "//*[@id='login-error-message']"
 
-    OTHER_OPTION="//*[@id='show-other-login-options']"
-    SERVER_FIELD="//*[@id='server-field']"
+    OTHER_OPTION = "//*[@id='show-other-login-options']"
+    SERVER_FIELD = "//*[@id='server-field']"
 
     SLEEP_TIME = 5
     OVIRT_DASHBOARD_FRAME_NAME = "/dashboard"
-    LOCALHOST_LINK = "//*[@id='host-nav-link']/span[1]"
+    # LOCALHOST_LINK = "//*[@id='host-nav-link']/span[1]"
+    # HOST_APPS = "//*[@id='host-apps']/nav/section[3]"
     DASHBOARD_LINK = "//*[@id='host-apps']/nav/section[1]/ul/li[2]/span/a"
     OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
 
-    #add and delete remote host
-    DOMAIN_BUTTON="//*[@id='pf-toggle-id-58']"
-    ADD_SERVER_BUTTON="//*[@id='page-sidebar']/div/div[2]/button"
-    INPUT_MACHINE_ADDRESS="//*[@id='add-machine-address']"
-    CONNECT_BUTTON="//*[@id='hosts_setup_server_dialog']/div/div/div[3]/button[1]"
-    INPUT_REMOTE_USER="//*[@id='login-custom-user']"
-    INPUT_REMOTE_PASSWORD="//*[@id='login-custom-password']"
+    # add and delete remote host
+    DOMAIN_BUTTON = "//*[@id='pf-toggle-id-58']"
+    ADD_SERVER_BUTTON = "//*[@id='page-sidebar']/div/div[2]/button"
+    INPUT_MACHINE_ADDRESS = "//*[@id='add-machine-address']"
+    ADD_HOST_BUTTON = "//*[@id='hosts_setup_server_dialog']/div/div/div[2]/div/button[1]"
+    CONNECT_BUTTON = "//*[@id='hosts_setup_server_dialog']/div/div/div[3]/button[1]"
+    INPUT_REMOTE_USER = "//*[@id='login-custom-user']"
+    INPUT_REMOTE_PASSWORD = "//*[@id='login-custom-password']"
 
-    EDITE_SERVER="//*[@id='dashboard-enable-edit']"
-    DELETE_SERVER="//*[@id='dashboard-hosts']/div[2]/a[1]/button[1]"
+    EDITE_SERVER = "//*[@id='page-sidebar']/div/div[2]/button[1]"  #/html/body/div[1]/div[3]/div/div/div/div[2]/button[1]
+    DELETE_SERVER = "//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/div/button[2]"
 
-    #subscription
-    NETWORK_INFO_LINK="//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
-    SUBSCRIPTION_LINK="//*[@id='host-apps']/nav/section[3]/ul/li[4]/span/a"
-    
-    SUBSCRIPTION_FRAME_NAME="/subscriptions"
-    REGIST_BUTTON="//*[@id='app']/div/div/button"
-    CHOOSE_URL_BUTTON="//*[@id='subscription-register-url']/button"
-    CUSTOM_URL_BUTTON="//*[@id='subscription-register-url']/ul/li[2]/a"
-    CUSTOM_URL_TEXT="//*[@id='subscription-register-url-custom']"
-    SUBSCRIPTION_USER_TEXT="//*[@id='subscription-register-username']"
-    SUBSCRIPTION_ORGANIZATION_TEXT="//*[@id='subscription-register-org']"
-    SUBSCRIPTION_PWD_TEXT="//*[@id='subscription-register-password']"
-    REGIST_COMMIT_BUTTON="//*[@id='register_dialog']/div/div[3]/button[1]"
-    
+    # subscription
+    NETWORK_INFO_LINK = "//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
+    SUBSCRIPTION_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[4]/span/a"
+
+    SUBSCRIPTION_FRAME_NAME = "/subscriptions"
+    REGIST_BUTTON = "//*[@id='app']/div/div/button"
+    CHOOSE_URL_BUTTON = "//*[@id='subscription-register-url']/button"
+    CUSTOM_URL_BUTTON = "//*[@id='subscription-register-url']/ul/li[2]/a"
+    CUSTOM_URL_TEXT = "//*[@id='subscription-register-url-custom']"
+    SUBSCRIPTION_USER_TEXT = "//*[@id='subscription-register-username']"
+    SUBSCRIPTION_ORGANIZATION_TEXT = "//*[@id='subscription-register-org']"
+    SUBSCRIPTION_PWD_TEXT = "//*[@id='subscription-register-password']"
+    REGIST_COMMIT_BUTTON = "//*[@id='register_dialog']/div/div[3]/button[1]"
+
     DETAIL_BUTTON = "//*[@id='app']/div/div[2]/div[2]/div[1]/div[1]/div[1]/span"
-    
+
     DETALI_PRODUCT_NAME = "//*[@id='app']/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/dl/dd[1]"
-    
+
     DETAIL_PRODUCT_ID = "//*[@id=app']/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/dl/dd[2]"
     DETAIL_PRODUCT_VERSION = "//*[@id='app']/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/dl/dd[3]"
     DETAIL_PRODUCT_STATUS = "//*[@id='app']/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/dl/dd[5]"
-    ORGANIZATION_TEXT= "//*[@id='subscription-register-org']"
-    KEY_TEXT="//*[@id='subscription-register-key']"
+    ORGANIZATION_TEXT = "//*[@id='subscription-register-org']"
+    KEY_TEXT = "//*[@id='subscription-register-key']"
 
-    #add nfs
-    STORAGE_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[3]/span/a"
-    STORAGE_FRAME_NAME="/storage"
-    ADD_NFS_BUTTON="//*[@id='nfs-mounts']/div[1]/div/button"
-    NFS_SERVER_ADDR_TEXT="//*[@id='dialog']/div/div/div[2]/form/div[1]/input"
-    SERVER_PATH_TEXT="//*[@id='pf-select-toggle-id-0-select-typeahead']"
-    NFS_PATHS=""
-    MOUNT_POINT_TEXT="//*[@id='dialog']/div/div/div[2]/form/div[3]/input"
-    NFS_ADD_BUTTON="//*[@id='dialog']/div/div/div[3]/button[1]"
+    # add nfs
+    STORAGE_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[3]/span/a"
+    STORAGE_FRAME_NAME = "/storage"
+    ADD_NFS_BUTTON = "//*[@id='nfs-mounts']/div[1]/div/button"
+    NFS_SERVER_ADDR_TEXT = "//*[@id='pf-modal-part-2']/form/div[1]/input"
+    SERVER_PATH_TEXT = "//*[@id='pf-select-toggle-id-0-select-typeahead']"
+    NFS_PATHS = ""
+    MOUNT_POINT_TEXT = "//*[@id='dialog']/div/div/div[2]/form/div[3]/input"
+    NFS_ADD_BUTTON = "//*[@id='dialog']/div/div/div[3]/button[1]"
 
-    NFS_SERVER_DETAIL_BUTTON="//*[@id='nfs-mounts']/table/tbody/tr/td[1]"
-    DELETE_NFS_SERVER_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[3]"
-    NFS_UNMOUNT_BUTTON="//*[@id='detail-header']/div/div[1]/span/button[1]"
-    NFS_SIZE_FIELD="#detail-header > div > div.panel-body > div"
-    
-    NFS_SIZE_PROGRESS="#pf-15846295830663u3ki41vij2 > div.pf-c-progress__bar > div"
-    NFS_STATUS="//*[@id='pf-15846295830663u3ki41vij2']/div[2]/span"
+    NFS_SERVER_DETAIL_BUTTON = "//*[@id='nfs-mounts']/table/tbody/tr/td[1]"
+    DELETE_NFS_SERVER_BUTTON = "//*[@id='detail-header']/div/div[1]/span/button[3]"
+    NFS_UNMOUNT_BUTTON = "//*[@id='detail-header']/div/div[1]/span/button[1]"
+    NFS_SIZE_FIELD = "#detail-header > div > div.panel-body > div"
 
-    #system status
-    CPU_STATUS="//*[@id='dashboard-plot-0']"
-    MEMORY_LINK="//*[@id='dashboard']/div[1]/div/ul/li[2]/a"
-    MEMORY_STATUS="//*[@id='dashboard-plot-1']"
-    NETWORK_LINK="//*[@id='dashboard']/div[1]/div/ul/li[3]/a"
-    NETWORK_STATUS="//*[@id='dashboard-plot-2']"
-    DISK_LINK="//*[@id='dashboard']/div[1]/div/ul/li[4]/a"
-    DISK_STATUS="//*[@id='dashboard-plot-3']"
+    NFS_SIZE_PROGRESS = "#pf-15846295830663u3ki41vij2 > div.pf-c-progress__bar > div"
+    NFS_STATUS = "//*[@id='pf-15846295830663u3ki41vij2']/div[2]/span"
 
-    #config hostname
-    SYSTEM_FRAME_LINK="//*[@id='sidebar-menu']/li[1]/a"
-    SYSTEM_FRAME_NAME="/system"
-    HOSTNAME_BUTTON="//*[@id='system_information_hostname_button']"
-    HOST_INFO_TEXT="//*[@id='system_information_hostname_text']"
-    PRETTY_HOSTNAME_TEXT="//*[@id='sich-pretty-hostname']"
-    REAL_HOSTNAME_TEXT="//*[@id='sich-hostname']"
-    HOSTNAME_APPLY_BUTTON="//*[@id='sich-apply-button']"
+    # system status
+    CPU_STATUS = "//*[@id='current-metrics-card-cpu']/div[1]"
+    MEMORY_LINK = "//*[@id='dashboard']/div[1]/div/ul/li[2]/a"
+    MEMORY_STATUS = "//*[@id='app']/div/main/section[1]/div/article[2]/div[1]"
+    NETWORK_LINK = "//*[@id='dashboard']/div[1]/div/ul/li[3]/a"
+    NETWORK_STATUS = "//*[@id='app']/div/main/section[1]/div/article[4]/div[1]"
+    DISK_LINK = "//*[@id='dashboard']/div[1]/div/ul/li[4]/a"
+    DISK_STATUS = "//*[@id='app']/div/main/section[1]/div/article[3]/div[1]"
 
-    #config timezone
-    TIME_LINK="//*[@id='system_information_systime_button']"
+    # config hostname
+    SYSTEM_FRAME_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[1]/span/a"
+    SYSTEM_FRAME_NAME = "/system"
+    HOSTNAME_BUTTON = "//*[@id='system_information_hostname_button']"
+    HOST_INFO_TEXT = "//*[@id='system_information_hostname_text']"
+    PRETTY_HOSTNAME_TEXT = "//*[@id='sich-pretty-hostname']"
+    REAL_HOSTNAME_TEXT = "//*[@id='sich-hostname']"
+    HOSTNAME_APPLY_BUTTON = "//*[@id='sich-apply-button']"
+
+    # config timezone
+    TIME_LINK = "//*[@id='system_information_systime_button']"
     # TIMEZONE_TEXT="//*[@id='systime-timezonesundefined']"
-    TIMEZONE_REMOVER="//*[@id='systime-timezonesundefined']//parent::*/span"
-    TIMEZONE_DROPDOWN="//*[@id='systime-timezonesundefined']//parent::*/span"
-    TIMEZONE_ITEM="//*[@id='systime-timezonesundefined']//parent::*/ul/li[1]"
-    TIMEZONE_APPLY_BUTTON="//*[@id='system_information_change_systime']/div/div/div[3]/button[1]"
-    
-    TIME_SET_DROPDOWN="//*[@id='change_systime']/button"
-    TIME_SET_MANUALLY="//*[@id='change_systime']/ul/li[1]/a"
-    TIME_MIN_TEXT="//*[@id='systime-time-minutes']"
+    TIMEZONE_REMOVER = "//*[@id='systime-timezonesundefined']//parent::*/span"
+    TIMEZONE_DROPDOWN = "//*[@id='systime-timezonesundefined']//parent::*/span"
+    TIMEZONE_ITEM = "//*[@id='systime-timezonesundefined']//parent::*/ul/li[1]"
+    TIMEZONE_APPLY_BUTTON = "//*[@id='system_information_change_systime']/div/div/div[3]/button[1]"
 
-    #restart node
-    RESTART_BUTTON="//*[@id='restart-button']"
-    LEAVE_MESSAGE_TEXT="//*[@id='shutdown-dialog']/div/div/div[2]/textarea"
-    RESTART_APPLY_BUTTON="//*[@id='shutdown-dialog']/div/div/div[3]/button[2]"
-    RECONNECT_BUTTON="//*[@id='machine-reconnect']"
+    TIME_SET_DROPDOWN = "//*[@id='change_systime']/button"
+    TIME_SET_MANUALLY = "//*[@id='change_systime']/ul/li[1]/a"
+    TIME_MIN_TEXT = "//*[@id='systime-time-minutes']"
 
-    #change the performance profile
-    PROFILE_LINK="//*[@id='tuned-status-button']"
-    DESKTOP_OPTION="button.list-group-item:nth-child(4)"
-    PROFILE_APPLY_BUTTON=".apply"
+    # restart node
+    RESTART_BUTTON = "//*[@id='reboot-button']"
+    LEAVE_MESSAGE_TEXT = "//*[@id='message']"
+    RESTART_APPLY_BUTTON = "//*[@id='shutdown-dialog']/footer/button[1]"
+    RECONNECT_BUTTON = "//*[@id='machine-reconnect']"
 
-    #kernel dump
-    KD_LINK="//*[@id='sidebar-tools']/li[2]/a"
-    #//*[@id="sidebar-tools"]/li[3]/a //*[@id="sidebar-tools"]/li[2]/a //*[@id="sidebar-tools"]/li[3]
-    HINT="//*[@id='app']/div/form/div[2]/a/span"
-    KDUMP_SERVICE_STATUS="//*[@id='app']/div/form/div[1]/a/span"
-    BTN_TEST_CONFIGURATION="//*[@id='app']/div/form/div[2]/button"
-    CRASH_SYSTEM_BUTTON="body > div:nth-child(3) > div.in.modal > div > div > div.modal-footer > button.btn.btn-danger.apply" 
-    
-    KD_FRAME_NAME="/kdump"
-    KD_SERVICE_LINK="//*[@id='app']/div/form/div[1]/a/span"
-    SERVICES_LINK="//*[@id='sidebar-menu']/li[7]/a/span"
-    SERVICE_FRAME_NAME="/system/services"
-    SERVICE_SEARCHER="//*[@id='services-text-filter']"
-    KD_SERVICE_LINK="//*[@id='services-list']/div/table/tbody/tr/td[1]"
-    STOP_START_BUTTON="//*[@id='service-details']/main/section[2]/div/span/label/span"
-    KD_STATUS_INFO="//*[@id='statuses']/div/span[2]"
-    KD_STATUS_INFO2=".status-running > span:nth-child(2)"
-    KD_RESTART_BUTTON="//*[@id='service-unit-action']/button[1]"
-    KD_DISABLE_BUTTON="//*[@id='service-file-action']/button[1]"
-    KD_ENABLE_TEXT="//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[3]/td[2]"
+    # change the performance profile
+    PROFILE_LINK = "//*[@id='tuned-status-button']"
+    DESKTOP_OPTION = "button.list-group-item:nth-child(4)"
+    PROFILE_APPLY_BUTTON = ".apply"
 
-    #check system logs
-    LOGS_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[2]/span/a"
-    LOGS_FRAME_NAME="/system/logs"
-    LOGS_DURATION_BUTTON="//*[@id='log-filters']"
+    # kernel dump
+    KD_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[2]/span/a"
+    HINT = "//*[@id='app']/div/form/div[2]/a/span"
+    KDUMP_SERVICE_STATUS = "//*[@id='app']/div/form/div[1]/a/span"
+    BTN_TEST_CONFIGURATION = "//*[@id='app']/div/main/section[2]/article/div/dl/div[4]/dd/div/div/button"
+    CRASH_SYSTEM_BUTTON = "body > div:nth-child(3) > div > div > div > footer > button:nth-child(1)"
+
+    KD_FRAME_NAME = "/kdump"
+    KD_SERVICE_LINK = "//*[@id='app']/div/form/div[1]/a/span"
+    SERVICES_LINK = "//*[@id='sidebar-menu']/li[7]/a/span"
+    SERVICE_FRAME_NAME = "/system/services"
+    SERVICE_SEARCHER = "//*[@id='services-text-filter']"
+    KD_SERVICE_LINK = "//*[@id='services-list']/div/table/tbody/tr/td[1]"
+    STOP_START_BUTTON = "//*[@id='service-details']/main/section/div/div[1]/article/div[1]/span/label/span"
+    KD_STATUS_INFO = "//*[@id='statuses']/div/div/span[2]"
+    KD_STATUS_INFO2 = "//*[@id='statuses']/div/div[1]/span[2]"
+    KD_RESTART_BUTTON = "//*[@id='service-unit-action']/button[1]"
+    KD_DISABLE_BUTTON = "//*[@id='service-file-action']/button[1]"
+    KD_ENABLE_TEXT = "//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[3]/td[2]"
+
+    # check system logs
+    LOGS_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[2]/span/a"
+    LOGS_FRAME_NAME = "/system/logs"
+    LOGS_DURATION_BUTTON = "//*[@id='log-filters']"
     # RECENT_LOGS="//*[@id='journal-current-day-menu']/ul/li[1]/a"
     # CURRENT_BOOT="//*[@id='journal-current-day-menu']/ul/li[2]/a"
-    LAST_ONE_DAY="//*[@id='logs-predefined-filters']/li[3]/a"
-    LAST_SEVEN_DAYS="//*[@id='logs-predefined-filters']/li[4]/a"
-    LOGS_LOAD_EARLIER="//*[@id='journal-load-earlier']"
-    LOG_INFO="//*[@id='journal-box']/div[1]/div[2]/span"
-    LOGS_FILTER="//*[@id='journal-prio-menu']/button"
-    LOGS_EVERYTHING="//*[@id='prio-lists']/li[1]/a"
-    LOGS_WARNING_ICON="//*[@id='journal-box']/div[1]/div[2]/div[1]"
+    LAST_ONE_DAY = "//*[@id='logs-predefined-filters']/li[3]/a"
+    LAST_SEVEN_DAYS = "//*[@id='logs-predefined-filters']/li[4]/a"
+    LOGS_LOAD_EARLIER = "//*[@id='journal-load-earlier']"
+    LOG_INFO = "//*[@id='journal-box']/div[1]/div[2]/span"
+    LOGS_FILTER = "//*[@id='journal-prio-menu']/button"
+    LOGS_EVERYTHING = "//*[@id='prio-lists']/li[1]/a"
+    LOGS_WARNING_ICON = "//*[@id='journal-box']/div[1]/div[2]/div[1]"
 
-    #create new account
-    ACCOUNT_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[5]/span/a"
-    ACCOUNT_FRAME_NAME="/users"
-    CREATE_NEW_ACCOUNT_BUTTON="//*[@id='accounts-create']"
-    FULL_NAME_TEXT="//*[@id='accounts-create-real-name']"
-    PASSWORD_TEXT="//*[@id='accounts-create-pw1']"
-    CONFIRM_TEXT="//*[@id='accounts-create-pw2']"
-    CREATE_BUTTON="//*[@id='accounts-create-dialog']/div/div/div[3]/button[1]"
-    ACCOUNT_INFO="//*[@id='accounts-list']/li[2]"
+    # create new account
+    ACCOUNT_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[5]/span/a"
+    ACCOUNT_FRAME_NAME = "/users"
+    CREATE_NEW_ACCOUNT_BUTTON = "//*[@id='accounts-create']"
+    FULL_NAME_TEXT = "//*[@id='accounts-create-real-name']"
+    PASSWORD_TEXT = "//*[@id='accounts-create-pw1']"
+    CONFIRM_TEXT = "//*[@id='accounts-create-pw2']"
+    CREATE_BUTTON = "//*[@id='accounts-create-dialog']/div/div/div[3]/button[1]"
+    ACCOUNT_INFO = "//*[@id='accounts-list']/li[2]"
 
-    ROOT_BUTTON="//*[@id='navbar-dropdown']"
-    LOGOUT_BUTTON="//*[@id='go-logout']"
-    LOGIN_USERNAME_TEXT="//*[@id='login-user-input']"
-    LOGIN_PWD_TEXT="//*[@id='login-password-input']"
-    LOGIN_BUTTON="//*[@id='login-button']"
+    ROOT_BUTTON = "//*[@id='navbar-dropdown']"
+    LOGOUT_BUTTON = "//*[@id='go-logout']"
+    LOGIN_USERNAME_TEXT = "//*[@id='login-user-input']"
+    LOGIN_PWD_TEXT = "//*[@id='login-password-input']"
+    LOGIN_BUTTON = "//*[@id='login-button']"
 
-    #terminal function
-    TERMINAL_LINK="//*[@id='host-apps']/nav/section[3]/ul/li[5]/span/a"
-    
-    TERMINAL_FRAME_NAME="/system/terminal"
-    TERMINAL_ADMIN="//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[5]"
-    CONMMAND_LINE="/html/body/div/div/div[2]/div/div/div[1]/div[1]/div[7]"
-    
-    SSH_HOST_KEY_LINK="//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/a"
-    SSH_HOST_KEY_COTENT="//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/div/div/div/div/div[2]/div"
+    # terminal function
+    TERMINAL_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[5]/span/a"
 
-    #check diagnostic report
-    DIAGNOSTIC_REPORT_LINK="//*[@id='host-apps']/nav/section[3]/ul/li[1]/span/a"
-    DIAGNOSTIC_REPORT_FRAME="/sosreport"
-    CREATE_REPORT_BUTTON="//button[text()='Create Report']"
-    REPORT_DIALOG="//*[@id='sos']/div"
-    REPORT_DOWNLOAD_BUTTON="#sos-download > button"
-    
-    #check_selinux_policy
-    SELINUX_LINK="//*[@id='host-apps']/nav/section[3]/ul/li[3]/span/a"
-    SELINUX_FRAME="/selinux/setroubleshoot"
-    SWITCH_BUTTON="#app > div > div > div > label > span"
+    TERMINAL_FRAME_NAME = "/system/terminal"
+    TERMINAL_ADMIN = "//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[5]"
+    CONMMAND_LINE = "/html/body/div/div/div[2]/div/div/div[1]/div[1]/div[7]"
 
-    #check udisks
-    SERVICE_LINK="//*[@id='host-apps']/nav/section[2]/ul/li[6]/span/a"
-    
-    FILTER_INPUT_TEXT="//*[@id='services-text-filter']"
-    UDISKS_STATUS_TEXT="//*[@id='udisks2.service']/div/div[2]/span[1]"
+    SSH_HOST_KEY_LINK = "//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/a"
+    SSH_HOST_KEY_COTENT = "//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/div/div/div/div/div[2]/div"
+
+    # check diagnostic report
+    DIAGNOSTIC_REPORT_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[1]/span/a"
+    DIAGNOSTIC_REPORT_FRAME = "/sosreport"
+    CREATE_REPORT_BUTTON = "//button[text()='Create Report']"
+    REPORT_DIALOG = "//*[@id='sos']/div"
+    REPORT_DOWNLOAD_BUTTON = "#sos-download > button"
+
+    # check_selinux_policy
+    SELINUX_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[3]/span/a"
+    SELINUX_FRAME = "/selinux/setroubleshoot"
+    SWITCH_BUTTON = "#app > div > div > div > label > span"
+
+    # check udisks
+    SERVICE_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[6]/span/a"
+
+    FILTER_BUTTON = "//*[@id='services-toolbar']/div[1]/div[1]/div/div[1]/button"
+    FILTER_INPUT_TEXT = "//*[@id='services-text-filter']/div/div/span/input"
+    UDISKS_STATUS_TEXT = "//*[@id='udisks2.service-service-unit-state']/div[1]"
+
+    # system infomation
+    SYSTEM_USAGE_LINK = "//*[@id='overview']/div/main/section[3]/div/article[2]/div[3]/a"
 
     def setUp(self):
         case_name = self._testMethodName
         config = self.get_data('cockpit_common.yml')
         self.config_dict = yaml.load(open(config))
-        
+
         if 'firefox' in case_name.split('_'):
-            os.environ['BROWSER']='firefox'
+            os.environ['BROWSER'] = 'firefox'
         if 'chrome' in case_name.split('_'):
-            os.environ['BROWSER']='chrome'
+            os.environ['BROWSER'] = 'chrome'
         if 'login' in case_name.split('_'):
-            os.environ['USERNAME']='invalid_user'
-            os.environ['PASSWD']='invalid_pwd'
-        super(CommonPages,self).setUp()
+            os.environ['USERNAME'] = 'invalid_user'
+            os.environ['PASSWD'] = 'invalid_pwd'
+        super(CommonPages, self).setUp()
 
     def open_page(self):
 
@@ -239,9 +246,9 @@ class CommonPages(SeleniumTest):
         # time.sleep(1)
         # self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
         pass
-    
+
     def check_firefox_login(self):
-        self.assertEqual(self.get_text(self.LOGIN_ERROR_MESSAGE),"Wrong user name or password")
+        self.assertEqual(self.get_text(self.LOGIN_ERROR_MESSAGE), "Wrong user name or password")
         time.sleep(3)
         config_dict = yaml.load(open('./config.yml'))
         os.environ['USERNAME'] = config_dict['host_user']
@@ -258,58 +265,53 @@ class CommonPages(SeleniumTest):
         cmd = 'systemctl status cockpit |grep running'
         output = host.execute(cmd).stdout
         print(output)
-        result = re.search("running",output)
+        result = re.search("running", output)
         self.assertNotEqual(result, None)
-        
+
     def check_chrome_login(self):
         self.check_firefox_login()
-        
+
     def login_remote_machine(self):
         time.sleep(5)
         self.click(self.OTHER_OPTION)
-        self.input_text(self.SERVER_FIELD,self.R_MACHINE_ADDR)
-        self.login(self.R_MACHINE_USER,self.R_MACHINE_PWD)
-        time.sleep(2)
-        actual_s = self.get_current_url().split('=')[-1]
+        self.input_text(self.SERVER_FIELD, self.R_MACHINE_ADDR)
+        self.login(self.R_MACHINE_USER, self.R_MACHINE_PWD)
+        self.click("//*[@id='login-button']")
+        time.sleep(5)
+        actual_s = self.get_current_url().split('=')[1]
         expect_s = self.R_MACHINE_ADDR + '/system'
-        self.assertEqual(actual_s,expect_s)
+        self.assertEqual(actual_s, expect_s)
 
     def login_wrong_remote_machine(self):
         time.sleep(2)
         self.click(self.OTHER_OPTION)
-        self.input_text(self.SERVER_FIELD,self.WRONG_ADDR)
-        self.login(self.R_MACHINE_USER,self.R_MACHINE_PWD)
+        self.input_text(self.SERVER_FIELD, self.WRONG_ADDR)
+        self.login(self.R_MACHINE_USER, self.R_MACHINE_PWD)
         time.sleep(15)
-        self.assertEqual(self.get_text(self.LOGIN_ERROR_MESSAGE),"Unable to connect to that address")
+        self.assertEqual(self.get_text(self.LOGIN_ERROR_MESSAGE), "Unable to connect to that address")
 
-        
     def add_remote_host(self):
         self.click(self.DOMAIN_BUTTON)
-
         self.click(self.ADD_SERVER_BUTTON)
         time.sleep(5)
-        self.input_text(self.INPUT_MACHINE_ADDRESS,self.R_MACHINE_ADDR)
-        time.sleep(5)
+        self.input_text(self.INPUT_MACHINE_ADDRESS, self.R_MACHINE_ADDR)
+        # self.input_text(self.INPUT_REMOTE_USER,self.R_MACHINE_USER)
+        self.click(self.ADD_HOST_BUTTON)
+        time.sleep(3)
         self.click(self.CONNECT_BUTTON)
-        time.sleep(5)
-        self.click(self.CONNECT_BUTTON)
-        time.sleep(5)
-        self.input_text(self.INPUT_REMOTE_USER,self.R_MACHINE_USER)
-        self.input_text(self.INPUT_REMOTE_PASSWORD,self.R_MACHINE_PWD)
+        time.sleep(3)
+        self.input_text(self.INPUT_REMOTE_PASSWORD, self.R_MACHINE_PWD)
         self.click(self.CONNECT_BUTTON)
         self.assert_element_visible("//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/a/span")
 
     def delete_remote_host(self):
-        self.click(self.DASHBOARD_LINK)
-        time.sleep(5)
-        self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
+        self.click(self.DOMAIN_BUTTON)
 
         self.click(self.EDITE_SERVER)
         time.sleep(2)
         self.click(self.DELETE_SERVER)
-        time.sleep(2)
-        self.assert_element_invisible("//*[@id='dashboard-hosts']/div[2]/a[2]")
-    
+        time.sleep(5)
+
     def subscription_to_rhsm(self):
         self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.stage.redhat.com")
         self.click(self.SUBSCRIPTION_LINK)
@@ -336,13 +338,13 @@ class CommonPages(SeleniumTest):
     def check_packages_installation(self):
         self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.stage.redhat.com")
         self.host.execute("subscription-manager repos --disable=*")
-        self.host.execute("subscription-manager repos --enable=%s" %self.config_dict['subscription_repos'])
-        
+        self.host.execute("subscription-manager repos --enable=%s" % self.config_dict['subscription_repos'])
+
         sub_pkgs = self.config_dict['subscription_packages']
         # for pkg in sub_pkgs[:-1]:
         #     ret = self.host.execute("yum install -y %s" % pkg, timeout=200)
         #     self.assertTrue('Complete!' in ret.stdout)
-        self.assertTrue('rhvm-appliance' in self.host.execute("yum search %s" %sub_pkgs[-1]))
+        self.assertTrue('rhvm-appliance' in self.host.execute("yum search %s" % sub_pkgs[-1]))
         ret = self.host.execute("yum search vdsm-hook*", timeout=200)
         self.assertTrue('vdsm-hook-checkips' in ret.stdout)
         self.assertTrue('vdsm-hook-cpuflags' in ret.stdout)
@@ -355,7 +357,6 @@ class CommonPages(SeleniumTest):
         self.assertTrue('vdsm-hook-vhostmd' in ret.stdout)
         self.assertTrue('vdsm-hook-vmfex-dev' in ret.stdout)
 
-
     def add_nfs_storage(self):
         self.click(self.STORAGE_LINK)
         self.switch_to_frame(self.STORAGE_FRAME_NAME)
@@ -366,6 +367,7 @@ class CommonPages(SeleniumTest):
         time.sleep(1)
         self.input_text(self.SERVER_PATH_TEXT, self.config_dict['nfs_dir'])
         time.sleep(1)
+        self.click('//*[@id="pf-modal-part-2"]/form/label[3]')
         self.input_text(self.MOUNT_POINT_TEXT, self.config_dict['nfs_mount_point'])
         time.sleep(1)
         self.click(self.NFS_ADD_BUTTON)
@@ -377,47 +379,36 @@ class CommonPages(SeleniumTest):
         time.sleep(2)
         self.assert_element_invisible(self.NFS_SERVER_DETAIL_BUTTON)
         self.assert_element_invisible("//*[@id='nfs-mounts']/table/tbody/tr")
-    
+
     def system__dynamic_status(self):
-        self.click(self.DASHBOARD_LINK)
+        self.click(self.SYSTEM_FRAME_LINK)
         time.sleep(1)
-        self.switch_to_frame(self.OVIRT_DASHBOARD_FRAME_NAME)
-        time.sleep(3)
-        self.assert_element_visible(self.CPU_STATUS)
+        self.switch_to_frame(self.SYSTEM_FRAME_NAME)
+        self.click(self.SYSTEM_USAGE_LINK)
+        self.assert_text_in_element(self.CPU_STATUS, "CPU")
+        self.assert_text_in_element(self.MEMORY_STATUS, "Memory")
+        self.assert_text_in_element(self.NETWORK_STATUS, "Network")
+        self.assert_text_in_element(self.DISK_STATUS, "Disks")
 
-        self.click(self.MEMORY_LINK)
-        time.sleep(3)
-        self.assert_element_visible(self.MEMORY_STATUS)
-        
-        self.click(self.NETWORK_LINK)
-        time.sleep(3)
-        self.assert_element_visible(self.NETWORK_STATUS)
-
-        self.click(self.DISK_LINK)
-        time.sleep(3)
-        self.assert_element_visible(self.DISK_STATUS)
-    
     def config_hostname(self):
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
         self.click(self.HOSTNAME_BUTTON)
 
-        self.input_text(self.PRETTY_HOSTNAME_TEXT,"test")
+        self.input_text(self.PRETTY_HOSTNAME_TEXT, "test")
         time.sleep(1)
-        self.input_text(self.REAL_HOSTNAME_TEXT,"test.redhat.com")
+        self.input_text(self.REAL_HOSTNAME_TEXT, "test.redhat.com")
         time.sleep(1)
         self.click(self.HOSTNAME_APPLY_BUTTON)
         time.sleep(2)
 
-        self.assert_text_in_element(self.HOST_INFO_TEXT,"test (test.redhat.com)")
+        self.assert_text_in_element(self.HOST_INFO_TEXT, "test (test.redhat.com)")
 
         cmd = 'hostname'
         output = self.host.execute(cmd).stdout
-        result = re.match("test.redhat.com",output)
+        result = re.match("test.redhat.com", output)
         self.assertNotEqual(result, None)
 
     def config_timezone(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.SYSTEM_FRAME_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
@@ -436,36 +427,34 @@ class CommonPages(SeleniumTest):
         actual_now = self.get_text(self.TIME_LINK)
         utc_now = pytz.utc.localize(datetime.datetime.utcnow())
         respect_now = utc_now.astimezone(pytz.timezone("Africa/Abidjan")).strftime("%Y-%m-%d %H:%M")
-        self.assertEqual(actual_now,respect_now)
+        self.assertEqual(actual_now, respect_now)
 
     def config_time_manually(self):
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
         self.click(self.TIME_LINK)
-        self.input_text(self.TIME_MIN_TEXT,"00")
+        self.input_text(self.TIME_MIN_TEXT, "00")
         self.click(self.TIMEZONE_APPLY_BUTTON)
         time.sleep(2)
         self.refresh()
         time.sleep(5)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
         actual_now = self.get_text(self.TIME_LINK).split(':')[-1]
-        self.assertEqual(actual_now,"00 PM")
-    
+        self.assertEqual(actual_now, "00 PM")
+
     def restart_node(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.SYSTEM_FRAME_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
         time.sleep(2)
         self.click(self.RESTART_BUTTON)
-        self.input_text(self.LEAVE_MESSAGE_TEXT,"GOODBYE!!!")
+        self.input_text(self.LEAVE_MESSAGE_TEXT, "GOODBYE!!!")
         time.sleep(2)
         self.click(self.RESTART_APPLY_BUTTON)
-        time.sleep(70)
+        time.sleep(80)
         self.switch_to_default_content()
         self.assert_element_visible("//*[@id='content']/div")
 
-        time.sleep(300)
+        time.sleep(330)
         self.click(self.RECONNECT_BUTTON)
         username = os.environ.get('USERNAME')
         passwd = os.environ.get('PASSWD')
@@ -483,54 +472,57 @@ class CommonPages(SeleniumTest):
 
         cmd = 'tuned-adm active'
         output = self.host.execute(cmd).stdout
-        result = re.search("desktop",output)
+        result = re.search("desktop", output)
         self.assertNotEqual(result, None)
-    
+
     def check_service_status(self):
         self.click(self.SERVICE_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SERVICE_FRAME_NAME)
-        self.input_text(self.FILTER_INPUT_TEXT,"kdump")
+        time.sleep(5)
+        self.click(self.FILTER_BUTTON)
         time.sleep(3)
-        self.click("//*[@id='kdump.service']/div/div[1]/div[1]")
+        self.input_text(self.FILTER_INPUT_TEXT, "kdump")
+        time.sleep(3)
+        self.click("//*[@id='kdump.service']/th/div/a")
 
         self.click(self.STOP_START_BUTTON)
-        time.sleep(10)
-        self.assert_text_in_element(self.KD_STATUS_INFO,"Disabled")
+        time.sleep(20)
+        self.assert_text_in_element(self.KD_STATUS_INFO, "Disabled")
         self.click(self.STOP_START_BUTTON)
-        time.sleep(8)
-        self.assert_text_in_element(self.KD_STATUS_INFO2,"Running")
-    
+        time.sleep(20)
+        self.assert_text_in_element(self.KD_STATUS_INFO2, "Running")
+
     def check_file_system_list(self):
         self.click(self.STORAGE_LINK)
         time.sleep(5)
         self.switch_to_frame(self.STORAGE_FRAME_NAME)
-        
-        self.assert_text_in_element("//*[@id='mounts']/table/tbody/tr[8]/td[2]","/boot")
+
+        self.assert_text_in_element("//*[@id='mounts']/table/tbody/tr[8]/td[2]", "/boot")
         # self.click("//*[@id='storage_mounts']/tr[1]/td[2]/div")
         time.sleep(1)
         # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[2]/tr[1]/td[2]/span","1 GiB")
         # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[5]/tr[1]/th","root")
 
-        #tmp
+        # tmp
         self.click("#mounts > table > tbody > tr:nth-child(3) > td:nth-child(2)")
-        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span","1 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span", "1 GiB")
         self.click("#storage-detail > div.col-md-12 > ol > li:nth-child(1) > button")
-        #var
+        # var
         self.click("#mounts > table > tbody > tr:nth-child(4) > td:nth-child(2)")
-        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span","15 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span", "15 GiB")
         self.click("#storage-detail > div.col-md-12 > ol > li:nth-child(1) > button")
-        #var_crash
+        # var_crash
         self.click("#mounts > table > tbody > tr:nth-child(5) > td:nth-child(2)")
-        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span","10 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span", "10 GiB")
         self.click("#storage-detail > div.col-md-12 > ol > li:nth-child(1) > button")
-        #var_log
+        # var_log
         self.click("#mounts > table > tbody > tr:nth-child(6) > td:nth-child(2)")
-        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span","8 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span", "8 GiB")
         self.click("#storage-detail > div.col-md-12 > ol > li:nth-child(1) > button")
-        #var_log_audit
+        # var_log_audit
         self.click("#mounts > table > tbody > tr:nth-child(7) > td:nth-child(2)")
-        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span","2 GiB")
+        self.assert_text_in_element("//*[@id='detail-content']/section/table/tbody/tr[1]/td[2]/span", "2 GiB")
         self.click("#storage-detail > div.col-md-12 > ol > li:nth-child(1) > button")
         # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[6]/tr[1]/th","/tmp")
         # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[7]/tr[1]/td[2]/span","15 GiB")
@@ -542,7 +534,7 @@ class CommonPages(SeleniumTest):
         # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[10]/tr[1]/td[2]/span","2 GiB")
         # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[10]/tr[1]/th","/var_log_audit")
         # self.assert_text_in_element("//*[@id='detail-content']/table/tbody[11]/tr[1]/th","swap")
-    
+
     def modify_nfs_storage(self):
         self.click(self.STORAGE_LINK)
         self.switch_to_frame(self.STORAGE_FRAME_NAME)
@@ -560,15 +552,15 @@ class CommonPages(SeleniumTest):
         time.sleep(2)
         self.click(self.NFS_UNMOUNT_BUTTON)
         time.sleep(1)
-        self.assert_text_in_element(self.NFS_SIZE_FIELD,"--")
+        self.assert_text_in_element(self.NFS_SIZE_FIELD, "--")
         self.click(self.NFS_UNMOUNT_BUTTON)
         time.sleep(2)
-        #self.assert_element_visible(self.NFS_SIZE_PROGRESS)
-        #self.assert_text_visible(self.NFS_STATUS)
+        # self.assert_element_visible(self.NFS_SIZE_PROGRESS)
+        # self.assert_text_visible(self.NFS_STATUS)
         self.click(self.DELETE_NFS_SERVER_BUTTON)
         time.sleep(2)
         self.assert_element_invisible("//*[@id='nfs-mounts']/table/tbody/tr")
-    
+
     def check_the_logs(self):
         self.click(self.LOGS_LINK)
         self.switch_to_frame(self.LOGS_FRAME_NAME)
@@ -592,9 +584,9 @@ class CommonPages(SeleniumTest):
 
         self.click(self.CREATE_NEW_ACCOUNT_BUTTON)
         time.sleep(3)
-        self.input_text(self.FULL_NAME_TEXT,"user_a")
-        self.input_text(self.PASSWORD_TEXT,"shleishlei123!")
-        self.input_text(self.CONFIRM_TEXT,"shleishlei123!")
+        self.input_text(self.FULL_NAME_TEXT, "user_a")
+        self.input_text(self.PASSWORD_TEXT, "shleishlei123!")
+        self.input_text(self.CONFIRM_TEXT, "shleishlei123!")
         self.click(self.CREATE_BUTTON)
         time.sleep(5)
         self.assert_element_visible(self.ACCOUNT_INFO)
@@ -603,12 +595,11 @@ class CommonPages(SeleniumTest):
         self.click(self.ROOT_BUTTON)
         self.click(self.LOGOUT_BUTTON)
         time.sleep(1)
-        self.input_text(self.LOGIN_USERNAME_TEXT,"user_a")
-        self.input_text(self.LOGIN_PWD_TEXT,"shleishlei123!")
+        self.input_text(self.LOGIN_USERNAME_TEXT, "user_a")
+        self.input_text(self.LOGIN_PWD_TEXT, "shleishlei123!")
         self.click(self.LOGIN_BUTTON)
         time.sleep(3)
         self.assert_frame_available("/users")
-    
 
     def check_terminal(self):
         self.click(self.TERMINAL_LINK)
@@ -616,9 +607,9 @@ class CommonPages(SeleniumTest):
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
         time.sleep(3)
         self.click(self.CONMMAND_LINE)
-        self.input_text(self.CONMMAND_LINE," nodectl check\r\n",False)
+        self.input_text(self.CONMMAND_LINE, " nodectl check\r\n", False)
         time.sleep(5)
-        self.assert_text_in_element("//*[@id='the-terminal']/div/div/div[1]/div[1]/div[9]","Status: OK")
+        self.assert_text_in_element("//*[@id='the-terminal']/div/div/div[1]/div[1]/div[9]", "Status: OK")
 
     def go_to_network_page(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
@@ -626,14 +617,14 @@ class CommonPages(SeleniumTest):
         self.switch_to_default_content()
         time.sleep(3)
         self.assert_frame_available("/network")
-    
+
     def go_to_logs_page(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         self.click(self.LOGS_LINK)
         self.switch_to_default_content()
         time.sleep(3)
         self.assert_frame_available(self.LOGS_FRAME_NAME)
-    
+
     def go_to_storage_page(self):
         self.switch_to_frame(self.OVIRT_HOSTEDENGINE_FRAME_NAME)
         self.click(self.STORAGE_LINK)
@@ -652,7 +643,7 @@ class CommonPages(SeleniumTest):
         self.assert_element_visible(self.REPORT_DOWNLOAD_BUTTON)
         self.click(self.REPORT_DOWNLOAD_BUTTON)
         time.sleep(3)
-    
+
     def check_selinux_policy(self):
         self.click(self.SELINUX_LINK)
         time.sleep(1)
@@ -660,7 +651,7 @@ class CommonPages(SeleniumTest):
 
         cmd = 'getenforce'
         output = self.host.execute(cmd).stdout
-        result = re.match("Enforcing",output)
+        result = re.match("Enforcing", output)
         self.assertNotEqual(result, None)
 
         time.sleep(3)
@@ -668,15 +659,15 @@ class CommonPages(SeleniumTest):
         time.sleep(5)
 
         output = self.host.execute(cmd).stdout
-        result = re.match("Permissive",output)
+        result = re.match("Permissive", output)
         self.assertNotEqual(result, None)
 
-        cmd2="setenforce 0"
+        cmd2 = "setenforce 0"
         output2 = self.host.execute(cmd2).stdout
         self.refresh()
         time.sleep(5)
 
-        cmd3="setenforce 1"
+        cmd3 = "setenforce 1"
         output3 = self.host.execute(cmd3).stdout
         self.refresh()
         time.sleep(5)
@@ -684,35 +675,35 @@ class CommonPages(SeleniumTest):
     def check_udisks_service(self):
         cmd = 'rpm -qa|grep udisks2'
         output = self.host.execute(cmd).stdout
-        result = re.search("udisks2",output)
+        result = re.search("udisks2", output)
         self.assertNotEqual(result, None)
 
         self.click(self.SERVICE_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SERVICE_FRAME_NAME)
-        self.input_text(self.FILTER_INPUT_TEXT,"udisks")
+        self.click("//*[@id='services-toolbar']/div[1]/div[1]/div/div/button")
+
+        self.input_text(self.FILTER_INPUT_TEXT, "udisks")
         time.sleep(3)
-        self.assert_text_in_element(self.UDISKS_STATUS_TEXT,"Running")
+        self.assert_text_in_element(self.UDISKS_STATUS_TEXT, "Running")
 
         cmd = "systemctl status udisks2 |grep 'running' && systemctl status udisks2 |grep PID"
         output = self.host.execute(cmd).stdout
-        start_point=re.search("PID:",output).end()+1
-        end_point=re.search("(udisksd)",output).start()-2
+        start_point = re.search("PID:", output).end() + 1
+        end_point = re.search("(udisksd)", output).start() - 2
         print(output[start_point:end_point])
-        process_id=output[start_point:end_point]
-        cmd='for i in {1..100}; do lsof -p'+' {} | wc -l 1>> /tmp/files; sleep 5; done'.format(process_id)
-        output = self.host.execute(cmd,timeout=510).stdout
-        self.assertEqual(output,'')
-    
+        process_id = output[start_point:end_point]
+        cmd = 'for i in {1..100}; do lsof -p' + ' {} | wc -l 1>> /tmp/files; sleep 5; done'.format(process_id)
+        output = self.host.execute(cmd, timeout=510).stdout
+        self.assertEqual(output, '')
+
     def check_kernel_dump_service(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.KD_LINK)
         self.switch_to_frame(self.KD_FRAME_NAME)
 
         time.sleep(3)
         self.assert_text_in_element(self.KDUMP_SERVICE_STATUS, 'Service is running')
-        
+
         kdump_service_status = self.host.execute("systemctl stop kdump").stdout
         time.sleep(3)
         self.assert_text_in_element(self.KDUMP_SERVICE_STATUS, 'Service is stopped')
@@ -721,7 +712,7 @@ class CommonPages(SeleniumTest):
         time.sleep(5)
         self.assert_text_in_element(self.KDUMP_SERVICE_STATUS, 'Service is running')
         self.assertFalse('disabled' in self.get_attribute(self.BTN_TEST_CONFIGURATION, 'class'))
-        
+
         self.hover_and_click(self.HINT)
         self.assert_element_visible("//*[@id='tip-test-info']")
 
@@ -734,7 +725,7 @@ class CommonPages(SeleniumTest):
         for i in range(len(addr_l)):
             if addr_l[i] != 'or':
                 address_list.append(addr_l[i])
-        
+
         re_ipv4 = "^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"
         re_ipv6 = "^(?:[a-f0-9]{1,4}:){7}[a-f0-9]{1,4}$"
         for addr in address_list:
@@ -760,19 +751,18 @@ class CommonPages(SeleniumTest):
             elif host_status == 'non_operational':
                 raise RuntimeError("Host is not %s as current status is: %s" %
                                    (expect_status, host_status))
-            time.sleep(15)
+            time.sleep(20)
             i += 1
 
     def goto_terminal_check_appliance(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.TERMINAL_LINK)
         time.sleep(2)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(5)
         appliance_like = self.get_text(self.TERMINAL_ADMIN)
-        self.check_appliance_like(appliance_like)  
+        self.check_appliance_like(appliance_like)
 
-    def add_host_rhvm(self, host_ip,host_name,host_pass,rhvm_fqdn):
+    def add_host_rhvm(self, host_ip, host_name, host_pass, rhvm_fqdn):
         rhvm = RhevmAction(rhvm_fqdn)
         rhvm.add_host(host_ip, host_name, host_pass, "Default")
         self.wait_host_up(rhvm, host_name, 'up')
@@ -785,58 +775,55 @@ class CommonPages(SeleniumTest):
         rhvm_fqdn = self.config_dict['rhvm_fqdn']
 
         self.goto_terminal_check_appliance()
-        self.add_host_rhvm(host_ip,host_name,passwd,rhvm_fqdn)
-        time.sleep(150)
-        self.host.execute("reboot",raise_exception=False)
-        time.sleep(400)
+        print(host_ip, host_name, passwd, rhvm_fqdn)
+        self.add_host_rhvm(host_ip, host_name, passwd, rhvm_fqdn)
+        time.sleep(200)
+        self.host.execute("reboot", raise_exception=False)
+        time.sleep(200)
         self.refresh()
         self.login(username, passwd)
         time.sleep(2)
         self.click(self.TERMINAL_LINK)
         time.sleep(2)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
+        time.sleep(8)
         appliance_like = self.get_text(self.TERMINAL_ADMIN)
         print(appliance_like)
-        self.check_appliance_like(appliance_like) 
-    
+        self.check_appliance_like(appliance_like)
+
     def check_password_is_encrypted_in_log(self):
         try:
-            self.host.get_file('/var/log/rhsm/rhsm.log','./rhsm.log')
-            pwd=self.config_dict['subscription_password']
+            self.host.get_file('/var/log/rhsm/rhsm.log', './rhsm.log')
+            pwd = self.config_dict['subscription_password']
             with open('./rhsm.log') as config_file:
                 while True:
-                    content=config_file.readline()
+                    content = config_file.readline()
                     if content:
-                        outcome=re.search(pwd,content)
-                        self.assertEqual(outcome,None)
+                        outcome = re.search(pwd, content)
+                        self.assertEqual(outcome, None)
                     else:
                         break
             os.remove('./rhsm.log')
         except Exception as e:
             pass
-    
-    def capture_vmcore_at_local(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
 
+    def capture_vmcore_at_local(self):
         self.click(self.KD_LINK)
         time.sleep(2)
         self.switch_to_frame(self.KD_FRAME_NAME)
-        time.sleep(1)
+        time.sleep(3)
         self.click(self.BTN_TEST_CONFIGURATION)
         self.click(self.CRASH_SYSTEM_BUTTON)
         time.sleep(330)
 
         cmd = 'ls /var/crash'
         output = self.host.execute(cmd).stdout
-        self.assertNotEqual(output.split(' ')[0], None)
-        res_date = '-'.join(output.split(' ')[0].split(':')[0].split('-')[-4:-1])
+        self.assertNotEqual(output.split(' ')[-1], None)
+        res_date = '-'.join(output.split(' ')[-1].split(':')[0].split('-')[-4:-1])
         des_date = datetime.date.today().__str__()
         self.assertEqual(res_date, des_date)
-    
+
     def subscription_with_key_and_organization(self):
-        self.click(self.LOCALHOST_LINK)
-        time.sleep(1)
         self.click(self.SUBSCRIPTION_LINK)
         time.sleep(10)
         self.switch_to_frame(self.SUBSCRIPTION_FRAME_NAME)
@@ -854,7 +841,7 @@ class CommonPages(SeleniumTest):
         self.click(self.DETAIL_BUTTON)
         time.sleep(2)
         self.assert_text_in_element(self.DETALI_PRODUCT_NAME, "Red Hat Virtualization Host")
-        self.assert_text_in_element(self.DETAIL_PRODUCT_ID,"328")
+        self.assert_text_in_element(self.DETAIL_PRODUCT_ID, "328")
         self.assert_text_in_element(self.DETAIL_PRODUCT_VERSION, "4.3")
         self.assert_text_in_element(self.DETAIL_PRODUCT_STATUS, "Subscribed")
 
@@ -866,7 +853,7 @@ class CommonPages(SeleniumTest):
             if file.startswith("sosreport-") and file.endswith(".tar.xz"):
                 tar_file_path = os.path.join('/var/tmp', file)
                 self.host.execute('tar -xvJf %s' % tar_file_path)
-    
+
     def find_nodectl_info_file(self):
         ret = self.host.execute('ls')
         for file in ret.split(' '):
@@ -883,17 +870,17 @@ class CommonPages(SeleniumTest):
                 self.assertEqual(result, None)
 
         for line in ret.split('\n'):
-            des_line = line.replace('\n','').replace('\r','')
+            des_line = line.replace('\n', '').replace('\r', '')
             with open('./nodectl_info') as file:
                 for line in file.readlines():
-                    res_line = line.replace('\n','').replace('\r','')
+                    res_line = line.replace('\n', '').replace('\r', '')
                     if res_line == des_line:
                         break
                     else:
                         continue
             continue
         os.remove('./nodectl_info')
-    
+
     def config_system_purpose(self):
         self.host.execute("syspurpose set-role 'Red Hat Enterprise Linux Compute Node'")
         self.host.execute("syspurpose set-sla 'Self-Support'")
@@ -905,6 +892,7 @@ class CommonPages(SeleniumTest):
 
     def remove_libvirt(self):
         cmd = 'yum remove libvirt'
-        output = self.host.execute(cmd).stdout
-        result = re.search("Error",output)
+        output = self.host.execute(cmd, raise_exception=False).stdout
+        print(output)
+        result = re.search("Error", output)
         self.assertNotEqual(result, None)
