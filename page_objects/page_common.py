@@ -88,14 +88,14 @@ class CommonPages(SeleniumTest):
     STORAGE_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[3]/span/a"
     STORAGE_FRAME_NAME = "/storage"
     ADD_NFS_BUTTON = "//*[@id='nfs-mounts']/div[1]/div/button"
-    NFS_SERVER_ADDR_TEXT = "//*[@id='pf-modal-part-2']/form/div[1]/input"
-    SERVER_PATH_TEXT = "//*[@id='pf-select-toggle-id-0-select-typeahead']"
+    NFS_SERVER_ADDR_TEXT = "//*[@id='pf-modal-part-2']/form/div/div[2]/input"
+    SERVER_PATH_TEXT = "//*[@id='pf-modal-part-2']/form/div[2]/div[2]/div/div/div/div/input"
     NFS_PATHS = ""
-    MOUNT_POINT_TEXT = "//*[@id='dialog']/div/div/div[2]/form/div[3]/input"
-    NFS_ADD_BUTTON = "//*[@id='dialog']/div/div/div[3]/button[1]"
+    MOUNT_POINT_TEXT = "//*[@id='pf-modal-part-2']/form/div[3]/div[2]/input"
+    NFS_ADD_BUTTON = "//*[@id='dialog']/footer/button[1]"
 
-    NFS_SERVER_DETAIL_BUTTON = "//*[@id='nfs-mounts']/table/tbody/tr/td[1]"
-    DELETE_NFS_SERVER_BUTTON = "//*[@id='detail-header']/div/div[1]/span/button[3]"
+    NFS_SERVER_DETAIL_BUTTON = "//*[@id='nfs-mounts']/div[2]/table/tbody/tr/td[1]"
+    DELETE_NFS_SERVER_BUTTON = "//*[@id='detail-header']/article/div[1]/div[2]/button[3]"   #/html/body/div/div/main/section/div/div[1]/article/div[1]/div[2]/button[3]
     NFS_UNMOUNT_BUTTON = "//*[@id='detail-header']/div/div[1]/span/button[1]"
     NFS_SIZE_FIELD = "#detail-header > div > div.panel-body > div"
 
@@ -367,18 +367,18 @@ class CommonPages(SeleniumTest):
         time.sleep(1)
         self.input_text(self.SERVER_PATH_TEXT, self.config_dict['nfs_dir'])
         time.sleep(1)
-        self.click('//*[@id="pf-modal-part-2"]/form/label[3]')
+        self.click('//*[@id="nfs-path-on-server"]/li/button')
         self.input_text(self.MOUNT_POINT_TEXT, self.config_dict['nfs_mount_point'])
         time.sleep(1)
         self.click(self.NFS_ADD_BUTTON)
         time.sleep(3)
-        self.assert_element_visible("//*[@id='nfs-mounts']/table/tbody/tr")
+        self.assert_element_visible("//*[@id='nfs-mounts']/div[2]/table/tbody/tr")
         self.click(self.NFS_SERVER_DETAIL_BUTTON)
         time.sleep(3)
         self.click(self.DELETE_NFS_SERVER_BUTTON)
         time.sleep(2)
         self.assert_element_invisible(self.NFS_SERVER_DETAIL_BUTTON)
-        self.assert_element_invisible("//*[@id='nfs-mounts']/table/tbody/tr")
+        self.assert_element_invisible("//*[@id='nfs-mounts']/div[2]/table/tbody/tr")
 
     def system__dynamic_status(self):
         self.click(self.SYSTEM_FRAME_LINK)
