@@ -786,7 +786,7 @@ class CommonPages(SeleniumTest):
         self.click(self.TERMINAL_LINK)
         time.sleep(2)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
-        time.sleep(8)
+        time.sleep(15)
         appliance_like = self.get_text(self.TERMINAL_ADMIN)
         print(appliance_like)
         self.check_appliance_like(appliance_like)
