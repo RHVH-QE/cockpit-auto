@@ -126,7 +126,7 @@ class CommonPages(SeleniumTest):
     TIMEZONE_REMOVER = "//*[@id='systime-timezonesundefined']//parent::*/span"
     TIMEZONE_DROPDOWN = "//*[@id='systime-timezonesundefined']//parent::*/span"
     TIMEZONE_ITEM = "//*[@id='systime-timezonesundefined']//parent::*/ul/li[1]"
-    TIMEZONE_APPLY_BUTTON = "//*[@id='system_information_change_systime']/div/div/div[3]/button[1]"
+    TIMEZONE_APPLY_BUTTON = "//*[@id='system_information_change_systime']/footer/button[1]"
 
     TIME_SET_DROPDOWN = "//*[@id='change_systime']/button"
     TIME_SET_MANUALLY = "//*[@id='change_systime']/ul/li[1]/a"
