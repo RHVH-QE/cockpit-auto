@@ -58,7 +58,7 @@ class CommonPages(SeleniumTest):
     INPUT_REMOTE_PASSWORD = "//*[@id='login-custom-password']"
 
     EDITE_SERVER = "//*[@id='page-sidebar']/div/div[2]/button[1]"  #/html/body/div[1]/div[3]/div/div/div/div[2]/button[1]
-    DELETE_SERVER = "//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/div/button[2]"
+    DELETE_SERVER = "//*[@id='page-sidebar']/div/nav/section/ul/li[1]/span/div/button[2]"
 
     # subscription
     NETWORK_INFO_LINK = "//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
@@ -307,7 +307,7 @@ class CommonPages(SeleniumTest):
 
     def delete_remote_host(self):
         self.click(self.DOMAIN_BUTTON)
-
+        time.sleep(2)
         self.click(self.EDITE_SERVER)
         time.sleep(2)
         self.click(self.DELETE_SERVER)
