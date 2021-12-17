@@ -118,7 +118,7 @@ class CommonPages(SeleniumTest):
     HOST_INFO_TEXT = "//*[@id='system_information_hostname_text']"
     PRETTY_HOSTNAME_TEXT = "//*[@id='sich-pretty-hostname']"
     REAL_HOSTNAME_TEXT = "//*[@id='sich-hostname']"
-    HOSTNAME_APPLY_BUTTON = "//*[@id='sich-apply-button']"
+    HOSTNAME_APPLY_BUTTON = "//*[@id='system_information_change_hostname']/footer/button[1]"
 
     # config timezone
     TIME_LINK = "//*[@id='system_information_systime_button']"
@@ -398,7 +398,7 @@ class CommonPages(SeleniumTest):
         self.input_text(self.PRETTY_HOSTNAME_TEXT, "test")
         time.sleep(1)
         self.input_text(self.REAL_HOSTNAME_TEXT, "test.redhat.com")
-        time.sleep(1)
+        time.sleep(2)
         self.click(self.HOSTNAME_APPLY_BUTTON)
         time.sleep(2)
 
