@@ -398,7 +398,7 @@ class CommonPages(SeleniumTest):
         self.input_text(self.PRETTY_HOSTNAME_TEXT, "test")
         time.sleep(1)
         self.input_text(self.REAL_HOSTNAME_TEXT, "test.redhat.com")
-        time.sleep(2)
+        time.sleep(5)
         self.click(self.HOSTNAME_APPLY_BUTTON)
         time.sleep(2)
 
