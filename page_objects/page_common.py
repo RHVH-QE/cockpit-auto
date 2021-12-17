@@ -206,9 +206,9 @@ class CommonPages(SeleniumTest):
     # check diagnostic report
     DIAGNOSTIC_REPORT_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[1]/span/a"
     DIAGNOSTIC_REPORT_FRAME = "/sosreport"
-    CREATE_REPORT_BUTTON = "//button[text()='Create Report']"
-    REPORT_DIALOG = "//*[@id='sos']/div"
-    REPORT_DOWNLOAD_BUTTON = "#sos-download > button"
+    CREATE_REPORT_BUTTON = "//*[@id='create-button']"
+    REPORT_DIALOG = "//*[@id='sos']/div/div/div"
+    REPORT_DOWNLOAD_BUTTON = "//*[@id='sos-download']/button"
 
     # check_selinux_policy
     SELINUX_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[3]/span/a"
@@ -640,7 +640,7 @@ class CommonPages(SeleniumTest):
         time.sleep(3)
         self.click(self.CREATE_REPORT_BUTTON)
         self.assert_element_visible(self.REPORT_DIALOG)
-        time.sleep(100)
+        time.sleep(120)
         self.assert_element_visible(self.REPORT_DOWNLOAD_BUTTON)
         self.click(self.REPORT_DOWNLOAD_BUTTON)
         time.sleep(3)
