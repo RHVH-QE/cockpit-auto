@@ -341,9 +341,9 @@ class CommonPages(SeleniumTest):
         self.host.execute("subscription-manager repos --enable=%s" % self.config_dict['subscription_repos'])
 
         sub_pkgs = self.config_dict['subscription_packages']
-        # for pkg in sub_pkgs[:-1]:
-        #     ret = self.host.execute("yum install -y %s" % pkg, timeout=200)
-        #     self.assertTrue('Complete!' in ret.stdout)
+        for pkg in sub_pkgs[:-1]:
+            ret = self.host.execute("yes|yum install -y %s" % pkg, timeout=200)
+            self.assertTrue('Complete!' in ret.stdout)
         self.assertTrue('rhvm-appliance' in self.host.execute("yum search %s" % sub_pkgs[-1]))
         ret = self.host.execute("yum search vdsm-hook*", timeout=200)
         self.assertTrue('vdsm-hook-checkips' in ret.stdout)
