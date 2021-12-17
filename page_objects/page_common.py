@@ -292,6 +292,7 @@ class CommonPages(SeleniumTest):
 
     def add_remote_host(self):
         self.click(self.DOMAIN_BUTTON)
+        time.sleep(2)
         self.click(self.ADD_SERVER_BUTTON)
         time.sleep(5)
         self.input_text(self.INPUT_MACHINE_ADDRESS, self.R_MACHINE_ADDR)
