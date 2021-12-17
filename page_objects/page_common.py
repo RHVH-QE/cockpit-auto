@@ -213,7 +213,7 @@ class CommonPages(SeleniumTest):
     # check_selinux_policy
     SELINUX_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[3]/span/a"
     SELINUX_FRAME = "/selinux/setroubleshoot"
-    SWITCH_BUTTON = "#app > div > div > div > label > span"
+    SWITCH_BUTTON = "//*[@id='app']/div/main/section[1]/div/div/label/span[1]"
 
     # check udisks
     SERVICE_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[6]/span/a"
