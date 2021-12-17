@@ -182,10 +182,10 @@ class CommonPages(SeleniumTest):
     ACCOUNT_FRAME_NAME = "/users"
     CREATE_NEW_ACCOUNT_BUTTON = "//*[@id='accounts-create']"
     FULL_NAME_TEXT = "//*[@id='accounts-create-real-name']"
-    PASSWORD_TEXT = "//*[@id='accounts-create-pw1']"
-    CONFIRM_TEXT = "//*[@id='accounts-create-pw2']"
-    CREATE_BUTTON = "//*[@id='accounts-create-dialog']/div/div/div[3]/button[1]"
-    ACCOUNT_INFO = "//*[@id='accounts-list']/li[2]"
+    PASSWORD_TEXT = "//*[@id='accounts-create-password-pw1']"
+    CONFIRM_TEXT = "//*[@id='accounts-create-password-pw2']"
+    CREATE_BUTTON = "//*[@id='accounts-create-dialog']/footer/button[1]"
+    ACCOUNT_INFO = "//*[@id='accounts-list']/div/article[2]/div"  #//*[@id="accounts-list"]/div/article[2]/div
 
     ROOT_BUTTON = "//*[@id='navbar-dropdown']"
     LOGOUT_BUTTON = "//*[@id='go-logout']"
