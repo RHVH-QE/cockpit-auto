@@ -6,7 +6,7 @@ import simplejson
 import urllib2
 import stat
 import re
-# import pytz
+import pytz
 from seleniumlib import SeleniumTest
 from utils.htmlparser import MyHTMLParser
 from utils.machine import Machine
@@ -124,8 +124,8 @@ class CommonPages(SeleniumTest):
     TIME_LINK = "//*[@id='system_information_systime_button']"
     # TIMEZONE_TEXT="//*[@id='systime-timezonesundefined']"
     TIMEZONE_REMOVER = "//*[@id='systime-timezonesundefined']//parent::*/span"
-    TIMEZONE_DROPDOWN = "//*[@id='systime-timezonesundefined']//parent::*/span"
-    TIMEZONE_ITEM = "//*[@id='systime-timezonesundefined']//parent::*/ul/li[1]"
+    TIMEZONE_DROPDOWN = "//*[@id='systime-manual-row']//parent::*/div"
+    TIMEZONE_ITEM = "//*[@id='systime-manual-row']//parent::*/div[1]/div[2]/ul/li[1]"
     TIMEZONE_APPLY_BUTTON = "//*[@id='system_information_change_systime']/footer/button[1]"
 
     TIME_SET_DROPDOWN = "//*[@id='change_systime']/button"
@@ -415,7 +415,7 @@ class CommonPages(SeleniumTest):
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
 
         self.click(self.TIME_LINK)
-        self.click(self.TIMEZONE_REMOVER)
+        # self.click(self.TIMEZONE_REMOVER)
         self.click(self.TIMEZONE_DROPDOWN)
         time.sleep(1)
         self.click(self.TIMEZONE_ITEM)
@@ -426,8 +426,10 @@ class CommonPages(SeleniumTest):
         time.sleep(5)
         self.switch_to_frame(self.SYSTEM_FRAME_NAME)
         actual_now = self.get_text(self.TIME_LINK)
+        print(actual_now)
         utc_now = pytz.utc.localize(datetime.datetime.utcnow())
         respect_now = utc_now.astimezone(pytz.timezone("Africa/Abidjan")).strftime("%Y-%m-%d %H:%M")
+        print(respect_now)
         self.assertEqual(actual_now, respect_now)
 
     def config_time_manually(self):
