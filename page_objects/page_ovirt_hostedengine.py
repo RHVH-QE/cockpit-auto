@@ -116,6 +116,8 @@ class OvirtHostedEnginePage(SeleniumTest):
     RETRIEVE_TARGET = "//button[text()='Retrieve Target List']"
     SELECTED_TARGET = "//input[@type='radio'][@name='target']"
     SELECTED_ISCSI_LUN = "//input[@type='radio'][@name='lun']"
+    SELECTED_10GB_ISCSI_LUN = ""   ### need modify
+    ISCSI_ERROR_MESSAGE = ""      ### need modify
 
     ## FC
     STORAGE_FC = _STORAGE_TYPE % 'fc'
@@ -851,6 +853,33 @@ class OvirtHostedEnginePage(SeleniumTest):
             # FINISH STAGE
             self.click(self.FINISH_DEPLOYMENT)
             self.click(self.CLOSE_BUTTON, 2000)
+
+        self.prepare_env('iscsi')
+        check_deploy()
+        
+    def node_zero_10Glun_iscsi_deploy_process(self):
+        def check_deploy():
+            self.default_vm_engine_stage_config()
+
+            # STORAGE STAGE
+            self.click(self.STORAGE_BUTTON)
+            self.click(self.STORAGE_ISCSI)
+            self.click(self.STORAGE_ADVANCED)
+            self.input_text(self.PORTAL_IP_ADDR,
+                            self.config_dict['iscsi_portal_ip'])
+            self.input_text(self.PORTAL_USER,
+                            self.config_dict['iscsi_portal_user'])
+            self.input_text(self.PORTAL_PASS,
+                            self.config_dict['iscsi_portal_pass'])
+            self.input_text(self.DISCOVERY_USER,
+                            self.config_dict['iscsi_discovery_user'])
+            self.input_text(self.DISCOVERY_PASS,
+                            self.config_dict['iscsi_discovery_pass'])
+
+            self.click(self.RETRIEVE_TARGET)
+            self.click(self.SELECTED_TARGET, 60)
+            self.click(self.SELECTED_ISCSI_LUN, 60)
+            self.assert_text_in_element(self.ISCSI_ERROR_MESSAGE, "This LUN cannot be selected because it does not have sufficient storage capacity to support the hosted engine VM.")
 
         self.prepare_env('iscsi')
         check_deploy()

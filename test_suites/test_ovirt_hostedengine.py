@@ -177,6 +177,14 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         """
         self.node_zero_iscsi_deploy_process()
 
+    @add_case_id("RHEVM-27877")
+    def test_node_zero_10Glun_iscsi_deployment(self):
+        # Show properly iSCSI lun errors when deploying HE with 10G iSCSI lun.
+        """
+        :avocado: tags=he_tier2
+        """
+        self.node_zero_10Glun_iscsi_deploy_process()
+
     @add_case_id("RHEVM-25010")
     def test_node_zero_fc_deployment(self):
         # Need to deploy HE on FC Storage
