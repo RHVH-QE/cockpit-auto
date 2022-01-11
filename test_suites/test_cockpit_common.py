@@ -47,7 +47,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23290")
     def test_suscription(self):
         """
-        :avocado: tags=common_tier1zxc
+        :avocado: tags=common_tier1
         """
         self.subscription_to_rhsm()
         self.check_packages_installation()
@@ -148,7 +148,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23260")
     def test_config_timezone(self):
         """
-        :avocado: tags=common_tier2ab
+        :avocado: tags=common_tier22
         """
         self.config_timezone()
         #bug https://bugzilla.redhat.com/show_bug.cgi?id=1330465
@@ -191,7 +191,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-24923")
     def test_modify_nfs_storage(self):
         """
-        :avocado: tags=common_tier2aa
+        :avocado: tags=common_tier22
         """
         self.modify_nfs_storage()
         #can not assert progress bar
@@ -235,7 +235,7 @@ class TestCockpitCommon(CommonPages):
     @add_case_id("RHEVM-23294")
     def test_subscription_with_key_and_organization(self):
         """
-        :avocado: tags=common_tier2bug
+        :avocado: tags=common_tier22
         """
         self.subscription_with_key_and_organization()
         #bug
