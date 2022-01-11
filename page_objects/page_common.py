@@ -58,7 +58,7 @@ class CommonPages(SeleniumTest):
     INPUT_REMOTE_PASSWORD = "//*[@id='login-custom-password']"
 
     EDITE_SERVER = "//*[@id='page-sidebar']/div/div[2]/button[1]"  #/html/body/div[1]/div[3]/div/div/div/div[2]/button[1]
-    DELETE_SERVER = "//*[@id='page-sidebar']/div/nav/section/ul/li[1]/span/div/button[2]"
+    DELETE_SERVER = "//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/div/button[2]"   #//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/div/button[2]
 
     # subscription
     NETWORK_INFO_LINK = "//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
@@ -322,7 +322,7 @@ class CommonPages(SeleniumTest):
         self.click(self.REGIST_BUTTON)
         self.input_text(self.SUBSCRIPTION_USER_TEXT, self.config_dict['subscription_username'])
         self.input_text(self.SUBSCRIPTION_PWD_TEXT, self.config_dict['subscription_password'])
-        self.input_text(self.SUBSCRIPTION_ORGANIZATION_TEXT, "12801563")
+        # self.input_text(self.SUBSCRIPTION_ORGANIZATION_TEXT, "12801563")
         time.sleep(2)
         self.click(self.REGIST_COMMIT_BUTTON)
         time.sleep(60)
@@ -338,7 +338,7 @@ class CommonPages(SeleniumTest):
 
     def check_packages_installation(self):
         self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.stage.redhat.com")
-        self.host.execute("subscription-manager repos --disable=*")
+        self.host.execute("subscription-manager repos --disable=*", timeout=100)
         self.host.execute("subscription-manager repos --enable=%s" % self.config_dict['subscription_repos'])
 
         sub_pkgs = self.config_dict['subscription_packages']
@@ -789,7 +789,7 @@ class CommonPages(SeleniumTest):
         self.click(self.TERMINAL_LINK)
         time.sleep(2)
         self.switch_to_frame(self.TERMINAL_FRAME_NAME)
-        time.sleep(15)
+        time.sleep(30)
         appliance_like = self.get_text(self.TERMINAL_ADMIN)
         print(appliance_like)
         self.check_appliance_like(appliance_like)

@@ -136,6 +136,11 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
         self.check_global_maintenance()
         self.assert_element_visible(self.GLOBAL_HINT)
         self.check_remove_maintenance()
+    
+    def test_set_non_default_port(self):
+        """
+                :avocado: tags=he_tier2
+        """
         self.setting_to_non_default_port()
 
     @add_case_id("RHEVM-23824")
