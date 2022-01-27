@@ -7,9 +7,9 @@ host_user: 'root'
 host_pwd: 'redhat'
 
 # NFS
-nfs_ip: '10.72.12.53'
+nfs_ip: '10.66.9.57'
 nfs_pass: ''
-nfs_dir: '/home/shiyilei/nfs'
+nfs_dir: '/home/wangwei/nfs'
 nfs_mount_point: '/root/mnt'
 
 #Subscription

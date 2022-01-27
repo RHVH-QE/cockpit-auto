@@ -21,7 +21,7 @@ class CommonPages(SeleniumTest):
     """
 
     #R_MACHINE_ADDR="10.66.9.205"
-    R_MACHINE_ADDR="10.73.130.125"
+    R_MACHINE_ADDR="10.73.73.106"
     WRONG_ADDR="1.2.3.4"
     R_MACHINE_USER="root"
     R_MACHINE_PWD="redhat"
@@ -349,15 +349,15 @@ class CommonPages(SeleniumTest):
         time.sleep(1)
         self.input_text(self.MOUNT_POINT_TEXT, self.config_dict['nfs_mount_point'])
         time.sleep(1)
+        nfs_text = self.config_dict['nfs_ip'] + " " + self.config_dict['nfs_dir']
         self.click(self.NFS_ADD_BUTTON)
         time.sleep(3)
-        self.assert_element_visible("//*[@id='nfs-mounts']/table/tbody/tr")
+        self.assert_text_in_element(self.NFS_SERVER_DETAIL_BUTTON, nfs_text)
         self.click(self.NFS_SERVER_DETAIL_BUTTON)
         time.sleep(3)
         self.click(self.DELETE_NFS_SERVER_BUTTON)
         time.sleep(2)
-        self.assert_element_invisible(self.NFS_SERVER_DETAIL_BUTTON)
-        self.assert_element_invisible("//*[@id='nfs-mounts']/table/tbody/tr")
+        self.assert_text_not_in_element(self.NFS_SERVER_DETAIL_BUTTON, nfs_text)
     
     def system__dynamic_status(self):
         self.click(self.DASHBOARD_LINK)
