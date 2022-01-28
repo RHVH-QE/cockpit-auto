@@ -17,7 +17,7 @@ custom_URL: 'subscription.rhsm.stage.redhat.com'
 subscription_username: 'shlei12'
 subscription_password: 'lsystc571998'
 subscription_repos: 'rhvh-4-for-rhel-8-x86_64-rpms'
-subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis','sssd-ad', 'rhvm-appliance']
+subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis','sssd-ad', 'samba', 'rhvm-appliance']
 subscription_organization: ''
 subscription_key: ''
 
