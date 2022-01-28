@@ -303,6 +303,7 @@ class CommonPages(SeleniumTest):
         self.assert_element_invisible("//*[@id='dashboard-hosts']/div[2]/a[2]")
     
     def subscription_to_rhsm(self):
+        self.host.execute("subscription-manager config --server.hostname=subscription.rhsm.stage.redhat.com")
         self.click(self.LOCALHOST_LINK)
         time.sleep(1)
         self.click(self.SUBSCRIPTION_LINK)
@@ -327,6 +328,8 @@ class CommonPages(SeleniumTest):
         self.assert_text_in_element(self.DETAIL_PRODUCT_STATUS, "Subscribed")
 
     def check_packages_installation(self):
+        self.host.execute("subscription-manager config --rhsm.baseurl=https://cdn.stage.redhat.com")
+        self.host.execute("subscription-manager repos --disable=*")
         self.host.execute("subscription-manager repos --enable=%s" %self.config_dict['subscription_repos'])
         sub_pkgs = self.config_dict['subscription_packages']
         for pkg in sub_pkgs[:-1]:

@@ -14,10 +14,10 @@ nfs_mount_point: '/root/mnt'
 
 #Subscription
 custom_URL: 'subscription.rhsm.stage.redhat.com'
-subscription_username: 'shlei12'
+subscription_username: 'shlei10'
 subscription_password: 'lsystc571998'
 subscription_repos: 'rhel-7-server-rhvh-4-*'
-subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis', 'rhvm-appliance']
+subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis']
 subscription_organization: '6340056'
 subscription_key: '6340056'
 
