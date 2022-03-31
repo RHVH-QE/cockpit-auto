@@ -18,6 +18,7 @@ class OvirtHostedEnginePage(SeleniumTest):
 
     # GENERAL
     VIRTUALIZATION_LINK = "//div[@id='nav-system']/nav[@id='host-apps']/nav/section/ul/li/span/a"
+    # VIRTUALIZATION_LINK = "//div[@id='nav-system']/nav[@id='host-apps']/nav/section/ul/li/a/span"
     OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
     HOSTEDENGINE_LINK = "//a[@href='#/he']"
 
@@ -206,7 +207,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         mp.close()
         mp.a_texts.sort()
 
-        rhvm_appliance_dict = {'v4.2':[], 'v4.3':[], 'v4.4':[]}
+        rhvm_appliance_dict = {'v4.2':[], 'v4.3':[], 'v4.4':[], 'v4.5':[]}
         all_appliance = mp.a_texts
         for appliance in all_appliance:
             if "-4.2-" in appliance:
@@ -215,6 +216,8 @@ class OvirtHostedEnginePage(SeleniumTest):
                 rhvm_appliance_dict.get('v4.3').append(appliance)
             elif "-4.4-" in appliance:
                 rhvm_appliance_dict.get('v4.4').append(appliance)
+            elif "-4.5-" in appliance:
+                rhvm_appliance_dict.get('v4.5').append(appliance)
         
         img_ver = self.host.execute("imgbase w", raise_exception=False).split(' ')[-1]
         if '-4.2' in img_ver:
@@ -223,6 +226,8 @@ class OvirtHostedEnginePage(SeleniumTest):
             rhvm_appliance = rhvm_appliance_dict.get('v4.3')[-1]
         elif '-4.4' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.4')[-1]
+        elif '-4.5' in img_ver:
+            rhvm_appliance = rhvm_appliance_dict.get('v4.5')[-1]
         rhvm_appliance_link = appliance_path + rhvm_appliance
         return rhvm_appliance_link
 

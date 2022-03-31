@@ -45,34 +45,42 @@ class CommonPages(SeleniumTest):
     OVIRT_DASHBOARD_FRAME_NAME = "/dashboard"
     # LOCALHOST_LINK = "//*[@id='host-nav-link']/span[1]"
     # HOST_APPS = "//*[@id='host-apps']/nav/section[3]"
-    DASHBOARD_LINK = "//*[@id='host-apps']/nav/section[1]/ul/li[2]/span/a"
+    # DASHBOARD_LINK = "//*[@id='host-apps']/nav/section[1]/ul/li[2]/span/a"
+    DASHBOARD_LINK = "//*[@id='host-apps']/nav/section[1]/ul/li[2]/a/span"   ### 4.5
     OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
 
     # add and delete remote host
-    DOMAIN_BUTTON = "//*[@id='pf-toggle-id-58']"
+    # DOMAIN_BUTTON = "//*[@id='pf-toggle-id-58']"
+    DOMAIN_BUTTON = "//*[@id='host-toggle']"   ### 4.5
     ADD_SERVER_BUTTON = "//*[@id='page-sidebar']/div/div[2]/button"
     INPUT_MACHINE_ADDRESS = "//*[@id='add-machine-address']"
-    ADD_HOST_BUTTON = "//*[@id='hosts_setup_server_dialog']/div/div/div[2]/div/button[1]"
-    CONNECT_BUTTON = "//*[@id='hosts_setup_server_dialog']/div/div/div[3]/button[1]"
+    # ADD_HOST_BUTTON = "//*[@id='hosts_setup_server_dialog']/div/div/div[2]/div/button[1]"
+    ADD_HOST_BUTTON = "//*[@id='hosts_setup_server_dialog']/footer/button"   ### 4.5
+    # CONNECT_BUTTON = "//*[@id='hosts_setup_server_dialog']/div/div/div[3]/button[1]"
+    CONNECT_BUTTON = "//*[@id='hosts_setup_server_dialog']/footer/button[1]"    ### 4.5
     INPUT_REMOTE_USER = "//*[@id='login-custom-user']"
     INPUT_REMOTE_PASSWORD = "//*[@id='login-custom-password']"
 
     EDITE_SERVER = "//*[@id='page-sidebar']/div/div[2]/button[1]"  #/html/body/div[1]/div[3]/div/div/div/div[2]/button[1]
-    DELETE_SERVER = "//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/div/button[2]"   #//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/div/button[2]
+    # DELETE_SERVER = "//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/div/button[2]"
+    DELETE_SERVER = "//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/button[2]"   #//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/div/button[2]    ### 4.5
 
     # subscription
     NETWORK_INFO_LINK = "//*[@id='content']/div/div/div[1]/table/tbody[4]/tr[1]/td[2]/a"
-    SUBSCRIPTION_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[4]/span/a"
+    # SUBSCRIPTION_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[4]/span/a"
+    SUBSCRIPTION_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[4]/a/span"    ### 4.5
 
     SUBSCRIPTION_FRAME_NAME = "/subscriptions"
-    REGIST_BUTTON = "//*[@id='app']/div/div/button"
+    # REGIST_BUTTON = "//*[@id='app']/div/div/button"
+    REGIST_BUTTON = "//*[@id='app']/div/main/section/div/article[1]/div[1]/div[2]/button"    ### 4.5
     CHOOSE_URL_BUTTON = "//*[@id='subscription-register-url']/button"
     CUSTOM_URL_BUTTON = "//*[@id='subscription-register-url']/ul/li[2]/a"
     CUSTOM_URL_TEXT = "//*[@id='subscription-register-url-custom']"
     SUBSCRIPTION_USER_TEXT = "//*[@id='subscription-register-username']"
     SUBSCRIPTION_ORGANIZATION_TEXT = "//*[@id='subscription-register-org']"
     SUBSCRIPTION_PWD_TEXT = "//*[@id='subscription-register-password']"
-    REGIST_COMMIT_BUTTON = "//*[@id='register_dialog']/div/div[3]/button[1]"
+    # REGIST_COMMIT_BUTTON = "//*[@id='register_dialog']/div/div[3]/button[1]"
+    REGIST_COMMIT_BUTTON = "//*[@id='register_dialog']/footer/button[1]"   ### 4.5
 
     DETAIL_BUTTON = "//*[@id='app']/div/div[2]/div[2]/div/div[1]/div[1]/span"   #/html/body/div/div/div[2]/div[2]/div/div[1]/div[1]/span  /html/body/div/div/div[1]/button
 
@@ -85,7 +93,8 @@ class CommonPages(SeleniumTest):
     KEY_TEXT = "//*[@id='subscription-register-key']"
 
     # add nfs
-    STORAGE_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[3]/span/a"
+    # STORAGE_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[3]/span/a"
+    STORAGE_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[3]/a/span"    ### 4.5
     STORAGE_FRAME_NAME = "/storage"
     ADD_NFS_BUTTON = "//*[@id='nfs-mounts']/div[1]/div/button"
     NFS_SERVER_ADDR_TEXT = "//*[@id='pf-modal-part-2']/form/div/div[2]/input"
@@ -112,7 +121,8 @@ class CommonPages(SeleniumTest):
     DISK_STATUS = "//*[@id='app']/div/main/section[1]/div/article[3]/div[1]"
 
     # config hostname
-    SYSTEM_FRAME_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[1]/span/a"
+    # SYSTEM_FRAME_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[1]/span/a"
+    SYSTEM_FRAME_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[1]/a/span"    ### 4.5
     SYSTEM_FRAME_NAME = "/system"
     HOSTNAME_BUTTON = "//*[@id='system_information_hostname_button']"
     HOST_INFO_TEXT = "//*[@id='system_information_hostname_text']"
@@ -121,8 +131,8 @@ class CommonPages(SeleniumTest):
     HOSTNAME_APPLY_BUTTON = "//*[@id='system_information_change_hostname']/footer/button[1]"
 
     # config timezone
-    TIME_LINK = "//*[@id='system_information_systime_button']"
-    # TIMEZONE_TEXT="//*[@id='systime-timezonesundefined']"
+    # TIME_LINK = "//*[@id='system_information_systime_button']"
+    TIMEZONE_TEXT="//*[@id='systime-timezonesundefined']"    ### 4.5
     TIMEZONE_REMOVER = "//*[@id='systime-timezonesundefined']//parent::*/span"
     TIMEZONE_DROPDOWN = "//*[@id='systime-manual-row']//parent::*/div"
     TIMEZONE_ITEM = "//*[@id='systime-manual-row']//parent::*/div[1]/div[2]/ul/li[1]"
@@ -144,7 +154,8 @@ class CommonPages(SeleniumTest):
     PROFILE_APPLY_BUTTON = ".apply"
 
     # kernel dump
-    KD_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[2]/span/a"
+    # KD_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[2]/span/a"
+    KD_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[2]/a/span"     ### 4.5
     HINT = "//*[@id='app']/div/form/div[2]/a/span"
     KDUMP_SERVICE_STATUS = "//*[@id='app']/div/form/div[1]/a/span"
     BTN_TEST_CONFIGURATION = "//*[@id='app']/div/main/section[2]/article/div/dl/div[4]/dd/div/div/button"
@@ -157,14 +168,17 @@ class CommonPages(SeleniumTest):
     SERVICE_SEARCHER = "//*[@id='services-text-filter']"
     KD_SERVICE_LINK = "//*[@id='services-list']/div/table/tbody/tr/td[1]"
     STOP_START_BUTTON = "//*[@id='service-details']/main/section/div/div[1]/article/div[1]/span/label/span"
-    KD_STATUS_INFO = "//*[@id='statuses']/div/div/span[2]"
-    KD_STATUS_INFO2 = "//*[@id='statuses']/div/div[1]/span[2]"
+    # KD_STATUS_INFO = "//*[@id='statuses']/div/div/span[2]"
+    # KD_STATUS_INFO2 = "//*[@id='statuses']/div/div[1]/span[2]"
+    KD_STATUS_INFO = "//*[@id='statuses']/div/div/span"     ### 4.5
+    KD_STATUS_INFO2 = "//*[@id='statuses']/div/div[1]/span[1]"     ### 4.5
     KD_RESTART_BUTTON = "//*[@id='service-unit-action']/button[1]"
     KD_DISABLE_BUTTON = "//*[@id='service-file-action']/button[1]"
     KD_ENABLE_TEXT = "//*[@id='service-unit']/div/div[2]/div[1]/table/tbody/tr[3]/td[2]"
 
     # check system logs
-    LOGS_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[2]/span/a"
+    # LOGS_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[2]/span/a"
+    LOGS_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[2]/a/span"    ### 4.5
     LOGS_FRAME_NAME = "/system/logs"
     LOGS_DURATION_BUTTON = "//*[@id='log-filters']"
     # RECENT_LOGS="//*[@id='journal-current-day-menu']/ul/li[1]/a"
@@ -178,7 +192,8 @@ class CommonPages(SeleniumTest):
     LOGS_WARNING_ICON = "//*[@id='journal-box']/div[1]/div[2]/div[1]"
 
     # create new account
-    ACCOUNT_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[5]/span/a"
+    # ACCOUNT_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[5]/span/a"
+    ACCOUNT_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[5]/a/span"    ### 4.5
     ACCOUNT_FRAME_NAME = "/users"
     CREATE_NEW_ACCOUNT_BUTTON = "//*[@id='accounts-create']"
     FULL_NAME_TEXT = "//*[@id='accounts-create-real-name']"
@@ -194,7 +209,8 @@ class CommonPages(SeleniumTest):
     LOGIN_BUTTON = "//*[@id='login-button']"
 
     # terminal function
-    TERMINAL_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[5]/span/a"
+    # TERMINAL_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[5]/span/a"
+    TERMINAL_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[5]/a/span"     ### 4.5
 
     TERMINAL_FRAME_NAME = "/system/terminal"
     TERMINAL_ADMIN = "//*[@id='terminal']/div/div[2]/div/div/div[1]/div[1]/div[5]"
@@ -204,19 +220,22 @@ class CommonPages(SeleniumTest):
     SSH_HOST_KEY_COTENT = "//*[@id='content']/div/div/div[1]/table/tbody[5]/tr/td[2]/div/div/div/div/div[2]/div"
 
     # check diagnostic report
-    DIAGNOSTIC_REPORT_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[1]/span/a"
+    # DIAGNOSTIC_REPORT_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[1]/span/a"
+    DIAGNOSTIC_REPORT_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[1]/a/span"    ### 4.5
     DIAGNOSTIC_REPORT_FRAME = "/sosreport"
     CREATE_REPORT_BUTTON = "//*[@id='create-button']"
     REPORT_DIALOG = "//*[@id='sos']/div/div/div"
     REPORT_DOWNLOAD_BUTTON = "//*[@id='sos-download']/button"
 
     # check_selinux_policy
-    SELINUX_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[3]/span/a"
+    # SELINUX_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[3]/span/a"
+    SELINUX_LINK = "//*[@id='host-apps']/nav/section[3]/ul/li[3]/a/span"     ### 4.5
     SELINUX_FRAME = "/selinux/setroubleshoot"
     SWITCH_BUTTON = "//*[@id='app']/div/main/section[1]/div/div/label/span[1]"
 
     # check udisks
-    SERVICE_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[6]/span/a"
+    # SERVICE_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[6]/span/a"
+    SERVICE_LINK = "//*[@id='host-apps']/nav/section[2]/ul/li[6]/a/span"     ### 4.5
 
     FILTER_BUTTON = "//*[@id='services-toolbar']/div[1]/div[1]/div/div[1]/button"
     FILTER_INPUT_TEXT = "//*[@id='services-text-filter']/div/div/span/input"
@@ -303,7 +322,8 @@ class CommonPages(SeleniumTest):
         time.sleep(3)
         self.input_text(self.INPUT_REMOTE_PASSWORD, self.R_MACHINE_PWD)
         self.click(self.CONNECT_BUTTON)
-        self.assert_element_visible("//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/a/span")
+        # self.assert_element_visible("//*[@id='page-sidebar']/div/nav/section/ul/li[2]/span/a/span")
+        self.assert_element_visible("//*[@id='page-sidebar']/div/nav/section/ul/li[2]/a/span[2]")    ### 4.5
 
     def delete_remote_host(self):
         self.click(self.DOMAIN_BUTTON)
@@ -483,8 +503,8 @@ class CommonPages(SeleniumTest):
         time.sleep(1)
         self.switch_to_frame(self.SERVICE_FRAME_NAME)
         time.sleep(5)
-        self.click(self.FILTER_BUTTON)
-        time.sleep(3)
+        # self.click(self.FILTER_BUTTON)    ### 4.5
+        # time.sleep(3)    ### 4.5
         self.input_text(self.FILTER_INPUT_TEXT, "kdump")
         time.sleep(3)
         self.click("//*[@id='kdump.service']/th/div/a")
@@ -684,7 +704,8 @@ class CommonPages(SeleniumTest):
         self.click(self.SERVICE_LINK)
         time.sleep(1)
         self.switch_to_frame(self.SERVICE_FRAME_NAME)
-        self.click("//*[@id='services-toolbar']/div[1]/div[1]/div/div/button")
+        # self.click("//*[@id='services-toolbar']/div[1]/div[1]/div/div/button")
+        # self.click("//*[@id='services-toolbar']/div[1]/div[1]/div/div/button")   ### 4.5
 
         self.input_text(self.FILTER_INPUT_TEXT, "udisks")
         time.sleep(3)
@@ -736,6 +757,7 @@ class CommonPages(SeleniumTest):
                 self.assertNotEqual(re.match(re_ipv4, addr[8:-6]), None)
             else:
                 self.assertNotEqual(re.match(re_ipv6, addr[8:-6]), None)
+                # pass
 
     def wait_host_up(self, rhvm_ins, host_name, expect_status='up'):
         i = 0

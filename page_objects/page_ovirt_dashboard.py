@@ -12,7 +12,8 @@ class OvirtDashboardPage(SeleniumTest):
     SLEEP_TIME = 5
 
     OVIRT_DASHBOARD_FRAME_NAME = "/ovirt-dashboard"
-    DASHBOARD_LINK = "//*[@id='host-apps']/nav/section[1]/ul/li[1]/span/a"
+    # DASHBOARD_LINK = "//*[@id='host-apps']/nav/section[1]/ul/li[1]/span/a"
+    DASHBOARD_LINK = "//*[@id='host-apps']/nav/section[1]/ul/li[1]/a/span"   ### 4.5
 
     OK_ICON = "pficon-ok"
     WARN_ICON = "pficon-warning-triangle-o"

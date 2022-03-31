@@ -18,11 +18,12 @@ subscription_username: 'shlei12'
 subscription_password: 'lsystc571998'
 subscription_repos: 'rhvh-4-for-rhel-8-x86_64-rpms'
 subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis','sssd-ad', 'samba', 'rhvm-appliance']
-subscription_organization: ''
-subscription_key: ''
+subscription_organization: '13349282'
+subscription_key: '13349282'
 
 #RHVM
-rhvm_fqdn: 'vm-198-146.lab.eng.pek2.redhat.com'
+#rhvm_fqdn: 'vm-198-42.lab.eng.pek2.redhat.com'
+rhvm_fqdn: 'vm-197-137.lab.eng.pek2.redhat.com'
 rhvm_admin: 'admin'
 rhvm_pw: 'password'
 
