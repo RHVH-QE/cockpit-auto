@@ -2,27 +2,27 @@
 ---
 
 #remote host
-host_ip: '10.73.131.63'
+host_ip: '10.73.73.106'
 host_user: 'root'
 host_pwd: 'redhat'
 
 # NFS
-nfs_ip: '10.66.9.57'
+nfs_ip: '10.73.131.180'
 nfs_pass: ''
-nfs_dir: '/home/wangwei/nfs'
+nfs_dir: '/root/linda/nfs'
 nfs_mount_point: '/root/mnt'
 
 #Subscription
 custom_URL: 'subscription.rhsm.stage.redhat.com'
-subscription_username: 'shlei10'
+subscription_username: 'shlei12'
 subscription_password: 'lsystc571998'
 subscription_repos: 'rhel-7-server-rhvh-4-*'
-subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis']
+subscription_packages: ['vim-enhanced', 'strace', 'ltrace', 'wget', 'systemtap', 'clevis', 'rhvm-appliance']
 subscription_organization: '6340056'
 subscription_key: '6340056'
 
 #RHVM
-rhvm_fqdn: 'vm-198-184.lab.eng.pek2.redhat.com'
+rhvm_fqdn: 'vm-198-9.lab.eng.pek2.redhat.com'
 rhvm_admin: 'admin'
 rhvm_pw: 'password'
 

@@ -2,7 +2,7 @@
 ---
 
 # RHVM
-rhvm_appliance_path: 'http://10.66.10.22:8090/rhevm-appliance/'
+rhvm_appliance_path: 'http://10.66.148.42:8090/rhevm-appliance/'
 
 # NFS
 nfs_ip: '10.73.131.180'
