@@ -228,7 +228,7 @@ class OvirtHostedEnginePage(SeleniumTest):
         elif '-4.4' in img_ver:
             rhvm_appliance = rhvm_appliance_dict.get('v4.4')[-1]
         elif '-4.5' in img_ver:
-            rhvm_appliance = rhvm_appliance_dict.get('v4.5')[-1]
+            rhvm_appliance = rhvm_appliance_dict.get('v4.5')[-2]
         rhvm_appliance_link = appliance_path + rhvm_appliance
         return rhvm_appliance_link
 
@@ -247,7 +247,7 @@ class OvirtHostedEnginePage(SeleniumTest):
             if additional_host.execute('hosted-engine --check-deployed', raise_exception=False).stdout.find("not") == -1:
                 additional_host.execute("yes|sh /usr/sbin/ovirt-hosted-engine-cleanup", timeout=250)
 
-        if self.host.execute('rpm -qa|grep appliance', raise_exception=False).stdout == "" and "insights" not in self._testMethodName:
+        if "rhvm-appliance" not in self.host.execute('rpm -qa|grep appliance', raise_exception=False).stdout and "insights" not in self._testMethodName:
             self.install_rhvm_appliance(self.config_dict['rhvm_appliance_path'])
 
         if self.host.execute('hosted-engine --check-deployed', raise_exception=False).stdout.find("not") == -1:
