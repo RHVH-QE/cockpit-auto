@@ -17,9 +17,10 @@ class OvirtHostedEnginePage(SeleniumTest):
     """
 
     # GENERAL
-    VIRTUALIZATION_LINK = "//div[@id='nav-system']/nav[@id='host-apps']/nav/section/ul/li/span/a"
+    VIRTUALIZATION_LINK = "//div[@id='nav-system']/nav[@id='host-apps']/nav/section/ul/li/a/span"
     # VIRTUALIZATION_LINK = "//div[@id='nav-system']/nav[@id='host-apps']/nav/section/ul/li/a/span"
     OVIRT_HOSTEDENGINE_FRAME_NAME = "/ovirt-dashboard"
+    # OVIRT_DASHBOARD_FRAME_NAME = "/cockpit1:localhost/network"
     HOSTEDENGINE_LINK = "//a[@href='#/he']"
 
     # LANDING PAGE
