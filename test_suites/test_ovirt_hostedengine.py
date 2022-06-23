@@ -14,7 +14,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-25794")
     def test_guide_link(self):
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier11
         """
         # self.prepare_env()
         # self.assert_element_visible(self.GETTING_START_LINK)
@@ -25,7 +25,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_errors_warnings_vm_setting(self):
         # Check the error message and warning message display when setting vm with illegal value.
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier11
         """
         self.errors_warnings_vm_setting()
 
@@ -33,7 +33,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     def test_errors_warnings_engine_setting(self):
         # Check the error message and warning message display when setting engine with illegal value.
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier11
         """
         self.errors_warnings_engine_setting()
 
@@ -48,14 +48,14 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     @add_case_id("RHEVM-26161")
     def test_maintenance_hint(self):
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier11
         """
         self.assert_element_visible(self.MAINTENANCE_HINT)
 
     @add_case_id("RHEVM-26151")
     def test_engine_vm_status(self):
         """
-        :avocado: tags=he_tier1
+        :avocado: tags=he_tier11
         """
         self.check_hosted_engine_status()
 
@@ -139,7 +139,7 @@ class TestOvirtHostedEngine(OvirtHostedEnginePage):
     
     def test_set_non_default_port(self):
         """
-                :avocado: tags=he_tier2
+        :avocado: tags=he_tier2
         """
         self.setting_to_non_default_port()
 

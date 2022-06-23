@@ -14,7 +14,7 @@ private_nfs_pass: 'redhat'
 private_nfs_dir: '/root/linda/nfs'
 
 #Subscription
-subscription_username: 'shlei2'
+subscription_username: 'shlei12'
 subscription_password: 'lsystc571998'
 subscription_repo_name: 'rhvh-4-for-rhel-8-x86_64-rpms'
 
