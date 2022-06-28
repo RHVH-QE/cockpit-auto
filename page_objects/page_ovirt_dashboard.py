@@ -65,7 +65,7 @@ class OvirtDashboardPage(SeleniumTest):
         self.click(self.DASHBOARD_LINK)
 
     def check_vm_quantity(self):
-        self.assert_element_visible(self.VM_QUANTITY % '1')
+        self.assert_element_visible(self.VM_QUANTITY % '0')
 
     def check_function_domains(self):
         self.assert_element_visible(self.DOMAIN_NODE_STATUS)
