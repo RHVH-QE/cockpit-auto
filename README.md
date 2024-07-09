@@ -54,3 +54,4 @@ java -Dwebdriver.ie.driver=path-to-ie-driver -jar path-to-selenium-standalone-se
 ```
 
 **$browser** defines browser type, includes chrome, firefox, ie. If this option is omitted, chrome is used.
+test
